@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <Folder Include="Areas\Identity\Controllers\" />
+    <Folder Include="Data\Seeder\" />
   </ItemGroup>
 
 </Project>

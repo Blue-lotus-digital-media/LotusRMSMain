@@ -56,9 +56,23 @@ namespace LotusRMS.Areas.Identity.Pages.Account.Manage
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
+            /// 
+
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+
+            [Phone]
+            [Display(Name = "Contact")]
+            public string Contact { get; set; }
+
+            [Display(Name = "First Name")]
+            public string FirstName { get; set; }
+
+            [Display(Name = "Middle Name")]
+            public string MiddleName { get; set; }
+            [Display(Name = "last Name")]
+            public string LastName { get; set; }
         }
 
         private async Task LoadAsync(RMSUser user)
@@ -70,7 +84,12 @@ namespace LotusRMS.Areas.Identity.Pages.Account.Manage
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                Contact=user.Contact,
+                FirstName=user.FirstName,
+                MiddleName=user.MiddleName,
+                LastName=user.LastName
+
             };
         }
 
