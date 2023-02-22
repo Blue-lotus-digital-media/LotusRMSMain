@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LotusRMS.Areas.SuperAdmin.Controllers
 {
+    [Area("SuperAdmin")]
+    [Authorize(Roles = "SuperAdmin")]
     public class RoleController : Controller
     {
         RoleManager<IdentityRole> roleManager;
@@ -17,13 +20,14 @@ namespace LotusRMS.Areas.SuperAdmin.Controllers
             var roles = roleManager.Roles.ToList();
             return View(roles);
         }
-
+        [Authorize(Policy = "rolecreation")]
         public IActionResult Create()
         {
             return View(new IdentityRole());
         }
 
         [HttpPost]
+        [Authorize(Policy = "rolecreation")]
         public async Task<IActionResult> Create(IdentityRole role)
         {
             await roleManager.CreateAsync(role);

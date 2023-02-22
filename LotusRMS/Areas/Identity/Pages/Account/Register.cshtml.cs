@@ -31,12 +31,16 @@ namespace LotusRMS.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
 
+        private readonly RoleManager<IdentityRole> _roleManager;
+
         public RegisterModel(
             UserManager<RMSUser> userManager,
             IUserStore<RMSUser> userStore,
             SignInManager<RMSUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+
+        RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -44,6 +48,8 @@ namespace LotusRMS.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+
+            _roleManager = roleManager;
         }
 
         /// <summary>
@@ -76,10 +82,23 @@ namespace LotusRMS.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             /// 
-            public string? FirstName { get; set; }
+            [Required]
+            [Display(Name = "First Name")]
+            public string FirstName { get; set; }
+
+            [Display(Name = "Middle Name")]
             public string? MiddleName { get; set; }
-            public string? LastName { get; set; }
-            public string? Contact { get; set; }
+            [Required]
+
+            [Display(Name = "Last Name")]
+            public string LastName { get; set; }
+            [Required]
+            [Display(Name ="Contact")]
+            public string Contact { get; set; }
+
+            [Required]
+            [Display(Name = "User Role")]
+            public string UserRole { get; set; }
 
             [Required]
             [EmailAddress]
@@ -91,7 +110,7 @@ namespace LotusRMS.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 8)]
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
             public string Password { get; set; }
@@ -109,6 +128,7 @@ namespace LotusRMS.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string returnUrl = null)
         {
+            ViewData["roles"] = _roleManager.Roles.Where(x=>x.NormalizedName!="SuperAdmin").ToList();
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
@@ -128,6 +148,8 @@ namespace LotusRMS.Areas.Identity.Pages.Account
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
+                var role = _roleManager.FindByIdAsync(Input.UserRole).Result;
+
 
                 if (result.Succeeded)
                 {
@@ -152,7 +174,7 @@ namespace LotusRMS.Areas.Identity.Pages.Account
                     }
                     else
                     {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
+                       // await _signInManager.SignInAsync(user, isPersistent: false);
                         return LocalRedirect(returnUrl);
                     }
                 }
