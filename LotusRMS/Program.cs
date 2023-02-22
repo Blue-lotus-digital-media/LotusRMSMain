@@ -22,6 +22,16 @@ builder.Services.AddScoped<IUserClaimsPrincipalFactory<RMSUser>,
             ApplicationUserClaimsPrincipalFactory
             >();
 builder.Services.AddControllersWithViews();
+builder.Services.AddAuthorization(options =>
+{
+   /* options.AddPolicy("EmailID", policy =>
+    policy.RequireClaim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name", "support@procodeguide.com"
+    ));*/
+
+    options.AddPolicy("rolecreation", policy =>
+    policy.RequireRole("SuperAdmin")
+    );
+});
 
 var app = builder.Build();
 
@@ -46,6 +56,18 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllerRoute(
     name: "SuperAdmin",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+app.MapControllerRoute(
+    name: "Admin",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+app.MapControllerRoute(
+    name: "Waiter",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+app.MapControllerRoute(
+    name: "Cashier",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+app.MapControllerRoute(
+    name: "Kitchen",
     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 app.MapControllerRoute(
     name: "default",
