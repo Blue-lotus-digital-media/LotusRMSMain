@@ -19,7 +19,7 @@ namespace LotusRMS.Data
             //seed superadmin
             var user = new RMSUser()
             {
-                UserName="SuperAdmin",
+                UserName= "forwebsite.fw@gmail.com",
                 Email="forwebsite.fw@gmail.com",
                 EmailConfirmed=true,
                 PhoneNumberConfirmed=true
@@ -30,7 +30,7 @@ namespace LotusRMS.Data
             var userInDb=await userManager.FindByEmailAsync(user.Email);
             if (userInDb == null)
             {
-                await userManager.CreateAsync(user,"Admin@123");
+                await userManager.CreateAsync(user,"Lotus@123");
                 await userManager.AddToRoleAsync(user, Constants.Roles.SuperAdmin.ToString());
 
             }
