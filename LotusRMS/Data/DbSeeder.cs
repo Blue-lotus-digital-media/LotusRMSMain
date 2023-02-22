@@ -15,6 +15,7 @@ namespace LotusRMS.Data
             await roleManager.CreateAsync(new IdentityRole(Constants.Roles.Cashier.ToString()));
             await roleManager.CreateAsync(new IdentityRole(Constants.Roles.Waiter.ToString()));
             await roleManager.CreateAsync(new IdentityRole(Constants.Roles.Kitchen.ToString()));
+            await roleManager.CreateAsync(new IdentityRole(Constants.Roles.User.ToString()));
 
             //seed superadmin
             var user = new RMSUser()

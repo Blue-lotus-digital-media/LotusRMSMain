@@ -131,7 +131,7 @@ namespace LotusRMS.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
-                    await _userManager.AddToRoleAsync(user, Constants.Roles.Waiter.ToString());
+                    await _userManager.AddToRoleAsync(user, Constants.Roles.User.ToString());
                     _logger.LogInformation("User created a new account with password.");
 
                     var userId = await _userManager.GetUserIdAsync(user);
