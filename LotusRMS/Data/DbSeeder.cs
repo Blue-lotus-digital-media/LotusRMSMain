@@ -33,6 +33,7 @@ namespace LotusRMS.Data
                 await userManager.CreateAsync(user,"Lotus@123");
                 await userManager.AddToRoleAsync(user, Constants.Roles.SuperAdmin.ToString());
 
+
             }
 
         }
