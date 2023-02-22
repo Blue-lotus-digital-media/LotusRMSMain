@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LotusRMS.Controllers
+namespace LotusRMS.Areas.SuperAdmin.Controllers
 {
     public class RoleController : Controller
     {

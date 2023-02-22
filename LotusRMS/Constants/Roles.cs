@@ -6,6 +6,7 @@
         Admin,
         Cashier,
         Waiter,
-        Kitchen
+        Kitchen,
+        User
     }
 }
