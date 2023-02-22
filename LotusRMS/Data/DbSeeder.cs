@@ -23,7 +23,6 @@ namespace LotusRMS.Data
                 Email="forwebsite.fw@gmail.com",
                 EmailConfirmed=true,
                 PhoneNumberConfirmed=true
-
             };
             user.Update("Blue Lotus", "Digital", "Media", "9844662120");
 
@@ -32,8 +31,6 @@ namespace LotusRMS.Data
             {
                 await userManager.CreateAsync(user,"Lotus@123");
                 await userManager.AddToRoleAsync(user, Constants.Roles.SuperAdmin.ToString());
-
-
             }
 
         }
