@@ -24,11 +24,13 @@ namespace LotusRMS.Models.Service.Implementation
 
         public Task<Guid> Update(UnitUpdateDto dto)
         {
-            var unit = _unitRepository.GetByIdAsync(dto.Id) ?? throw new Exception();
-            unit.Update(dto.UnitDescription, );
-            _unitRepository.Update(unit);
+            /* var unit = _unitRepository.GetByIdAsync(dto.Id) ?? throw new Exception();
+             unit.Update(dto.UnitDescription);*/
+            //_unitRepository.Update(unit);
             //todo logic
-            
+
+            throw new NotImplementedException();
+
         }
     }
 }
