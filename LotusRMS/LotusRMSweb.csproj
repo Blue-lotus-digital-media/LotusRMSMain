@@ -27,8 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Admin\Data\" />
-    <Folder Include="Areas\Admin\Models\" />
     <Folder Include="Areas\Identity\Controllers\" />
     <Folder Include="Areas\SuperAdmin\Data\" />
     <Folder Include="Areas\SuperAdmin\Models\" />
@@ -36,7 +34,6 @@
     <Folder Include="Areas\Waiter\Controllers\" />
     <Folder Include="Areas\Waiter\Data\" />
     <Folder Include="Areas\Waiter\Models\" />
-    <Folder Include="Areas\Waiter\Views\" />
     <Folder Include="Views\Shared\Order\" />
   </ItemGroup>
 
