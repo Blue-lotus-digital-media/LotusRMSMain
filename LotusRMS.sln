@@ -3,7 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32526.322
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LotusRMS", "LotusRMS\LotusRMS.csproj", "{FB854805-43F9-4CE2-8206-2F5ADB1BE3B8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LotusRMSweb", "LotusRMS\LotusRMSweb.csproj", "{FB854805-43F9-4CE2-8206-2F5ADB1BE3B8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LotusRMS.DataAccess", "LotusRms.DataAccess\LotusRMS.DataAccess.csproj", "{802D0881-D95D-4BA6-968A-E32576F61102}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LotusRMS.Models", "LotusRMS.Models\LotusRMS.Models.csproj", "{C24A7450-D575-431F-B948-6FF47389E8F5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LotusRMS.Utility", "LotusRMS.Utility\LotusRMS.Utility.csproj", "{BCC58EE6-C7D2-43D1-B1F2-EDEB33C992E5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +21,18 @@ Global
 		{FB854805-43F9-4CE2-8206-2F5ADB1BE3B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB854805-43F9-4CE2-8206-2F5ADB1BE3B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB854805-43F9-4CE2-8206-2F5ADB1BE3B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{802D0881-D95D-4BA6-968A-E32576F61102}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{802D0881-D95D-4BA6-968A-E32576F61102}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{802D0881-D95D-4BA6-968A-E32576F61102}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{802D0881-D95D-4BA6-968A-E32576F61102}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C24A7450-D575-431F-B948-6FF47389E8F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C24A7450-D575-431F-B948-6FF47389E8F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C24A7450-D575-431F-B948-6FF47389E8F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C24A7450-D575-431F-B948-6FF47389E8F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCC58EE6-C7D2-43D1-B1F2-EDEB33C992E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCC58EE6-C7D2-43D1-B1F2-EDEB33C992E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCC58EE6-C7D2-43D1-B1F2-EDEB33C992E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCC58EE6-C7D2-43D1-B1F2-EDEB33C992E5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

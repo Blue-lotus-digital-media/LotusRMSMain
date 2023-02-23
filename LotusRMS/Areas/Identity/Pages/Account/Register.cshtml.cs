@@ -19,8 +19,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using LotusRMS.DataAccess.Constants;
 
-namespace LotusRMS.Areas.Identity.Pages.Account
+namespace LotusRMSweb.Areas.Identity.Pages.Account
 {
     public class RegisterModel : PageModel
     {
@@ -153,7 +154,7 @@ namespace LotusRMS.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
-                    await _userManager.AddToRoleAsync(user, Constants.Roles.User.ToString());
+                    await _userManager.AddToRoleAsync(user, Roles.User.ToString());
                     _logger.LogInformation("User created a new account with password.");
 
                     var userId = await _userManager.GetUserIdAsync(user);
@@ -185,6 +186,8 @@ namespace LotusRMS.Areas.Identity.Pages.Account
             }
 
             // If we got this far, something failed, redisplay form
+            ViewData["roles"] = _roleManager.Roles.Where(x => x.NormalizedName != "SuperAdmin").ToList();
+
             return Page();
         }
 

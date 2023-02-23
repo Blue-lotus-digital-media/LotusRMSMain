@@ -1,8 +1,11 @@
-using LotusRMS.Areas.Identity.Data;
-using LotusRMS.Data;
+
+using LotusRMS.DataAccess;
 using LotusRMS.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using LotusRMSweb.Areas.Identity.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +21,28 @@ builder.Services.AddIdentity<RMSUser,IdentityRole>()
             .AddDefaultUI()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
+builder.Services.AddAuthentication().AddCookie( options => {
+    options.Cookie.Expiration = TimeSpan.FromMinutes(20);
+    options.LoginPath = "/Account/Login";
+    options.LogoutPath = "/Account/Logout";
+    options.AccessDeniedPath = "/Account/AccessDenied";
+    options.SlidingExpiration = true;
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
+}
+    );
+/*builder.Services.PostConfigure<CookieAuthenticationOptions>(IdentityConstants.ApplicationScheme,
+options =>
+{
+
+    options.Cookie.Expiration = TimeSpan.FromMinutes(20);
+    options.LoginPath = "/Account/Login";
+    options.LogoutPath = "/Account/Logout";
+    options.AccessDeniedPath = "/Account/AccessDenied";
+    options.SlidingExpiration = true;
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
+
+});*/
+
 builder.Services.AddScoped<IUserClaimsPrincipalFactory<RMSUser>,
             ApplicationUserClaimsPrincipalFactory
             >();

@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace LotusRMS.Areas.Identity.Pages.Account.Manage
+namespace LotusRMSweb.Areas.Identity.Pages.Account.Manage
 {
     public class IndexModel : PageModel
     {

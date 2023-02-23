@@ -1,7 +1,8 @@
 ﻿using LotusRMS.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace LotusRMS.Data
+namespace LotusRMS.DataAccess
 {
     public static class DbSeeder
     {

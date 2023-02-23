@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
 
-namespace LotusRMS.Areas.Identity.Data
+namespace LotusRMSweb.Areas.Identity.Data
 {
     public class ApplicationUserClaimsPrincipalFactory : UserClaimsPrincipalFactory<RMSUser, IdentityRole>
     {

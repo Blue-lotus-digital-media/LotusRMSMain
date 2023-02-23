@@ -1,4 +1,4 @@
-﻿namespace LotusRMS.Constants
+﻿namespace LotusRMS.DataAccess.Constants
 {
     public enum Roles
     {

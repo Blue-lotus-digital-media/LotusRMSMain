@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace LotusRMS.Viewmodels
+namespace LotusRMSweb.Viewmodels
 {
     public class RMSUserViewModel : IdentityUser
     {

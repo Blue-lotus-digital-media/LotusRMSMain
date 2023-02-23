@@ -7,11 +7,11 @@
 }
 
 <h1>@ViewData["Title"]</h1>
-
+@*
 <div class="row">
     <div class="col-md-4">
         <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h2>Create a new account.</h2>
+           @* <h2>Create a new account.</h2>
             <hr />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
              <div class="form-floating">
@@ -57,40 +57,100 @@
             </div>
 
             <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+
         </form>
     </div>
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h3>Use another service to register.</h3>
-            <hr />
-            @{
-                if ((Model.ExternalLogins?.Count ?? 0) == 0)
-                {
-                    <div>
-                        <p>
-                            There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">article
-                            about setting up this ASP.NET application to support logging in via external services</a>.
-                        </p>
-                    </div>
-                }
-                else
-                {
-                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
-                        <div>
-                            <p>
-                                @foreach (var provider in Model.ExternalLogins!)
-                                {
-                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
-                                }
-                            </p>
-                        </div>
-                    </form>
-                }
-            }
-        </section>
-    </div>
+    
 </div>
+*@
+<div class="container">
 
+      <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-8 d-flex flex-column align-items-center justify-content-center">
+
+              <div class="d-flex justify-content-center py-4">
+                <a href="index.html" class="logo d-flex align-items-center w-auto">
+                  <img src="~/assets/img/logo.png" alt="">
+                  <span class="d-none d-lg-block">Blue Lotus</span>
+                </a>
+              </div><!-- End Logo -->
+
+              <div class="card mb-3">
+
+                <div class="card-body">
+
+                  <div class="pt-4 pb-2">
+                    <h5 class="card-title text-center pb-0 fs-4">Create an Account</h5>
+                    <p class="text-center small">Enter user's personal details to create account</p>
+                  </div>
+                   <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="row g-3 needs-validation" novalidate>
+        
+                     <div class="col-md-4">
+                      <label for="firstname" class="form-label">First Name</label>
+                      <input asp-for="Input.FirstName" class="form-control" id="firstName" required>
+                      <span class="invalid-feedback" asp-validation-for="Input.FirstName"></span>
+                    </div>
+                    <div class="col-md-4">
+                      <label for="middleName" class="form-label">Middle Name</label>
+                      <input asp-for="Input.MiddleName" class="form-control" id="middleName" >
+                      
+                    </div>
+                    <div class="col-md-4">
+                      <label for="lastName" class="form-label">Last Name</label>
+                      <input asp-for="Input.LastName" class="form-control" id="lastName" required>
+                      <span class="invalid-feedback" asp-validation-for="Input.LastName"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                      <label for="yourEmail" class="form-label"> Email</label>
+                      <input type="email" asp-for="Input.Email" class="form-control" id="yourEmail" required>
+                      <span class="invalid-feedback" asp-validation-for="Input.Email"></span>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="yourContact" class="form-label"> Contact</label>
+                      <input asp-for="Input.Contact" class="form-control" id="yourContact" required>
+                      <span class="invalid-feedback" asp-validation-for="Input.Contact"></span>
+                    </div>
+
+                    <div class="col-12">
+                      <label for="Role" class="form-label">User Role</label>
+                      <div class="input-group has-validation">
+                           <select asp-for="Input.UserRole" class="form-select" asp-items='new SelectList(roles,"Id","Name")'>
+                </select>
+               
+                        <span class="invalid-feedback" asp-validation-for="Input.UserRole"></span>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <label for="yourPassword" class="form-label">Password</label>
+                      <input type="password" asp-for="Input.Password" class="form-control" id="yourPassword" required>
+                      <span class="invalid-feedback" asp-validation-for="Input.Password"></span>
+                    </div>
+                     <div class="col-md-6">
+                      <label for="ConfirmPassword" class="form-label">Confirm Password </label>
+                      <input type="password" asp-for="Input.ConfirmPassword" class="form-control" id="confirmPassword" required>
+                      <span class="invalid-feedback" asp-validation-for="Input.ConfirmPassword"></span>
+                    </div>
+
+                   
+                    <div class="col-12">
+                      <button class="btn btn-primary w-100" type="submit" id="registerSubmit">Create Account</button>
+                    </div>
+                     
+                  </form>
+
+                </div>
+              </div>          
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

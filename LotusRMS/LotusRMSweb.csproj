@@ -20,6 +20,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.jQuery.Unobtrusive.Ajax" Version="3.2.6" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.12" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql.Design" Version="1.1.2" />
@@ -36,7 +37,12 @@
     <Folder Include="Areas\Waiter\Data\" />
     <Folder Include="Areas\Waiter\Models\" />
     <Folder Include="Areas\Waiter\Views\" />
-    <Folder Include="Data\Seeder\" />
+    <Folder Include="Views\Shared\Order\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LotusRms.DataAccess\LotusRMS.DataAccess.csproj" />
+    <ProjectReference Include="..\LotusRMS.Models\LotusRMS.Models.csproj" />
   </ItemGroup>
 
 </Project>

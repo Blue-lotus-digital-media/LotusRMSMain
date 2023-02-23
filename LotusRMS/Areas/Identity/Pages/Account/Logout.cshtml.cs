@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
-namespace LotusRMS.Areas.Identity.Pages.Account
+namespace LotusRMSweb.Areas.Identity.Pages.Account
 {
     public class LogoutModel : PageModel
     {

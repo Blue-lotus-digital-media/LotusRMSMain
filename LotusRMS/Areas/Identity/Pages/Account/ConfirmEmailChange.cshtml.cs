@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 
-namespace LotusRMS.Areas.Identity.Pages.Account
+namespace LotusRMSweb.Areas.Identity.Pages.Account
 {
     public class ConfirmEmailChangeModel : PageModel
     {

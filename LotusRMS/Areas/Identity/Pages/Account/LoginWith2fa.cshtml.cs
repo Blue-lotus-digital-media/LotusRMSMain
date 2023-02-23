@@ -13,7 +13,7 @@ using LotusRMS.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
-namespace LotusRMS.Areas.Identity.Pages.Account
+namespace LotusRMSweb.Areas.Identity.Pages.Account
 {
     public class LoginWith2faModel : PageModel
     {

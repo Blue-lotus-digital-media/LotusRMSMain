@@ -1,8 +1,9 @@
-﻿using LotusRMS.Models;
+﻿
+using LotusRMS.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace LotusRMS.Data
+namespace LotusRMS.DataAccess
 {
     public class ApplicationDbContext : IdentityDbContext<RMSUser>
     {
@@ -10,5 +11,5 @@ namespace LotusRMS.Data
             : base(options)
         {
         }
-    }
+    }   
 }
