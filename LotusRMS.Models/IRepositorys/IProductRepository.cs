@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LotusRMS.DataAccess.Repository.IRepository
+namespace LotusRMS.Models.IRepositorys
 {
     public class IProductRepository
     {

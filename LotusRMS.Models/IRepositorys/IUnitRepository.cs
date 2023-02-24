@@ -5,10 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LotusRMS.Models.Repository.Unit
+namespace LotusRMS.Models.IRepositorys
 {
-    public interface IUnitRepository
+    public interface IUnitRepository:IBaseRepository<LotusRMS_Unit>
     {
-        Task Update(LotusRMS_Unit unit);
+        void Update(LotusRMS_Unit unit);
+        void Save();
     }
+
 }

@@ -9,7 +9,12 @@ namespace LotusRMS.DataAccess
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
+        {}
+        public DbSet<LotusRMS_Unit> LotusRMS_Units { get; set; }
+
+        public object ToList()
         {
+            throw new NotImplementedException();
         }
     }   
 }
