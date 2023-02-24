@@ -1,4 +1,4 @@
-﻿using LotusRMS.DataAccess.Repository.IRepository;
+﻿using LotusRMS.Models.IRepositorys;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace LotusRMS.DataAccess.Repository
 {
-    public class Repository<T> : IRepository<T> where T : class
+    public class BaseRepository<T> : IBaseRepository<T> where T : class
     {
         private readonly ApplicationDbContext _dal;
         internal DbSet<T> dbSet;
         
-        public Repository(ApplicationDbContext dal) {
+        public BaseRepository(ApplicationDbContext dal) {
             _dal = dal;
             this.dbSet = _dal.Set<T>();
         }

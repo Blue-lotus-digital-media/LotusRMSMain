@@ -25,6 +25,10 @@ namespace LotusRMS.Models
             Unit_Description = unit_Description;
         }
 
+        public LotusRMS_Unit()
+        {
+        }
+
         public void Update(string unit_Name, string unit_Symbol, string unit_Description,bool status)
         {
             Unit_Name = unit_Name;

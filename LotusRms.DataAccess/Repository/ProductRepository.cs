@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace LotusRMS.DataAccess.Repository
 {
-    public class UnitRepository
+    public class ProductRepository
     {
-        public UnitRepository()
-        {
-                
-        }
+        
     }
 }

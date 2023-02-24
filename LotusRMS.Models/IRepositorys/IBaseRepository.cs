@@ -5,9 +5,9 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LotusRMS.DataAccess.Repository.IRepository
+namespace LotusRMS.Models.IRepositorys
 {
-    public interface IRepository<T> where T:class
+    public interface IBaseRepository<T> where T:class
     {
         T Get(int id);
         IEnumerable<T> GetAll(

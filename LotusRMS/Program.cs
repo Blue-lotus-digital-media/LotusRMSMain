@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using LotusRMSweb.Areas.Identity.Data;
+using LotusRMS.DataAccess.Repository;
+using LotusRMS.Models.IRepositorys;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +23,7 @@ builder.Services.AddIdentity<RMSUser,IdentityRole>()
             .AddDefaultUI()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddAuthentication().AddCookie( options => {
     options.Cookie.Expiration = TimeSpan.FromMinutes(20);
     options.LoginPath = "/Account/Login";
@@ -79,25 +82,43 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapControllerRoute(
-    name: "SuperAdmin",
-    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-app.MapControllerRoute(
-    name: "Admin",
-    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-app.MapControllerRoute(
-    name: "Waiter",
-    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-app.MapControllerRoute(
-    name: "Cashier",
-    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-app.MapControllerRoute(
-    name: "Kitchen",
-    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-app.MapRazorPages();
+app.UseEndpoints(endpoints =>
+{ 
+    endpoints.MapAreaControllerRoute(
+        name: "SuperAdmin",
+        areaName: "SuperAdmin",
+        pattern: "SuperAdmin/{controller=Home}/{action=Index}/{id?}");
+    endpoints.MapAreaControllerRoute(
+        name: "Admin",
+
+        areaName: "Admin",
+        pattern: "Admin/{controller=Home}/{action=Index}/{id?}");
+    endpoints.MapAreaControllerRoute(
+        name: "Waiter",
+
+        areaName: "Waiter",
+        pattern: "Waiter/{controller=Home}/{action=Index}/{id?}");
+    endpoints.MapAreaControllerRoute(
+        name: "Cashier",
+
+        areaName: "Cashier",
+        pattern: "Cashier/{controller=Home}/{action=Index}/{id?}");
+    endpoints.MapAreaControllerRoute(
+        name: "Kitchen",
+        areaName: "Kitchen",
+        pattern: "Kitchen/{controller=Home}/{action=Index}/{id?}");
+    endpoints.MapControllerRoute(
+                   name: "areas",
+
+                   pattern: "{area:exists}/{controller}/{action}/{id?}"
+               );
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
+    endpoints.MapRazorPages();
+});
+ 
+
 using (var scope = app.Services.CreateScope())
 {
     await DbSeeder.SeedRolesAndSuperAdminAsync(scope.ServiceProvider);

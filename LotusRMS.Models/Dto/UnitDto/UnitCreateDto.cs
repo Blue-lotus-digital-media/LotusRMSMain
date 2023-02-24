@@ -12,5 +12,14 @@ namespace LotusRMS.Models.Dto.UnitDto
         public string UnitSymbol { get; set; }
         public string UnitDescription { get; set; }
         public bool Status { get; set; }
+
+        public UnitCreateDto(string unitName,string unitSymbol, string unitDescription,bool status)
+        {
+            UnitName = unitName;
+            UnitSymbol = unitSymbol;
+            UnitDescription = unitDescription;
+            Status = status;
+        }
+
     }
 }
