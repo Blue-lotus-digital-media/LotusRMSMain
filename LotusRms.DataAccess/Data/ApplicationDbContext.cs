@@ -11,6 +11,8 @@ namespace LotusRMS.DataAccess
             : base(options)
         {}
         public DbSet<LotusRMS_Unit> LotusRMS_Units { get; set; }
+        public DbSet<LotusRMS_Product> LotusRMS_Products { get; set; }
+        public DbSet<LotusRMS_Product_Category> LotusRMS_Product_Categories { get; set; }
 
         public object ToList()
         {

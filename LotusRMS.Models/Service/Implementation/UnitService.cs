@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace LotusRMS.Models.Service.Implementation
 {
@@ -17,19 +18,48 @@ namespace LotusRMS.Models.Service.Implementation
             _unitRepository = unitRepository;
         }
 
-        public Task<Guid> Create(UnitCreateDto dto)
+        public async Task<Guid> Create(UnitCreateDto dto)
         {
-            throw new NotImplementedException();
+           // using var tx = new TransactionScope();
+            var unit = new LotusRMS_Unit(dto.UnitName, dto.UnitSymbol, dto.UnitDescription);
+            _unitRepository.Add(unit);
+            _unitRepository.Save();
+           // tx.Complete();
+            return unit.Id;
+
+
         }
 
-        public Task<Guid> Update(UnitUpdateDto dto)
+        public Guid Update(UnitUpdateDto dto)
         {
-            /* var unit = _unitRepository.GetByIdAsync(dto.Id) ?? throw new Exception();
-             unit.Update(dto.UnitDescription);*/
-            //_unitRepository.Update(unit);
+            using var tx = new TransactionScope();
+            var unit = _unitRepository.GetByGuid(dto.Id) ?? throw new Exception();
+
+            unit.Update(unit_Name: dto.UnitName, unit_Symbol: dto.UnitSymbol, unit_Description: dto.UnitDescription);
+           
+            _unitRepository.Update(unit);
+            _unitRepository.Save();
             //todo logic
 
-            throw new NotImplementedException();
+            tx.Complete();
+            return unit.Id;
+        }
+
+        public IEnumerable<LotusRMS_Unit> GetAll()
+        {
+            return _unitRepository.GetAll();
+        } 
+        public LotusRMS_Unit GetByGuid(Guid Id)
+        {
+            return _unitRepository.GetByGuid(Id);
+        }
+
+        public Guid UpdateStatus(Guid Id)
+        {
+            
+            _unitRepository.UpdateStatus(Id);
+            _unitRepository.Save();
+            return Id;
 
         }
     }

@@ -10,6 +10,7 @@ namespace LotusRMS.Models.IRepositorys
     public interface IBaseRepository<T> where T:class
     {
         T Get(int id);
+        T GetByGuid(Guid id);
         IEnumerable<T> GetAll(
             Expression<Func<T, bool>> filter = null,
             Func<IQueryable<T>,IOrderedQueryable<T>> orderBy=null,
@@ -23,6 +24,8 @@ namespace LotusRMS.Models.IRepositorys
         void Remove(int id);
         void RemoveRange(IEnumerable<T> entity);
         void Remove(T entity);
+
+        void Save();
 
     }
 }

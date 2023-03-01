@@ -8,10 +8,12 @@ namespace LotusRMS.Models.Dto.UnitDto
 {
     public class UnitUpdateDto : UnitCreateDto
     {
-        public UnitUpdateDto(string unitName, string unitSymbol, string unitDescription, bool status) : base(unitName, unitSymbol, unitDescription, status)
+        public UnitUpdateDto(string unitName, string unitSymbol, string unitDescription) : base(unitName, unitSymbol, unitDescription)
         {
         }
 
         public Guid Id { get; set; }
+        public bool Status { get; set; }
+        public bool IsDelete { get; set; }
     }
 }

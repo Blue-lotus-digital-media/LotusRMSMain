@@ -10,6 +10,7 @@ namespace LotusRMS.Models.IRepositorys
     public interface IUnitRepository:IBaseRepository<LotusRMS_Unit>
     {
         void Update(LotusRMS_Unit unit);
+        void UpdateStatus(Guid Id);
         void Save();
     }
 

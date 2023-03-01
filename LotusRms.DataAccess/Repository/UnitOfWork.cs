@@ -15,10 +15,14 @@ namespace LotusRMS.DataAccess.Repository
         {
             _dal = dal;
             Unit = new UnitRepository(_dal);
+            Product = new ProductRepository(_dal);
+            Category = new CategoryRepository(_dal);
             SP_Call = new SP_Call(_dal);
 
         }
         public IUnitRepository Unit { get; private set; }
+        public IProductRepository Product { get; private set; }
+        public ICategoryRepository Category { get; private set; }
         public ISP_Call SP_Call { get; private set; }
 
         public void Dispose()

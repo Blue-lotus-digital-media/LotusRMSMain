@@ -23,7 +23,10 @@ namespace LotusRMS.DataAccess.Repository
         {
             dbSet.Add(entity);
         }
-
+        public T GetByGuid(Guid id)
+        {
+            return dbSet.Find(id);
+        }
         public T Get(int id)
         {
             return dbSet.Find(id);
@@ -48,6 +51,11 @@ namespace LotusRMS.DataAccess.Repository
                 return orderBy(query).ToList();
             }
             return query.ToList();
+        }
+
+        public void Save()
+        {
+            _dal.SaveChanges();
         }
 
         public T GetFirstOrDefault(Expression<Func<T, bool>> filter = null, string includeProperties = null)

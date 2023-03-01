@@ -1,0 +1,15 @@
+﻿using LotusRMS.Models.Service;
+using LotusRMS.Models.Service.Implementation;
+
+namespace LotusRMSweb
+{
+    public static class DiConfig
+    {
+        public static void UseConfMgmtCore(this IServiceCollection services)
+        {
+            services.AddScoped<IUnitService, UnitService>();
+            services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IProductService, ProductService>();
+        }
+        }
+}
