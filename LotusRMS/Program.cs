@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using LotusRMSweb.Areas.Identity.Data;
 using LotusRMS.DataAccess.Repository;
 using LotusRMS.Models.IRepositorys;
+using LotusRMSweb;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,7 +24,6 @@ builder.Services.AddIdentity<RMSUser,IdentityRole>()
             .AddDefaultUI()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddAuthentication().AddCookie( options => {
     options.Cookie.Expiration = TimeSpan.FromMinutes(20);
     options.LoginPath = "/Account/Login";
@@ -49,7 +49,12 @@ options =>
 builder.Services.AddScoped<IUserClaimsPrincipalFactory<RMSUser>,
             ApplicationUserClaimsPrincipalFactory
             >();
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews().AddNToastNotifyNoty(new NToastNotify.NotyOptions()
+{
+    ProgressBar=true,
+    Timeout=5000,
+    Theme="mint"
+});
 builder.Services.AddAuthorization(options =>
 {
    /* options.AddPolicy("EmailID", policy =>
@@ -60,6 +65,14 @@ builder.Services.AddAuthorization(options =>
     policy.RequireRole("SuperAdmin")
     );
 });
+
+builder.Services.UseConfMgmtCore();
+builder.Services.UseConfMgmtData();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromHours(2);
+});
+
 
 var app = builder.Build();
 
@@ -74,7 +87,7 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
+app.UseNToastNotify();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 

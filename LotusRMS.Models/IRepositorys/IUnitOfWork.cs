@@ -9,7 +9,10 @@ namespace LotusRMS.Models.IRepositorys
     public interface IUnitOfWork:IDisposable
     {
         IUnitRepository Unit { get; }
+        IProductRepository Product { get; }
+        ICategoryRepository Category { get; }
         ISP_Call SP_Call { get; }
+        void Save();
 
     }
 }

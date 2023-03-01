@@ -19,11 +19,74 @@ namespace LotusRMS.Migrations
                 .HasAnnotation("ProductVersion", "7.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
+            modelBuilder.Entity("LotusRMS.Models.LotusRMS_Product", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<Guid>("Product_Category_Id")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Product_Description")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Product_Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid>("Product_Unit_Id")
+                        .HasColumnType("char(36)");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("tinyint(1)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Product_Category_Id");
+
+                    b.HasIndex("Product_Unit_Id");
+
+                    b.ToTable("LotusRMS_Products");
+                });
+
+            modelBuilder.Entity("LotusRMS.Models.LotusRMS_Product_Category", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Category_Description")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Category_Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("tinyint(1)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LotusRMS_Product_Categories");
+                });
+
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_Unit", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("Status")
                         .HasColumnType("tinyint(1)");
@@ -250,6 +313,25 @@ namespace LotusRMS.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("LotusRMS.Models.LotusRMS_Product", b =>
+                {
+                    b.HasOne("LotusRMS.Models.LotusRMS_Product_Category", "Product_Category")
+                        .WithMany()
+                        .HasForeignKey("Product_Category_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LotusRMS.Models.LotusRMS_Unit", "Product_Unit")
+                        .WithMany()
+                        .HasForeignKey("Product_Unit_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product_Category");
+
+                    b.Navigation("Product_Unit");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

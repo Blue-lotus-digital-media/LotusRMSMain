@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 
 namespace LotusRMS.Models.IRepositorys
 {
-    public class IProductRepository
+    public interface IProductRepository : IBaseRepository<LotusRMS_Product>
     {
+        void Update(LotusRMS_Product product);
+        void UpdateStatus(Guid Id);
+        void Save();
 
     }
 }

@@ -16,9 +16,12 @@ namespace LotusRMS.Models.Viewmodels
         [Required]
         public string? Unit_Description { get; set; }
         public bool Status { get; set; }
+        public bool IsDelete { get; set; }
 
 
-
-        
+    }
+    public class UnitVMUpdate:UnitVM
+    {
+        public Guid Id {get; set; }
     }
 }
