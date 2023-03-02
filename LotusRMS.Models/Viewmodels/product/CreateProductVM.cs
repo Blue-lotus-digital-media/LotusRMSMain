@@ -18,11 +18,11 @@ namespace LotusRMS.Models.Viewmodels.product
 
         [Required]
         public Guid Product_Unit_Id { get;  set; }
-        public LotusRMS_Unit? Product_Unit { get;  set; }
+        public string? Product_Unit { get;  set; }
 
         [Required]
         public Guid Product_Category_Id { get;  set; }
-        public LotusRMS_Product_Category? Product_Category { get;  set; }
+        public string? Product_Category { get;  set; }
 
         
 
