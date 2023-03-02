@@ -1,4 +1,5 @@
-﻿using LotusRMS.Models;
+﻿using LotusRMS.DataAccess.Constants;
+using LotusRMS.Models;
 using LotusRMS.Models.Dto.ProductDTO;
 using LotusRMS.Models.IRepositorys;
 using LotusRMS.Models.Service;
@@ -10,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace LotusRMSweb.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles ="Admin , SuperAdmin")]
+    [Authorize(Roles = "Admin")]
     public class ProductController : Controller
     {
         private readonly IProductService _IProductService;
@@ -65,6 +66,20 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             }
             else
             {
+                var p = _IProductService.GetByGuid((Guid)Id) ?? throw new Exception();
+                var updateProductViewmodel = new UpdateProductVM()
+                {
+                    Id = p.Id,
+                    Product_Name = p.Product_Name,
+                    Product_Description = p.Product_Description,
+                    
+                    Product_Category_Id = p.Product_Category_Id,
+                    Product_Unit_Id = p.Product_Unit_Id
+
+                };
+                ProductVMs.Product = updateProductViewmodel;
+
+
                 return View(ProductVMs);
 
             }
@@ -112,7 +127,6 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             }
             else
             {
-                var CategoryList = _ICategoryService.GetAll();
                 var ProductVMs = new ProductVM()
                 {
                     Product = productVMs.Product,
@@ -148,9 +162,9 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 Status=pro.Status,
                 IsDelete=pro.IsDelete,
                 Product_Category_Id=pro.Product_Category_Id,
-                Product_Category=pro.Product_Category,
+                Product_Category=pro.Product_Category.Category_Name,
                 Product_Unit_Id=pro.Product_Unit_Id,
-                Product_Unit=pro.Product_Unit
+                Product_Unit=pro.Product_Unit.Unit_Name
 
             }).ToList();
             return Json(new { data = products });

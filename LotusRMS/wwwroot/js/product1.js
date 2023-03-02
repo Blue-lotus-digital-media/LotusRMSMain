@@ -2,10 +2,7 @@
 
 $(document).ready(function () {
     loadData();
-
-
-
-});
+    });
 function toggleMe(me) {
     var id = $(me).attr("data-id");
     console.log(id);
@@ -39,13 +36,12 @@ function toggleMe(me) {
      }*/
 }
 function loadData() {
-    console.log("i m here ");
     dataTable = $("#tblData").DataTable({
         "ajax": {
             "url": "/Admin/Product/GetAll",
-             "success": function (data) {
+            /* "success": function (data) {
                  console.log(data);
-             }
+             }*/
         },
         /* columnDefs: [{
              "defaultContent": "-",
@@ -54,19 +50,22 @@ function loadData() {
         "columns": [
 
             {
-                data: "category_Name"
-
+                data: "product_Name"
             },
             {
-                data: "category_Description"
+                data: "product_Description"
+            },
+            {
+                data: "product_Unit"
+            },
+            {
+                data: "product_Category"
             },
             {
                 data: "status"
-
             },
             {
                 data: "id",
-
                 render: function (data) {
                     return `<div class="text-center">
                               <a href="/Admin/Product/UpCreate/${data}" class="btn btn-success text-white" style="cursor:pointer">
@@ -83,14 +82,14 @@ function loadData() {
         searching: false,
         rowCallback: function (row, data) {
             if (data["status"] == false) {
-                $('td:eq(2)', row).html(`
+                $('td:eq(4)', row).html(`
 <div class="text-center">
 <i class= "bi bi-toggle-off statusToggle" onclick = "toggleMe($(this));" data-id="${data['id']}"></i>
 </div > `);
 
             }
             else {
-                $('td:eq(2)', row).html(`<div class="text-center">
+                $('td:eq(4)', row).html(`<div class="text-center">
 <i class= "bi bi-toggle-on statusToggle" onclick = "toggleMe($(this));" data-id="${data['id']}" >
 </i></div > `);
 

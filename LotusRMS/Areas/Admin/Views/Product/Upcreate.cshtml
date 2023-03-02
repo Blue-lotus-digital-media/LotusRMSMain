@@ -76,12 +76,7 @@
             
             <div class="form-group row">
                 <div class="col-8 offset-4">
-                    @if (Model.Product.Id != Guid.Empty)
-                    {
-                        <partial name="_EditAndBackToListButton" model="Model.Product.Id" />
-                    }
-                    else
-                    {
+                  
                 <div class="row">
                     <div class="col">
                         <button type="submit" onclick="return validateInput()" class="btn btn-primary form-control">Create</button>
@@ -90,7 +85,7 @@
                         <a asp-action="Index" class="btn btn-success form-control">Back to List</a>
                     </div>
                 </div>
-                    }
+                  
                 </div>
             </div>
         </div>
