@@ -8,5 +8,11 @@ namespace LotusRMS.Utility
 {
     public static class SD
     {
+        public const string Role_SuperAdmin = "SuperAdmin Admin";
+        public const string Role_Admin = "Admin Cashier Waiter Kitchen";
+        public const string Role_Cashier = "Cashier Waiter";
+        public const string Role_Waiter = "Waiter";
+        public const string Role_Kitchen = "Kitchen";
+        public const string Role_User = "User";
     }
 }
