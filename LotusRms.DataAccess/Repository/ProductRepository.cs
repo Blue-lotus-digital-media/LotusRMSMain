@@ -26,7 +26,9 @@ namespace LotusRMS.DataAccess.Repository
                 product.Update(product_Name: lProduct.Product_Name,
                     product_Description: lProduct.Product_Description,
                     product_Unit_Id: lProduct.Product_Unit_Id,
-                    product_Category_Id: lProduct.Product_Category_Id
+                    product_Category_Id: lProduct.Product_Category_Id,
+                    unit_Quantity: (float)lProduct.Unit_Quantity,
+                    product_Type_Id:lProduct.Product_Type_Id
                    
                     );
             }

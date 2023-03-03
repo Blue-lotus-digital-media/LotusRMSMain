@@ -1,10 +1,10 @@
-﻿
+﻿@using LotusRMS.Models.Viewmodels.Type
+@model IEnumerable<TypeVM>
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
 }
-
 <style>
     .statusToggle{
     color:blue;
@@ -13,10 +13,10 @@
 </style>
 
 <div class="d-flex justify-content-between px-10">
-    <a asp-area="admin" asp-action="Create" asp-controller="Category" class="btn btn-primary">Create</a>
-    <div class="title">Category list</div> 
+    <a asp-area="admin" asp-action="create" asp-controller="Type" class="btn btn-primary">Create</a>
+    <div class="title">Type list</div> 
     <div class="exportBtns">
-        <form enctype="multipart/form-data" asp-area="Admin" asp-controller="Category" asp-action="ExportToExcel">
+        <form enctype="multipart/form-data" asp-area="Admin" asp-controller="Type" asp-action="ExportToExcel">
              <input class="btn btn-primary" type="submit" value="Excel" />
  
         </form> 
@@ -31,11 +31,8 @@
                 <th> 
                     Name   
                 </th>
-                <th> 
+               <th> 
                     Description
-                </th> 
-                <th> 
-                    Type
                 </th>
                 <th>
                     Status
@@ -51,7 +48,5 @@
 </div>
 
 @section Scripts{
-    <script src="~/js/category1.js"></script>
+    <script src="~/js/type.js"></script>
 }
-
-

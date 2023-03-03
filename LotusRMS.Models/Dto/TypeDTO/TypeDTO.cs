@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LotusRMS.Models.Viewmodels.product
+namespace LotusRMS.Models.Dto.TypeDTO
 {
-    public class UpdateProductVM:CreateProductVM
+    public class TypeDTO
     {
-        public Guid Id { get; set; }
     }
 }

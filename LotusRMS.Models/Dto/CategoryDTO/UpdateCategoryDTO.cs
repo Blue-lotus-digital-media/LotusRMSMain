@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace LotusRMS.Models.Dto.CategoryDTO
 {
+
     public class UpdateCategoryDTO:CreateCategoryDTO
     {
-        public UpdateCategoryDTO(string category_Name, string category_Description) : base(category_Name, category_Description)
+        public UpdateCategoryDTO(string category_Name, string category_Description, Guid type_Id) : base(category_Name, category_Description, type_Id)
         {
         }
 

@@ -8,6 +8,8 @@ namespace LotusRMS.Models.Viewmodels.Category
 {
     public class UpdateCategoryVM:CreateCategoryVM
     {
+       
         public Guid Id { get; set; }
+
     }
 }

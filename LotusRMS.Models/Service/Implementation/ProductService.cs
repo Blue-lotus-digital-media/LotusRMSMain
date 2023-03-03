@@ -21,7 +21,14 @@ namespace LotusRMS.Models.Service.Implementation
 
         public Guid Create(CreateProductDTO dto)
         {
-            var product = new LotusRMS_Product(product_Name:dto.Product_Name,product_Description:dto.Product_Description,product_Unit_Id:dto.Product_Unit_Id,product_Category_Id:dto.Product_Category_Id);
+            var product = new LotusRMS_Product(
+                 product_Name: dto.Product_Name,
+                product_Description: dto.Product_Description,
+                product_Unit_Id: dto.Product_Unit_Id,
+                product_Category_Id: dto.Product_Category_Id,
+                unit_Quantity: dto.Unit_Quantity,
+                product_Type_Id: dto.Product_Type_Id
+                );
             _IProductRepository.Add(product);
             _IProductRepository.Save();
             return product.Id;
@@ -29,7 +36,7 @@ namespace LotusRMS.Models.Service.Implementation
 
         public IEnumerable<LotusRMS_Product> GetAll()
         {
-            return _IProductRepository.GetAll(includeProperties: "Product_Unit,Product_Category");    
+            return _IProductRepository.GetAll(includeProperties: "Product_Unit,Product_Category,Product_Type");    
         }
 
         public LotusRMS_Product GetByGuid(Guid Id)
@@ -40,7 +47,14 @@ namespace LotusRMS.Models.Service.Implementation
         public async Task<Guid> Update(UpdateProductDTO dto)
         {
             var product = _IProductRepository.GetByGuid(dto.Id) ?? throw new Exception();
-            product.Update(dto.Product_Name, dto.Product_Description, dto.Product_Unit_Id, dto.Product_Category_Id);
+            product.Update(
+                product_Name: dto.Product_Name,
+                product_Description: dto.Product_Description,
+                product_Unit_Id: dto.Product_Unit_Id,
+                product_Category_Id: dto.Product_Category_Id,
+                unit_Quantity:dto.Unit_Quantity,
+                product_Type_Id:dto.Product_Type_Id
+                );
             _IProductRepository.Update(product);
 
             _IProductRepository.Save();

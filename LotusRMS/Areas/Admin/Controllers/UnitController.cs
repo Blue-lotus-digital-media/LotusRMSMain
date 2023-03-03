@@ -34,24 +34,27 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             _toastNotification.AddInfoToastMessage("Added for test");
             return View(/*units*/);
         }
-        public IActionResult Create() {
+        public IActionResult Create(string? returnUrl=null) {
+            returnUrl ??= nameof(Index);
+            ViewBag.ReturnUrl = returnUrl;
 
             return View();
 
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(UnitVM unitVM)
+        public IActionResult Create(UnitVM unitVM,string? returnUrl=null)
         {
             if (!ModelState.IsValid)
             {
+                ViewBag.ReturnUrl = returnUrl;
                 return View(unitVM);
             }
 
             var unitCreateDto = new UnitCreateDto(unitVM.Name, unitVM.Unit_Symbol, unitVM.Unit_Description);
             var id=_unitService.Create(unitCreateDto);
 
-            return RedirectToAction(nameof(Index));
+            return Redirect(returnUrl);
         }
         [HttpPost]
         [AutoValidateAntiforgeryToken]

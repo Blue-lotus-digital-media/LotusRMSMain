@@ -17,6 +17,7 @@ namespace LotusRMS.DataAccess
             services.AddScoped<IUnitRepository, UnitRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<ITypeRepository, TypeRepository>();
         }
         }
 }

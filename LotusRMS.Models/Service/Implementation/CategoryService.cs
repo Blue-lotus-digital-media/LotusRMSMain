@@ -20,7 +20,7 @@ namespace LotusRMS.Models.Service.Implementation
 
         public async Task<Guid> Create(CreateCategoryDTO dto)
         {
-            var category = new LotusRMS_Product_Category(dto.Category_Name,dto.Category_Description);
+            var category = new LotusRMS_Product_Category(dto.Category_Name,dto.Category_Description,dto.Type_Id);
             _CategoryRepository.Add(category);
             _CategoryRepository.Save();
             return category.Id;
@@ -29,7 +29,7 @@ namespace LotusRMS.Models.Service.Implementation
 
         public IEnumerable<LotusRMS_Product_Category> GetAll()
         {
-            return _CategoryRepository.GetAll();
+            return _CategoryRepository.GetAll(includeProperties: "Product_Type");
         }
 
         public LotusRMS_Product_Category GetByGuid(Guid Id)
@@ -40,7 +40,7 @@ namespace LotusRMS.Models.Service.Implementation
         public Guid Update(UpdateCategoryDTO dto)
         {
             var category=_CategoryRepository.GetByGuid(dto.Id) ?? throw new Exception();
-            category.Update(category_Name: dto.Category_Name, category_Description: dto.Category_Description);
+            category.Update(category_Name: dto.Category_Name, category_Description: dto.Category_Description,type_Id:dto.Type_Id);
             _CategoryRepository.Update(category);
             _CategoryRepository.Save();
             return category.Id;
