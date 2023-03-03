@@ -2,13 +2,16 @@
 
 $(document).ready(function () {
     loadData();
-    });
+
+
+
+});
 function toggleMe(me) {
     var id = $(me).attr("data-id");
     console.log(id);
     $.ajax({
         type: 'GET',
-        url: "/admin/product/statuschange",
+        url: "/admin/type/statuschange",
         data: "id=" + id,
         success: function (data) {
 
@@ -38,7 +41,7 @@ function toggleMe(me) {
 function loadData() {
     dataTable = $("#tblData").DataTable({
         "ajax": {
-            "url": "/Admin/Product/GetAll",
+            "url": "/Admin/Type/GetAll",
             /* "success": function (data) {
                  console.log(data);
              }*/
@@ -50,28 +53,25 @@ function loadData() {
         "columns": [
 
             {
-                data: "product_Name"
+                data: "type_Name"
+
             },
             {
-                data: "product_Description"
-            },
-            {
-                data: "product_Unit"
-            },
-            {
-                data: "product_Category"
+                data: "type_Description"
             },
             {
                 data: "status"
+
             },
             {
                 data: "id",
+
                 render: function (data) {
                     return `<div class="text-center">
-                              <a href="/Admin/Product/UpCreate/${data}" class="btn btn-success text-white" style="cursor:pointer">
+                              <a href="/Admin/type/Update/${data}" class="btn btn-success text-white" style="cursor:pointer">
                                 <i class="bi bi-pencil-square"></i>    
                               </a>
-                              <a href="/Admin/Product/Delete/${data}" class="btn btn-danger text-white" style="cursor:pointer">
+                              <a href="/Admin/Type/Delete/${data}" class="btn btn-danger text-white" style="cursor:pointer">
                                 <i class="bi bi-trash"></i>    
                               </a>
                             </div>`;
@@ -82,14 +82,14 @@ function loadData() {
         searching: false,
         rowCallback: function (row, data) {
             if (data["status"] == false) {
-                $('td:eq(4)', row).html(`
+                $('td:eq(2)', row).html(`
 <div class="text-center">
 <i class= "bi bi-toggle-off statusToggle" onclick = "toggleMe($(this));" data-id="${data['id']}"></i>
 </div > `);
 
             }
             else {
-                $('td:eq(4)', row).html(`<div class="text-center">
+                $('td:eq(2)', row).html(`<div class="text-center">
 <i class= "bi bi-toggle-on statusToggle" onclick = "toggleMe($(this));" data-id="${data['id']}" >
 </i></div > `);
 

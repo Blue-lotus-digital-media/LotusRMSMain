@@ -10,9 +10,9 @@
     <div class="col-lg-6">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Add Category </h5>
+              <h5 class="card-title">Update Category </h5>
               <!-- Vertical Form -->
-              <form class="row g-3" asp-action="upcreate" asp-controller="category" asp-area="admin">
+              <form class="row g-3" asp-action="Create" asp-controller="category" asp-area="admin">
                   <input aasp-for="Id" hidden />
                 <div class="col-12">
                   <label for="cName" class="form-label">Catgory Name</label>
@@ -25,9 +25,20 @@
                   
                   <span asp-validation-for="Category_Description" class="text-danger"></span>
                 </div> 
+                 <div class="col-12">
+                    <lable for="typeText" class="form-label">Type</lable>
+                    <select asp-for="Type_Id" class="form-control" id="typeText">
+                        <option>Select a type</option>
+                        @foreach (var item in Model.TypeList)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
+                     <span asp-validation-for="Type_Id" class="text-danger"></span>
+                </div>
                 <div class="col-12 d-flex ">
             <button type="reset" class="btn btn-danger mx-2">Clear</button>  
-            <button type="submit" class="btn btn-primary mx-2">Add</button>  
+            <button type="submit" class="btn btn-primary mx-2">Update</button>  
         </div>
               </form><!-- Vertical Form -->
             </div>

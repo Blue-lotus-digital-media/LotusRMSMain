@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LotusRMS.Utility;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -12,9 +13,12 @@ namespace LotusRMS.Models.Viewmodels.Category
         [Required]
         public string Category_Name { get; set; }
 
-        public string Category_Description { get; set; }
+        public string? Category_Description { get; set; }
+        [Required]
+        public Guid Type_Id { get; set; }
 
-        public bool Status { get; set; }
-        public bool IsDelete { get; set; }
+        public IEnumerable<SelectListItem>? TypeList { get; set; } 
+
+     
     }
 }

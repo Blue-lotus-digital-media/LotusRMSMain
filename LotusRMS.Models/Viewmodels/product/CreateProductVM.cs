@@ -24,6 +24,15 @@ namespace LotusRMS.Models.Viewmodels.product
         public Guid Product_Category_Id { get;  set; }
         public string? Product_Category { get;  set; }
 
+
+        [Required]
+        public Guid Product_Type_Id { get; set; }
+        public string? Product_Type { get; set; }
+        public float Unit_Quantity { get; set; }
+
+        public float? Stock_Quantity { get; set; }
+
+
         
 
        

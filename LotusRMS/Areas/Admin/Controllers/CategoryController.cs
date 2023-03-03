@@ -14,13 +14,13 @@ namespace LotusRMSweb.Areas.Admin.Controllers
     public class CategoryController : Controller
     {
         private readonly ICategoryService _ICategoryService;
-        private readonly IUnitService _IUnitService;
+        private readonly ITypeService _ITypeService;
         private readonly IToastNotification _toastNotification;
-        public CategoryController(ICategoryService iCategoryService, IToastNotification toastNotification, IUnitService iUnitService)
+        public CategoryController(ICategoryService iCategoryService, IToastNotification toastNotification, ITypeService iTypeService)
         {
             _ICategoryService = iCategoryService;
             _toastNotification = toastNotification;
-            _IUnitService = iUnitService;   
+            _ITypeService = iTypeService;   
         }
         public IActionResult Index()
         {
@@ -29,31 +29,22 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             return View();
         }
 
-        public IActionResult Upcreate(Guid? id)
+        public IActionResult Create(string? returnUrl=null)
         {
-            var category = new UpdateCategoryVM();
+            returnUrl ??= nameof(Index);
 
-            if (id == null)
+            var category = new CreateCategoryVM();
+            var typeList = _ITypeService.GetAll().Where(x => x.Status).Select(x => new SelectListItem()
             {
+                Text = x.Type_Name,
+                Value = x.Id.ToString()
+            });
+            category.TypeList = typeList;
+
+            ViewBag.ReturnUrl = returnUrl;
                 return View(category);
-            }
-            else
-            {
-
-                var cat = _ICategoryService.GetByGuid((Guid)id);
-                category = new UpdateCategoryVM()
-                {
-                    Category_Name = cat.Category_Name,
-                    Category_Description = cat.Category_Description,
-                    Status = cat.Status,
-                    IsDelete = cat.IsDelete
-                };
-
-
-
-
-                return View(category);
-            }
+           
+            
 
 
             
@@ -61,54 +52,88 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Upcreate(UpdateCategoryVM obj)
+        public IActionResult Create(CreateCategoryVM obj, string? returnUrl = null)
         {
-
+            returnUrl ??= nameof(Index);
             if (!ModelState.IsValid)
             {
+                var typeList = _ITypeService.GetAll().Where(x => x.Status).Select(x => new SelectListItem()
+                {
+                    Text = x.Type_Name,
+                    Value = x.Id.ToString()
+                });
+                obj.TypeList = typeList;
+
                 return View(obj);
 
             }
-            else
+              var category = new CreateCategoryDTO(obj.Category_Name,obj.Category_Description,obj.Type_Id);
+            
+            var id = _ICategoryService.Create(category);
+
+
+                    return Redirect(returnUrl);
+
+              
+
+        }
+
+        public IActionResult Update(Guid? Id)
+        {
+            if (Id == Guid.Empty)
             {
-                if (obj.Id == null || obj.Id==Guid.Empty)
-                {
-
-                    var category = new CreateCategoryDTO(obj.Category_Name,obj.Category_Description);
-                    var id = _ICategoryService.Create(category);
-
-                    return RedirectToAction(nameof(Index));
-
-                }
-                else
-                {
-
-                    var category = _ICategoryService.GetByGuid(obj.Id);
-                    if (category == null)
-                    {
-                        return BadRequest();
-
-                    }
-                    else
-                    {
-                        var DTO = new UpdateCategoryDTO(category_Name: category.Category_Name,category_Description : category.Category_Description)
-                        {
-                            Id = obj.Id,
-                         
-                        };
-                        
-                       var id = _ICategoryService.Update(DTO);
-
-                        return RedirectToAction(nameof(Index));
-
-
-                    }
-                }
-
+                return RedirectToAction(nameof(Index));
             }
+
+            var updateCategoryVM = new UpdateCategoryVM();
+            var typeList = _ITypeService.GetAll().Where(x => x.Status).Select(x => new SelectListItem()
+            {
+                Text = x.Type_Name,
+                Value = x.Id.ToString()
+            });
+            updateCategoryVM.TypeList = typeList;
+
+
+            var category = _ICategoryService.GetByGuid((Guid)Id);
+            if (category == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+
+            updateCategoryVM.Category_Name = category.Category_Name;
+            
+            updateCategoryVM.Category_Description = category.Category_Description;
+            updateCategoryVM.Type_Id = category.Type_Id;
+
+
+
+            return View(updateCategoryVM);
+        }
+        [HttpPost]
+        public IActionResult Update(UpdateCategoryVM vm)
+        {
+           
+            if (!ModelState.IsValid) {
+                vm.TypeList = _ITypeService.GetAll().Where(x => x.Status).Select(x => new SelectListItem()
+                {
+                    Text = x.Type_Name,
+                    Value = x.Id.ToString()
+                });
+                return View(vm);
+            }
+
+            var dto = new UpdateCategoryDTO(
+                category_Name: vm.Category_Name,
+                category_Description: vm.Category_Description,
+                type_Id: vm.Type_Id
+                );
+
+            _ICategoryService.Update(dto);
             return RedirectToAction(nameof(Index));
 
         }
+             
 
         #region API CALLS
         [HttpPost]
@@ -136,12 +161,15 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         public IActionResult GetAll()
         {
 
-            var categorys =_ICategoryService.GetAll().Select(x => new UpdateCategoryVM()
+            var categorys =_ICategoryService.GetAll().Select(x => new CategoryVM()
             {
                 Id = x.Id,
                 Category_Name = x.Category_Name,
                 Category_Description = x.Category_Description,
-                Status = x.Status
+                Status=x.Status,
+                IsDelete=x.IsDelete,
+                Type_Name=x.Product_Type.Type_Name
+
 
 
             });

@@ -26,7 +26,7 @@ namespace LotusRMS.DataAccess.Repository
             var category = _dal.LotusRMS_Product_Categories.FirstOrDefault(x => x.Id == obj.Id);
             if (category != null)
             {
-                category.Update(category_Name: obj.Category_Name, category_Description: obj.Category_Description);
+                category.Update(category_Name: obj.Category_Name, category_Description: obj.Category_Description,obj.Type_Id);
                 Save();
 
             }

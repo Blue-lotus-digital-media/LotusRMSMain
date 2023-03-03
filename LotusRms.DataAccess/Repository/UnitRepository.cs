@@ -18,10 +18,7 @@ namespace LotusRMS.DataAccess.Repository
             _dal = dal;
         }
 
-        public void Save()
-        {
-            _dal.SaveChanges();
-        }
+      
 
         public void Update(LotusRMS_Unit lUnit)
         {

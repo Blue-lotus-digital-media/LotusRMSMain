@@ -18,10 +18,17 @@ namespace LotusRMS.Models
         public string Product_Description { get; private set; }
         public Guid Product_Unit_Id { get; private set; }
         [ForeignKey(nameof(Product_Unit_Id))]
-        public LotusRMS_Unit Product_Unit { get; set; }
+        public LotusRMS_Unit? Product_Unit { get; set; }
+
+        public float? Unit_Quantity { get; set; } 
         public Guid Product_Category_Id { get; private set; }
         [ForeignKey(nameof(Product_Category_Id))]
-        public LotusRMS_Product_Category Product_Category { get; set; }
+        public LotusRMS_Product_Category? Product_Category { get; set; }
+
+        public Guid Product_Type_Id { get; set; }
+
+        [ForeignKey(nameof(Product_Type_Id))]
+        public LotusRMS_Product_Type? Product_Type { get; set; }
 
         public bool Status { get; set; } = true;
         public bool IsDelete { get; private set; } = false;
@@ -29,22 +36,25 @@ namespace LotusRMS.Models
 
 
 
-        public LotusRMS_Product(string product_Name,string product_Description,Guid product_Unit_Id, Guid product_Category_Id)
+        public LotusRMS_Product(string product_Name,string product_Description,Guid product_Unit_Id, float? unit_Quantity,Guid product_Category_Id,Guid product_Type_Id)
         {
             Product_Name = product_Name;
             Product_Description = product_Description;
             Product_Unit_Id = product_Unit_Id;
+            Unit_Quantity = unit_Quantity;
             Product_Category_Id = product_Category_Id;
-           
-                
-        }    public void Update(string product_Name,string product_Description,Guid product_Unit_Id, Guid product_Category_Id)
+            Product_Type_Id = product_Type_Id;
+        }    public void Update(string product_Name,string product_Description,Guid product_Unit_Id, float? unit_Quantity, Guid product_Category_Id, Guid product_Type_Id)
         {
+
             Product_Name = product_Name;
             Product_Description = product_Description;
             Product_Unit_Id = product_Unit_Id;
+            Unit_Quantity = unit_Quantity;
             Product_Category_Id = product_Category_Id;
-           
-                
+            Product_Type_Id = product_Type_Id;
+
+
         }
 
     }

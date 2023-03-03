@@ -18,13 +18,15 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         
         private readonly ICategoryService _ICategoryService;   
         private readonly IUnitService _IUnitService;
+        private readonly ITypeService _ITypeService;
 
 
-        public ProductController(IProductService iProductService, ICategoryService iCategoryService, IUnitService iUnitService)
+        public ProductController(IProductService iProductService, ICategoryService iCategoryService, IUnitService iUnitService, ITypeService iTypeService)
         {
             _IProductService = iProductService;
             _ICategoryService = iCategoryService;
             _IUnitService = iUnitService;
+            _ITypeService = iTypeService;
         }
 
         public IActionResult Index()
@@ -40,14 +42,13 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             var UnitList = _IUnitService.GetAll();
             var ProductVMs = new ProductVM()
             {
-                Product = new UpdateProductVM(),
-
-                CategoryList = _ICategoryService.GetAll().Where(x=>x.Status).Select(i => new SelectListItem()
+                TypeList=_ITypeService.GetAll().Where(x=>x.Status).Select(type=>new SelectListItem()
                 {
-                    Text = i.Category_Name,
-                    Value = i.Id.ToString()
-
+                    Text=type.Type_Name,
+                    Value=type.Id.ToString()
                 }),
+
+              
                 UnitList = _IUnitService.GetAll().Where(x => x.Status).Select(i => new SelectListItem()
                 {
                     Text = i.Unit_Name,
@@ -77,8 +78,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                     Product_Unit_Id = p.Product_Unit_Id
 
                 };
-                ProductVMs.Product = updateProductViewmodel;
-
+               
 
                 return View(ProductVMs);
 
@@ -91,14 +91,18 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                var product = productVMs.Product;
-                if (productVMs.Product.Id == Guid.Empty)
+               
+                if (productVMs.Id == Guid.Empty)
                 {
                     var dto = new CreateProductDTO(
-                        product_Name: product.Product_Name,
-                        product_Description: product.Product_Description,
-                        product_Unit_Id: product.Product_Unit_Id,
-                        product_Category_Id: product.Product_Category_Id);
+                        product_Name: productVMs.Product_Name,
+                        product_Description: productVMs.Product_Description,
+                        product_Unit_Id: productVMs.Product_Unit_Id,
+                        product_Category_Id: productVMs.Product_Category_Id,
+                        unit_Quantity:productVMs.Unit_Quantity,
+                        product_Type_Id:productVMs.Product_Type_Id
+                        );
+
 
                     _IProductService.Create(dto);
 
@@ -106,36 +110,40 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 else
                 {
 
-                    var products = _IProductService.GetByGuid(product.Id) ?? throw new Exception();
+                    var products = _IProductService.GetByGuid(productVMs.Id) ?? throw new Exception();
                     if (products == null)
                     {
                         return BadRequest("Product not found");
                     }
-                    var dto = new UpdateProductDTO(product_Name: product.Product_Name,
-                        product_Description: product.Product_Description,
-                        product_Unit_Id: product.Product_Unit_Id,
-                        product_Category_Id: product.Product_Category_Id)
+                    var dto = new UpdateProductDTO(product_Name: productVMs.Product_Name,
+                        product_Description: productVMs.Product_Description,
+                        product_Unit_Id: productVMs.Product_Unit_Id,
+                        product_Category_Id: productVMs.Product_Category_Id,
+                         unit_Quantity: productVMs.Unit_Quantity,
+                        product_Type_Id: productVMs.Product_Type_Id
+
+                        )
                     {
-                        Id=product.Id
+                        Id= productVMs.Id
                     };
                     _IProductService.Update(dto);
 
 
                 }
 
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
             else
             {
                 var ProductVMs = new ProductVM()
                 {
-                    Product = productVMs.Product,
-                    CategoryList = _ICategoryService.GetAll().Where(x=>x.Status).Select(i => new SelectListItem()
+                    TypeList = _ITypeService.GetAll().Where(x => x.Status).Select(type => new SelectListItem()
                     {
-                        Text = i.Category_Name,
-                        Value = i.Id.ToString()
-
+                        Text = type.Type_Name,
+                        Value = type.Id.ToString()
                     }),
+
+                  
                     UnitList = _IUnitService.GetAll().Select(i => new SelectListItem()
                     {
                         Text = i.Unit_Name,
@@ -154,22 +162,34 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var products = _IProductService.GetAll().ToList().Select(pro => new UpdateProductVM()
+            var products = _IProductService.GetAll().ToList().Select(pro => new ProductVM()
             {
                 Id=pro.Id,
                 Product_Name=pro.Product_Name,
                 Product_Description=pro.Product_Description,
-                Status=pro.Status,
-                IsDelete=pro.IsDelete,
                 Product_Category_Id=pro.Product_Category_Id,
                 Product_Category=pro.Product_Category.Category_Name,
                 Product_Unit_Id=pro.Product_Unit_Id,
-                Product_Unit=pro.Product_Unit.Unit_Name
+                Product_Unit=pro.Product_Unit.Unit_Name,
+                Product_Type_Id=pro.Product_Type_Id,
+                Product_Type=pro.Product_Type.Type_Name,
+                Status=pro.Status
 
             }).ToList();
             return Json(new { data = products });
         }
+        [HttpGet]
+        public List<SelectListItem> GetCategory(Guid Id)
+        {
 
+            var CategoryList = _ICategoryService.GetAll().Where(x => x.Status && x.Type_Id == Id).Select(type => new SelectListItem()
+            {
+                Text = type.Category_Name,
+                Value = type.Id.ToString()
+            }).ToList();
+            return CategoryList;
+
+        }
             #endregion
 
         }

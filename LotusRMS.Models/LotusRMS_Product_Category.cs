@@ -15,21 +15,26 @@ namespace LotusRMS.Models
         public Guid Id { get; set; }
         public string Category_Name { get; private set; }
         public string Category_Description { get; private set; }
+        public Guid Type_Id { get; private set; }
+        [ForeignKey("Type_Id")]
+        public LotusRMS_Product_Type? Product_Type { get; set; }
 
         public bool Status { get; set; } = true;
         public bool IsDelete { get; set; } = false;
 
-        public LotusRMS_Product_Category(string category_Name,string category_Description)
+        public LotusRMS_Product_Category(string category_Name,string category_Description,Guid type_Id)
         {
             Category_Name = category_Name;
             Category_Description = category_Description;
+            Type_Id = type_Id;
         }
         protected LotusRMS_Product_Category() { }
 
-        public void Update(string category_Name, string category_Description)
+        public void Update(string category_Name, string category_Description,Guid type_Id)
         {
             Category_Name = category_Name;
             Category_Description = category_Description;
+            Type_Id = type_Id;
          
         }
 

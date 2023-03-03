@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LotusRMS.Models.Viewmodels.product
+namespace LotusRMS.Models.Viewmodels.Type
 {
-    public class UpdateProductVM:CreateProductVM
+    public class UpdateTypeVM:CreateTypeVM
     {
         public Guid Id { get; set; }
     }

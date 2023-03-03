@@ -3,6 +3,7 @@ using System;
 using LotusRMS.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LotusRMS.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230302083059_TypeAdded")]
+    partial class TypeAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,23 +42,15 @@ namespace LotusRMS.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<Guid>("Product_Type_Id")
-                        .HasColumnType("char(36)");
-
                     b.Property<Guid>("Product_Unit_Id")
                         .HasColumnType("char(36)");
 
                     b.Property<bool>("Status")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<float?>("Unit_Quantity")
-                        .HasColumnType("float");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Product_Category_Id");
-
-                    b.HasIndex("Product_Type_Id");
 
                     b.HasIndex("Product_Unit_Id");
 
@@ -360,12 +355,6 @@ namespace LotusRMS.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LotusRMS.Models.LotusRMS_Product_Type", "Product_Type")
-                        .WithMany()
-                        .HasForeignKey("Product_Type_Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("LotusRMS.Models.LotusRMS_Unit", "Product_Unit")
                         .WithMany()
                         .HasForeignKey("Product_Unit_Id")
@@ -374,20 +363,18 @@ namespace LotusRMS.Migrations
 
                     b.Navigation("Product_Category");
 
-                    b.Navigation("Product_Type");
-
                     b.Navigation("Product_Unit");
                 });
 
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_Product_Category", b =>
                 {
-                    b.HasOne("LotusRMS.Models.LotusRMS_Product_Type", "Product_Type")
+                    b.HasOne("LotusRMS.Models.LotusRMS_Product_Type", "ProductType")
                         .WithMany()
                         .HasForeignKey("Type_Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Product_Type");
+                    b.Navigation("ProductType");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
