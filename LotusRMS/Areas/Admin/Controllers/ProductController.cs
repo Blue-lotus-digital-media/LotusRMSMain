@@ -68,16 +68,17 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             else
             {
                 var p = _IProductService.GetByGuid((Guid)Id) ?? throw new Exception();
-                var updateProductViewmodel = new UpdateProductVM()
-                {
-                    Id = p.Id,
-                    Product_Name = p.Product_Name,
-                    Product_Description = p.Product_Description,
-                    
-                    Product_Category_Id = p.Product_Category_Id,
-                    Product_Unit_Id = p.Product_Unit_Id
 
-                };
+
+                ProductVMs.Id = p.Id;
+                ProductVMs.Product_Name = p.Product_Name;
+                ProductVMs.Product_Description = p.Product_Description;
+                ProductVMs.Product_Category_Id = p.Product_Category_Id;
+                ProductVMs.Product_Unit_Id = p.Product_Unit_Id;
+                ProductVMs.Product_Type_Id = p.Product_Type_Id;
+                ProductVMs.Unit_Quantity = (float)p.Unit_Quantity;
+
+               
                
 
                 return View(ProductVMs);
@@ -178,6 +179,26 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             }).ToList();
             return Json(new { data = products });
         }
+        [HttpGet]
+        public IActionResult StatusChange(Guid Id)
+        {
+            var unit = _IProductService.GetByGuid(Id);
+            if (unit == null)
+            {
+                return BadRequest();
+
+            }
+            else
+            {
+
+                var id = _IProductService.UpdateStatus(Id);
+
+                return Ok(unit.Status);
+            }
+
+        }
+
+
         [HttpGet]
         public List<SelectListItem> GetCategory(Guid Id)
         {
