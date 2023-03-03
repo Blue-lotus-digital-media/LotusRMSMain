@@ -11,6 +11,9 @@ namespace LotusRMSweb
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<ITypeService, TypeService>();
+            services.AddScoped<IMenuTypeService, MenuTypeService>();
+            services.AddScoped<IMenuCategoryService, MenuCategoryService>();
+            services.AddScoped<ITableTypeService, TableTypeService>();
         }
         }
 }

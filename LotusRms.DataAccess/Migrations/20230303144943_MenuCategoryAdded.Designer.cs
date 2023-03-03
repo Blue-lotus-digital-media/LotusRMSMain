@@ -3,6 +3,7 @@ using System;
 using LotusRMS.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LotusRMS.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230303144943_MenuCategoryAdded")]
+    partial class MenuCategoryAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -168,30 +171,6 @@ namespace LotusRMS.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("LotusRMS_Product_Types");
-                });
-
-            modelBuilder.Entity("LotusRMS.Models.LotusRMS_Table_Type", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<bool>("IsDelete")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("Type_Description")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Type_Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("LotusRMS_Table_Types");
                 });
 
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_Unit", b =>

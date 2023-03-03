@@ -47,11 +47,10 @@ namespace LotusRMS.Models.Service.Implementation
         }
         public Guid UpdateStatus(Guid Id)
         {
-            var category = _CategoryRepository.GetByGuid(Id) ?? throw new Exception();
-            category.Status = !category.Status;
-            _CategoryRepository.Update(category);
-            _CategoryRepository.Save();
-            return category.Id;
+           
+            _CategoryRepository.UpdateStatus(Id);
+           
+            return Id;
         }
 
     }

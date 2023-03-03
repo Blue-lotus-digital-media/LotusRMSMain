@@ -22,6 +22,7 @@ namespace LotusRMS.DataAccess.Repository
         public void Add(T entity)
         {
             dbSet.Add(entity);
+            Save();
         }
         public T GetByGuid(Guid id)
         {

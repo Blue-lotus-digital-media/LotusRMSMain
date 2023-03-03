@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace LotusRMS.Models.IRepositorys
 {
-    public interface ICategoryRepository : IBaseRepository<LotusRMS_Product_Category>
+    public interface IMenuTypeRepository : IBaseRepository<LotusRMS_Menu_Type>
     {
-        void Update(LotusRMS_Product_Category obj);
+        void Update(LotusRMS_Menu_Type type);
         void UpdateStatus(Guid Id);
+
     }
 }

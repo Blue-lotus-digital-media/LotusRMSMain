@@ -3,6 +3,7 @@ using System;
 using LotusRMS.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,44 +11,16 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LotusRMS.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230303111126_MenuTypeAdded")]
+    partial class MenuTypeAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "7.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
-
-            modelBuilder.Entity("LotusRMS.Models.LotusRMS_Menu_Category", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("Category_Description")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Category_Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<bool>("IsDelete")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<Guid>("Type_Id")
-                        .HasColumnType("char(36)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Type_Id");
-
-                    b.ToTable("LotusRMS_Menu_Categories");
-                });
 
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_Menu_Type", b =>
                 {
@@ -168,30 +141,6 @@ namespace LotusRMS.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("LotusRMS_Product_Types");
-                });
-
-            modelBuilder.Entity("LotusRMS.Models.LotusRMS_Table_Type", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<bool>("IsDelete")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("Type_Description")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Type_Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("LotusRMS_Table_Types");
                 });
 
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_Unit", b =>
@@ -428,17 +377,6 @@ namespace LotusRMS.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("LotusRMS.Models.LotusRMS_Menu_Category", b =>
-                {
-                    b.HasOne("LotusRMS.Models.LotusRMS_Menu_Type", "Product_Type")
-                        .WithMany()
-                        .HasForeignKey("Type_Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product_Type");
                 });
 
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_Product", b =>

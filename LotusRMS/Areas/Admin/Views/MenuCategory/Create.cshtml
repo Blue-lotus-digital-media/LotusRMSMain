@@ -1,5 +1,5 @@
 ﻿@using LotusRMS.Models.Viewmodels.Category
-@model  UpdateCategoryVM
+@model  CreateCategoryVM
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
@@ -10,10 +10,9 @@
     <div class="col-lg-6">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Update Category </h5>
+              <h5 class="card-title">Add Menu Category </h5>
               <!-- Vertical Form -->
-              <form class="row g-3" asp-action="Update" asp-controller="category" asp-area="admin">
-                  <input aasp-for="Id" hidden />
+              <form class="row g-3" asp-action="Create" asp-controller="menucategory" asp-area="admin" asp-route-returnUrl="@ViewBag.ReturnUrl">
                 <div class="col-12">
                   <label for="cName" class="form-label">Catgory Name</label>
                   <input asp-for="Category_Name" class="form-control" id="cName">
@@ -25,8 +24,11 @@
                   
                   <span asp-validation-for="Category_Description" class="text-danger"></span>
                 </div> 
-                 <div class="col-12">
+                <div class="col-12">
                     <lable for="typeText" class="form-label">Type</lable>
+                    <div class="row">
+                        <div class="col-10">
+                            
                     <select asp-for="Type_Id" class="form-control" id="typeText">
                         <option>Select a type</option>
                         @foreach (var item in Model.TypeList)
@@ -34,11 +36,19 @@
                             <option value="@item.Value">@item.Text</option>
                         }
                     </select>
+                        </div>
+                        <div class="col-2">
+                            <a class="btn btn-primary" asp-action="create" asp-controller="menutype" asp-area="admin" asp-route-returnUrl="~/admin/menucategory/create"><i class="bi bi-plus-lg"></i></a>
+                        </div>
+
+                    </div>
                      <span asp-validation-for="Type_Id" class="text-danger"></span>
                 </div>
+
+
                 <div class="col-12 d-flex ">
             <button type="reset" class="btn btn-danger mx-2">Clear</button>  
-            <button type="submit" class="btn btn-primary mx-2">Update</button>  
+            <button type="submit" class="btn btn-primary mx-2">Add</button>  
         </div>
               </form><!-- Vertical Form -->
             </div>
@@ -47,3 +57,8 @@
 </div>
 
 
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}

@@ -1,7 +1,5 @@
 ﻿using ClosedXML.Excel;
-using LotusRMS.Models;
 using LotusRMS.Models.Dto.CategoryDTO;
-using LotusRMS.Models.IRepositorys;
 using LotusRMS.Models.Service;
 using LotusRMS.Models.Viewmodels.Category;
 using LotusRMS.Utility;
@@ -11,30 +9,32 @@ using NToastNotify;
 namespace LotusRMSweb.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class CategoryController : Controller
+    public class MenuCategoryController : Controller
     {
-        private readonly ICategoryService _ICategoryService;
-        private readonly ITypeService _ITypeService;
+
+        private readonly IMenuCategoryService _IMenuCategoryService;
+        private readonly IMenuTypeService _IMenuTypeService;
         private readonly IToastNotification _toastNotification;
-        public CategoryController(ICategoryService iCategoryService, IToastNotification toastNotification, ITypeService iTypeService)
+        public MenuCategoryController(IMenuCategoryService iMenuCategoryService,
+            IToastNotification toastNotification, IMenuTypeService iMenuTypeService)
         {
-            _ICategoryService = iCategoryService;
+            _IMenuCategoryService = iMenuCategoryService;
             _toastNotification = toastNotification;
-            _ITypeService = iTypeService;   
+            _IMenuTypeService = iMenuTypeService;
         }
         public IActionResult Index()
         {
-            
+
 
             return View();
         }
 
-        public IActionResult Create(string? returnUrl=null)
+        public IActionResult Create(string? returnUrl = null)
         {
             returnUrl ??= nameof(Index);
 
             var category = new CreateCategoryVM();
-            var typeList = _ITypeService.GetAll().Where(x => x.Status).Select(x => new SelectListItem()
+            var typeList = _IMenuTypeService.GetAll().Where(x => x.Status).Select(x => new SelectListItem()
             {
                 Text = x.Type_Name,
                 Value = x.Id.ToString()
@@ -42,12 +42,12 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             category.TypeList = typeList;
 
             ViewBag.ReturnUrl = returnUrl;
-                return View(category);
-           
-            
+            return View(category);
 
 
-            
+
+
+
 
         }
         [HttpPost]
@@ -57,7 +57,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             returnUrl ??= nameof(Index);
             if (!ModelState.IsValid)
             {
-                var typeList = _ITypeService.GetAll().Where(x => x.Status).Select(x => new SelectListItem()
+                var typeList = _IMenuTypeService.GetAll().Where(x => x.Status).Select(x => new SelectListItem()
                 {
                     Text = x.Type_Name,
                     Value = x.Id.ToString()
@@ -67,14 +67,14 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 return View(obj);
 
             }
-              var category = new CreateCategoryDTO(obj.Category_Name,obj.Category_Description,obj.Type_Id);
-            
-            var id = _ICategoryService.Create(category);
+            var category = new CreateCategoryDTO(obj.Category_Name, obj.Category_Description, obj.Type_Id);
+
+            var id = _IMenuCategoryService.Create(category);
 
 
-                    return Redirect(returnUrl);
+            return Redirect(returnUrl);
 
-              
+
 
         }
 
@@ -86,7 +86,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             }
 
             var updateCategoryVM = new UpdateCategoryVM();
-            var typeList = _ITypeService.GetAll().Where(x => x.Status).Select(x => new SelectListItem()
+            var typeList = _IMenuTypeService.GetAll().Where(x => x.Status).Select(x => new SelectListItem()
             {
                 Text = x.Type_Name,
                 Value = x.Id.ToString()
@@ -94,15 +94,15 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             updateCategoryVM.TypeList = typeList;
 
 
-            var category = _ICategoryService.GetByGuid((Guid)Id);
+            var category = _IMenuCategoryService.GetByGuid((Guid)Id);
             if (category == null)
             {
                 return RedirectToAction(nameof(Index));
             }
-
             updateCategoryVM.Id = category.Id;
+
             updateCategoryVM.Category_Name = category.Category_Name;
-            
+
             updateCategoryVM.Category_Description = category.Category_Description;
             updateCategoryVM.Type_Id = category.Type_Id;
 
@@ -113,9 +113,10 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Update(UpdateCategoryVM vm)
         {
-           
-            if (!ModelState.IsValid) {
-                vm.TypeList = _ITypeService.GetAll().Where(x => x.Status).Select(x => new SelectListItem()
+
+            if (!ModelState.IsValid)
+            {
+                vm.TypeList = _IMenuTypeService.GetAll().Where(x => x.Status).Select(x => new SelectListItem()
                 {
                     Text = x.Type_Name,
                     Value = x.Id.ToString()
@@ -124,6 +125,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             }
 
             var dto = new UpdateCategoryDTO(
+
                 category_Name: vm.Category_Name,
                 category_Description: vm.Category_Description,
                 type_Id: vm.Type_Id
@@ -132,18 +134,18 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 Id = vm.Id
             };
 
-            _ICategoryService.Update(dto);
+            _IMenuCategoryService.Update(dto);
             return RedirectToAction(nameof(Index));
 
         }
-             
+
 
         #region API CALLS
         [HttpPost]
         [AutoValidateAntiforgeryToken]
         public IActionResult ExportToExcel()
         {
-            var arraylist = _ICategoryService.GetAll();
+            var arraylist = _IMenuCategoryService.GetAll();
 
 
             using (XLWorkbook xl = new XLWorkbook())
@@ -154,7 +156,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 {
                     xl.SaveAs(mstream);
                     var date = CurrentTime.DateTimeToday();
-                    return File(mstream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ProductCategory-" + date + ".xlsx");
+                    return File(mstream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "MenuCategory-" + date + ".xlsx");
                 }
             }
         }
@@ -164,14 +166,14 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         public IActionResult GetAll()
         {
 
-            var categorys =_ICategoryService.GetAll().Select(x => new CategoryVM()
+            var categorys = _IMenuCategoryService.GetAll().Select(x => new CategoryVM()
             {
                 Id = x.Id,
                 Category_Name = x.Category_Name,
                 Category_Description = x.Category_Description,
-                Status=x.Status,
-                IsDelete=x.IsDelete,
-                Type_Name=x.Product_Type.Type_Name
+                Status = x.Status,
+                IsDelete = x.IsDelete,
+                Type_Name = x.Product_Type.Type_Name
 
 
 
@@ -182,7 +184,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult StatusChange(Guid Id)
         {
-            var category = _ICategoryService.GetByGuid(Id);
+            var category = _IMenuCategoryService.GetByGuid(Id);
             if (category == null)
             {
                 return BadRequest();
@@ -190,9 +192,9 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             }
             else
             {
-              
-                _ICategoryService.UpdateStatus(Id);
-               
+
+                _IMenuCategoryService.UpdateStatus(Id);
+
                 return Ok(category.Status);
             }
 
