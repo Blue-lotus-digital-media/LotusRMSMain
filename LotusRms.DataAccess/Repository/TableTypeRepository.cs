@@ -20,7 +20,7 @@ namespace LotusRMS.DataAccess.Repository
             var type = _dal.LotusRMS_Table_Types.FirstOrDefault(x => x.Id == lType.Id);
             if (type != null)
             {
-                type.Update(type.Type_Name, type.Type_Description);
+                type.Update(lType.Type_Name, lType.Type_Description);
                 Save();
             }
         }
