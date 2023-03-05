@@ -3,6 +3,7 @@ using System;
 using LotusRMS.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,63 +11,16 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LotusRMS.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230305044347_TablePropertyAdded")]
+    partial class TablePropertyAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "7.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
-
-            modelBuilder.Entity("LotusRMS.Models.LotusRMS_Menu", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid>("Category_Id")
-                        .HasColumnType("char(36)");
-
-                    b.Property<byte[]>("Image")
-                        .HasColumnType("longblob");
-
-                    b.Property<bool>("IsDelete")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("Item_Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("OrderTo")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<float>("Rate")
-                        .HasColumnType("float");
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<Guid>("Type_Id")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid>("Unit_Id")
-                        .HasColumnType("char(36)");
-
-                    b.Property<float>("Unit_Quantity")
-                        .HasColumnType("float");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Category_Id");
-
-                    b.HasIndex("Type_Id");
-
-                    b.HasIndex("Unit_Id");
-
-                    b.ToTable("LotusRMS_Menus");
-                });
 
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_Menu_Category", b =>
                 {
@@ -120,35 +74,6 @@ namespace LotusRMS.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("LotusRMS_Menu_Types");
-                });
-
-            modelBuilder.Entity("LotusRMS.Models.LotusRMS_Menu_Unit", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<bool>("IsDelete")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("Unit_Description")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Unit_Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Unit_Symbol")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("LotusRMS_Menu_Units");
                 });
 
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_Product", b =>
@@ -541,33 +466,6 @@ namespace LotusRMS.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("LotusRMS.Models.LotusRMS_Menu", b =>
-                {
-                    b.HasOne("LotusRMS.Models.LotusRMS_Menu_Category", "Menu_Category")
-                        .WithMany()
-                        .HasForeignKey("Category_Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("LotusRMS.Models.LotusRMS_Menu_Type", "Menu_Type")
-                        .WithMany()
-                        .HasForeignKey("Type_Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("LotusRMS.Models.LotusRMS_Menu_Unit", "Menu_Unit")
-                        .WithMany()
-                        .HasForeignKey("Unit_Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Menu_Category");
-
-                    b.Navigation("Menu_Type");
-
-                    b.Navigation("Menu_Unit");
                 });
 
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_Menu_Category", b =>

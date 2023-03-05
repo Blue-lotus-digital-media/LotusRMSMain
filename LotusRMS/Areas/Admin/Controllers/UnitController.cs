@@ -12,7 +12,7 @@ using NToastNotify;
 
 namespace LotusRMSweb.Areas.Admin.Controllers
 {
-    /*[Authorize(Roles ="Admin")]*/
+    [Authorize(Roles ="Admin,SuperAdmin")]
 
     [Area("Admin")]
     public class UnitController : Controller
