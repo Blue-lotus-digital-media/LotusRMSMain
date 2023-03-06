@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.100.3" />
+    <PackageReference Include="DinkToPdf" Version="1.0.8" />
     <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.9" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.14" />
@@ -27,6 +28,7 @@
     <PackageReference Include="NToastNotify" Version="8.0.0" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql.Design" Version="1.1.2" />
+    <PackageReference Include="QRCoder" Version="1.4.3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -45,5 +47,13 @@
     <ProjectReference Include="..\LotusRMS.Models\LotusRMS.Models.csproj" />
     <ProjectReference Include="..\LotusRMS.Utility\LotusRMS.Utility.csproj" />
   </ItemGroup>
+<ItemGroup>
+  <None Remove="libwkhtmltox.dll" />
+</ItemGroup>
 
+<ItemGroup>
+  <Content Include="libwkhtmltox.dll">
+    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+  </Content>
+</ItemGroup>
 </Project>

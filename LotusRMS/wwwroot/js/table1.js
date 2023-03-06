@@ -85,6 +85,19 @@ function loadData() {
                               </a>
                             </div>`;
                 }
+            },
+            {
+                data: "id",
+                render: function (data) {
+                    return `<div class="text-center">
+                            <a onclick="downloadQr($(this),event); " data-id="${data}" href="" >Download Qr</a>
+<div class="spinner" style="display:none">Downloading                            
+<div class="spinner-border text-info" role="status"  >
+                <span class="visually-hidden">Loading...</span>
+              </div>
+              </div>
+                            </div>`;
+                }
             }
 
         ],
@@ -122,3 +135,73 @@ function loadData() {
 
     });
 }
+
+function downloadQr(me, e) {
+    var spinner = $(me).siblings(".spinner");
+    spinner.css("display", "block");
+    $(me).css("display", "none");
+
+
+    e = e || window.event;
+    e.preventDefault();
+    var id = $(me).attr("data-id");
+    $.ajax({
+        type: 'GET',
+        url: "/admin/table/downloadQr",
+        data: "id=" + id,
+        success: function (data) {
+
+            const pageImage = new Image();
+            pageImage.src = data.stringImage;//'data:image/png;base64,' + base64string;
+            console.log(pageImage.naturalHeight+100);
+            pageImage.onload = function () {
+                const canvas = document.createElement('canvas');
+                canvas.width = pageImage.naturalWidth ;
+                canvas.height = pageImage.naturalHeight + 300;
+                canvas.fillStyle = "white";
+
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = "#000ff0";
+
+                ctx.fillRect(0, 0, 1180, 1180);
+
+                ctx.fillStyle = "#0ff000";
+                ctx.imageSmoothingEnabled = false;
+                ctx.drawImage(pageImage, 0, 0);
+
+               
+                ctx.font = "80px Calibri";
+                ctx.fillStyle = "#0ff000";
+                ctx.textBaseline = 'middle';
+                ctx.textAlign = "center";
+
+                ctx.fillText(data.tableName, 590, 1120);
+                
+
+
+               
+                saveScreenshot(canvas,data.tableName);
+            }
+            $(me).css("display", "block");
+
+            spinner.css("display", "none");
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            $(me).css("display", "block");
+
+            spinner.css("display", "none");
+            alert(errorThrown);
+        }
+    });
+
+}
+function saveScreenshot(canvas,fileName) {
+    const link = document.createElement('a');
+    link.download = fileName + '.png';
+    console.log(canvas)
+    canvas.toBlob(function (blob) {
+       
+        link.href = URL.createObjectURL(blob);
+        link.click();
+    });
+};
