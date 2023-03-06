@@ -1,10 +1,14 @@
 ﻿using ClosedXML.Excel;
+using DinkToPdf;
+using DinkToPdf.Contracts;
 using LotusRMS.Models.Dto.TableDTO;
 using LotusRMS.Models.Service;
 using LotusRMS.Models.Viewmodels.Table;
 using LotusRMS.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using QRCoder;
+using System.Drawing;
 
 namespace LotusRMSweb.Areas.Admin.Controllers
 {
@@ -12,15 +16,17 @@ namespace LotusRMSweb.Areas.Admin.Controllers
     [Authorize(Roles = "Admin , SuperAdmin")]
     public class TableController : Controller
     {
+        private readonly IConverter _converter;
 
         public readonly ITableService _ITableService;
 
         public readonly ITableTypeService _ITableTypeService;
 
-        public TableController(ITableService iTableService, ITableTypeService iTableTypeService)
+        public TableController(ITableService iTableService, ITableTypeService iTableTypeService, IConverter converter)
         {
             _ITableService = iTableService;
             _ITableTypeService = iTableTypeService;
+            _converter = converter;
         }
 
         public IActionResult Index()
@@ -124,6 +130,40 @@ namespace LotusRMSweb.Areas.Admin.Controllers
 
         }
         #region API CALLS
+        [HttpGet]
+        public IActionResult DownloadQr(Guid Id)
+        {
+            String strUrl = HttpContext.Request.Path;
+          /*  String strUrl = HttpContext.Current.Request.Url.AbsoluteUri.Replace(strPathAndQuery, "/");
+          */  
+            var table = _ITableService.GetByGuid(Id);
+            if (table == null)
+            {
+                return BadRequest("Table not found");
+
+            }
+            var stringImage = GetQR(Id);
+           
+
+            return Ok(new { hotelName="abc",tableName=table.Table_Name, stringImage=stringImage});
+
+
+
+        }
+        public string GetQR(Guid Id)
+        {
+            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            var qrText = HttpContext.Request.Host.Value.ToString();
+            qrText = "https://" + qrText + "/qrTable/?TableNo=" + Id;
+
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrText, QRCodeGenerator.ECCLevel.Q);
+            BitmapByteQRCode qrCode = new BitmapByteQRCode(qrCodeData);
+            byte[] qrCodeAsBitmapByteArr = qrCode.GetGraphic(20); //, "#000ff0", "#0ff000"); for color
+            var stringImage = ImageUpload.GetStrigFromByteArray(qrCodeAsBitmapByteArr);
+            return stringImage;
+        }
+
+
         [HttpPost]
         [AutoValidateAntiforgeryToken]
         public IActionResult ExportToExcel()
@@ -184,6 +224,41 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             }
 
         }
+
+        public IActionResult DownloadAllQr()
+        {
+            var tables = _ITableService.GetAll().Where(x => x.Status && !x.IsDelete).Select(tbl => new QrTableVM()
+            {
+                Table_Name=tbl.Table_Name,
+                imageString=GetQR(tbl.Id)
+
+            }).ToList();
+            var globalSettings = new GlobalSettings
+            {
+                ColorMode = ColorMode.Color,
+                Orientation = Orientation.Portrait,
+                PaperSize = PaperKind.A4,
+                Margins = new MarginSettings { Top = 10 },
+                DocumentTitle = "PDF Report",
+                
+            };
+            var objectSettings = new ObjectSettings
+            {
+                PagesCount = true,
+                HtmlContent = TemplateGenerator.GetHTMLString(tables),
+                WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(Directory.GetCurrentDirectory(), "assets", "styles.css") },
+                HeaderSettings = { FontName = "Arial", FontSize = 9, Right = "Page [page] of [toPage]", Line = true },
+                FooterSettings = { FontName = "Arial", FontSize = 9, Line = true, Center = "Report Footer" }
+            };
+            var pdf = new HtmlToPdfDocument()
+            {
+                GlobalSettings = globalSettings,
+                Objects = { objectSettings }
+            };
+            var file = _converter.Convert(pdf);
+            return File(file ,"application/pdf","QrTables.pdf");
+        }
+
 
         #endregion
 

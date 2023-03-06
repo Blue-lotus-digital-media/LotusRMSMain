@@ -9,6 +9,9 @@ using LotusRMSweb.Areas.Identity.Data;
 using LotusRMS.DataAccess.Repository;
 using LotusRMS.Models.IRepositorys;
 using LotusRMSweb;
+using DinkToPdf;
+using DinkToPdf.Contracts;
+using LotusRMS.Utility;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -68,6 +71,12 @@ builder.Services.AddAuthorization(options =>
 
 builder.Services.UseConfMgmtCore();
 builder.Services.UseConfMgmtData();
+
+var context = new CustomAssemblyLoadContext();
+context.LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox.dll"));
+
+builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
+
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromHours(2);
