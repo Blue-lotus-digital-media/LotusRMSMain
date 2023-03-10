@@ -1,0 +1,56 @@
+﻿@model IEnumerable<SelectListItem> 
+
+<div class="menu">
+    <div class="menu_header">
+        Menu
+    </div>
+    <div class="menu_body">
+        @foreach(var item in Model)
+        {
+            <div class="row">
+                <div class="col-8">
+                    @item.Text
+                </div>
+                <div class="col-2">
+                    <form 
+                        asp-action="Selectmenu"
+                        asp-controller="home"
+                        asp-area="Order"
+                        asp-route-MenuId="@item.Value"
+                        data-ajax=true
+                        data-ajax-success="menuSelected()"
+                        data-ajax-update="#AddmenuSection">
+                    <button type="submit" class="btn btn-success"
+                    >+</button>
+                    </form>
+                </div>
+
+                </div>
+
+        }
+    </div>
+
+</div>
+   <div class="modal fade" id="addMenuModal" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Menu</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                     <div id="AddmenuSection"></div>
+                    </div>
+                   @* <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>*@
+                  </div>
+                </div>
+              </div><!-- End Vertically centered Modal-->
+
+<script>
+function menuSelected() {
+    $("#addMenuModal").modal("show");
+}
+</script>
