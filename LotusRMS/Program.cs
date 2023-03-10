@@ -23,11 +23,12 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 /*
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();*/
-builder.Services.AddIdentity<RMSUser,IdentityRole>()
+builder.Services.AddIdentity<RMSUser, IdentityRole>()
             .AddDefaultUI()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
-builder.Services.AddAuthentication().AddCookie( options => {
+builder.Services.AddAuthentication().AddCookie(options =>
+{
     options.Cookie.Expiration = TimeSpan.FromMinutes(20);
     options.LoginPath = "/Account/Login";
     options.LogoutPath = "/Account/Logout";
@@ -54,15 +55,15 @@ builder.Services.AddScoped<IUserClaimsPrincipalFactory<RMSUser>,
             >();
 builder.Services.AddControllersWithViews().AddNToastNotifyNoty(new NToastNotify.NotyOptions()
 {
-    ProgressBar=true,
-    Timeout=5000,
-    Theme="mint"
+    ProgressBar = true,
+    Timeout = 5000,
+    Theme = "mint"
 });
 builder.Services.AddAuthorization(options =>
 {
-   /* options.AddPolicy("EmailID", policy =>
-    policy.RequireClaim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name", "support@procodeguide.com"
-    ));*/
+    /* options.AddPolicy("EmailID", policy =>
+     policy.RequireClaim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name", "support@procodeguide.com"
+     ));*/
 
     options.AddPolicy("rolecreation", policy =>
     policy.RequireRole("SuperAdmin")
@@ -105,7 +106,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseEndpoints(endpoints =>
-{ 
+{
     endpoints.MapAreaControllerRoute(
         name: "SuperAdmin",
         areaName: "SuperAdmin",
@@ -116,16 +117,17 @@ app.UseEndpoints(endpoints =>
         areaName: "Admin",
         pattern: "Admin/{controller=Home}/{action=Index}/{id?}");
     endpoints.MapAreaControllerRoute(
-        name: "Waiter",
+        name: "Order",
 
-        areaName: "Waiter",
-        pattern: "Waiter/{controller=Home}/{action=Index}/{id?}");
+        areaName: "Order",
+        pattern: "Order/{controller=Home}/{action=Index}/{id?}");
     endpoints.MapAreaControllerRoute(
-        name: "Cashier",
 
-        areaName: "Cashier",
-        pattern: "Cashier/{controller=Home}/{action=Index}/{id?}");
+        name: "Checkout",
+        areaName: "Checkout",
+        pattern: "Checkout/{controller=Home}/{action=Index}/{id?}");
     endpoints.MapAreaControllerRoute(
+
         name: "Kitchen",
         areaName: "Kitchen",
         pattern: "Kitchen/{controller=Home}/{action=Index}/{id?}");
@@ -139,10 +141,10 @@ app.UseEndpoints(endpoints =>
         pattern: "{controller=Home}/{action=Index}/{id?}");
     endpoints.MapRazorPages();
 });
- 
+
 
 using (var scope = app.Services.CreateScope())
 {
     await DbSeeder.SeedRolesAndSuperAdminAsync(scope.ServiceProvider);
-} 
+}
 app.Run();

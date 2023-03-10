@@ -1,0 +1,28 @@
+﻿@model  IEnumerable<LotusRMS_Table>
+
+<div class="d-flex">
+    @foreach(var item in Model){
+    <form 
+        class="TableForm"
+        asp-action="getOrder"
+    asp-controller="home"
+    asp-area="order"
+    asp-route-id="@item.Id"
+    data-ajax="true"
+    data-ajax-success="function(){console.log('Success');}"
+    data-ajax-update="#orderSection"
+    >
+    <button type="submit" class="btn btn-danger">@item.Table_Name</button> 
+
+</form>
+    }
+
+    
+</div>
+@if(Model!=null){
+      <script>
+$(document).ready(function() { 
+    $(".TableForm:first").submit();
+});
+        </script>
+}

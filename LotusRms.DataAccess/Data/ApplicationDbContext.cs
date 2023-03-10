@@ -21,6 +21,7 @@ namespace LotusRMS.DataAccess
         public DbSet<LotusRMS_Table_Type> LotusRMS_Table_Types { get; set; }
         public DbSet<LotusRMS_Table> LotusRMS_Tables { get; set; }
         public DbSet<LotusRMS_Menu> LotusRMS_Menus { get; set; }
+        public DbSet<LotusRMS_Order> LotusRMS_Orders { get; set; }
 
        
     }   

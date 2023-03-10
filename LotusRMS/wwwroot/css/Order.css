@@ -1,0 +1,14 @@
+﻿
+.typeSelected{
+    color:white;
+    background-color:blue !important;
+}
+.typeBooked {
+    color: white;
+    background-color: black;
+}
+.typeUnBooked {
+    color: white;
+    background-color: darkorange;
+}
+

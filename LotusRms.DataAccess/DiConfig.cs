@@ -24,6 +24,7 @@ namespace LotusRMS.DataAccess
             services.AddScoped<IMenuCategoryRepository, MenuCategoryRepository>();
             services.AddScoped<ITableTypeRepository, TableTypeRepository>();
             services.AddScoped<ITableRepository, TableRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
         }
         }
 }
