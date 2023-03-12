@@ -53,72 +53,90 @@
     </nav><!-- End Icons Navigation -->
 
   </header><!-- End Header -->
-
+  @if (User.Identity.IsAuthenticated){
   <!-- ======= Sidebar ======= -->
     <aside id="sidebar" class="sidebar">
 
     <ul class="sidebar-nav" id="sidebar-nav">
-
+        @if(User.IsInRole("Admin")){
       <li class="nav-item">
-        <a class="nav-link " href="index.html">
+        <a class="nav-link " asp-area= "Admin" asp-action="Index"  asp-controller="Home">
           <i class="bi bi-grid"></i>
           <span>Dashboard</span>
         </a>
       </li><!-- End Dashboard Nav -->
-
+      }
+        @if(User.IsInRole("SuperAdmin")){
+      <li class="nav-item">
+        <a class="nav-link " asp-area= "SuperAdmin" asp-action="Index"  asp-controller="Home">
+          <i class="bi bi-grid"></i>
+          <span>Dashboard</span>
+        </a>
+      </li><!-- End Dashboard Nav -->
+      }
+      @if(User.IsInRole("Admin")|| User.IsInRole("Waiter") || User.IsInRole("Cashier")){
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" asp-action="Index" asp-controller="Home" asp-area="Order">
           <i class="bi bi-pencil-square"></i><span>Order</span> 
         </a>        
       </li><!-- End Components Nav -->
-
+      }
+      @if(User.IsInRole("Admin") || User.IsInRole("Cashier")){
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-truck"></i><span>Check Out</span> 
         </a>
       </li><!-- End Forms Nav -->
-
+      }
+      @if(User.IsInRole("Admin")|| User.IsInRole("Cashier")){
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-table"></i><span>Tables</span> 
         </a>
       </li><!-- End Tables Nav -->
-
+      }
+      @if(User.IsInRole("Admin")|| User.IsInRole("Waiter") || User.IsInRole("Cashier")){
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
           <i class="ri-home-line"></i><span>Room</span> 
         </a>
       </li><!-- End Charts Nav -->
-
+      }
+      @if(User.IsInRole("Admin")|| User.IsInRole("Cashier")|| User.IsInRole("Waiter")){
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
           <i class="ri-menu-5-fill"></i><span>Menu</span> 
         </a>        
       </li><!-- End Icons Nav -->
+      }
+      @if(User.IsInRole("Admin")|| User.IsInRole("Cashier")|| User.IsInRole("Waiter")){
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
           <i class="ri-text-spacing"></i><span>Today</span> 
         </a>        
       </li>
-
+      }
       <li class="nav-heading">Others </li>
-        <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-contact.html">
+                @if (User.IsInRole("Admin"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" href="pages-contact.html">
           <i class="bi bi-file-earmark-ppt"></i>
           <span>Product</span>
         </a>
       </li><!-- End Contact Page Nav --> 
-
+      }
     
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-register.html">
+                @if (User.IsInRole("Admin") || User.IsInRole("Cashier"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" href="pages-register.html">
           <i class="bi bi-cash"></i>
           <span>Purchase</span>
         </a>
       </li><!-- End Register Page Nav -->
-
-       
+      }
+       @if (User.IsInRole("Admin")){
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#report-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-box-arrow-in-right"></i><span>Report</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -131,7 +149,7 @@
           </li>
           <li>
             <a href="icons-remix.html">
-              <i class="bi bi-circle"></i><span>Salse</span>
+              <i class="bi bi-circle"></i><span>Sales</span>
             </a>
           </li>
           <li>
@@ -141,36 +159,44 @@
           </li>
         </ul>
       </li>
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="users-profile.html">
+      }
+                @if (User.IsInRole("Admin") || User.IsInRole("Cashier"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" href="users-profile.html">
           <i class="bi bi-person"></i>
           <span>Customer</span>
         </a>
       </li><!-- End Profile Page Nav -->
-
-      <li class="nav-item">
+      }
+       @if (User.IsInRole("Admin") || User.IsInRole("Cashier")){
+     <li class="nav-item">
         <a class="nav-link collapsed" href="pages-faq.html">
           <i class="bi bi-person"></i>
           <span>Suppliers </span>
         </a>
       </li><!-- End F.A.Q Page Nav -->
-
+       }
+        @if (User.IsInRole("Admin") || User.IsInRole("Cashier")){
       <li class="nav-item">
         <a class="nav-link collapsed" href="pages-error-404.html">
           <i class="bi bi-handbag"></i>
           <span>Assets</span>
         </a>
       </li><!-- End Error 404 Page Nav -->
-
+        }
+         @if (User.IsInRole("Admin") || User.IsInRole("Cashier")){
       <li class="nav-item">
         <a class="nav-link collapsed" href="pages-blank.html">
           <i class="bi bi-currency-exchange"></i>
           <span>Galla</span>
         </a>
       </li><!-- End Blank Page Nav -->
-     
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
+         }
+                @if (User.IsInRole("Admin"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-gear"></i><span>Setting</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="icons-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
@@ -191,10 +217,11 @@
           </li>
         </ul>
       </li>
-
+      }
     </ul>
 
   </aside>
+  }
 
   <main id="main" class="main">
       @RenderBody()
