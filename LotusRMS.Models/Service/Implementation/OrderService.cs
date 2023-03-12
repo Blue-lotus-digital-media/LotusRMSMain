@@ -55,7 +55,8 @@ namespace LotusRMS.Models.Service.Implementation
 
         public IEnumerable<LotusRMS_Order> GetAll()
         {
-            throw new NotImplementedException();
+            var orders = _IOrderRepository.GetAll(x => x.IsCheckout);
+            return orders;
         }
 
         public Task<IEnumerable<LotusRMS_Order>> GetAllAsync()
@@ -75,9 +76,11 @@ namespace LotusRMS.Models.Service.Implementation
 
         public LotusRMS_Order GetFirstOrDefaultByTableId(Guid TableId)
         {
-            var orders = _IOrderRepository.GetFirstOrDefault(filter: x=>x.Table_Id==TableId ,includeProperties: "Order_Details,User");
+            var orders = _IOrderRepository.GetFirstOrDefault(filter: x=>x.Table_Id==TableId && !x.IsCheckout ,includeProperties: "Order_Details,User");
             return orders;
         }
+       
+
         public LotusRMS_Order GetFirstOrDefaultByOrderNo(string orderNo)
         {
             var orders = _IOrderRepository.GetFirstOrDefault(filter: x=>x.Order_No==orderNo ,includeProperties: "Order_Details , User");

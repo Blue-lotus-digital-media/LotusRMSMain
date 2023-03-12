@@ -38,7 +38,7 @@ namespace LotusRMS.DataAccess.Repository
             IQueryable<T> query = dbSet;
             if (filter != null)
             {
-                query.Where(filter);
+                query=query.Where(filter);
             }
             if (includeProperties != null)
             {
@@ -64,7 +64,7 @@ namespace LotusRMS.DataAccess.Repository
             IQueryable<T> query = dbSet;
             if (filter != null)
             {
-                query.Where(filter);
+               query= query.Where(filter);
             }
             if (includeProperties != null)
             {
