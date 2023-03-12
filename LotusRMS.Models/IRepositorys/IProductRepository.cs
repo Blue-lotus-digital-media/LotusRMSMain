@@ -10,7 +10,6 @@ namespace LotusRMS.Models.IRepositorys
     {
         void Update(LotusRMS_Product product);
         void UpdateStatus(Guid Id);
-        void Save();
 
     }
 }

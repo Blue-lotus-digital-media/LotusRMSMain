@@ -8,5 +8,6 @@ namespace LotusRMS.Models.Dto.OrderDTO
 {
     public class AddOrderItemDTO
     {
+       
     }
 }

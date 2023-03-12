@@ -29,20 +29,25 @@
 @if (Model != null)
 {
     <script>
-$(document).ready(function() { 
-    $(".TypeForm:first").submit();
-});
+
         </script>
 }
 
 <script>
-
-
+    document.addEventListener("DOMContentLoaded", () => {
+        console.log("Hello World!");
+        if ($(".TypeForm").length > 0) {
+            $(".TypeForm:first").submit();
+        }
+    });
+  
    function afterTypeSuccess(me){
-       console.log(me);
     $(".TypeForm").children("button").removeClass("typeSelected");
     $(me).children("button").addClass("typeSelected");
-        
+
+        if ($(".TableForm").length>0){
+            $(".TableForm:first").submit();
+        }
     }
 
 </script>

@@ -12,6 +12,7 @@ using LotusRMSweb;
 using DinkToPdf;
 using DinkToPdf.Contracts;
 using LotusRMS.Utility;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,6 +54,7 @@ options =>
 builder.Services.AddScoped<IUserClaimsPrincipalFactory<RMSUser>,
             ApplicationUserClaimsPrincipalFactory
             >();
+
 builder.Services.AddControllersWithViews().AddNToastNotifyNoty(new NToastNotify.NotyOptions()
 {
     ProgressBar = true,
@@ -78,9 +80,9 @@ context.LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), "libw
 
 builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
 
-builder.Services.AddSession(options =>
-{
-    options.IdleTimeout = TimeSpan.FromHours(2);
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options => {
+    options.IdleTimeout = TimeSpan.FromMinutes(60);//You can set Time   
 });
 
 
@@ -102,7 +104,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseEndpoints(endpoints =>

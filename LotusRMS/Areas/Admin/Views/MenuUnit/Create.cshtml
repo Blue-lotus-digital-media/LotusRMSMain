@@ -1,4 +1,5 @@
-﻿@model UnitVM
+﻿@using LotusRMS.Models.Viewmodels.Unit;
+@model CreateUnitVM
 
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -12,8 +13,8 @@
         <form class="form" asp-action="create" asp-controller="MenuUnit" asp-area="admin" asp-route-returnUrl="@ViewBag.ReturnUrl">
         <div class="form-group">
             <label >Unit Name</label>
-            <input asp-for="Name" class="form-control" pplaceholder="eg. Kilogram"/>
-            <span asp-validation-for="Name" class="text-danger" ></span>
+            <input asp-for="Unit_Name" class="form-control" pplaceholder="eg. Kilogram"/>
+                <span asp-validation-for="Unit_Name" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label >Unit Symbol</label>
