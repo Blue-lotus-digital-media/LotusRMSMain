@@ -2,6 +2,7 @@
 using LotusRMS.Models.IRepositorys;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,9 +17,16 @@ namespace LotusRMS.DataAccess.Repository
             _dal = dal;
         }
 
+        
+
         public void Update(LotusRMS_Order order)
         {
-            throw new NotImplementedException();
+            var orders = _dal.LotusRMS_Orders.FirstOrDefault(x => x.Id == order.Id);
+            if (orders != null)
+            {
+               
+                Save();
+            }
         }
 
         public void UpdateStatus(Guid Id)

@@ -12,5 +12,6 @@ namespace LotusRMS.Models.IRepositorys
 
         void Update(LotusRMS_Order Order);
         void UpdateStatus(Guid Id);
+      /*  IEnumerable<LotusRMS_Order> GetFirstOrDefault(Guid TableId);*/
     }
 }

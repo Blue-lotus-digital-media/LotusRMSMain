@@ -8,8 +8,9 @@
     asp-controller="home"
     asp-area="order"
     asp-route-id="@item.Id"
+    tableId="@item.Id"
     data-ajax="true"
-    data-ajax-success="function(){console.log('Success');}"
+    data-ajax-success="afterTableSuccess(this)"
     data-ajax-update="#orderSection"
     >
     <button type="submit" class="btn btn-danger">@item.Table_Name</button> 
@@ -19,10 +20,13 @@
 
     
 </div>
-@if(Model!=null){
-      <script>
-$(document).ready(function() { 
-    $(".TableForm:first").submit();
-});
-        </script>
-}
+<script>
+    function afterTableSuccess(form){
+        var table_No = $(form).attr("tableId");
+        $('.menuForm').attr('action', function (i, value) {
+
+            var action = value.split("&");
+            return action[0] + "&tableId=" + table_No;
+        });
+    }
+</script>

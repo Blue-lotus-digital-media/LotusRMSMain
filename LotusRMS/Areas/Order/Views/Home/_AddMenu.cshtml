@@ -1,10 +1,11 @@
 ﻿@using LotusRMS.Models.Viewmodels.Order
 @model AddNewOrderVM
-<form asp-action="AddNewOrder"
+<form 
+    asp-action="AddNewOrder"
 asp-controller="home"
 asp-area="order"
 data-ajax=true
-data-ajax-success="$('#addMenuModal').modal('hide')"
+data-ajax-success="menuAdded()"
 data-ajax-update="#NewOrderSection">
 
 <div class="row">
@@ -13,9 +14,15 @@ data-ajax-update="#NewOrderSection">
         <input asp-for="Quantity" class="form-control" />
         <input asp-for="Rate" hidden/>
         <input asp-for="MenuId" hidden/>
+        <input asp-for="TableId" hidden/>
     </div>
     <div class="col-4">
         <input type="submit" value="Submit">
     </div>
 </div>
 </form>
+<script>
+    function menuAdded(){
+        $('#addMenuModal').modal('hide');
+    }
+</script>

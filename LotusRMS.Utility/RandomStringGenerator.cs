@@ -7,9 +7,9 @@ using System.Security.Cryptography;
 
 namespace LotusRMS.Utility
 {
-    public class RandomStringGenerator
+    public static class RandomStringGenerator
     {
-        public string RandomString(int length)
+        public static string RandomString(int length)
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             return new string(Enumerable.Repeat(chars, length)

@@ -1,20 +1,6 @@
-﻿@using LotusRMS.Models.Viewmodels.Order;
-@model OrderVm
+﻿@using LotusRMS.Models.Viewmodels.Order
+@model List<AddNewOrderVM>
 
-<fieldset name="order">
-    
-    <legend>Orders</legend>
-    <div class="row">
-        <div class="col-3">
-            <button class="btn btn-info">refresh</button>
-        </div>
-        <div class="col-6 align-center">
-            <h3>@Model.Order_No</h3>
-            </div>
-            <div class="col-3">
-                time
-            </div>
-    </div>
 
 <table class="table table-striped">
     <thead>
@@ -31,7 +17,7 @@
         @{
             var i = 1;
         }
-        @foreach (var item in Model.Order_Details)
+        @foreach (var item in Model)
         {
 
             <tr>
@@ -47,21 +33,21 @@
             i++;
         }
     </tbody>
-   @* <tfoot>
+    <tfoot>
         <tr>
             <td colspan="6" class="text-align:right">
 
-                <form asp-action="CompleteNewOrder"
-                      asp-controller="Home"
-                      asp-area="Order"
-                      asp-route-tableId="@Model.TableId"
-                      data-ajax="true"
+                <form 
+                    asp-action="CompleteNewOrder"
+                    asp-controller="Home"
+                    asp-area="Order"
+                    asp-route-tableId="@Model[0].TableId"
+                    data-ajax="true"
                       data-ajax-success="$('#NewOrderSection').empty()"
                       data-ajax-update="#OrderSection">
-                    <button type="submit" class="btn btn-primary">Complete</button>
-                </form>
+                  <button type="submit" class="btn btn-primary">Complete</button>
+                  </form>
             </td>
-        </tr>
-    </tfoot>*@
+</tr>
+    </tfoot>
 </table>
-    </fieldset>

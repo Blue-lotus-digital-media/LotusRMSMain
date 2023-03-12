@@ -15,10 +15,9 @@ namespace LotusRMS.Models
 
         public Guid Id { get; set; }
         public string Order_No { get; set; }
+        public Guid Table_Id { get; set; }
 
         [Display(Name = "Date")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:HH:mm}")]
-        [DataType(DataType.Date)]
         public string DateTime { get; set; }
 
         public string OrderBy { get; set; }
@@ -28,7 +27,7 @@ namespace LotusRMS.Models
         public List<LotusRMS_Order_Details> Order_Details { get;set; }
         public float Total { get; set; }
         public float Discount { get; set; }
-        public bool IsCheckout { get; set; }
+        public bool IsCheckout { get; set; } = false;
         public bool Status { get; set; }
 
 

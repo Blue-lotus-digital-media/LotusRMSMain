@@ -1,9 +1,13 @@
-﻿using LotusRMS.Models.Service;
+﻿using LotusRMS.Models;
+using LotusRMS.Models.Dto.OrderDTO;
+using LotusRMS.Models.Service;
 using LotusRMS.Models.Viewmodels.Order;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
+using System.Security.Claims;
 
 namespace LotusRMSweb.Areas.Order.Controllers
 {
@@ -12,14 +16,18 @@ namespace LotusRMSweb.Areas.Order.Controllers
     public class HomeController : Controller
     {
 
-        public readonly ITableTypeService _ITableTypeService;
-        public readonly ITableService _ITableService;
-        public readonly IMenuService _IMenuService;
-        public HomeController(ITableTypeService TableTypeService, ITableService iTableService, IMenuService iMenuService)
+        private readonly ITableTypeService _ITableTypeService;
+        private readonly ITableService _ITableService;
+        private readonly IMenuService _IMenuService;
+        private readonly UserManager<RMSUser> _UserManager;
+        private readonly IOrderService _IOrderService;
+        public HomeController(IOrderService iOrderService,ITableTypeService TableTypeService, ITableService iTableService, IMenuService iMenuService,UserManager<RMSUser> userManager)
         {
+            _IOrderService = iOrderService;
             _ITableTypeService = TableTypeService;
             _ITableService = iTableService;
             _IMenuService = iMenuService;
+            _UserManager = userManager;
         }
 
 
@@ -43,38 +51,152 @@ namespace LotusRMSweb.Areas.Order.Controllers
 
         public IActionResult GetOrder(Guid Id)
         {
-
-            return PartialView("_Order",model:Id
+            var order = GetOrderVM(Id,""); 
+            return PartialView("_Order",model:order
                 );
         }
-        public IActionResult Selectmenu(Guid MenuId)
+        public IActionResult Selectmenu(Guid MenuId,Guid TableId)
         {
             var menu=_IMenuService.GetByGuid(MenuId);
             var vm = new AddNewOrderVM()
             {
                 MenuId = MenuId,
+                TableId=TableId,
                 Item_Name = menu.Item_Name,
                 Rate = menu.Rate,
                 Quantity = 0
 
             };
+            
             return PartialView("_AddMenu",model:vm);
         }
+        public OrderVm GetOrderVM(Guid? tableId,string? orderNo)
+        {
+            var OrderVM = new OrderVm()
+            {
 
+                Order_Details = new List<OrderDetailVm>()
+            };
+
+            if (tableId != Guid.Empty)
+            {
+                var order = _IOrderService.GetFirstOrDefaultByTableId((Guid)tableId);
+                if (order != null)
+                {
+                    OrderVM = new OrderVm()
+                    {
+                        Id = order.Id,
+                        TableId = order.Table_Id,
+                        Date = order.DateTime,
+                        Order_No = order.Order_No,
+                     };
+                    foreach(var item in order.Order_Details)
+                    {
+                        var orderDetail = new OrderDetailVm()
+                        {
+                            Id = item.Id,
+                            MenuId = item.MenuId,
+                            Item_Name = item.Menu.Item_Name + " (" + item.Menu.Menu_Unit.Unit_Symbol + " )",
+                            Rate = item.Rate,
+                            Quantity = item.Quantity,
+                            IsComplete = item.IsComplete,
+                            Total = item.GetTotal
+
+
+                        };
+                        OrderVM.Order_Details.Add(orderDetail);
+
+                    }
+                }
+
+
+            } else if (orderNo != null)
+            {
+                var order = _IOrderService.GetFirstOrDefaultByOrderNo(orderNo);
+                if (order != null)
+                {
+                    OrderVM = new OrderVm()
+                    {
+                        Id = order.Id,
+                        TableId = order.Table_Id,
+                        Date = order.DateTime,
+                        Order_No = order.Order_No,
+                    };
+                    foreach (var item in order.Order_Details)
+                    {
+                        var orderDetail = new OrderDetailVm()
+                        {
+                            Id = item.Id,
+                            MenuId = item.MenuId,
+                            Item_Name = item.Menu.Item_Name + " (" + item.Menu.Menu_Unit.Unit_Symbol + " )",
+                            Rate = item.Rate,
+                            Quantity = item.Quantity,
+                            IsComplete = item.IsComplete,
+                            Total = item.GetTotal
+
+
+                        };
+                        OrderVM.Order_Details.Add(orderDetail);
+
+                    }
+                }
+
+            }
+            return OrderVM;
+
+        }
+       
+
+
+        [HttpPost]
         public IActionResult AddNewOrder(AddNewOrderVM vm)
         {
             var orderList = new List<AddNewOrderVM>();
-            if (HttpContext.Session.GetString("NewOrder") != null)
+            if (HttpContext.Session.GetString(vm.TableId.ToString()) != null)
             {
-                orderList = JsonConvert.DeserializeObject<List<AddNewOrderVM>>(HttpContext.Session.GetString("NewOrder"));
+                orderList = JsonConvert.DeserializeObject<List<AddNewOrderVM>>(HttpContext.Session.GetString(vm.TableId.ToString()));
+            }
+            var menu=_IMenuService.GetAll().Where(x=>x.Id== vm.MenuId).FirstOrDefault();
+            vm.Item_Name = menu.Item_Name +"("+menu.Menu_Unit.Unit_Symbol+")";
+            vm.Total = vm.Quantity * vm.Rate;
+            orderList.Add(vm);
+
+            HttpContext.Session.SetString(vm.TableId.ToString(), JsonConvert.SerializeObject(orderList));
+
+
+            return PartialView("_NewOrders",model:orderList);
+        }
+        [HttpPost]
+        public IActionResult CompleteNewOrder(Guid tableId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var orderList = new List<AddNewOrderVM>();
+            if (HttpContext.Session.GetString(tableId.ToString()) != null)
+            {
+                orderList = JsonConvert.DeserializeObject<List<AddNewOrderVM>>(HttpContext.Session.GetString(tableId.ToString()));
             }
 
-            HttpContext.Session.SetString("NewOrder", JsonConvert.SerializeObject(orderList));
-            
-
-            return PartialView("_NewOrder",model:orderList);
+            var dto = new CreateOrderDTO()
+            {
+                Table_Id = tableId,
+                UserId=userId,
+                OrderDetails=new List<CreateOrderDetailDTO>()
+            };
+            foreach(var item in orderList)
+            {
+                var detailDto = new CreateOrderDetailDTO()
+                {
+                    Menu_Id = item.MenuId,
+                    Quantity = item.Quantity,
+                    Rate = item.Rate
+                };
+                dto.OrderDetails.Add(detailDto);
+            }
+            var id=_IOrderService.Create(dto);
+            return View();
         }
 
-        
+
+
     }
 }
