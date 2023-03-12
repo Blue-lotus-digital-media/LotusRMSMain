@@ -68,6 +68,12 @@ namespace LotusRMS.Models.Service.Implementation
             throw new NotImplementedException();
         }
 
+        public LotusRMS_Menu GetFirstOrDefault(Guid Id)
+        {
+
+            return _IMenuRepository.GetFirstOrDefault(filter: x => x.Id == Id, includeProperties: "Menu_Unit,Menu_Category,Menu_Type");
+        }
+
         public Guid Update(UpdateMenuDTO dto)
         {
             //using var tx = new TransactionScope();

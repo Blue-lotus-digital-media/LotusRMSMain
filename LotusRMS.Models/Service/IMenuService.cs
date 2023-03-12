@@ -19,5 +19,6 @@ namespace LotusRMS.Models.Service
         Task<IEnumerable<LotusRMS_Menu>> GetAllAsync();
         LotusRMS_Menu GetByGuid(Guid Id);
         Task<LotusRMS_Menu> GetByGuidAsync(Guid Id);
+       LotusRMS_Menu GetFirstOrDefault(Guid Id);
     }
 }

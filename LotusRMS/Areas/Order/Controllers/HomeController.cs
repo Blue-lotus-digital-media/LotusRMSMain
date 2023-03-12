@@ -51,6 +51,7 @@ namespace LotusRMSweb.Areas.Order.Controllers
 
         public IActionResult GetOrder(Guid Id)
         {
+            var orders = _IOrderService.GetAll();
             var order = GetOrderVM(Id,""); 
             return PartialView("_Order",model:order
                 );
@@ -89,14 +90,16 @@ namespace LotusRMSweb.Areas.Order.Controllers
                         TableId = order.Table_Id,
                         Date = order.DateTime,
                         Order_No = order.Order_No,
-                     };
+                        Order_Details = new List<OrderDetailVm>()
+                    };
                     foreach(var item in order.Order_Details)
                     {
+                        var menu = _IMenuService.GetFirstOrDefault(item.MenuId);
                         var orderDetail = new OrderDetailVm()
                         {
                             Id = item.Id,
                             MenuId = item.MenuId,
-                            Item_Name = item.Menu.Item_Name + " (" + item.Menu.Menu_Unit.Unit_Symbol + " )",
+                            Item_Name = menu.Item_Name + " (" + menu.Menu_Unit.Unit_Symbol + " )",
                             Rate = item.Rate,
                             Quantity = item.Quantity,
                             IsComplete = item.IsComplete,
@@ -121,14 +124,17 @@ namespace LotusRMSweb.Areas.Order.Controllers
                         TableId = order.Table_Id,
                         Date = order.DateTime,
                         Order_No = order.Order_No,
+                        Order_Details = new List<OrderDetailVm>()
                     };
                     foreach (var item in order.Order_Details)
                     {
+
+                        var menu = _IMenuService.GetFirstOrDefault(item.MenuId);
                         var orderDetail = new OrderDetailVm()
                         {
                             Id = item.Id,
                             MenuId = item.MenuId,
-                            Item_Name = item.Menu.Item_Name + " (" + item.Menu.Menu_Unit.Unit_Symbol + " )",
+                            Item_Name = menu.Item_Name + " (" + menu.Menu_Unit.Unit_Symbol + " )",
                             Rate = item.Rate,
                             Quantity = item.Quantity,
                             IsComplete = item.IsComplete,
@@ -193,6 +199,7 @@ namespace LotusRMSweb.Areas.Order.Controllers
                 dto.OrderDetails.Add(detailDto);
             }
             var id=_IOrderService.Create(dto);
+            HttpContext.Session.SetString(tableId.ToString(), "");
             return View();
         }
 
