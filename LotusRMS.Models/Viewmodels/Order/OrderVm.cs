@@ -10,6 +10,8 @@ namespace LotusRMS.Models.Viewmodels.Order
     {
         public Guid Id { get; set; }
         public Guid TableId { get; set; }
+        public string OrderBy { get; set; }
+        public string Table_Name { get; set; }
         public string Order_No{get;set;}
         public string Date { get; set; }
         public List<OrderDetailVm> Order_Details { get; set; }

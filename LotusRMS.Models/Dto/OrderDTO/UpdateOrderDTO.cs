@@ -8,5 +8,7 @@ namespace LotusRMS.Models.Dto.OrderDTO
 {
     public class UpdateOrderDTO
     {
+        public Guid Order_Id { get; set; }
+        public List<CreateOrderDetailDTO> OrderDetail { get; set; }
     }
 }

@@ -22,9 +22,10 @@ namespace LotusRMS.Models
             get { return Total; }
             set { Total = Quantity * Rate; }
         }
-        public bool IsComplete { get; set; }
-        public bool IsQrOrder { get; set; }
-        public bool IsQrVerified { get; set; }
+        public bool IsComplete { get; set; } = false;
+        public bool IsKitchenComplete { get; set; } = false;
+        public bool IsQrOrder { get; set; } = false;
+        public bool IsQrVerified { get; set; } = false;
 
         public Guid MenuId { get; set; }
         [ForeignKey("MenuId")]

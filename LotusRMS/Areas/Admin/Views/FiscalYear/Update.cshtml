@@ -1,0 +1,107 @@
+﻿@using LotusRMS.Models.Viewmodels.FiscalYear;
+@model UpdateFiscalYearVM
+
+
+<div class="col-lg-12">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Fiscal Year</h5>
+
+            <!-- General Form Elements -->
+            <form asp-action="Update" asp-area="admin" asp-controller="fiscalyear">
+                <div class="row mb-3">
+                    <label for="fiscalName" class="col-sm-2 col-form-label">Name</label>
+                    <div class="col-sm-10">
+                        <input asp-for="Name" class="form-control">
+                        <input asp-for="Id" class="form-control" hidden>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="startDate" class="col-sm-2 col-form-label">Start Date</label>
+
+                    <div class="col-sm-10">
+                        <div class="input-group">
+                            <input type="text" asp-for="StartDateBS" id="start-bs" class="form-control" placeholder="Date In BS ">
+                            <input type="text" asp-for="StartDateAD" id="start-ad">
+                            <span class="input-group-text"><i class="bi bi-calendar-check"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="endDate" class="col-sm-2 col-form-label">End Date</label>
+
+                    <div class="col-sm-10">
+                        <div class="input-group">
+                            <input type="text" asp-for="EndDateBS" id="end-bs" class="form-control" placeholder="Date In BS ">
+                            <input type="text" asp-for="EndDateAD" id="end-ad">
+                            <span class="input-group-text"><i class="bi bi-calendar-check"></i></span>
+                        </div>
+
+                    </div>
+                    <div class="row mb-3">
+                        <legend class="col-form-label col-sm-2 pt-0">Is this current?</legend>
+                        <div class="col-sm-10">
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="gridCheck1" asp-for="IsActive">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-10">
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </div>
+                </div>
+            </form><!-- End General Form Elements -->
+        </div>
+    </div>
+</div>
+<script>
+    window.onload = function () {
+        var startbs = document.getElementById("start-bs");
+        startbs.nepaliDatePicker({
+            ndpYear: true,
+            ndpMonth: true,
+            ndpYearCount: 10,
+            readOnlyInput: true,
+            language: "english",
+            onChange: function () {
+
+                ChangeStartDate(this);
+            }
+        });
+
+        var endbs = document.getElementById("end-bs");
+        endbs.nepaliDatePicker({
+            ndpYear: true,
+            ndpMonth: true,
+            ndpYearCount: 10,
+            readOnlyInput: true,
+            language: "english",
+            onChange: function () {
+                ChangeEndDate();
+            }
+        });
+    };
+
+    function ChangeStartDate() {
+        var date = $("#start-bs").val();
+
+        var adDate = NepaliFunctions.BS2AD(date, "YYYY-MM-DD");
+
+        $("#start-ad").val(adDate);
+
+    }
+    function ChangeEndDate(me) {
+
+        var date = $("#end-bs").val();
+
+        var adDate = NepaliFunctions.BS2AD(date, "YYYY-MM-DD");
+
+        $("#end-ad").val(adDate);
+
+    }
+
+</script>

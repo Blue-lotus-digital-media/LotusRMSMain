@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LotusRMS.Models.Service
+namespace LotusRMS.Models.Dto.CheckoutDTO
 {
-    internal interface BaseServiceInterface
+    public class UpdateCheckoutDTO:CreateCheckoutDTO
     {
+        public Guid Id { get; set; }
     }
 }

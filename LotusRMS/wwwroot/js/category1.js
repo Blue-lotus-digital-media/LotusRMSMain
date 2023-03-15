@@ -2,9 +2,6 @@
 
 $(document).ready(function () {
     loadData();
-
-
-
 });
 function toggleMe(me) {
     var id = $(me).attr("data-id");

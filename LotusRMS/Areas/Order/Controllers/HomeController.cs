@@ -1,4 +1,6 @@
-﻿using LotusRMS.Models;
+﻿using DocumentFormat.OpenXml.Drawing.Charts;
+using DocumentFormat.OpenXml.Office2010.Excel;
+using LotusRMS.Models;
 using LotusRMS.Models.Dto.OrderDTO;
 using LotusRMS.Models.Service;
 using LotusRMS.Models.Viewmodels.Order;
@@ -6,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.Differencing;
 using Newtonsoft.Json;
 using System.Security.Claims;
 
@@ -34,10 +37,12 @@ namespace LotusRMSweb.Areas.Order.Controllers
         public IActionResult Index()
         {
             var type = _ITableTypeService.GetAll().Where(x => !x.IsDelete && x.Status);
-            var menu = _IMenuService.GetAll().Where(x => !x.IsDelete && x.Status).Select(menu => new SelectListItem()
+            var menu = _IMenuService.GetAll().Where(x => !x.IsDelete && x.Status).Select(menu => new OrderMenu()
             {
-                Text = menu.Item_Name,
-                Value = menu.Id.ToString()
+                Item_Name = menu.Item_Name,
+                Rate=menu.Rate,
+                Symbol=menu.Menu_Unit.Unit_Symbol,
+                Id = menu.Id
             }).ToList();
             ViewBag.Menu = menu;
 
@@ -51,11 +56,14 @@ namespace LotusRMSweb.Areas.Order.Controllers
 
         public IActionResult GetOrder(Guid Id)
         {
-            var orders = _IOrderService.GetAll();
-            var order = GetOrderVM(Id,""); 
-            return PartialView("_Order",model:order
-                );
+            var order = GetOrderVM(Id,"");
+
+            ViewBag.NewOrder = GetNewOrder(Id);
+
+
+            return PartialView("_Order",model:order);
         }
+
         public IActionResult Selectmenu(Guid MenuId,Guid TableId)
         {
             var menu=_IMenuService.GetByGuid(MenuId);
@@ -88,6 +96,7 @@ namespace LotusRMSweb.Areas.Order.Controllers
                     {
                         Id = order.Id,
                         TableId = order.Table_Id,
+                        Table_Name=order.Table.Table_Name,
                         Date = order.DateTime,
                         Order_No = order.Order_No,
                         Order_Details = new List<OrderDetailVm>()
@@ -103,6 +112,7 @@ namespace LotusRMSweb.Areas.Order.Controllers
                             Rate = item.Rate,
                             Quantity = item.Quantity,
                             IsComplete = item.IsComplete,
+                            IsKitchenComplete = item.IsKitchenComplete,
                             Total = item.GetTotal
 
 
@@ -122,6 +132,8 @@ namespace LotusRMSweb.Areas.Order.Controllers
                     {
                         Id = order.Id,
                         TableId = order.Table_Id,
+
+                        Table_Name = order.Table.Table_Name,
                         Date = order.DateTime,
                         Order_No = order.Order_No,
                         Order_Details = new List<OrderDetailVm>()
@@ -138,6 +150,7 @@ namespace LotusRMSweb.Areas.Order.Controllers
                             Rate = item.Rate,
                             Quantity = item.Quantity,
                             IsComplete = item.IsComplete,
+                            IsKitchenComplete = item.IsKitchenComplete,
                             Total = item.GetTotal
 
 
@@ -151,14 +164,14 @@ namespace LotusRMSweb.Areas.Order.Controllers
             return OrderVM;
 
         }
-       
 
-
+        //new order region
+        #region newOrder
         [HttpPost]
         public IActionResult AddNewOrder(AddNewOrderVM vm)
         {
             var orderList = new List<AddNewOrderVM>();
-            if (HttpContext.Session.GetString(vm.TableId.ToString()) != null)
+            if (HttpContext.Session.GetString(vm.TableId.ToString()) != null )
             {
                 orderList = JsonConvert.DeserializeObject<List<AddNewOrderVM>>(HttpContext.Session.GetString(vm.TableId.ToString()));
             }
@@ -182,13 +195,8 @@ namespace LotusRMSweb.Areas.Order.Controllers
                 orderList = JsonConvert.DeserializeObject<List<AddNewOrderVM>>(HttpContext.Session.GetString(tableId.ToString()));
             }
 
-            var dto = new CreateOrderDTO()
-            {
-                Table_Id = tableId,
-                UserId=userId,
-                OrderDetails=new List<CreateOrderDetailDTO>()
-            };
-            foreach(var item in orderList)
+            var orderDetailDTO = new List<CreateOrderDetailDTO>();
+            foreach (var item in orderList)
             {
                 var detailDto = new CreateOrderDetailDTO()
                 {
@@ -196,14 +204,112 @@ namespace LotusRMSweb.Areas.Order.Controllers
                     Quantity = item.Quantity,
                     Rate = item.Rate
                 };
-                dto.OrderDetails.Add(detailDto);
+                orderDetailDTO.Add(detailDto);
             }
-            var id=_IOrderService.Create(dto);
-            HttpContext.Session.SetString(tableId.ToString(), "");
-            return View();
+            var order = _IOrderService.GetFirstOrDefaultByTableId((Guid)tableId);
+            if (order != null)
+            {
+                var dto = new UpdateOrderDTO()
+                {
+                    Order_Id = order.Id,
+                    OrderDetail = orderDetailDTO
+                };
+                _IOrderService.UpdateCompleteOrder(dto);
+
+            }
+            else {
+
+                var dto = new CreateOrderDTO()
+                {
+                    Table_Id = tableId,
+                    UserId = userId,
+                    OrderDetails = orderDetailDTO
+                };
+                var id = _IOrderService.Create(dto);
+            }
+
+
+            HttpContext.Session.Remove(tableId.ToString());
+            var orders = GetOrderVM(tableId, "");
+            
+            ViewBag.NewOrder = GetNewOrder(tableId);
+            return PartialView("_Order",model:orders);
+        }
+        public IEnumerable<AddNewOrderVM> GetNewOrder(Guid tableId)
+        {
+            var newOrder = new List<AddNewOrderVM>();
+            if (HttpContext.Session.GetString(tableId.ToString()) != null)
+            {
+                newOrder = JsonConvert.DeserializeObject<List<AddNewOrderVM>>(HttpContext.Session.GetString(tableId.ToString()));
+            }
+            return newOrder;
+        }
+        [HttpGet]
+        public IActionResult DeleteNewOrder(Guid tableId,Guid menuId,float quantity)
+        {
+            var orderList = new List<AddNewOrderVM>();
+            if (HttpContext.Session.GetString(tableId.ToString()) != null)
+            {
+                orderList = JsonConvert.DeserializeObject<List<AddNewOrderVM>>(HttpContext.Session.GetString(tableId.ToString()));
+            }
+
+            var order = orderList.Where(x => x.MenuId == menuId && x.Quantity == quantity).FirstOrDefault();
+            orderList.Remove(order);
+
+            HttpContext.Session.SetString(tableId.ToString(), JsonConvert.SerializeObject(orderList));
+
+            return PartialView("_NewOrders", orderList);
+        }
+        [HttpPost]
+        public IActionResult EditNewOrder(Guid tableId,Guid menuId,float quantity)
+        {
+            var orderList = new List<AddNewOrderVM>();
+            if (HttpContext.Session.GetString(tableId.ToString()) != null)
+            {
+                orderList = JsonConvert.DeserializeObject<List<AddNewOrderVM>>(HttpContext.Session.GetString(tableId.ToString()));
+            }
+
+            var order = orderList.Where(x => x.MenuId == menuId && x.Quantity == quantity).FirstOrDefault();
+            orderList.Remove(order);
+
+            HttpContext.Session.SetString(tableId.ToString(), JsonConvert.SerializeObject(orderList));
+
+            var menu = _IMenuService.GetByGuid(menuId);
+
+            var vm = new AddNewOrderVM()
+            {
+                MenuId = menuId,
+                TableId = tableId,
+                Item_Name = menu.Item_Name,
+                Rate = menu.Rate,
+                Quantity = quantity
+
+            };
+
+            return PartialView("_AddMenu", model: vm);
+        }
+        #endregion
+
+        //new order region
+        [HttpPost]
+        public IActionResult CancelOrder(string orderNo, Guid OrderDetailId)
+        {
+
+            var id = _IOrderService.CancelOrder(orderNo, OrderDetailId);
+            var order = GetOrderVM(new Guid(), orderNo);
+            ViewBag.NewOrder = GetNewOrder(order.TableId);
+            return PartialView("_Order", model: order);
         }
 
+        [HttpPost]
+        public IActionResult CompleteOrderDetail(string orderNo,Guid OrderDetailId)
+        {
 
+            var id = _IOrderService.CompleteOrderDetail(orderNo, OrderDetailId);
+            var order = GetOrderVM(new Guid(), orderNo);
+            ViewBag.NewOrder = GetNewOrder(order.TableId);
+            return PartialView("_Order", model: order);
+        }
 
     }
 }

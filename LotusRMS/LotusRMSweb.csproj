@@ -34,6 +34,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Areas\Checkout\Data\" />
+    <Folder Include="Areas\Checkout\Models\" />
     <Folder Include="Areas\Identity\Controllers\" />
     <Folder Include="Areas\Order\Data\" />
     <Folder Include="Areas\Order\Models\" />
@@ -58,6 +60,29 @@
 <ItemGroup>
   <Content Include="libwkhtmltox.dll">
     <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+  </Content>
+</ItemGroup>
+
+<ItemGroup>
+  <Content Update="Areas\Checkout\Views\Home\Index.cshtml">
+    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+  </Content>
+  <Content Update="Areas\Checkout\Views\Home\_Order.cshtml">
+    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+  </Content>
+  <Content Update="Areas\Checkout\Views\Home\_OrderList.cshtml">
+    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+  </Content>
+  <Content Update="Areas\Checkout\Views\Home\_TableList.cshtml">
+    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+  </Content>
+  <Content Update="Areas\Checkout\Views\Home\_TableType.cshtml">
+    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
   </Content>
 </ItemGroup>
 </Project>

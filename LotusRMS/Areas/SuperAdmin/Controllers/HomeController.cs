@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace LotusRMS.Areas.SuperAdmin.Controllers
+namespace LotusRMSweb.Areas.SuperAdmin.Controllers
 {
     [Area("SuperAdmin")]
     public class HomeController : Controller

@@ -1,37 +1,96 @@
-﻿@model IEnumerable<SelectListItem> 
+﻿@using LotusRMS.Models.Viewmodels.Order;
+@model IEnumerable<OrderMenu> 
 
-<div class="menu">
-    <div class="menu_header">
-        Menu
-    </div>
-    <div class="menu_body">
-        @foreach(var item in Model)
-        {
-            <div class="row">
-                <div class="col-8">
-                    @item.Text
-                </div>
-                <div class="col-2">
-                    <form 
-                        class="menuForm"
-                        asp-action="Selectmenu"
-                        asp-controller="home"
-                        asp-area="Order"
-                        asp-route-MenuId="@item.Value"
-                        data-ajax=true
-                        data-ajax-success="menuSelected()"
-                        data-ajax-update="#AddmenuSection">
-                    <button type="submit" class="btn btn-success"
-                    >+</button>
-                    </form>
-                </div>
+<style>
+    .menu {
+        display: flex;
+        justify-content: space-between;
+        padding: 3px;
+        width: 100%;
+    }
+</style>
+<div style="min-height:400px; max-height:500px; overflow-x:auto;">
 
-                </div>
+    <table class="table tableSearch">
+        <thead>
+            <tr>
+                <td colspan="3">
+                    <div class="input-group rounded">
+                        <input type="search" class="form-control rounded search" onkeyup="mySearchFunction(this)" placeholder="Search" aria-label="Search"
+                               aria-describedby="search-addon" />
+                        <span class="input-group-text border-0" id="search-addon">
+                            <i class="bi bi-search"></i>
+                        </span>
+                    </div>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
 
-        }
-    </div>
+                    <td>@item.Item_Name </td>
+                    <td>
+                       Rs. @item.Rate / @item.Symbol
+                    </td>
 
+                    <td style="text-align:right">
+
+                        <form class="menuForm"
+                          asp-action="Selectmenu"
+                          asp-controller="home"
+                          asp-area="Order"
+                          asp-route-MenuId="@item.Id"
+                              data-ajax=true
+                              data-ajax-success="menuSelected()"
+                              data-ajax-update="#AddmenuSection"
+                              data-ajax-loading="#overlay">
+                            <button type="submit" class="btn btn-success">
+                                +
+                            </button>
+                        </form>
+                    </td>
+
+                </tr>
+               
+            }
+        </tbody>
+    </table>
 </div>
+
+<script>
+    function menuSelected() {
+        $("#addMenuModal").modal("show");
+    }
+    function mySearchFunction(input) {
+        /*Declare variables*/
+        var input, filter, table, tr, td, i, txtValue;
+        filter = input.value.toUpperCase();
+        table = input.closest(".tableSearch");
+        console.log(table);
+        tr = table.getElementsByTagName("tr");
+
+
+        {/*  // Loop through all table rows, and hide those who don't match the search query*/ }
+        for (i = 1; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+
+
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+</script>
+
+
    <div class="modal fade" id="addMenuModal" tabindex="-1">
                 <div class="modal-dialog modal-dialog-centered">
                   <div class="modal-content">
@@ -50,8 +109,3 @@
                 </div>
               </div><!-- End Vertically centered Modal-->
 
-<script>
-function menuSelected() {
-    $("#addMenuModal").modal("show");
-}
-</script>

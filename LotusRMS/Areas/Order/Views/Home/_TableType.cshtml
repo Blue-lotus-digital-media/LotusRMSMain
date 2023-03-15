@@ -13,9 +13,8 @@
                 asp-route-id="@item.Id"
             data-ajax=true
             data-ajax-success="afterTypeSuccess(this)"
-            data-ajax-update="#tableSection"
-            
-            >
+                  data-ajax-update="#tableSection"
+                  data-ajax-loading="#overlay">
             <button type="submit" class="btn typeUnBooked">@item.Type_Name</button>
 
 

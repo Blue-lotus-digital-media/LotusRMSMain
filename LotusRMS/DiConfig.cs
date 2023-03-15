@@ -18,6 +18,10 @@ namespace LotusRMSweb
             services.AddScoped<ITableTypeService, TableTypeService>();
             services.AddScoped<ITableService, TableService>();
             services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<ICheckoutService, CheckoutService>();
+            services.AddScoped<IFiscalYearService, FiscalYearService>();
+            services.AddScoped<IBillSettingService,BillSettingService >();
+            //services.AddScoped<, >();
         }
         }
 }

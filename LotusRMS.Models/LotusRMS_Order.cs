@@ -17,6 +17,9 @@ namespace LotusRMS.Models
         public string Order_No { get; set; }
         public Guid Table_Id { get; set; }
 
+        [ForeignKey("Table_Id")]
+        public virtual LotusRMS_Table Table{get;set;}
+
         [Display(Name = "Date")]
         public string DateTime { get; set; }
 

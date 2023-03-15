@@ -1,0 +1,101 @@
+﻿@using LotusRMS.Models.Viewmodels.Order;
+@model OrderVm
+
+    <div class="row">
+        <div class="col-3">
+            <button class="btn btn-info">refresh</button>
+        </div>
+        <div class="col-6 align-center d-flex justify-spacebetween">
+            <h3>@Model.Table_Name</h3>
+            <h2>by : @Model.OrderBy</h2>
+            </div>
+            <div class="col-3">
+                time
+            </div>
+    </div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>S.N</th>
+            <th>Item Name</th>
+            <th>Quantity</th>
+            <th>Rate</th>
+            <th>Total</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            var i = 1;
+        }
+        @foreach (var item in Model.Order_Details)
+        {
+
+            <tr>
+                <td>@i</td>
+                <td>@item.Item_Name</td>
+                <td>@item.Quantity</td>
+                <td>@item.Rate</td>
+                <td>@item.Total</td>
+                    @if (item.IsComplete)
+                    {
+ <td class="d-flex">
+                            <span class="text-primary"> <i class="bi bi-check"></i></span>
+                        </td>
+                    }
+                    else
+                    {
+
+                        <td class="d-flex">
+                           
+                                  <form asp-action="CompleteOrderDetail"
+                          asp-controller="Home"
+                          asp-area="Checkout"
+                          asp-route-OrderNo="@Model.Order_No"
+                          asp-route-OrderDetailId="@item.Id"
+                                      data-ajax="true"
+                                      data-ajax-update="#orderSection"
+                                  data-ajax-loading="#overlay">
+                            <button type="submit" class="btn btn-primary"><i class="bi bi-check"></i></button>
+                        </form>
+                            @if (!item.IsKitchenComplete)
+                            {
+                                <form
+                          asp-action="CancelOrder"
+                          asp-controller="Home"
+                      asp-area="Checkout"
+                          asp-route-OrderNo="@Model.Order_No"
+                          asp-route-OrderDetailId="@item.Id"
+            data-ajax="true"
+            data-ajax-confirm="Are you sure?"
+            data-ajax-update="#orderSection"
+                                      data-ajax-loading="#overlay">
+                                    <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i></button>
+                                </form>
+                            }
+                        </td>
+                    }
+            </tr>
+            i++;
+        }
+    </tbody>
+   <tfoot>
+        <tr>
+            <td colspan="4" class="text-align:right">
+
+                Total
+            </td>
+            <td align="center">
+                    @{
+                        var gtotal = Model.Order_Details.Sum(x => x.Total);
+                    }
+                    @gtotal
+
+            </td>
+        </tr>
+    </tfoot>
+</table>
+<partial name="_CompleteForm" model="@ViewBag.Checkout" />
+
+  

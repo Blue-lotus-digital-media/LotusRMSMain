@@ -1,0 +1,52 @@
+﻿@model IEnumerable<LotusRMS_Table_Type>
+
+
+<div class="d-flex">
+    @foreach(var item in Model){
+        <div >
+            <form 
+                class="TypeForm"
+
+                asp-action="getTable" 
+                asp-controller="Home" 
+                asp-area="checkout"
+                asp-route-id="@item.Id"
+            data-ajax=true
+            data-ajax-success="afterTypeSuccess(this)"
+                  data-ajax-update="#tableSection"
+                  data-ajax-loading="#overlay">
+            <button type="submit" class="btn typeUnBooked">@item.Type_Name</button>
+
+
+            </form>
+            </div>
+    }
+</div>
+<div id="tableSection">
+
+</div>
+@if (Model != null)
+{
+    <script>
+
+        </script>
+}
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        console.log("Hello World!");
+        if ($(".TypeForm").length > 0) {
+            $(".TypeForm:first").submit();
+        }
+    });
+  
+   function afterTypeSuccess(me){
+    $(".TypeForm").children("button").removeClass("typeSelected");
+    $(me).children("button").addClass("typeSelected");
+
+        if ($(".TableForm").length>0){
+            $(".TableForm:first").submit();
+        }
+    }
+
+</script>

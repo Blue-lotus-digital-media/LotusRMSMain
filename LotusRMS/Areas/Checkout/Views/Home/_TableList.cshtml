@@ -1,0 +1,32 @@
+﻿@model  IEnumerable<LotusRMS_Table>
+
+<div class="d-flex">
+    @foreach(var item in Model){
+    <form 
+        class="TableForm"
+        asp-action="getOrder"
+    asp-controller="home"
+    asp-area="checkout"
+    asp-route-id="@item.Id"
+    tableId="@item.Id"
+    data-ajax="true"
+    data-ajax-success="afterTableSuccess(this)"
+              data-ajax-update="#orderSection"
+              data-ajax-loading="#overlay">
+    <button type="submit" class="btn btn-danger">@item.Table_Name</button> 
+
+</form>
+    }
+
+    
+</div>
+<script>
+    function afterTableSuccess(form){
+        var table_No = $(form).attr("tableId");
+        $('.menuForm').attr('action', function (i, value) {
+
+            var action = value.split("&");
+            return action[0] + "&tableId=" + table_No;
+        });
+    }
+</script>

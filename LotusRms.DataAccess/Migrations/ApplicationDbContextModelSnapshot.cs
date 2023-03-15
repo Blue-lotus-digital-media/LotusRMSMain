@@ -19,6 +19,46 @@ namespace LotusRMS.Migrations
                 .HasAnnotation("ProductVersion", "7.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
+            modelBuilder.Entity("LotusRMS.Models.LotusRMS_FiscalYear", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("EndDateAD")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("EndDateBS")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("StartDateAD")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("StartDateBS")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("tinyint(1)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LotusRMS_FiscalYears");
+                });
+
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_Menu", b =>
                 {
                     b.Property<Guid>("Id")
@@ -188,6 +228,8 @@ namespace LotusRMS.Migrations
 
                     b.HasIndex("OrderBy");
 
+                    b.HasIndex("Table_Id");
+
                     b.ToTable("LotusRMS_Orders");
                 });
 
@@ -201,6 +243,9 @@ namespace LotusRMS.Migrations
                         .HasColumnType("float");
 
                     b.Property<bool>("IsComplete")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsKitchenComplete")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("IsQrOrder")
@@ -667,6 +712,14 @@ namespace LotusRMS.Migrations
                         .HasForeignKey("OrderBy")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("LotusRMS.Models.LotusRMS_Table", "Table")
+                        .WithMany()
+                        .HasForeignKey("Table_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Table");
 
                     b.Navigation("User");
                 });

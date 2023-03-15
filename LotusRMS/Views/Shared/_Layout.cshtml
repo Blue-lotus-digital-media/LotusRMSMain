@@ -34,8 +34,16 @@
   <!-- Template Main CSS File -->
   <link href="~/assets/css/style.css" rel="stylesheet">
 
+    <link href="~/css/site.css" rel="stylesheet" />
+    <link href="~/css/nepali.datepicker.v4.0.1.min.css" rel="stylesheet" />
 </head>
 <body>
+    <div class="wrapper">
+        <div id="overlay">
+            <div class="loader vertical-center">
+            </div>
+        </div>
+
     
   <!-- ======= Header ======= -->
   <header id="header" class="header fixed-top d-flex align-items-center">
@@ -83,7 +91,7 @@
       }
       @if(User.IsInRole("Admin") || User.IsInRole("Cashier")){
       <li class="nav-item">
-        <a class="nav-link collapsed" asp-area="Cashier" asp-controller="checkout" asp-action="index" >
+        <a class="nav-link collapsed" asp-area="checkout" asp-controller="home" asp-action="index" >
           <i class="bi bi-truck"></i><span>Check Out</span> 
         </a>
       </li><!-- End Forms Nav -->
@@ -208,7 +216,7 @@
             </a>
           </li>
           <li>
-            <a href="icons-remix.html">
+            <a asp-action="index" asp-controller="fiscalyear" asp-area="admin">
               <i class="bi bi-circle"></i><span>Fiscal Year</span>
             </a>
           </li>
@@ -236,8 +244,10 @@
   </footer><!-- End Footer -->
 
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-  
+
+    </div>
     <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/js/nepali.datepicker.v4.0.1.min.js" ></script>
   <!-- Vendor JS Files -->
   <script src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
   <script src="~/assets/vendor/apexcharts/apexcharts.min.js"></script>

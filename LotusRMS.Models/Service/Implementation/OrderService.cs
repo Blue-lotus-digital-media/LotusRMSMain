@@ -1,5 +1,6 @@
 ﻿using LotusRMS.Models.Dto.OrderDTO;
 using LotusRMS.Models.IRepositorys;
+using LotusRMS.Models.Viewmodels.Order;
 using LotusRMS.Utility;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace LotusRMS.Models.Service.Implementation
                 Table_Id=dto.Table_Id,
                 OrderBy=dto.UserId,
                 Order_No=RandomStringGenerator.RandomString(6),
-                DateTime=CurrentTime.DateTimeNow().ToLongDateString(),
+                DateTime=CurrentTime.DateTimeNow().ToString(),
                 Order_Details = new List<LotusRMS_Order_Details>()
             };
             foreach(var item in dto.OrderDetails)
@@ -66,7 +67,7 @@ namespace LotusRMS.Models.Service.Implementation
 
         public LotusRMS_Order GetByGuid(Guid Id)
         {
-            throw new NotImplementedException();
+            return _IOrderRepository.GetByGuid(Id);
         }
 
         public Task<LotusRMS_Order> GetByGuidAsync(Guid Id)
@@ -76,20 +77,41 @@ namespace LotusRMS.Models.Service.Implementation
 
         public LotusRMS_Order GetFirstOrDefaultByTableId(Guid TableId)
         {
-            var orders = _IOrderRepository.GetFirstOrDefault(filter: x=>x.Table_Id==TableId && !x.IsCheckout ,includeProperties: "Order_Details,User");
+            var orders = _IOrderRepository.GetFirstOrDefault(filter: x=>x.Table_Id==TableId && !x.IsCheckout ,includeProperties: "Order_Details,User,Table");
             return orders;
         }
        
 
         public LotusRMS_Order GetFirstOrDefaultByOrderNo(string orderNo)
         {
-            var orders = _IOrderRepository.GetFirstOrDefault(filter: x=>x.Order_No==orderNo ,includeProperties: "Order_Details , User");
+            var orders = _IOrderRepository.GetFirstOrDefault(filter: x=>x.Order_No==orderNo ,includeProperties: "Order_Details,User,Table");
             return orders;
         }
 
         public Guid Update(UpdateOrderDTO dto)
         {
             throw new NotImplementedException();
+        }
+        public Guid UpdateCompleteOrder(UpdateOrderDTO dto)
+        {
+            var order = new LotusRMS_Order()
+            {
+                Id=dto.Order_Id,
+                Order_Details=new List<LotusRMS_Order_Details>()
+            };
+
+            foreach(var item in dto.OrderDetail)
+            {
+                var orderDetail = new LotusRMS_Order_Details()
+                {
+                    MenuId = item.Menu_Id,
+                    Quantity = item.Quantity,
+                    Rate = item.Rate
+                };
+                order.Order_Details.Add(orderDetail);
+            }
+            _IOrderRepository.UpdateCompleteOrder(order);
+            return order.Id;
         }
 
         public Task<Guid> UpdateAsync(UpdateOrderDTO dto)
@@ -105,6 +127,17 @@ namespace LotusRMS.Models.Service.Implementation
         public Task<Guid> UpdateStatusAsync(Guid Id)
         {
             throw new NotImplementedException();
+        }
+
+        public Guid CancelOrder(string OrderNo, Guid OrderDetailId)
+        {
+            _IOrderRepository.CancelOrder(OrderNo, OrderDetailId);
+            return OrderDetailId; 
+        }
+        public Guid CompleteOrderDetail(string OrderNo, Guid OrderDetailId)
+        {
+            _IOrderRepository.CompleteOrderDetail(OrderNo, OrderDetailId);
+            return OrderDetailId; 
         }
     }
 }

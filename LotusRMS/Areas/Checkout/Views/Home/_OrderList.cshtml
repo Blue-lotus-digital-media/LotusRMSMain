@@ -1,0 +1,36 @@
+﻿@using LotusRMS.Models.Viewmodels.Order
+@model List<AddNewOrderVM>
+
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>S.N</th>
+            <th>Item Name</th>
+            <th>Quantity</th>
+            <th>Rate</th>
+            <th>Total</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            var i = 1;
+        if(Model!=null){
+            foreach (var item in Model)
+        {
+
+            <tr>
+                <td>@i</td>
+                <td>@item.Item_Name</td>
+                <td>@item.Quantity</td>
+                <td>@item.Rate</td>
+                <td>@item.Total</td>
+                <td>
+                    <button>Delete</button>
+                </td>
+            </tr>
+            i++;
+        }}}
+    </tbody>
+</table>

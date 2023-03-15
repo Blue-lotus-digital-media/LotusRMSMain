@@ -1,0 +1,261 @@
+﻿@using LotusRMS.Models.Viewmodels.Checkout;
+@using LotusRMS.Utility.Enum;
+@model CreateCheckoutVM
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+<style>
+    /* Chrome, Safari, Edge, Opera */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* Firefox */
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+    .checkoutDetail {
+        display: flex;
+    }
+
+    .customerDetail {
+        width: 60%;
+        margin: 10px;
+        padding: 5px;
+        border: 1px solid black;
+        border-radius: 5px;
+        box-shadow: 2px 2px #344343;
+    }
+
+        .customerDetail .row {
+            padding: 3px;
+        }
+
+    .billDetail {
+        width: 40%;
+        margin: 10px;
+        padding: 5px;
+        border: 1px solid black;
+        border-radius: 5px;
+        box-shadow: 2px 2px #344343;
+    }
+
+        .billDetail .row {
+            padding: 3px;
+        }
+</style>
+<form id="checkoutForm"
+    asp-action="completeCheckout"
+    asp-controller="home"
+    asp-area="checkout"
+    data-ajax="true"
+    data-ajax-success=""
+    data-ajax-update="#orderSection"
+    data-ajax-loading="#overlay">
+
+<div class="checkoutDetail">
+    <div class="customerDetail">
+        <div class="row">
+            <div class="col-5">
+                Customer Name
+            </div>
+            <div class="col-7">
+                <input class="form-control" id="customer_Name" asp-for="Customer_Name" />
+                <input class="form-control" id="customer_Id" asp-for="Customer_Id" hidden value="0" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5">
+                Address
+            </div>
+            <div class="col-7">
+                <input class="form-control" id="customer_Address" asp-for="Customer_Address" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5">
+                Contact
+            </div>
+            <div class="col-7">
+                <input type="number" class="form-control" id="customer_Contact" asp-for="Customer_Contact" />
+            </div>
+        </div>
+        <div class="w-100 mt-5">
+            <h2 class="text-danger text-center">
+                Refund = <label id="refundAmount"> 0.0 </label>
+                <input type="text" name="RefundAmount" hidden id="refAmt" />
+            </h2>
+        </div>
+
+
+
+
+    </div>
+    <div class="billDetail">
+        <div class="row">
+            <div class="col-5">
+                Total rs.
+            </div>
+            <div class="col-7">
+                <input type="text" id="GTotal" class="form-control" asp-for="Total" readonly />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5">
+                Discount rs.
+            </div>
+            <div class="col-7">
+                <div class="discountDiv row">
+                    <div class="col-7 p-0 pl-3">
+                        <input type="number" id="DiscountAmount" onkeyup="calculateDiscount()" asp-for="Discount" value="0" class="form-control" />
+                    </div>
+                    <div class="col-5 p-0 pr-3">
+                        <select id="discountType" class="form-control" asp-for="Discount_Type" asp-items="Html.GetEnumSelectList<DiscountTypeEnum>()">
+                            
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5">
+                Grand Total Rs.
+            </div>
+            <div class="col-7">
+                <input type="text" id="GrandAmount" class="form-control" value="@Model.Total" readonly />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5">
+                Tender Amount
+            </div>
+            <div class="col-7">
+                <input type="number" id="TenderAmount" onkeyup="calculateRefund()" value="0" class="form-control" asp-for="Paid_Amount" />
+
+                <div class="invalid-tooltip">Tender amount must be equal or greater then grand total.</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5">
+                Payment
+            </div>
+            <div class="col-7">
+                <select name="PaymentType" id="CheckoutMode" class="form-control" asp-items="Html.GetEnumSelectList<PaymentModeEnum>()">
+                    
+                </select>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="footer row">
+    <div class="col-6">
+        
+            <tr>
+                <td colspan="2" class="align-left">
+                    @*<a asp-action="GoToRoom" asp-route-TableId="@Model.Table_No" class="btn btn-info">Go To Room</a>*@
+
+                    <a class="Switch btn" style="color:white ; background-color:#009900" onclick="$('#TableSwitchForm').submit();">Switch Table</a>
+                    <a class="btn" style="color:white ; background-color:#229966" onclick="$('#ReturnOrderForm').submit();">Return Order</a>
+
+                </td>
+            </tr>
+       
+    </div>
+    <div class="col-6 pr-3 text-right">
+        <div id="mainBtn">
+            <input type="text" asp-for="Order_Id" hidden />
+            <button type="button" class="btn btn-success" onclick="validateCheckout()" id="checkoutSubmitBtn">
+                Checkout <i class="fa fa-shopping-cart"></i>
+            </button>
+
+        </div>
+
+
+
+    </div>
+</div>
+</form>
+@*return Order form*@
+<form asp-action="ReturnOrder" id="ReturnOrderForm" hidden
+      asp-route-OrderId="@Model.Order_Id"
+      data-ajax=true
+      data-ajax-success=""
+      data-ajax-update="#customerDue"
+      data-ajax-loading="#overlay">
+    <button type="submit" class="btn btn-success" form="returnForm">
+        return order <i class="fa fa-book-open"></i>
+    </button>
+</form>
+                <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        console.log("Hello World!");
+        calculateDiscount();
+        $("#discountType").change(function () {
+            calculateDiscount();
+
+        });
+        $("input[type='number']").focus(function () {
+            this.select();
+        });
+    });
+
+    function calculateDiscount() {
+        var total = $("#GTotal").val();
+        var discount = $("#DiscountAmount").val();
+        var discountType = $("#discountType option:selected").text();
+        console.log(discountType);
+        var gt = 0;
+        if (discountType != "Rs.") {
+
+            gt = total - discount * total / 100;
+        } else {
+            gt = total - discount;
+        }
+
+        $("#GrandAmount").val(gt);
+
+        calculateRefund();
+
+    }
+    function calculateRefund() {
+        var tanderAmount = $("#TenderAmount").val();
+        var gt = $("#GrandAmount").val();
+        var refund = tanderAmount - gt;
+        $("#refundAmount").text(refund);
+        $("#refAmt").val(refund);
+    }
+    function validateCheckout() {
+        console.log($("#CheckoutMode option:selected").text());
+        if ($("#CheckoutMode option:selected").text() == "Cash" && parseInt($("#TenderAmount").val()) < parseInt($("#GrandAmount").val())) {
+            $("#TenderAmount").css("border", "1px solid red");
+            $("#TenderAmount").attr("focused", "true");
+            $(".invalid-tooltip").css("display", "block");
+
+            return false;
+        } else if ($("#CheckoutMode option:selected").text() == "Credit" && $("#customer_Id").val() == 0) {
+            alert("Please select customer before checkout change payment mode");
+        }
+
+        else {
+            $("#checkoutSubmitBtn").attr("disabled", "true");
+            $("#checkoutForm").submit();
+        }
+    }
+    function checkValid() {
+        if (document.getElementsByClassName("unserved").length > 0) {
+
+           
+            $("#mainBtn").children("button").attr("disabled", "true");
+
+        } else {
+           
+            $("#mainBtn").children("button").removeAttr("disabled");
+        }
+    }
+
+
+</script>
