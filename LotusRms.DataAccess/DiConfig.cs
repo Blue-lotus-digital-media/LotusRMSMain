@@ -28,6 +28,8 @@ namespace LotusRMS.DataAccess
             services.AddScoped<ICheckoutRepository, CheckoutRepository>();
             services.AddScoped<IFiscalYearRepository, FiscalYearRepository>();
             services.AddScoped<IBillSettingRepository,BillSettingRepository >();
+            services.AddScoped<ICompanyRepository,CompanyRepository >();
+            //services.AddScoped<, >();
         }
         }
 }

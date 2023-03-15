@@ -1,0 +1,177 @@
+﻿@using LotusRMS.Models.Viewmodels.Company;
+@model CreateCompanyVM
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Add Organization Details </h5>
+
+        <!-- Multi Columns Form -->
+            <form class="row g-3" 
+            id="mainForm"
+            asp-action="create"
+                  asp-controller="Company"
+                  asp-area="superadmin">
+            <div class="col-md-12">
+                <label for="organizationName" class="form-label">Organization Name</label>
+                <input type="text" class="form-control" id="organizationName" asp-for="CompanyName">
+                <span asp-validation-for="CompanyName" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label for="regNumber" class="form-label">Company Registration Number</label>
+                <input class="form-control" id="regNumber" asp-for="CompanyRegistrationNumber">
+
+                <span asp-validation-for="CompanyRegistrationNumber" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label for="regDate" class="form-label">Company Registration Date</label>
+                <input type="date" class="form-control" id="regDate" asp-for="RegistrationDate">
+
+                <span asp-validation-for="RegistrationDate" class="text-danger"></span>
+            </div>
+           
+            <div class="col-md-6">
+                <label for="panNumber" class="form-label">PAN Number</label>
+                <input class="form-control" id="panNumber" asp-for="PanOrVat">
+
+                <span asp-validation-for="PanOrVat" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label for="Number" class="form-label">Contact Number</label>
+                <input class="form-control" id="Number" asp-for="Contact">
+
+                <span asp-validation-for="Contact" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" asp-for="Email">
+
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="col-6">
+                <label for="Country" class="form-label">Country</label>
+                <input type="text" class="form-control" id="inputAddress2" asp-for="Country">
+
+                <span asp-validation-for="Country" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label for="inputState" class="form-label">Province</label>
+                <select id="inputState" class="form-select" asp-for="Province">
+                    <option>Choose province...</option>
+                    <option value="Koshi">Koshi</option>
+                    <option value="Madhesh">Madhesh</option>
+                    <option value="Bagmati">Bagmati</option>
+                    <option value="Gandaki">Gandaki</option>
+                    <option value="Lumbini">Lumbini</option>
+                    <option value="Karnali">Karnali</option>
+                    <option value="Sudurpashchim">Sudurpashchim</option>
+             </select>
+
+                <span asp-validation-for="Province" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label for="inputCity" class="form-label">City</label>
+                <input type="text" class="form-control" id="inputCity" asp-for="City">
+
+                <span asp-validation-for="City" class="text-danger"></span>
+            </div>
+          
+            <div class="col-md-6">
+                <label for="inputToal" class="form-label">Tole</label>
+                <input type="text" class="form-control" id="inputToal" asp-for="Tole">
+
+                <span asp-validation-for="Tole" class="text-danger"></span>
+            </div>
+
+            <label for="cPerson2" class="form-label" style="font-size: 2rem;">Contact Person Details</label>
+           <div id="contactPersonSection" class="row m-2">
+                <div class="col-md-6 " id="contactperson0">
+                    <h3>
+                        Contact Person 1
+                    </h3>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="form-label">Contact Person Name</label>
+                            <input type="text" class="form-control" asp-for="ContactPerson[0].PersonName" required>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Phone Number</label>
+                            <input  class="form-control" asp-for="ContactPerson[0].ContactNumber" required>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Address</label>
+                            <input class="form-control" asp-for="ContactPerson[0].Address" required>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="col-md-6" id="contactperson1">
+                    <h3>
+                        Contact Person 2
+                    </h3>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="form-label">Contact Person Name</label>
+                            <input type="text" class="form-control" asp-for="ContactPerson[1].PersonName">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Phone Number</label>
+                            <input class="form-control" asp-for="ContactPerson[1].ContactNumber">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Address</label>
+                            <input class="form-control" asp-for="ContactPerson[1].Address">
+                        </div>
+                    </div>
+
+                </div>
+             
+                </div>
+            <label for="cPerson2" class="form-label" style="font-size: 2rem;">System registration section</label>
+
+                <div class="row">
+                <div class="col-md-6">
+                    <label for="regNo" class="form-label">System Contract Number</label>
+                    <input class="form-control" id="regNo" asp-for="RegistrationNo">
+
+                    <span asp-validation-for="RegistrationNo" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Service Contract Date</label>
+                    <input type="date" class="form-control" asp-for="ContractDate">
+
+                    <span asp-validation-for="ContractDate" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Service start date</label>
+                    <input type="date" class="form-control" asp-for="ServiceStartDate">
+
+                    <span asp-validation-for="ServiceStartDate" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Service Valid Till</label>
+                    <input type="date" class="form-control" asp-for="ValidTill">
+
+                    <span asp-validation-for="ValidTill" class="text-danger"></span>
+                </div>
+                </div>
+
+            
+            <div class="d-flex justify-content-end">
+                <button type="reset" class="btn btn-danger mx-2 ">Reset</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+
+        </form><!-- End Multi Columns Form -->
+    
+    </div>
+</div>
+@section Scripts{
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+
+
+}
