@@ -21,6 +21,7 @@ namespace LotusRMSweb
             services.AddScoped<ICheckoutService, CheckoutService>();
             services.AddScoped<IFiscalYearService, FiscalYearService>();
             services.AddScoped<IBillSettingService,BillSettingService >();
+            services.AddScoped<ICompanyService,CompanyService >();
             //services.AddScoped<, >();
         }
         }

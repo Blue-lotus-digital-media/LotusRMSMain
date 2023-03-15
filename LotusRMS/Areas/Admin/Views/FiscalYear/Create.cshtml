@@ -16,34 +16,54 @@
                     </div>
                 </div>
                 <div class="row mb-3">
-                    <label for="startDate" class="col-sm-2 col-form-label" >Start Date</label>
-                    
+                    <label for="startDate" class="col-sm-2 col-form-label">Start Date</label>
+
                     <div class="col-sm-10">
-                        <div class="input-group">
-                            <input type="text" asp-for="StartDateBS" id="start-bs" class="form-control" placeholder="Date In BS ">
-                            <input type="text" asp-for="StartDateAD" id="start-ad" >
-                            <span class="input-group-text"><i class="bi bi-calendar-check"></i></span>
+                        <div class="row">
+
+                            <div class="col-md-6 ">
+
+                                <div class=" input-group">
+                                    <span class="input-group-text">BS</span>
+                                    <input type="text" asp-for="StartDateBS" id="start-bs" class="form-control" placeholder="Start Date In BS ">
+                                    <span class="input-group-text"><i class="bi bi-calendar-check"></i></span>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+
+                                <div class=" input-group">
+                                    <span class="input-group-text">AD</span>
+                                    <input type="text" asp-for="StartDateAD" class="form-control" id="start-ad" readonly placeholder="Start Date in AD">
+
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="row mb-3">
-                    <label for="endDate" class="col-sm-2 col-form-label" >End Date</label>
-                  
+                    <label for="endDate" class="col-sm-2 col-form-label">End Date</label>
                     <div class="col-sm-10">
-                        <div class="input-group">
-                            <input type="text" asp-for="EndDateBS" id="end-bs" class="form-control" placeholder="Date In BS ">
-                            <input type="text" asp-for="EndDateAD" id="end-ad"  >
-                            <span class="input-group-text"><i class="bi bi-calendar-check"></i></span>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class=" input-group">
+                                    <span class="input-group-text">BS</span>
+                                    <input type="text" asp-for="EndDateBS" id="end-bs" class="form-control" placeholder="End Date In BS ">
+                                    <span class="input-group-text"><i class="bi bi-calendar-check"></i></span>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class=" input-group">
+                                    <span class="input-group-text">AD</span>
+                                    <input type="text" asp-for="EndDateAD" id="end-ad" class="form-control" readonly placeholder="End Date in AD">
+                                </div>
+                            </div>
                         </div>
-
                     </div>
-                    <div class="row mb-3">
+                    <div class="row mt-2 mb-3">
                         <legend class="col-form-label col-sm-2 pt-0">Is this current?</legend>
                         <div class="col-sm-10">
-
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="gridCheck1" asp-for="IsActive">
-
+                                <input class="form-check-input" type="checkbox" id="gridCheck1" asp-for="IsActive" style="width:2em; height:2em">
                             </div>
                         </div>
                     </div>
@@ -86,21 +106,21 @@
     };
 
     function ChangeStartDate() {
-         var date = $("#start-bs").val();
+        var date = $("#start-bs").val();
 
-            var adDate = NepaliFunctions.BS2AD(date, "YYYY-MM-DD");
+        var adDate = NepaliFunctions.BS2AD(date, "YYYY-MM-DD");
 
-           $("#start-ad").val(adDate);
-           
+        $("#start-ad").val(adDate);
+
     }
     function ChangeEndDate(me) {
 
         var date = $("#end-bs").val();
 
-            var adDate = NepaliFunctions.BS2AD(date, "YYYY-MM-DD");
+        var adDate = NepaliFunctions.BS2AD(date, "YYYY-MM-DD");
 
-           $("#end-ad").val(adDate);
+        $("#end-ad").val(adDate);
 
     }
-   
+
 </script>

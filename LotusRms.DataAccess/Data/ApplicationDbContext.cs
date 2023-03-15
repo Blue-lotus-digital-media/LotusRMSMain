@@ -23,6 +23,8 @@ namespace LotusRMS.DataAccess
         public DbSet<LotusRMS_Menu> LotusRMS_Menus { get; set; }
         public DbSet<LotusRMS_Order> LotusRMS_Orders { get; set; }
         public DbSet<LotusRMS_FiscalYear> LotusRMS_FiscalYears { get; set; }
+        public DbSet<LotusRMS_Company> Company { get; set; }
+
 
        
     }   
