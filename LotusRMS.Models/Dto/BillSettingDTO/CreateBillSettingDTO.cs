@@ -11,7 +11,7 @@ namespace LotusRMS.Models.Dto.BillSettingDTO
         public string BillPrefix { get; set; }
         public string BillTitle { get; set; }
         public string BillAddress { get; set; }
-        public string BillNote { get; set; }
+        public string? BillNote { get; set; }
 
         public bool IsPhone { get; set; } = true;
         public bool IsPanOrVat { get; set; } = true;

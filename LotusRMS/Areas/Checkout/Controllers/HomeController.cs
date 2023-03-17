@@ -9,6 +9,7 @@ using LotusRMS.Models.Viewmodels.Checkout;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using LotusRMS.Models.Dto.CheckoutDTO;
 using LotusRMS.Utility;
+using LotusRMS.Models.Viewmodels.FiscalYear;
 
 namespace LotusRMSweb.Areas.Checkout.Controllers
 {
@@ -23,7 +24,9 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
         private readonly UserManager<RMSUser> _UserManager;
         private readonly IOrderService _IOrderService;
         private readonly ICheckoutService _ICheckoutService;
-        public HomeController(IOrderService iOrderService, ITableTypeService TableTypeService, ITableService iTableService, IMenuService iMenuService, ICheckoutService iCheckoutService, UserManager<RMSUser> userManager)
+        private readonly IBillSettingService _IBillSettingService;
+        private readonly ICustomerService _ICustomerService;
+        public HomeController(IOrderService iOrderService, ITableTypeService TableTypeService, ITableService iTableService, IMenuService iMenuService, ICheckoutService iCheckoutService, UserManager<RMSUser> userManager, IBillSettingService iBillSettingService, ICustomerService iCustomerService)
         {
             _IOrderService = iOrderService;
             _ITableTypeService = TableTypeService;
@@ -31,9 +34,15 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
             _IMenuService = iMenuService;
             _UserManager = userManager;
             _ICheckoutService = iCheckoutService;
+            _IBillSettingService = iBillSettingService;
+            _ICustomerService = iCustomerService;
         }
         public IActionResult Index()
         {
+            if (_IBillSettingService.GetActive() == null) {
+                
+            }
+
             var type = _ITableTypeService.GetAll().Where(x => !x.IsDelete && x.Status);
             return View(type);
         }
@@ -62,14 +71,14 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
                 Total = vm.Total,
                 Discount_Type = vm.Discount_Type,
                 Discount = vm.Discount,
-                Payment_Mode = vm.Payment_Mode
+                Payment_Mode = vm.Payment_Mode,
+                Paid_Amount=vm.Paid_Amount
 
             };
             var id=_ICheckoutService.Create(dto);
 
+            return RedirectToAction("InvoicePrint", "Invoice", new {Areas="",Id = id });
 
-
-            return View();
         }
 
         public OrderVm GetOrderVM(Guid? tableId, string? orderNo)
@@ -164,13 +173,31 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
             {
                 Order_Id=Order_Id,
                 Total=Total
-
-
             };
-
-
-
             return checkoutVm;
         }
+        #region API 
+        [HttpGet]
+        public IActionResult GetCustomerView()
+        {
+            return PartialView("_CustomerView");
+        }
+        [HttpPost]    
+        public IActionResult GetAllCustomer()
+        {
+            var customer = _ICustomerService.GetAllAvailable().Select(x=>new CustomerCheckOutVM()
+            {
+                Id=x.Id,
+                Name=x.Name,
+                Address=x.Address,
+                Contact=x.Contact,
+                PanOrVat=x.PanOrVat,
+                Due=x.DueBooks.LastOrDefault().BalanceDue
+            });
+
+            return Json(new { data = customer });
+        }
+
+        #endregion
     }
 }

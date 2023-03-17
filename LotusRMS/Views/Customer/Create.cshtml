@@ -1,0 +1,67 @@
+﻿@using LotusRMS.Models.Viewmodels.Customer;
+@model CreateCustomerVM
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<div class="col-lg-12">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Customer Detail</h5>
+
+            <!-- General Form Elements -->
+            <form asp-action="Create" asp-area="" asp-controller="Customer">
+                <div class="row mb-3">
+                    <label for="name" class="col-sm-2 col-form-label">Customer Name</label>
+                    <div class="col-sm-10">
+                        <input asp-for="Name" class="form-control" id="name">
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                </div>
+                <div class="row mb-3">
+                    <label for="address" class="col-sm-2 col-form-label">Customer Address</label>
+                    <div class="col-sm-10">
+                        <input asp-for="Address" class="form-control" id="address">
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+
+                </div>
+                <div class="row mb-3">
+                    <label for="contact" class="col-sm-2 col-form-label">Customer Contact</label>
+                    <div class="col-sm-10">
+                        <input asp-for="Contact" class="form-control" id="contact">
+                        <span asp-validation-for="Contact" class="text-danger"></span>
+                    </div>
+                </div> 
+                <div class="row mb-3">
+                    <label for="panorvat" class="col-sm-2 col-form-label">PAN or VAT</label>
+                    <div class="col-sm-10">
+                        <input asp-for="PanOrVat" class="form-control" id="panorvat">
+                        <span asp-validation-for="PanOrVat" class="text-danger"></span>
+                    </div>
+                </div> 
+                <div class="row mb-3">
+                    <label for="due" class="col-sm-2 col-form-label">Previous Due Amount</label>
+                    <div class="col-sm-10">
+                        <input asp-for="DueAmount" class="form-control" id="due">
+                        <span asp-validation-for="DueAmount" class="text-danger"></span>
+                    </div>
+                </div>
+
+
+
+          
+                <div class="row mb-3">
+                    <div class="col-sm-10">
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </div>
+                </div>
+            </form><!-- End General Form Elements -->
+        </div>
+    </div>
+</div>
+

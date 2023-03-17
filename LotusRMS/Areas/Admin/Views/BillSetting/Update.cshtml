@@ -1,0 +1,269 @@
+﻿@using LotusRMS.Models.Viewmodels.BillSetting;
+@using LotusRMS.Utility;
+@model CreateBillSettingVM
+
+<link href="~/css/BillSetting.css" rel="stylesheet" />
+<div class="row">
+    <div class="col-lg-6">
+
+        <div class="card">
+            <div class="card-body">
+
+
+                <!-- General Form Elements -->
+                <div class="topflex">
+                    <div class="head">
+                        <div class="head-sub">
+                            <div class="cName">
+                                <h2 class="cHead" id="finalName">@Model.BillTitle</h2>
+                            </div>
+                            <div class="address">
+                                <h5 class="cAddress" id="finalAddress">@Model.BillAddress</h5>
+                            </div>
+                            <div class="phone">
+                                <p class="phone-number" id="phoneNo"> <span>Phone No: </span>@Model.Contact</p>
+                            </div>
+
+                        </div>
+                        <div class="tablehead" id="top-tablehead">
+                            <div class="invoice">
+                                <p class="pan-no" id="panNo"><span>Pan No:</span> @Model.PanOrVat</p>
+                                <p>
+                                    Bill No.
+                                    <span id="final-prefix">@Model.BillPrefix</span><span id="final-date">@Model.FiscalYear</span><span id="final-bill">_0001</span>
+
+
+                                </p>
+                            </div>
+
+                            <div class="date final-date">
+                                <p>Date: @CurrentTime.DateTimeToday()</p>
+                                <p>Time: <span>@CurrentTime.DateTimeNow().ToShortTimeString() </span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="border-class"></div>
+
+                    <div class="cdetails">
+                        <div class="right-cdetails">
+                            <p>Name: </p>
+                            <p>Address:</p>
+                            <p>Phone:</p>
+                            <p>Table: </p>
+                        </div>
+                        <div class="left-cdetails">
+                            <p>Customer Name</p>
+                            <p>Address</p>
+                            <p>Customer phone number</p>
+                            <p>Table Name (Table No.)</p>
+                        </div>
+                    </div>
+
+                    <table id="customers">
+                        <tr>
+                            <th>S.N</th>
+                            <th>Item Name</th>
+                            <th>Qty</th>
+                            <th>Rate</th>
+                            <th>Amount</th>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>Momo</td>
+                            <td>1 plate</td>
+                            <td>120</td>
+                            <td>120</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Choumin</td>
+                            <td>1 plate</td>
+                            <td>150</td>
+                            <td>150</td>
+                        </tr>
+                        <tr>
+                            <th colspan="4">
+                                Total
+                            </th>
+
+                            <th>270</th>
+                        </tr>
+                    </table>
+
+
+                    <div class="right">
+                        <div class="right-topic">
+                            <p>Total: </p>
+                            <p>Discount: </p>
+                            <p>Tender Amount:</p>
+                            <p>Return:</p>
+                            <p class="bold">Grand Amount: </p>
+                        </div>
+                        <div class="right-amount">
+                            <p>270</p>
+                            <p>0</p>
+                            <p>300</p>
+                            <p>30</p>
+                            <p class="bold">270</p>
+                        </div>
+
+                    </div>
+                    <div class="inWord">
+                        <p>In Word: <span class="InWord">@NumberToWord.MoneyToWords(270) </span></p>
+                    </div>
+                    <div class="thank">
+                        <p>Thank You</p>
+                    </div>
+                    <div class="note">
+                        <p>Note: <span id="notes">...</span></p>
+                    </div>
+                    <div class="serve-printby">
+                        <p>Serve by: <span>Raju Mishra</span> </p>
+                        <p>Printed by: <span>Bhuwan</span> </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-lg-6">
+        <form asp-action="create"
+              asp-area="admin"
+              asp-controller="billsetting">
+            <div class="card">
+                <div class="card-body">
+                    <div class="bottomflex">
+                        <div class="head">
+                            <div class="head-sub">
+                                <div class="cName bottomflex-cName">
+                                    <input type="text" class="form-control" id="companyNameInput" placeholder="Company Name"
+                                           onkeyup="changeName(this)" asp-for="BillTitle">
+                                    <!-- <h2 class="cHead">Company Name</h2> -->
+                                </div>
+                                <div class="address bottomflex-address">
+                                    <input type="text" class="form-control" id="companyAddressInput" placeholder="Address"
+                                           onkeyup="changeAdd(this)" asp-for="BillAddress">
+                                    <!-- <h5 class="cAddress">Birtamode 5, Jhapa</h5> -->
+                                </div>
+                                <div class="phone">
+                                    <input type="checkbox" id="phoneId" onchange="hidePhone(this)" asp-for="IsPhone">
+                                    <span class=" phone-number">Phone No: @Model.Contact</span>
+                                </div>
+
+                            </div>
+                            <div class="tablehead">
+                                <div class="invoice">
+                                    <input type="checkbox" id="panId" onchange="hidePan(this)" asp-for="IsPanOrVat">
+                                    <span class="pan-no">Pan No: @Model.PanOrVat</span>
+                                    <p>
+                                        Bill No.
+                                        <input type="text" id="prefix" placeholder="prefix" class="form-control"
+                                               onkeyup="changePrefix(this)" asp-for="BillPrefix">
+                                        <input type="checkbox" id="date" onchange="hideDate(this)" asp-for="IsFiscalYear">@Model.FiscalYear
+                                        <span type="text" id="billNo"></span>
+                                    </p>
+                                </div>
+
+                                <div class=" date">
+                                    <p>Date: @CurrentTime.DateTimeToday()</p>
+                                    <p>Time: <span>@CurrentTime.DateTimeNow().ToShortTimeString() </span></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-class"></div>
+
+                        <div class="cdetails">
+                            <div class="right-cdetails">
+                                <p>Name: </p>
+                                <p>Address:</p>
+                                <p>Phone:</p>
+                                <p>Table: </p>
+                            </div>
+                            <div class="left-cdetails">
+                                <p>Customer Name</p>
+                                <p>Address</p>
+                                <p>Customer phone number</p>
+                                <p>Table Name (Table No.)</p>
+                            </div>
+                        </div>
+
+                        <table id="customers">
+                            <tr>
+                                <th>S.N</th>
+                                <th>Item Name</th>
+                                <th>Qty</th>
+                                <th>Rate</th>
+                                <th>Amount</th>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Momo</td>
+                                <td>1 plate</td>
+                                <td>120</td>
+                                <td>120</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Choumin</td>
+                                <td>1 plate</td>
+                                <td>150</td>
+                                <td>150</td>
+                            </tr>
+                            <tr>
+                                <th colspan="4">
+                                    Total
+                                </th>
+
+                                <th>270</th>
+                            </tr>
+                        </table>
+
+
+                        <div class="right">
+                            <div class="right-topic">
+                                <p>Total: </p>
+                                <p>Discount: </p>
+                                <p>Tender Amount:</p>
+                                <p>Return:</p>
+                                <p class="bold">Grand Amount: </p>
+                            </div>
+                            <div class="right-amount">
+                                <p>270</p>
+                                <p>0</p>
+                                <p>300</p>
+                                <p>30</p>
+                                <p class="bold">270</p>
+                            </div>
+
+                        </div>
+                        <div class="inWord">
+                            <p>In Word: <span class="InWord">@NumberToWord.MoneyToWords(270) </span></p>
+                        </div>
+                        <div class="thank">
+                            <p>Thank You</p>
+                        </div>
+
+                        <div class="form-group green-border-focus">
+                            <label for="exampleFormControlTextarea5">Note:</label>
+                            <textarea class="form-control" id="inputNote" rows="1" onkeyup="changeNote(this)" asp-for="BillNote"></textarea>
+                        </div>
+
+                        <div class="serve-printby">
+                            <p>Serve by: <span>Waiter name</span> </p>
+                            <p>Printed by: <span>cashier name</span> </p>
+                        </div>
+                    </div>
+                    <div class="border-class border-down"></div>
+                    <div class="btn-container">
+                        <label>Make this bill Active </label> <input type="checkbox" asp-for="IsActive" class="mr-3" />
+                        <button type="submit" class="btn btn-primary buttons">Save</button>
+                    </div>
+
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+<script src="~/js/BillsettingForm.js"></script>

@@ -102,7 +102,7 @@ namespace LotusRMSweb.Areas.SuperAdmin.Controllers
                 Contact = company.Contact,
                 PanOrVat = company.PanOrVat,
                 RegistrationDate = company.RegistrationDate,
-
+                RegistrationNo=company.RegistrationNo,
                 CompanyRegistrationNumber = company.CompanyRegistrationNumber,
                 ContractDate = company.ContractDate,
                 ServiceStartDate = company.ServiceStartDate,

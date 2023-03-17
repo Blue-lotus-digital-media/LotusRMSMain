@@ -47,6 +47,103 @@ namespace LotusRMS.Migrations
                     b.ToTable("ContactPerson");
                 });
 
+            modelBuilder.Entity("LotusRMS.Models.LotusRMS_BillSetting", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("BillAddress")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("BillNote")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("BillPrefix")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("BillTitle")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsFiscalYear")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsPanOrVat")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsPhone")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("tinyint(1)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LotusRMS_BillSettings");
+                });
+
+            modelBuilder.Entity("LotusRMS.Models.LotusRMS_Checkout", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Customer_Address")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Customer_Contact")
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid?>("Customer_Id")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Customer_Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("DateTime")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<float>("Discount")
+                        .HasColumnType("float");
+
+                    b.Property<int>("Discount_Type")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Invoice_No")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid>("Order_Id")
+                        .HasColumnType("char(36)");
+
+                    b.Property<float>("Paid_Amount")
+                        .HasColumnType("float");
+
+                    b.Property<int>("Payment_Mode")
+                        .HasColumnType("int");
+
+                    b.Property<float>("Total")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Order_Id");
+
+                    b.ToTable("LotusRMS_Checkout");
+                });
+
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_Company", b =>
                 {
                     b.Property<Guid>("Id")
@@ -114,6 +211,75 @@ namespace LotusRMS.Migrations
                     b.ToTable("Company");
                 });
 
+            modelBuilder.Entity("LotusRMS.Models.LotusRMS_Customer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Contact")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PanOrVat")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("tinyint(1)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LotusRMS_Customers");
+                });
+
+            modelBuilder.Entity("LotusRMS.Models.LotusRMS_DueBook", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<float>("BalanceDue")
+                        .HasColumnType("float");
+
+                    b.Property<float>("DueAmount")
+                        .HasColumnType("float");
+
+                    b.Property<string>("DueDate")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<float>("Invoice_Amount")
+                        .HasColumnType("float");
+
+                    b.Property<Guid?>("Invoice_Id")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid?>("LotusRMS_CustomerId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<float>("PaidAmount")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Invoice_Id");
+
+                    b.HasIndex("LotusRMS_CustomerId");
+
+                    b.ToTable("LotusRMS_DueBooks");
+                });
+
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_FiscalYear", b =>
                 {
                     b.Property<Guid>("Id")
@@ -152,6 +318,42 @@ namespace LotusRMS.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("LotusRMS_FiscalYears");
+                });
+
+            modelBuilder.Entity("LotusRMS.Models.LotusRMS_Invoice", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("BillSetting_Id")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("Checkout_Id")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("FiscalYear_Id")
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("Invoice_No")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Invoice_String")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Print_Count")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BillSetting_Id");
+
+                    b.HasIndex("Checkout_Id");
+
+                    b.HasIndex("FiscalYear_Id");
+
+                    b.ToTable("LotusRMS_Invoices");
                 });
 
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_Menu", b =>
@@ -769,6 +971,57 @@ namespace LotusRMS.Migrations
                         .HasForeignKey("LotusRMS_CompanyId");
                 });
 
+            modelBuilder.Entity("LotusRMS.Models.LotusRMS_Checkout", b =>
+                {
+                    b.HasOne("LotusRMS.Models.LotusRMS_Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("Order_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("LotusRMS.Models.LotusRMS_DueBook", b =>
+                {
+                    b.HasOne("LotusRMS.Models.LotusRMS_Invoice", "Invoice")
+                        .WithMany()
+                        .HasForeignKey("Invoice_Id");
+
+                    b.HasOne("LotusRMS.Models.LotusRMS_Customer", null)
+                        .WithMany("DueBooks")
+                        .HasForeignKey("LotusRMS_CustomerId");
+
+                    b.Navigation("Invoice");
+                });
+
+            modelBuilder.Entity("LotusRMS.Models.LotusRMS_Invoice", b =>
+                {
+                    b.HasOne("LotusRMS.Models.LotusRMS_BillSetting", "BillSetting")
+                        .WithMany()
+                        .HasForeignKey("BillSetting_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LotusRMS.Models.LotusRMS_Checkout", "Checkout")
+                        .WithMany()
+                        .HasForeignKey("Checkout_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LotusRMS.Models.LotusRMS_FiscalYear", "FiscalYear")
+                        .WithMany()
+                        .HasForeignKey("FiscalYear_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BillSetting");
+
+                    b.Navigation("Checkout");
+
+                    b.Navigation("FiscalYear");
+                });
+
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_Menu", b =>
                 {
                     b.HasOne("LotusRMS.Models.LotusRMS_Menu_Category", "Menu_Category")
@@ -944,6 +1197,11 @@ namespace LotusRMS.Migrations
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_Company", b =>
                 {
                     b.Navigation("ContactPersons");
+                });
+
+            modelBuilder.Entity("LotusRMS.Models.LotusRMS_Customer", b =>
+                {
+                    b.Navigation("DueBooks");
                 });
 
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_Order", b =>

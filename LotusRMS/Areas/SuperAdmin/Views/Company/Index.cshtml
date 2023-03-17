@@ -8,5 +8,92 @@
 
    
 }
+
        <a asp-action="Update" asp-controller="company" asp-area="superadmin">Update</a>
    
+       <div class="container">
+           <h2>Organization Detail</h2>
+           <div class="row">
+             <div class="col-12 p-2">
+                 <h2>
+                <label>Name: </label>
+                     @Model.CompanyName
+                 </h2>
+             </div>  
+             <div class="col-md-4 p-1">
+                 <label >Registration No.: </label>
+                 @Model.CompanyRegistrationNumber
+             
+             </div>
+        <div class="col-md-4 p-1">
+            <label>PAN  / VAT : </label>
+            @Model.PanOrVat
+        </div>
+             <div class="col-md-4 p-1">
+            <label>Registration Date.: </label>
+                 @Model.RegistrationDate
+             </div>
+             <div class="col-md-6 p-2">
+            <label>Email : </label>
+                 @Model.Email</div>
+             <div class="col-md-6 p-2">
+            <label>Contact No.: </label>
+                 @Model.Contact</div>
+             <div class="col-md-3 p-2">
+                 <p>Country</p>
+                 @Model.Country</div>
+             <div class="col-md-3 p-2">
+
+            <p>Province</p>
+                 @Model.Province</div>
+             <div class="col-md-3 p-2">
+                 <p>City</p>
+                 @Model.City</div>
+
+             <div class="col-md-3 p-2">
+                 <p>Tole</p>
+                 @Model.Tole</div>
+             
+    </div>
+    <fieldSet>
+        <legend>Contact person detail</legend>
+        <div class="row">
+        <div class="col-md-4 p-2">Name </div>
+        <div class="col-md-4 p-2">Contact</div>
+        <div class="col-md-4 p-2">Address</div>
+        <div class="col-md-4 p-2">@Model.ContactPerson[0].PersonName</div>
+        <div class="col-md-4 p-2">@Model.ContactPerson[0].ContactNumber</div>
+        <div class="col-md-4 p-2">@Model.ContactPerson[0].Address</div>
+        <div class="col-md-4 p-2">@Model.ContactPerson[1].PersonName</div>
+        <div class="col-md-4 p-2">@Model.ContactPerson[1].ContactNumber</div>
+        <div class="col-md-4 p-2">@Model.ContactPerson[1].Address</div>
+        </div>
+    </fieldSet>
+
+    <fieldset>
+        <legend>
+            System Detail
+        </legend>
+        <div class="row">
+            <div class="col-md-3">
+                <p>Contract No.</p>
+                @Model.RegistrationNo
+            </div>
+            <div class="col-md-3">
+                <p>Contract Date</p>
+                @Model.ContractDate
+            </div>
+            <div class="col-md-3">
+                <p>Service start Date</p>
+                @Model.ServiceStartDate
+            </div>
+            <div class="col-md-3">
+                <p>Service Valid Till</p>
+                @Model.ValidTill
+            </div>
+            
+        </div>
+
+    </fieldset>
+
+       </div>

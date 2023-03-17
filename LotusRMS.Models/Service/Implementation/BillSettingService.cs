@@ -24,6 +24,9 @@ namespace LotusRMS.Models.Service.Implementation
 
         public Task<Guid> Create(CreateBillSettingDTO dto)
         {
+            var activeBill = GetActive();
+            
+
             var bs = new LotusRMS_BillSetting()
             {
                 BillPrefix = dto.BillPrefix,
@@ -35,12 +38,17 @@ namespace LotusRMS.Models.Service.Implementation
                 IsActive=dto.IsActive,
                 
 
-            };
-            if (dto.IsActive)
-            {
-                var setting = _billSettingRepository.GetFirstOrDefault(x => x.IsActive);
-                setting.IsActive = false;
+            }; 
+            if (activeBill == null) {
+                bs.IsActive = true;
             }
+            else if(dto.IsActive)
+            {
+                activeBill.IsActive = false;
+
+            }
+          
+            _billSettingRepository.Add(bs);
             _billSettingRepository.Save();
             return Task.FromResult(bs.Id);
         }
