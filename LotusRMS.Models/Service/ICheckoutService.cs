@@ -17,5 +17,8 @@ namespace LotusRMS.Models.Service
         public IEnumerable<LotusRMS_Checkout> GetAll();
         public LotusRMS_Checkout GetByGuid(Guid Id);
 
+        Guid SetInvoice(Guid Id);
+
+
     }
 }

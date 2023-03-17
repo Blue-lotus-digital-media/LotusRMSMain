@@ -23,6 +23,7 @@ namespace LotusRMS.Models.Viewmodels.Company
         public string PanOrVat { get; set; }
 
         public string RegistrationDate { get; set; }
+        public string RegistrationNo { get; set; }
         public string ValidTill { get; set; }
 
         public string CompanyRegistrationNumber { get;  set; }

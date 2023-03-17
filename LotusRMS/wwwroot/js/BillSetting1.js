@@ -5,19 +5,17 @@ $(document).ready(function () {
 });
 function toggleMe(me) {
     var id = $(me).attr("data-id");
-    console.log(id);
     $.ajax({
         type: 'GET',
         url: "/admin/billSetting/Activechange",
         data: "id=" + id,
         success: function (data) {
-
             if (data) {
                 $(".statusToggle").removeClass('bi-toggle-on').addClass('bi-toggle-off');
                 $(me).removeClass("bi-toggle-off").addClass('bi-toggle-on');
             } else {
 
-                alert("Active fiscal year cannot be changed.. ");
+                alert("Active bill setting cannot be changed.. ");
             }
 
         },
@@ -65,6 +63,12 @@ function loadData() {
             {
                 data: "isPanOrVat"
 
+            },{
+                data: "isPhone"
+
+            },{
+                data: "isFiscalYear"
+
             },
             {
                 data: "isActive"
@@ -95,7 +99,8 @@ function loadData() {
                   <i class= "bi bi-eye-fill">
 
                 `);
-            } else {
+            }
+            else {
                 $('td:eq(4)', row).html(`
 
                   <i class= "bi bi-eye-slash-fill">
@@ -108,8 +113,23 @@ function loadData() {
                   <i class= "bi bi-eye-fill">
 
                 `);
-            } else {
+            }
+            else {
                 $('td:eq(5)', row).html(`
+
+                  <i class= "bi bi-eye-slash-fill">
+
+                `);
+            }
+             if (data["isFiscalYear"]) {
+                $('td:eq(6)', row).html(`
+
+                  <i class= "bi bi-eye-fill">
+
+                `);
+             }
+             else {
+                $('td:eq(6)', row).html(`
 
                   <i class= "bi bi-eye-slash-fill">
 
@@ -117,16 +137,16 @@ function loadData() {
             }
 
 
-            if (data["isActive"]) {
+            if (!data["isActive"]) {
 
-                $('td:eq(6)', row).html(`
+                $('td:eq(7)', row).html(`
 <div class="text-center">
 <i class= "bi bi-toggle-off statusToggle" onclick = "toggleMe($(this));" data-id="${data['id']}"></i>
 </div > `);
 
             }
             else {
-                $('td:eq(6)', row).html(`<div class="text-center">
+                $('td:eq(7)', row).html(`<div class="text-center">
 <i class= "bi bi-toggle-on statusToggle" onclick = "toggleMe($(this));" data-id="${data['id']}" >
 </i></div > `);
 

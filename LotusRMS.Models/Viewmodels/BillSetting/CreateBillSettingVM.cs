@@ -19,10 +19,13 @@ namespace LotusRMS.Models.Viewmodels.BillSetting
         public string BillAddress { get; set; }
 
         public string? BillNote { get; set; }
-
+        public bool IsFiscalYear { get; set; }
+        public string? FiscalYear { get; set; }
         public bool IsPhone { get; set; } 
+        public string? Contact { get; set; }
         public bool IsPanOrVat { get; set; }
 
+        public string? PanOrVat { get; set; }
         public bool IsActive { get; set; }
     }
 }

@@ -12,12 +12,19 @@ namespace LotusRMS.Models.Service.Implementation
     public class CheckoutService : ICheckoutService
     {
         public ICheckoutRepository _CheckoutRepository;
-        public CheckoutService(ICheckoutRepository checkoutRepository)
+        public IInvoiceService _invoiceService;
+        public CheckoutService(ICheckoutRepository checkoutRepository, IInvoiceService invoiceService)
         {
             _CheckoutRepository = checkoutRepository;
+            _invoiceService = invoiceService;
         }
         public async Task<Guid> Create(CreateCheckoutDTO dto)
         {
+            if (dto.Customer_Name == "")
+            {
+                dto.Customer_Name = "Cash";
+            }
+
             var checkout = new LotusRMS_Checkout()
             {
                 Order_Id = dto.Order_Id,
@@ -30,12 +37,21 @@ namespace LotusRMS.Models.Service.Implementation
                 Discount = dto.Discount,
                 DateTime = CurrentTime.DateTimeNow().ToString(),
                 Payment_Mode = dto.Payment_Mode,
+                Paid_Amount=dto.Paid_Amount,
                 Invoice_No = GetInvoiceNo()
-
             };
+         
+
             _CheckoutRepository.Add(checkout);
             _CheckoutRepository.Save();
-            return checkout.Id;
+
+            var invoiceId = _invoiceService.Create(checkout.Id);
+
+
+
+
+
+            return invoiceId;
 
         }
 
@@ -64,6 +80,11 @@ namespace LotusRMS.Models.Service.Implementation
             var invoiceNo = "";
             return invoiceNo;
 
+        }
+
+        public Guid SetInvoice(Guid Id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

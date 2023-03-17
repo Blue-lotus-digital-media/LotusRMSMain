@@ -22,6 +22,8 @@ namespace LotusRMSweb
             services.AddScoped<IFiscalYearService, FiscalYearService>();
             services.AddScoped<IBillSettingService,BillSettingService >();
             services.AddScoped<ICompanyService,CompanyService >();
+            services.AddScoped<IInvoiceService,InvoiceService >();
+            services.AddScoped<ICustomerService,CustomerService >();
             //services.AddScoped<, >();
         }
         }

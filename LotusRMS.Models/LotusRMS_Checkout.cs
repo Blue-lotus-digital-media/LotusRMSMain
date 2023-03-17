@@ -19,8 +19,8 @@ namespace LotusRMS.Models
 
         public Guid? Customer_Id { get;set; }
         public string Customer_Name { get; set; }
-        public string Customer_Address { get; set; }
-        public string Customer_Contact { get; set; }
+        public string? Customer_Address { get; set; }
+        public string? Customer_Contact { get; set; }
 
         public Guid Order_Id { get; set; }
         [ForeignKey("Order_Id")]

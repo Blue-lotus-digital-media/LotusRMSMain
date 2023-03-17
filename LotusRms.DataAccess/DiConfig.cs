@@ -29,6 +29,8 @@ namespace LotusRMS.DataAccess
             services.AddScoped<IFiscalYearRepository, FiscalYearRepository>();
             services.AddScoped<IBillSettingRepository,BillSettingRepository >();
             services.AddScoped<ICompanyRepository,CompanyRepository >();
+            services.AddScoped<IInvoiceRepository,InvoiceRepository >();
+            services.AddScoped<ICustomerRepository,CustomerRepository >();
             //services.AddScoped<, >();
         }
         }

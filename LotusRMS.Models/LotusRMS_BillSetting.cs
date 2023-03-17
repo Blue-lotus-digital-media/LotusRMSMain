@@ -19,8 +19,9 @@ namespace LotusRMS.Models
         public string BillAddress { get; set; }
         public string BillNote { get; set; }
 
-        public bool IsPhone { get; set; } = true;
-        public bool IsPanOrVat { get; set; } = true;
+        public bool IsPhone { get; set; }
+        public bool IsPanOrVat { get; set; }
+        public bool IsFiscalYear { get; set; }
 
         public bool IsActive { get; set; }
         public bool Status { get; set; }=true;

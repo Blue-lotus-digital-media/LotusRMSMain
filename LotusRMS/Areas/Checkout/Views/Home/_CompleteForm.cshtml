@@ -47,13 +47,10 @@
         }
 </style>
 <form id="checkoutForm"
-    asp-action="completeCheckout"
+      asp-action="CompleteCheckout"
     asp-controller="home"
     asp-area="checkout"
-    data-ajax="true"
-    data-ajax-success=""
-    data-ajax-update="#orderSection"
-    data-ajax-loading="#overlay">
+  >
 
 <div class="checkoutDetail">
     <div class="customerDetail">
@@ -112,7 +109,7 @@
                         <input type="number" id="DiscountAmount" onkeyup="calculateDiscount()" asp-for="Discount" value="0" class="form-control" />
                     </div>
                     <div class="col-5 p-0 pr-3">
-                        <select id="discountType" class="form-control" asp-for="Discount_Type" asp-items="Html.GetEnumSelectList<DiscountTypeEnum>()">
+                            <select id="discountType" class="form-control" onchange="calculateDiscount()" asp-for="Discount_Type" asp-items="Html.GetEnumSelectList<DiscountTypeEnum>()">
                             
                         </select>
                     </div>
@@ -143,7 +140,7 @@
                 Payment
             </div>
             <div class="col-7">
-                <select name="PaymentType" id="CheckoutMode" class="form-control" asp-items="Html.GetEnumSelectList<PaymentModeEnum>()">
+                <select asp-for="Payment_Mode" id="CheckoutMode" onchange="CheckPaymentMode()" class="form-control" asp-items="Html.GetEnumSelectList<PaymentModeEnum>()">
                     
                 </select>
             </div>
@@ -180,6 +177,20 @@
 </div>
 </form>
 @*return Order form*@
+<form asp-action="GetCustomerVIew" 
+asp-area="checkout"
+asp-controller="home"
+id="CustomerDueForm" hidden
+      data-ajax=true
+      data-ajax-method="get"
+      data-ajax-success=""
+      data-ajax-update="#customerDue"
+      data-ajax-loading="#overlay">
+    <button type="submit" class="btn btn-success" hidden>
+       
+    </button>
+</form>
+@*return Order form*@
 <form asp-action="ReturnOrder" id="ReturnOrderForm" hidden
       asp-route-OrderId="@Model.Order_Id"
       data-ajax=true
@@ -192,7 +203,6 @@
 </form>
                 <script>
     document.addEventListener("DOMContentLoaded", () => {
-        console.log("Hello World!");
         calculateDiscount();
         $("#discountType").change(function () {
             calculateDiscount();
@@ -203,6 +213,11 @@
         });
     });
 
+    function CheckPaymentMode(){
+       var mode=$("#CheckoutMode option:Selected").val();
+       console.log(mode);
+        $("#CustomerDueForm").submit();
+    }
     function calculateDiscount() {
         var total = $("#GTotal").val();
         var discount = $("#DiscountAmount").val();
