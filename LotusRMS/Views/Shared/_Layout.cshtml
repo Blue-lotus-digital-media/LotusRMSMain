@@ -130,7 +130,7 @@
                 @if (User.IsInRole("Admin"))
                 {
                     <li class="nav-item">
-                        <a class="nav-link collapsed"  >
+                        <a class="nav-link collapsed" asp-area="Admin" asp-controller="Product" asp-action="Index" >
           <i class="bi bi-file-earmark-ppt"></i>
           <span>Product</span>
         </a>
@@ -173,7 +173,7 @@
                 @if (User.IsInRole("Admin") || User.IsInRole("Cashier"))
                 {
                     <li class="nav-item">
-                        <a class="nav-link collapsed" href="users-profile.html">
+                        <a class="nav-link collapsed" asp-controller="Customer" asp-action="Index">
           <i class="bi bi-person"></i>
           <span>Customer</span>
         </a>
@@ -181,7 +181,7 @@
       }
        @if (User.IsInRole("Admin") || User.IsInRole("Cashier")){
      <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-faq.html">
+        <a class="nav-link collapsed" asp-controller="Supplier" asp-action=" Index">
           <i class="bi bi-person"></i>
           <span>Suppliers </span>
         </a>
@@ -189,7 +189,7 @@
        }
         @if (User.IsInRole("Admin") || User.IsInRole("Cashier")){
       <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-error-404.html">
+        <a class="nav-link collapsed"  asp-area="Admin" asp-controller="Assets" asp-action="Index">
           <i class="bi bi-handbag"></i>
           <span>Assets</span>
         </a>
@@ -197,7 +197,7 @@
         }
          @if (User.IsInRole("Admin") || User.IsInRole("Cashier")){
       <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-blank.html">
+        <a class="nav-link collapsed" asp-action="Index" asp-controller="Galla" >
           <i class="bi bi-currency-exchange"></i>
           <span>Galla</span>
         </a>
@@ -211,7 +211,7 @@
         </a>
         <ul id="icons-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a href="icons-bootstrap.html">
+            <a  asp-controller="Admin" asp-action="User">
               <i class="bi bi-circle"></i><span>User</span>
             </a>
           </li>
@@ -221,7 +221,7 @@
             </a>
           </li>
           <li>
-            <a href="icons-boxicons.html">
+            <a asp-controller="billsetting" asp-area="Admin" asp-action="Index" >
               <i class="bi bi-circle"></i><span>Bill Setting</span>
             </a>
           </li>
