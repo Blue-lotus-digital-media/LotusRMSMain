@@ -18,6 +18,12 @@ namespace LotusRMS.Models
         public bool Status { get; set; } = true;
         public bool IsDelete { get; set; }
 
+
+        public void Update(string name,string address,string contact) {
+            Name = name;
+            Address = address;
+            Contact = contact;
+        }
     }
     public class LotusRMS_DueBook
     {

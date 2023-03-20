@@ -176,14 +176,14 @@
     </div>
 </div>
 </form>
-@*return Order form*@
-<form asp-action="GetCustomerVIew" 
+@*get customer form*@
+<form asp-action="GetCustomerView" 
 asp-area="checkout"
 asp-controller="home"
 id="CustomerDueForm" hidden
       data-ajax=true
       data-ajax-method="get"
-      data-ajax-success=""
+      data-ajax-success="loadData()"
       data-ajax-update="#customerDue"
       data-ajax-loading="#overlay">
     <button type="submit" class="btn btn-success" hidden>
@@ -214,9 +214,14 @@ id="CustomerDueForm" hidden
     });
 
     function CheckPaymentMode(){
-       var mode=$("#CheckoutMode option:Selected").val();
+       var mode=$("#CheckoutMode option:Selected").text();
        console.log(mode);
+       if(mode=="Credit"){
         $("#CustomerDueForm").submit();
+       }else{
+           $("#customer_Id").val("");
+           $("#customerDue").empty();
+       }
     }
     function calculateDiscount() {
         var total = $("#GTotal").val();
@@ -252,7 +257,7 @@ id="CustomerDueForm" hidden
 
             return false;
         } else if ($("#CheckoutMode option:selected").text() == "Credit" && $("#customer_Id").val() == 0) {
-            alert("Please select customer before checkout change payment mode");
+            alert("Please select customer before checkout or change payment mode");
         }
 
         else {
@@ -262,15 +267,32 @@ id="CustomerDueForm" hidden
     }
     function checkValid() {
         if (document.getElementsByClassName("unserved").length > 0) {
-
-           
-            $("#mainBtn").children("button").attr("disabled", "true");
-
-        } else {
-           
+             $("#mainBtn").children("button").attr("disabled", "true");
+            } else {
             $("#mainBtn").children("button").removeAttr("disabled");
         }
     }
 
+    function selectCustomer(me){
 
+        var tr=$(me).closest("tr");
+        $(".selectCustomerBtn").removeClass("selectedCustomer");
+        $(me).addClass("selectedCustomer");
+        var id=$(me).attr("id");
+        $("#customer_Id").val(id);
+        var name= tr.children("td").children(".name").text().trim();
+        $("#customer_Name").val(name);
+        var address=tr.children("td").children(".address").text().trim();
+        $("#customer_Address").val(address);
+        var contact = tr.children("td").children(".contact").text().trim();
+        $("#customer_Contact").val(contact);
+
+    }
+
+
+
+
+
+
+    
 </script>

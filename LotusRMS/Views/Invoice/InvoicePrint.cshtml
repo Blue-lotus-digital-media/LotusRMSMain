@@ -1,7 +1,9 @@
 ﻿@using LotusRMS.Models.Viewmodels.Company;
+@using LotusRMS.Models.Viewmodels.Invoice;
 @using LotusRMS.Utility;
 @using Microsoft.AspNetCore.Identity;
-@model LotusRMS_Invoice
+@model InvoiceVM
+
 @inject UserManager<RMSUser> UserManager
 @{ Layout = null;}
 
@@ -12,8 +14,6 @@
     var billSetting = Model.BillSetting;
     var checkout = Model.Checkout;
     var order = checkout.Order;
-    var table=order.Table;
-    var tableType = table.Table_Type;
     UpdateCompanyVM company = ViewBag.Company;
 
 }
@@ -187,7 +187,7 @@
                 Name: @checkout.Customer_Name<br />
                 Address: @checkout.Customer_Address<br />
                 Phone: @checkout.Customer_Contact<br />
-                Table : @tableType.Type_Name (@table.Table_Name) <br/>
+                Table : @order.Table_Name <br/>
             </p>
 
         </div>
@@ -212,11 +212,11 @@
                     <tr class="service" style="border-bottom: 1px solid gray">
                         <td class="tableitem" style="text-align: center;" width="8%"><p class="itemtext">@i</p></td>
 
-                        <td class="tableitem" style="text-align: left;" width="47%"><p class="itemtext">@item.Menu.Item_Name </p></td>
+                        <td class="tableitem" style="text-align: left;" width="47%"><p class="itemtext">@item.Item_Name </p></td>
                        
-                        <td class="tableitem" style="text-align: center;" width="11%"><p class="itemtext">@item.Quantity @item.Menu.Menu_Unit.Unit_Symbol</p></td>
+                        <td class="tableitem" style="text-align: center;" width="11%"><p class="itemtext">@item.Quantity </p></td>
                         <td class="tableitem" style="text-align: right;" width="14%"><p class="itemtext">@item.Rate</p></td>
-                        <td class="tableitem" style="text-align: right;"><p class="itemtext">@item.GetTotal</p></td>
+                        <td class="tableitem" style="text-align: right;"><p class="itemtext">@item.Total</p></td>
 
                     </tr>
                 }
@@ -316,7 +316,7 @@
             <small>
                 Served by: @{
 
-                    var servedBy = order.User.FirstName + " " + order.User.MiddleName + " " + order.User.LastName;
+                    var servedBy = order.OrderBy;
                     var PrintedBy = UserManager.FindByNameAsync(User.Identity.Name).Result;
                     var Printer = PrintedBy.FirstName + " " + PrintedBy.MiddleName + " " + PrintedBy.LastName;
 

@@ -9,5 +9,6 @@ namespace LotusRMS.Models.IRepositorys
     public interface ICheckoutRepository:IBaseRepository<LotusRMS_Checkout>
     {
         void Update(LotusRMS_Checkout obj);
+        void UpdateOrder(Guid id);
     }
 }

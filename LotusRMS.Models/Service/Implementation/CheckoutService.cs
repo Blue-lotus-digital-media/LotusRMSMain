@@ -20,7 +20,7 @@ namespace LotusRMS.Models.Service.Implementation
         }
         public async Task<Guid> Create(CreateCheckoutDTO dto)
         {
-            if (dto.Customer_Name == "")
+            if (dto.Customer_Name == null)
             {
                 dto.Customer_Name = "Cash";
             }
@@ -43,7 +43,12 @@ namespace LotusRMS.Models.Service.Implementation
          
 
             _CheckoutRepository.Add(checkout);
+
+            _CheckoutRepository.UpdateOrder(checkout.Order_Id);
+
             _CheckoutRepository.Save();
+
+            
 
             var invoiceId = _invoiceService.Create(checkout.Id);
 
@@ -62,7 +67,7 @@ namespace LotusRMS.Models.Service.Implementation
 
         public LotusRMS_Checkout GetByGuid(Guid Id)
         {
-            throw new NotImplementedException();
+           return _CheckoutRepository.GetByGuid(Id);
         }
 
         public Guid Update(UpdateCheckoutDTO dto)
