@@ -8,7 +8,7 @@ namespace LotusRMS.Models.IRepositorys
 {
     public interface ICustomerRepository:IBaseRepository<LotusRMS_Customer>
     {
-        void Update();
+        void Update(LotusRMS_Customer obj);
         void UpdateStatus(Guid id);
 
     }

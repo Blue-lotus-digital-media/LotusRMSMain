@@ -11,11 +11,13 @@ namespace LotusRMS.Models.Service
     public interface ICustomerService
     {
         Guid Create(CreateCustomerDTO dto);
-        void Update();
+        void Update(UpdateCustomerDTO dto);
         IEnumerable<LotusRMS_Customer> GetAll(); 
         LotusRMS_Customer GetByGuid(Guid id); 
-        LotusRMS_Customer GetFirstOrDefault(Guid id); 
-        IEnumerable<LotusRMS_Customer> GetAllAvailable(); 
+        LotusRMS_Customer GetFirstOrDefaultById(Guid id); 
+        IEnumerable<LotusRMS_Customer> GetAllAvailable();
+
+        void UpdateStatus(Guid Id);
 
     }
 }

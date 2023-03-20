@@ -14,6 +14,7 @@ namespace LotusRMS.Models.Dto.BillSettingDTO
         public string? BillNote { get; set; }
 
         public bool IsPhone { get; set; } = true;
+        public bool IsFiscalYear { get; set; } = true;
         public bool IsPanOrVat { get; set; } = true;
 
         public bool IsActive { get; set; }

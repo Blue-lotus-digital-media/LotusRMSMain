@@ -19,6 +19,12 @@ namespace LotusRMS.DataAccess.Repository
         {
 
         }
+        public void UpdateOrder(Guid Id)
+        {
+            var order = _dal.LotusRMS_Orders.FirstOrDefault(x => x.Id == Id);
+            order.IsCheckout = true;
+
+        }
          
     }
     }

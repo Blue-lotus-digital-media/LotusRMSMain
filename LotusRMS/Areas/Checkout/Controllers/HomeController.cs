@@ -77,7 +77,7 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
             };
             var id=_ICheckoutService.Create(dto);
 
-            return RedirectToAction("InvoicePrint", "Invoice", new {Areas="",Id = id });
+            return RedirectToAction("InvoicePrint", "Invoice", new {area="",Id = id.Result,returnUrl="/checkout" });
 
         }
 
@@ -182,7 +182,7 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
         {
             return PartialView("_CustomerView");
         }
-        [HttpPost]    
+        [HttpGet]    
         public IActionResult GetAllCustomer()
         {
             var customer = _ICustomerService.GetAllAvailable().Select(x=>new CustomerCheckOutVM()
@@ -192,10 +192,22 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
                 Address=x.Address,
                 Contact=x.Contact,
                 PanOrVat=x.PanOrVat,
-                Due=x.DueBooks.LastOrDefault().BalanceDue
+                Due=GetDue(x.DueBooks)
+                
             });
 
             return Json(new { data = customer });
+        }
+        public float GetDue(List<LotusRMS_DueBook> dueBook)
+        {
+            if (dueBook.Count==0)
+            {
+                return 0;
+            }
+            else
+            {
+                return dueBook.LastOrDefault().BalanceDue;
+            }
         }
 
         #endregion

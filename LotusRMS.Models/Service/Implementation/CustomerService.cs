@@ -53,22 +53,36 @@ namespace LotusRMS.Models.Service.Implementation
 
         public IEnumerable<LotusRMS_Customer> GetAllAvailable()
         {
-            return _customerRepository.GetAll(x => !x.IsDelete,includeProperties: "DueBooks,DueBooks.Invoice");
+            return _customerRepository.GetAll(x => !x.IsDelete && x.Status,includeProperties: "DueBooks,DueBooks.Invoice");
         }
 
         public LotusRMS_Customer GetByGuid(Guid id)
         {
-            throw new NotImplementedException();
+            return _customerRepository.GetByGuid(id);
         }
 
-        public LotusRMS_Customer GetFirstOrDefault(Guid id)
+        public LotusRMS_Customer GetFirstOrDefaultById(Guid id)
         {
-            throw new NotImplementedException();
+            return _customerRepository.GetFirstOrDefault(x => x.Id==id, includeProperties: "DueBooks");
         }
 
-        public void Update()
+        public void Update(UpdateCustomerDTO dto)
         {
-            throw new NotImplementedException();
+            var customer = new LotusRMS_Customer()
+            {
+                Id = dto.Id,
+                Name = dto.Name,
+                Address = dto.Address,
+                Contact = dto.Contact,
+                PanOrVat = dto.PanOrVat
+
+            };
+            _customerRepository.Update(customer);
+        }
+
+        public void UpdateStatus(Guid Id)
+        {
+            _customerRepository.UpdateStatus(Id);
         }
     }
 }

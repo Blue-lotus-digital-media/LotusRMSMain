@@ -74,6 +74,7 @@ builder.Services.AddAuthorization(options =>
 
 builder.Services.UseConfMgmtCore();
 builder.Services.UseConfMgmtData();
+builder.Services.AddLazyResolution();
 
 var context = new CustomAssemblyLoadContext();
 context.LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox.dll"));
