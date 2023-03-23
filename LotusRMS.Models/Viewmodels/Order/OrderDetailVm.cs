@@ -12,7 +12,7 @@ namespace LotusRMS.Models.Viewmodels.Order
         public Guid MenuId { get; set; }
         public Guid TableId { get; set; }
         public string Item_Name { get; set; }
-
+        public string Item_Unit { get; set; }
         public float Quantity { get; set; }
         public float Rate { get; set; }
         private float total { get; set; }

@@ -6,10 +6,12 @@ using LotusRMS.Models.Service;
 using LotusRMS.Models.Service.Implementation;
 using LotusRMS.Models.Viewmodels.Customer;
 using LotusRMS.Models.Viewmodels.FiscalYear;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LotusRMSweb.Controllers
 {
+    [Authorize(Roles = "SuperAdmin,Admin,Cashier")]
     public class CustomerController : Controller
     {
         private readonly ICustomerService _customerService;

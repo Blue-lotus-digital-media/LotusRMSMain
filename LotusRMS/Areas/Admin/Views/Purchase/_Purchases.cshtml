@@ -1,0 +1,135 @@
+﻿@using LotusRMS.Models.Viewmodels.Purchase;
+@model CreatePurchaseVm
+
+<style>
+    #supplierDetail{
+        display:none;
+    }
+</style>
+<div class="purchaseDiv">
+    <form asp-action="purchase" asp-area="admin" asp-controller="purchase" class="row g-3">
+
+        <div class="col-md-12 ">
+            <div class="col-md-12 d-flex justify-content-around">
+                        <h2>Supplier Details</h2>
+                <button type="button" class="btn btn-info" onclick="chooseSupplier();">Choose a supplier</button>
+              </div>
+           
+                <div class="row">
+                   
+                    <div class="col-md-6 row" >
+                        <div class="label col-5">Supplier Name</div>
+                        <div class="col-7" id="supplierName">
+                    </div><input id="supplierId" asp-for="SupplierId" hidden />
+                    </div> 
+                    <div class="col-md-6 row" >
+                        <div class="label col-5">PAN or VAT</div>
+                        <div class="col-7" id="panOrVat"></div>
+                    </div>
+                    <div class="col-md-6 row">
+                        <div class="label col-5">Address</div>
+                        <div class="col-7" id="address"></div>
+                    </div>
+                    <div class="col-md-6 row">
+                        <div class="label col-5">Contact</div>
+                        <div class="col-7" id="contact"></div>
+                    </div>
+                    
+
+                </div>
+
+           
+        </div>
+        
+        <div class="col-md-12 row">
+            <label for="dateBS" class="form-label col-md-4 ">Date</label>
+            <div class=" input-group col-md-4">
+                <span class="input-group-text">BS</span>
+                <input type="text" class="form-control" id="dateBS" placeholder="date" asp-for="DateBS">
+                <span class="input-group-text"><i class="bi bi-calendar-check"></i></span>
+            </div>
+            <div class=" input-group col-md-4">
+                <span class="input-group-text">AD</span>
+                <input type="text" class="form-control" id="dateAD" placeholder="date" asp-for="DateAD">
+                <span class="input-group-text"><i class="bi bi-calendar-check"></i></span>
+            </div>
+            
+          
+            <span asp-validation-for="DateBS" class="text-danger"></span>
+            <span asp-validation-for="DateAD" class="text-danger"></span>
+        </div>
+        <div class="productDetails">
+            <div class="d-flex justify-content-center">
+                <h2>Product Details</h2>
+                <div class="btn btn-info" onclick="chooseProduct()">Choose product</div>
+                </div>
+                <table class="table table-striped" id="productList">
+                    <thead class="thead-dark">
+                        <tr scope="row">
+                            <th>
+                                Item Name
+                            </th>
+                            <th>Unit</th>
+                            <th>Quantity</th>
+                            <th>Rate</th>
+                            <th>Total</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tBody>
+
+                    </tBody>
+                    <tfoot>
+                        <tr scope="row">
+                            <td colspan="3" class="text-right">
+                                Total
+                            </td>
+                            <td >
+                                <div class="text-center" id="GTotal">
+                                0
+                            </div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+          
+
+        </div>
+
+        
+   
+        <button type="submit" class="btn btn-primary">Submit</button>
+
+
+
+    </form>
+
+    <form asp-action="chooseSupplier" 
+    id="ChooseSupplierForm"
+    asp-controller="purchase"
+    asp-area="admin"
+    data-ajax="true"
+    data-ajax-success="loadSupplier()"
+          data-ajax-update="#selectionDiv"
+   data-ajax-loading="#overlay"
+    >
+    <button type="submit" hidden></button>
+
+    </form> 
+    <form asp-action="chooseProduct" 
+    id="ChooseProductForm"
+    asp-controller="purchase"
+    asp-area="admin"
+    data-ajax="true"
+    data-ajax-success="loadProduct()"
+          data-ajax-update="#selectionDiv"
+   data-ajax-loading="#overlay"
+    >
+    <button type="submit" hidden></button>
+
+    </form>
+</div>
+<script>
+   
+   
+</script>

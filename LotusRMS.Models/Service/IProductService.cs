@@ -14,6 +14,7 @@ namespace LotusRMS.Models.Service
         Guid UpdateStatus(Guid Id);
 
         public IEnumerable<LotusRMS_Product> GetAll();
+        public IEnumerable<LotusRMS_Product> GetAllAvailable();
         public LotusRMS_Product GetByGuid(Guid Id);
 
 

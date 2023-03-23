@@ -10,6 +10,7 @@ using DocumentFormat.OpenXml.Office2010.Excel;
 using LotusRMS.Models.Dto.CheckoutDTO;
 using LotusRMS.Utility;
 using LotusRMS.Models.Viewmodels.FiscalYear;
+using DocumentFormat.OpenXml.Drawing.Charts;
 
 namespace LotusRMSweb.Areas.Checkout.Controllers
 {
@@ -81,17 +82,19 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
 
         }
 
-        public OrderVm GetOrderVM(Guid? tableId, string? orderNo)
+        public OrderVm GetOrderVM(Guid tableId, string? orderNo)
         {
             var OrderVM = new OrderVm()
             {
+                TableId = tableId,
+                Table_Name = _ITableService.GetByGuid(tableId).Table_Name,
 
                 Order_Details = new List<OrderDetailVm>()
             };
 
             if (tableId != Guid.Empty)
             {
-                var order = _IOrderService.GetFirstOrDefaultByTableId((Guid)tableId);
+                var order = _IOrderService.GetFirstOrDefaultByTableId(tableId);
                 if (order != null)
                 {
                     OrderVM = new OrderVm()
@@ -111,7 +114,8 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
                         {
                             Id = item.Id,
                             MenuId = item.MenuId,
-                            Item_Name = menu.Item_Name + " (" + menu.Menu_Unit.Unit_Symbol + " )",
+                            Item_Name = menu.Item_Name ,
+                            Item_Unit = menu.Menu_Unit.Unit_Symbol,
                             Rate = item.Rate,
                             Quantity = item.Quantity,
                             IsComplete = item.IsComplete,
@@ -121,6 +125,10 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
                         OrderVM.Order_Details.Add(orderDetail);
 
                     }
+                }
+                else
+                {
+
                 }
 
 
@@ -148,7 +156,8 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
                         {
                             Id = item.Id,
                             MenuId = item.MenuId,
-                            Item_Name = menu.Item_Name + " (" + menu.Menu_Unit.Unit_Symbol + " )",
+                            Item_Name = menu.Item_Name,
+                            Item_Unit=menu.Menu_Unit.Unit_Symbol,
                             Rate = item.Rate,
                             Quantity = item.Quantity,
                             IsComplete = item.IsComplete,

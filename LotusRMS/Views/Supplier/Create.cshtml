@@ -1,0 +1,46 @@
+﻿@using LotusRMS.Models.Viewmodels.Supplier;
+@model CreateSupplierVM
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Add Supplier</h5>
+
+            <!-- Multi Columns Form -->
+            <form class="row g-3" asp-area="" asp-action="Create" asp-controller="Supplier">
+                <div class="col-md-12">
+                    <label for="supplierName" class="form-label">Full Name</label>
+                    <input asp-for="FullName" class="form-control" id="fName" placeholder="Full Name">
+                    <span asp-validation-for="FullName" class="text-danger"></span>
+                </div>
+                <div class="col-md-12">
+                    <label class="col-sm-6 col-form-label">Address</label>
+                    <input asp-for="Address" class="form-control" id="Address" placeholder="Address">
+                    <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+                <div class="col-md-12">
+                    <label class="col-sm-6 col-form-label">PAN Or VAT</label>
+                    <input asp-for="PanOrVat" class="form-control" id="povName" placeholder="Pan Or Vat no.">
+                    <span asp-validation-for="PanOrVat" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-12">
+                    <label class="col-sm-6 col-form-label">Contact Number</label>
+                    <input asp-for="Contact" class="form-control" id="Contact" placeholder="Contact">
+                    <span asp-validation-for="Contact" class="text-danger"></span>
+                </div>
+                <div class="col-md-12">
+                    <label class="col-sm-6 col-form-label">Contact Number 2 (Optional)</label>
+                    <input asp-for="Contact1" class="form-control" id="Contact2" placeholder="Contact">
+                    <span asp-validation-for="Contact1" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-primary">Create</button>
+            </form>
+
+        </div>
+    </div>
+</div>

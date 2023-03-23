@@ -1,0 +1,35 @@
+﻿
+
+<div class="container" >
+    <div class="row" >
+    <div id="purchaseForm" class="col-md-6">
+        <partial name="_Purchases" />
+            <div id="purchaseDetail">
+                
+            </div>
+    </div>
+    <div class="col-md-6">
+        <div id="selectionDiv">
+
+        </div>
+    </div>
+    
+    </div>
+
+</div>
+
+
+
+
+
+
+@section Scripts{
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+
+       
+    }
+    <script src="~/js/purchase.js"></script>
+
+}
