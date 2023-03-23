@@ -36,7 +36,10 @@ namespace LotusRMS.Models.Service.Implementation
 
         public IEnumerable<LotusRMS_Product> GetAll()
         {
-            return _IProductRepository.GetAll(includeProperties: "Product_Unit,Product_Category,Product_Type");    
+            return _IProductRepository.GetAll(x => !x.IsDelete,includeProperties: "Product_Unit,Product_Category,Product_Type");    
+        } public IEnumerable<LotusRMS_Product> GetAllAvailable()
+        {
+            return _IProductRepository.GetAll(x=>!x.IsDelete&&x.Status, includeProperties: "Product_Unit,Product_Category,Product_Type");    
         }
 
         public LotusRMS_Product GetByGuid(Guid Id)

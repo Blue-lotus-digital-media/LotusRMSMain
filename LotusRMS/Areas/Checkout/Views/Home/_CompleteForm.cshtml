@@ -164,10 +164,23 @@
     </div>
     <div class="col-6 pr-3 text-right">
         <div id="mainBtn">
-            <input type="text" asp-for="Order_Id" hidden />
+            <input type="text" asp-for="Order_Id" id="OrderID" hidden />
+                @if (Model.Order_Id == Guid.Empty)
+                {
+
+                    <button type="button" class="btn btn-success" onclick="validateCheckout()" id="checkoutSubmitBtn" disabled>
+                        Checkout <i class="fa fa-shopping-cart"></i>
+                    </button>
+                }
+                else
+                {
+                    
+
             <button type="button" class="btn btn-success" onclick="validateCheckout()" id="checkoutSubmitBtn">
                 Checkout <i class="fa fa-shopping-cart"></i>
             </button>
+
+                }
 
         </div>
 
@@ -211,6 +224,7 @@ id="CustomerDueForm" hidden
         $("input[type='number']").focus(function () {
             this.select();
         });
+
     });
 
     function CheckPaymentMode(){

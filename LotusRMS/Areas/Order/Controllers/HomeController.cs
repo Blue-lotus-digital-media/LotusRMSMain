@@ -79,17 +79,19 @@ namespace LotusRMSweb.Areas.Order.Controllers
             
             return PartialView("_AddMenu",model:vm);
         }
-        public OrderVm GetOrderVM(Guid? tableId,string? orderNo)
+        public OrderVm GetOrderVM(Guid tableId,string? orderNo)
         {
             var OrderVM = new OrderVm()
             {
+                TableId = tableId,
+                Table_Name = _ITableService.GetByGuid(tableId).Table_Name,
 
                 Order_Details = new List<OrderDetailVm>()
             };
 
             if (tableId != Guid.Empty)
             {
-                var order = _IOrderService.GetFirstOrDefaultByTableId((Guid)tableId);
+                var order = _IOrderService.GetFirstOrDefaultByTableId(tableId);
                 if (order != null)
                 {
                     OrderVM = new OrderVm()
@@ -108,7 +110,8 @@ namespace LotusRMSweb.Areas.Order.Controllers
                         {
                             Id = item.Id,
                             MenuId = item.MenuId,
-                            Item_Name = menu.Item_Name + " (" + menu.Menu_Unit.Unit_Symbol + " )",
+                            Item_Name = menu.Item_Name,
+                            Item_Unit=menu.Menu_Unit.Unit_Symbol,
                             Rate = item.Rate,
                             Quantity = item.Quantity,
                             IsComplete = item.IsComplete,
@@ -146,7 +149,8 @@ namespace LotusRMSweb.Areas.Order.Controllers
                         {
                             Id = item.Id,
                             MenuId = item.MenuId,
-                            Item_Name = menu.Item_Name + " (" + menu.Menu_Unit.Unit_Symbol + " )",
+                            Item_Name = menu.Item_Name,
+                            Item_Unit= menu.Menu_Unit.Unit_Symbol ,
                             Rate = item.Rate,
                             Quantity = item.Quantity,
                             IsComplete = item.IsComplete,

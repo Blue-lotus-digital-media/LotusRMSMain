@@ -7,7 +7,10 @@
         </div>
         <div class="col-6 align-center d-flex justify-spacebetween">
             <h3>@Model.Table_Name</h3>
+        @if (Model.OrderBy != null)
+        {
             <h2>by : @Model.OrderBy</h2>
+        }
             </div>
             <div class="col-3">
                 time
@@ -35,7 +38,7 @@
             <tr>
                 <td>@i</td>
                 <td>@item.Item_Name</td>
-                <td>@item.Quantity</td>
+                <td>@item.Quantity @item.Item_Unit</td>
                 <td>@item.Rate</td>
                 <td>@item.Total</td>
                     @if (item.IsComplete)

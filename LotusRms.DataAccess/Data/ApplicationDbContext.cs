@@ -28,6 +28,7 @@ namespace LotusRMS.DataAccess
         public DbSet<LotusRMS_Invoice> LotusRMS_Invoices { get; set; }
         public DbSet<LotusRMS_Customer> LotusRMS_Customers { get; set; }
         public DbSet<LotusRMS_DueBook> LotusRMS_DueBooks { get; set; }
+        public DbSet<LotusRMS_Supplier> LotusRMS_Suppliers { get; set; }
 
 
        
