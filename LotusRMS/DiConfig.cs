@@ -26,6 +26,7 @@ namespace LotusRMSweb
             services.AddScoped<ICustomerService,CustomerService >();
             services.AddScoped<IUserService,UserService >();
             services.AddScoped<ISupplierService,SupplierService >();
+            services.AddScoped<IPurchaseService,PurchaseService >();
             //services.AddScoped<, >();
         }
         }
