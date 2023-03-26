@@ -2,26 +2,65 @@
 
 <div class="container" >
     <div class="row" >
-    <div id="purchaseForm" class="col-md-6">
-        <partial name="_Purchases" />
+       <partial name="_Purchases" />
             <div id="purchaseDetail">
                 
             </div>
-    </div>
-    <div class="col-md-6">
-        <div id="selectionDiv">
-
-        </div>
-    </div>
     
     </div>
+   
 
 </div>
+<div class="modal fade" id="selectionModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" id="selectionDiv">
+            
+        </div>
+    </div>
+</div><!-- End Extra Large Modal-->
 
+@*//product add modal*@
 
+<div class="modal fade" id="productPurchaseModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pItemName"></h5>
+                <input type="text" hidden id="pId">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-5">Quantity</div>
+                    <div class="col-md-5">
+                        <input type="number" class="form-control" id="pQuantity" min="1" value="1" onkeyUp="CalculatePTotal();">
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" class="form-control-plaintext" readonly id="pUnit">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-5">Rate</div>
+                    <div class="col-md-7">
+                        <input type="number" class="form-control" id="pRate" min="1" onkeyUp="CalculatePTotal();">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-5">Rate</div>
+                    <div class="col-md-7">
+                        <input type="number" class="form-control" id="pTotal" min="1" readonly>
+                    </div>
+                </div>
 
-
-
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="addProduct()">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*//product add modal*@
 
 @section Scripts{
 
@@ -30,6 +69,6 @@
 
        
     }
-    <script src="~/js/purchase.js"></script>
+    <script src="~/js/purchase1.js"></script>
 
 }

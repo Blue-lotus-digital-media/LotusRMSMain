@@ -3,6 +3,7 @@ using System;
 using LotusRMS.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LotusRMS.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230324042538_PurchaseAdded")]
+    partial class PurchaseAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -678,11 +681,9 @@ namespace LotusRMS.Migrations
                     b.Property<float>("Bill_Amount")
                         .HasColumnType("float");
 
-                    b.Property<string>("Bill_No")
+                    b.Property<string>("Date")
+                        .IsRequired()
                         .HasColumnType("longtext");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime(6)");
 
                     b.Property<float>("Discount")
                         .HasColumnType("float");
@@ -690,17 +691,15 @@ namespace LotusRMS.Migrations
                     b.Property<int>("Discount_Type")
                         .HasColumnType("int");
 
-                    b.Property<float>("Due")
-                        .HasColumnType("float");
-
                     b.Property<float>("Paid_Amount")
                         .HasColumnType("float");
 
                     b.Property<int>("Payment_Mode")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("PurchaseDate")
-                        .HasColumnType("datetime(6)");
+                    b.Property<string>("PurchaseDate")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<Guid>("Supplier_Id")
                         .HasColumnType("char(36)");
@@ -1251,7 +1250,7 @@ namespace LotusRMS.Migrations
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_PurchaseDetail", b =>
                 {
                     b.HasOne("LotusRMS.Models.LotusRMS_Purchase", null)
-                        .WithMany("PurchaseDetails")
+                        .WithMany("ProductDetails")
                         .HasForeignKey("LotusRMS_PurchaseId");
 
                     b.HasOne("LotusRMS.Models.LotusRMS_Product", "Product")
@@ -1342,7 +1341,7 @@ namespace LotusRMS.Migrations
 
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_Purchase", b =>
                 {
-                    b.Navigation("PurchaseDetails");
+                    b.Navigation("ProductDetails");
                 });
 #pragma warning restore 612, 618
         }

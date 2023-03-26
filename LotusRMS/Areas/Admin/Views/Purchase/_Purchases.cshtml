@@ -1,8 +1,9 @@
 ﻿@using LotusRMS.Models.Viewmodels.Purchase;
+@using LotusRMS.Utility.Enum;
 @model CreatePurchaseVm
 
 <style>
-    #supplierDetail{
+    #dueSection{
         display:none;
     }
 </style>
@@ -10,126 +11,197 @@
     <form asp-action="purchase" asp-area="admin" asp-controller="purchase" class="row g-3">
 
         <div class="col-md-12 ">
-            <div class="col-md-12 d-flex justify-content-around">
+            <fieldset>
+                <legend>
+                    <div class="d-flex justify-content-around px-3">
                         <h2>Supplier Details</h2>
-                <button type="button" class="btn btn-info" onclick="chooseSupplier();">Choose a supplier</button>
-              </div>
-           
-                <div class="row">
-                   
-                    <div class="col-md-6 row" >
-                        <div class="label col-5">Supplier Name</div>
-                        <div class="col-7" id="supplierName">
+                        <button type="button" class="btn btn-info" onclick="chooseSupplier();">Choose a supplier</button>
+                    </div>
+                </legend>
+           <div class="row">
+
+                <div class="col-md-6 row">
+                    <div class="label col-5">Supplier Name</div>
+                    <div class="col-7" id="supplierName">
                     </div><input id="supplierId" asp-for="SupplierId" hidden />
-                    </div> 
-                    <div class="col-md-6 row" >
-                        <div class="label col-5">PAN or VAT</div>
-                        <div class="col-7" id="panOrVat"></div>
-                    </div>
-                    <div class="col-md-6 row">
-                        <div class="label col-5">Address</div>
-                        <div class="col-7" id="address"></div>
-                    </div>
-                    <div class="col-md-6 row">
-                        <div class="label col-5">Contact</div>
-                        <div class="col-7" id="contact"></div>
-                    </div>
-                    
-
+                </div>
+                <div class="col-md-6 row">
+                    <div class="label col-5">PAN or VAT</div>
+                    <div class="col-7" id="panOrVat"></div>
+                </div>
+                <div class="col-md-6 row">
+                    <div class="label col-5">Address</div>
+                    <div class="col-7" id="address"></div>
+                </div>
+                <div class="col-md-6 row">
+                    <div class="label col-5">Contact</div>
+                    <div class="col-7" id="contact"></div>
                 </div>
 
-           
-        </div>
-        
-        <div class="col-md-12 row">
-            <label for="dateBS" class="form-label col-md-4 ">Date</label>
-            <div class=" input-group col-md-4">
-                <span class="input-group-text">BS</span>
-                <input type="text" class="form-control" id="dateBS" placeholder="date" asp-for="DateBS">
-                <span class="input-group-text"><i class="bi bi-calendar-check"></i></span>
+
             </div>
-            <div class=" input-group col-md-4">
-                <span class="input-group-text">AD</span>
-                <input type="text" class="form-control" id="dateAD" placeholder="date" asp-for="DateAD">
-                <span class="input-group-text"><i class="bi bi-calendar-check"></i></span>
-            </div>
-            
-          
-            <span asp-validation-for="DateBS" class="text-danger"></span>
-            <span asp-validation-for="DateAD" class="text-danger"></span>
+
+
+            </fieldset>
         </div>
+        <fieldset class="py-1">
+            <legend>
+                <div class="billdetail px-4 ">
+                    Bill Details
+                </div>
+            </legend>
+
+        <div class="row py-1">
+            <label for="dateBS" class="form-label col-md-3 ">Date</label>
+            <div class="col-md-9 row">
+                <div class="col-md-4 ">
+                    <div class=" input-group">
+                        <span class="input-group-text">BS</span>
+                        <input type="text" class="form-control" id="dateBS" placeholder="date" asp-for="DateBS">
+                        <span class="input-group-text"><i class="bi bi-calendar-check"></i></span>
+                    </div>
+
+                    <span asp-validation-for="DateBS" class="text-danger"></span>
+                </div>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text">AD</span>
+                        <input type="text" class="form-control" id="dateAD" placeholder="date" asp-for="DateAD" readonly>
+                        <span class="input-group-text"><i class="bi bi-calendar-check"></i></span>
+                    </div>
+                    <span asp-validation-for="DateAD" class="text-danger"></span>
+                </div>
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-text">Bill No</span>
+                            <input type="text" class="form-control" placeholder=" bill no." asp-for="BillNo">
+                        </div>
+                        <span asp-validation-for="BillNo" class="text-danger"></span>
+                    </div>
+                </div>
+
+        </div>
+        <div class="row ">
+                <div class="col-md-6 p-2">
+                    <div class="row">
+                        <div class="input-group">
+                            <span class="input-group-text"> Discount rs.</span>
+                        
+                                    <input type="number" id="DiscountAmount"  asp-for="Discount" value="0" class="form-control" />
+                                    <select id="discountType" class="form-control"  asp-for="Discount_Type" asp-items="Html.GetEnumSelectList<DiscountTypeEnum>()">
+                                    </select>
+                               
+                            </div>
+
+                        <span asp-validation-for="Discount" class="text-danger"></span>
+
+                        </div>
+                   
+            </div>
+                <div class="col-md-6 p-2">
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            Payment
+                        </span> 
+                        <select asp-for="Payment_Mode" id="CheckoutMode" onclick="CheckPaymentMode()" class="form-control" asp-items="Html.GetEnumSelectList<PaymentModeEnum>()">
+                        </select>
+                     </div>
+                    <span asp-validation-for="Payment_Mode" class="text-danger"></span>
+                </div>
+               </div>
+         <div class="row">
+                <div class="col-md-4 p-2">
+                    <div class="input-group">
+                        <span class="input-group-text">Bill Total</span>
+                        <input type="text" class="form-control" placeholder="bill total" asp-for="BillTotal">
+                    </div>
+                    <span asp-validation-for="BillTotal" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 p-2">
+                    <div class="input-group">
+                        <span class="input-group-text">Paid Amount</span>
+                        <input type="text" class="form-control" placeholder="Paid Amount" asp-for="Paid_Amount">
+                    </div>
+                    <span asp-validation-for="Paid_Amount" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 p-2" id="dueSection">
+                    <div class="input-group">
+                        <span class="input-group-text">Due Amount</span>
+                        <input type="text" class="form-control" placeholder="Due Amount" id="dueAmount" asp-for="Due_Amount">
+                    </div>
+                    <span asp-validation-for="Due_Amount" class="text-danger"></span>
+                </div>
+                </div>
+                
+        </fieldset>
         <div class="productDetails">
-            <div class="d-flex justify-content-center">
-                <h2>Product Details</h2>
+            <div class="d-flex justify-content-around">
+                <h2>Purchased Product Details</h2>
                 <div class="btn btn-info" onclick="chooseProduct()">Choose product</div>
-                </div>
-                <table class="table table-striped" id="productList">
-                    <thead class="thead-dark">
-                        <tr scope="row">
-                            <th>
-                                Item Name
-                            </th>
-                            <th>Unit</th>
-                            <th>Quantity</th>
-                            <th>Rate</th>
-                            <th>Total</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tBody>
-
-                    </tBody>
-                    <tfoot>
-                        <tr scope="row">
-                            <td colspan="3" class="text-right">
-                                Total
-                            </td>
-                            <td >
-                                <div class="text-center" id="GTotal">
+            </div>
+            <table class="table table-striped" id="productList">
+                <thead class="thead-dark">
+                    <tr scope="row">
+                        <th>
+                            Item Name
+                        </th>
+                        <th>Unit</th>
+                        <th>Quantity</th>
+                        <th>Rate</th>
+                        <th>Total</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tBody>
+                    <span asp-validation-for="ProductList" class="text-danger"></span>
+                </tBody>
+                <tfoot>
+                    <tr scope="row">
+                        <td colspan="4" class="text-right">
+                            Total
+                        </td>
+                        <td>
+                            <div class="text-center" id="GTotal">
                                 0
                             </div>
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
-          
+                        </td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+
 
         </div>
 
-        
-   
+
+
         <button type="submit" class="btn btn-primary">Submit</button>
 
 
 
     </form>
 
-    <form asp-action="chooseSupplier" 
-    id="ChooseSupplierForm"
-    asp-controller="purchase"
-    asp-area="admin"
-    data-ajax="true"
-    data-ajax-success="loadSupplier()"
+    <form asp-action="chooseSupplier"
+          id="ChooseSupplierForm"
+          asp-controller="purchase"
+          asp-area="admin"
+          data-ajax="true"
+          data-ajax-success="supplierLoader()"
           data-ajax-update="#selectionDiv"
-   data-ajax-loading="#overlay"
-    >
-    <button type="submit" hidden></button>
+          data-ajax-loading="#overlay">
+        <button type="submit" hidden></button>
 
-    </form> 
-    <form asp-action="chooseProduct" 
-    id="ChooseProductForm"
-    asp-controller="purchase"
-    asp-area="admin"
-    data-ajax="true"
-    data-ajax-success="loadProduct()"
+    </form>
+    <form asp-action="chooseProduct"
+          id="ChooseProductForm"
+          asp-controller="purchase"
+          asp-area="admin"
+          data-ajax="true"
+          data-ajax-success="productLoader()"
           data-ajax-update="#selectionDiv"
-   data-ajax-loading="#overlay"
-    >
-    <button type="submit" hidden></button>
+          data-ajax-loading="#overlay">
+        <button type="submit" hidden></button>
 
     </form>
 </div>
-<script>
-   
-   
-</script>
+

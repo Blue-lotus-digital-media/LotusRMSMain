@@ -18,17 +18,17 @@ namespace LotusRMS.Models
         public string Product_Description { get; private set; }
         public Guid Product_Unit_Id { get; private set; }
         [ForeignKey(nameof(Product_Unit_Id))]
-        public LotusRMS_Unit? Product_Unit { get; set; }
+        public virtual LotusRMS_Unit Product_Unit { get; set; }
 
         public float? Unit_Quantity { get; set; } 
         public Guid Product_Category_Id { get; private set; }
         [ForeignKey(nameof(Product_Category_Id))]
-        public LotusRMS_Product_Category? Product_Category { get; set; }
+        public virtual LotusRMS_Product_Category Product_Category { get; set; }
 
         public Guid Product_Type_Id { get; set; }
 
         [ForeignKey(nameof(Product_Type_Id))]
-        public LotusRMS_Product_Type? Product_Type { get; set; }
+        public virtual LotusRMS_Product_Type Product_Type { get; set; }
 
         public bool Status { get; set; } = true;
         public bool IsDelete { get; private set; } = false;

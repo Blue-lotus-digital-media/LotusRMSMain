@@ -9,7 +9,20 @@ var datatable2;
 function chooseSupplier() {
     $("#ChooseSupplierForm").submit();
 }
-
+function supplierLoader() {
+    $("#selectionModal").modal("toggle");
+    loadSupplier();
+}
+function CheckPaymentMode() {
+    var mode = $("#CheckoutMode option:Selected").text();
+    console.log(mode);
+    if (mode == "Credit") {
+        $("#dueSection").css("display","block");
+    } else {
+        $("#dueAmount").val("");
+        $("#dueSection").css("display", "none");
+    }
+}
 
 function selectSupplier(me,id) {
     var $tr = $(me).closest("tr");
@@ -22,6 +35,8 @@ function selectSupplier(me,id) {
     $("#address").text(address);
     $("#contact").text(contact);
     $("#panOrVat").text(panOrVat);
+
+    $("#selectionModal").modal("toggle");
 }
 
 window.onload = function () {
@@ -100,6 +115,10 @@ function loadSupplier() {
 function chooseProduct() {
     $("#ChooseProductForm").submit();
 }
+function productLoader() {
+    $("#selectionModal").modal("toggle");
+    loadProduct();
+}
 function CalculatePTotal() {
     var qty = $("#pQuantity").val();
     var rate = $("#pRate").val();
@@ -111,10 +130,12 @@ function selectProduct(me, id) {
     var itemName = $tr.children("td").eq(0).text();
     var itemUnit = $tr.children("td").eq(1).text();
 
-    $("#productPurchaseModal").modal("toggle");
+    $("#selectionModal").modal("toggle");
     $("#pItemName").text(itemName);
     $("#pId").val(id);
     $("#pUnit").val(itemUnit);
+
+    $("#productPurchaseModal").modal("toggle");
 
 }
 function RemoveProduct(index) {
