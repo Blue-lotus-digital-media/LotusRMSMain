@@ -26,6 +26,7 @@ namespace LotusRMS.Models
         public bool IsKitchenComplete { get; set; } = false;
         public bool IsQrOrder { get; set; } = false;
         public bool IsQrVerified { get; set; } = false;
+        public bool IsPrinted { get; set; } = false;
 
         public Guid MenuId { get; set; }
         [ForeignKey("MenuId")]

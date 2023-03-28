@@ -139,5 +139,29 @@ namespace LotusRMS.Models.Service.Implementation
             _IOrderRepository.CompleteOrderDetail(OrderNo, OrderDetailId);
             return OrderDetailId; 
         }
+
+        public async Task<Guid> PrintKotAsync(Guid OrderId,List<LotusRMS_Order_Details> orderDetails )
+        {
+            var order =await _IOrderRepository.GetFirstOrDefaultAsync(x => x.Id == OrderId, includeProperties: "Order_Details,User,Table");
+            foreach(var item in orderDetails)
+            {
+                order.Order_Details.Where(x => x.Id == item.Id).First().IsPrinted = true;
+            }
+            _IOrderRepository.Update(order);
+            return OrderId;
+        }
+
+        public async Task<IEnumerable<LotusRMS_Order_Details>> GetUnPrintedDetail(string orderNo)
+        {
+            var order =await _IOrderRepository.GetFirstOrDefaultAsync(x => x.Order_No == orderNo, includeProperties: "Order_Details,User,Table");
+            var orderDetail = new List<LotusRMS_Order_Details>();
+            foreach(var item in order.Order_Details) {
+                if (!item.IsPrinted)
+                {
+                    orderDetail.Add(item);
+                }
+            }
+            return orderDetail;
+        }
     }
 }

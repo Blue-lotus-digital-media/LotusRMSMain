@@ -11,6 +11,7 @@ namespace LotusRMS.Models.IRepositorys
     {
 
         void Update(LotusRMS_Order Order);
+        Task UpdateAsync(LotusRMS_Order Order);
         void UpdateCompleteOrder(LotusRMS_Order order);
         void UpdateStatus(Guid Id);
         void CancelOrder(string OrderNo, Guid OrderDetailId);

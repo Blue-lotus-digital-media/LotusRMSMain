@@ -219,6 +219,37 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
             }
         }
 
+        public IActionResult PrintKOT(string OrderNo)
+        {
+            var order = _IOrderService.GetFirstOrDefaultByOrderNo(OrderNo);
+
+
+            var printOrderVM = new PrintOrderDetailVM()
+            {
+                OrderNo=OrderNo,
+                TableName=order.Table.Table_Name,
+                OrderDetail=new List<OrderDetailVm>()
+            };
+            foreach (var item in order.Order_Details.Where(x=>!x.IsPrinted))
+            {
+                var menu = _IMenuService.GetFirstOrDefault(item.MenuId);
+                var orderDetail = new OrderDetailVm()
+                {
+                    Id = item.Id,
+                    MenuId = item.MenuId,
+                    Item_Name = menu.Item_Name,
+                    Item_Unit = menu.Menu_Unit.Unit_Symbol,
+                    Rate = item.Rate,
+                    Quantity = item.Quantity,
+                    IsComplete = item.IsComplete,
+                    IsKitchenComplete = item.IsKitchenComplete,
+                    Total = item.GetTotal
+                };
+                printOrderVM.OrderDetail.Add(orderDetail);
+
+            }
+            return View(printOrderVM);
+        }
         #endregion
     }
 }

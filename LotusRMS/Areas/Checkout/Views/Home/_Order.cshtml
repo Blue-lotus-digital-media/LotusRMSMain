@@ -1,5 +1,15 @@
 ﻿@using LotusRMS.Models.Viewmodels.Order;
 @model OrderVm
+<style>
+    .kotWrapper{
+        position:relative;
+    }
+    .kotWrapper span{
+        position:absolute;
+        top:0;
+        right:0;
+    }
+</style>
 
     <div class="row">
         <div class="col-3">
@@ -13,7 +23,14 @@
         }
             </div>
             <div class="col-3">
-                time
+                @if(Model.Id!=Guid.Empty){
+                <div class="kotWrapper">
+                <a asp-action="PrintKOT" asp-controller="Home" asp-area="Checkout" asp-route-OrderNO="@Model.Order_No" target="_blank" class="btn btn-info" id="printKot">Print KOT</a>
+               
+            <span class="badge bg-primary badge-text">New</span>
+                </div>
+                }
+
             </div>
     </div>
 

@@ -25,6 +25,10 @@ namespace LotusRMS.Models.IRepositorys
             Expression<Func<T, bool>> filter = null,
             string includeProperties = null
             );
+        Task<T> GetFirstOrDefaultAsync(
+           Expression<Func<T, bool>> filter = null,
+           string includeProperties = null
+           );
         void Add(T entity);
         void Remove(int id);
         void RemoveRange(IEnumerable<T> entity);

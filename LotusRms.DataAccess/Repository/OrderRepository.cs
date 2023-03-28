@@ -22,12 +22,17 @@ namespace LotusRMS.DataAccess.Repository
 
         public void Update(LotusRMS_Order order)
         {
-            var orders = GetFirstOrDefault(filter: x => x.Id == order.Id, includeProperties: "Order_Details,User");
-            if (orders != null)
-            {
-
+            
+            
                 Save();
-            }
+            
+        }   
+        public async Task UpdateAsync(LotusRMS_Order order)
+        {
+            
+            
+                Save();
+            
         }
         public void UpdateCompleteOrder(LotusRMS_Order orders)
         {
