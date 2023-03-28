@@ -1,15 +1,66 @@
 ﻿@using LotusRMS.Models.Viewmodels.Order;
 @model IEnumerable<OrderMenu> 
 
-<style>
+@*<style>
     .menu {
         display: flex;
         justify-content: space-between;
         padding: 3px;
         width: 100%;
     }
-</style>
-<div style="min-height:400px; max-height:500px; overflow-x:auto;">
+</style>*@
+ <div class="card menu-card ">
+            <h5 class="card-title text-center menu">Menu <span class="close-btn"></h5>
+            <div class=" search-bar">
+              <form class="search-form" method="POST" action="#">
+                <input type="text" name="query" placeholder="Search" title="Enter search keyword">
+                <button type="submit" title="Search"><i class="bi bi-search text-primary"></i></button>
+              </form>
+            </div>
+            <!-- <div class="border-line"></div> -->
+            <!-- Experiment start -->
+            <!-- Table with stripped rows -->
+            <table class="table table-striped ">
+              <thead>
+                <tr>
+                  <th scope="col" class="text-start">Item Name</th>
+                  <th scope="col" class="text-start">Price</th>
+                  <th scope="col" class="text-center"></th>
+
+                </tr>
+              </thead>
+              <tbody class="menu-tbody">
+                    @foreach (var item in Model)
+            {
+              
+                <tr>
+                  <td class="text-start">Fried Chicken</td>
+                  <td class="text-start"> <span>390</span>/-</td>
+                  
+                  <td class="text-center">
+                          <form class="menuForm"
+                          asp-action="Selectmenu"
+                          asp-controller="home"
+                          asp-area="Order"
+                          asp-route-MenuId="@item.Id"
+                              data-ajax=true
+                              data-ajax-update="#AddmenuSection"
+                              data-ajax-success="menuSelected()"
+                              data-ajax-loading="#overlay">
+                              <button  type="submit">
+                          <i class="fa-solid fa-circle-plus text-primary" ></i></button>
+                  </form>
+                  </td>
+                  
+                </tr>
+            }
+         
+              </tbody>
+            </table>
+            <!-- End Table with stripped rows -->
+            <!-- Experiment ends -->
+          </div>
+@*<div style="min-height:400px; max-height:500px; overflow-x:auto;">
 
     <table class="table tableSearch">
         <thead>
@@ -58,11 +109,12 @@
         </tbody>
     </table>
 </div>
-
+*@
 <script>
-    function menuSelected() {
-        $("#addMenuModal").modal("show");
+    function menuSelected(){
+    $("#basicModal").toggle();
     }
+   
     function mySearchFunction(input) {
         /*Declare variables*/
         var input, filter, table, tr, td, i, txtValue;

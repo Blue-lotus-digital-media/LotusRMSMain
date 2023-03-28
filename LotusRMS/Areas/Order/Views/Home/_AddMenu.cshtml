@@ -1,5 +1,60 @@
 ﻿@using LotusRMS.Models.Viewmodels.Order
 @model AddNewOrderVM
+<form id="ordertable"
+    asp-action="AddNewOrder"
+asp-controller="home"
+asp-area="order"
+data-ajax=true
+data-ajax-success="menuAdded()"
+      data-ajax-update="#NewOrderSection"
+      data-ajax-loading="#overlay">
+ <div class="modal-content pb-1">
+            <div class="modal-header">
+              <h5 class="modal-title">@Model.Item_Name</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="head-bar">
+              <div class="left-side">
+                <div class="quantity">Quantity</div>
+                  <input type="number" asp-for="Quantity" name="quantity" class="form-control" placeholder="1" disabled class="disabled-icon">
+                   <input asp-for="Rate" hidden/>
+        <input asp-for="MenuId" hidden/>
+        <input asp-for="TableId" hidden/>
+       
+              </div>
+              <div class="qty">60 ml</div>
+            </div>
+
+
+            <span class="remarks-title">Remarks</span>
+            <textarea placeholder="Remarks....." id="remarks" name="remarks" rows="3" placeholder="Remarks....."
+              class="textarea">
+            </textarea>
+
+
+
+
+            <div class="modal-body">
+              <div class="grid">
+                <div class="item item-num" onclick="ordertable.answer.value += '1' ">1</div>
+                <div class="item item-num"onclick="ordertable.answer.value += '2' " >2</div>
+                <div class="item item-num" onclick="ordertable.answer.value += '3' ">3</div>
+                <div class="item item-num" onclick="ordertable.answer.value += '4' ">4</div>
+                <div class="item item-num" onclick="ordertable.answer.value += '5' ">5</div>
+                <div class="item item-num" onclick="ordertable.answer.value += '6' ">6</div>
+                <div class="item item-num" onclick="ordertable.answer.value += '7' ">7</div>
+                <div class="item item-num" onclick="ordertable.answer.value += '8' ">8</div>
+                <div class="item item-num" onclick="ordertable.answer.value += '9' ">9</div>
+                <div class="item item-num" onclick="ordertable.answer.value += '0' ">0</div>
+                <div class="item item-clear" onclick="ordertable.answer.value += ' ' "><i class="fa-solid fa-delete-left"></i></div>
+
+                <div onclick="submitform()" class="item item-done" >Done</div>
+              </div>
+            </div>
+
+          </div>
+          </form>
+          @*
 <form 
     asp-action="AddNewOrder"
 asp-controller="home"
@@ -21,9 +76,13 @@ data-ajax-success="menuAdded()"
         <input type="submit" value="Submit">
     </div>
 </div>
-</form>
+</form>*@
 <script>
+    function submitform(){
+        $(".ordertable").submit();
+    }
     function menuAdded(){
+
         $('#addMenuModal').modal('hide');
     }
 </script>
