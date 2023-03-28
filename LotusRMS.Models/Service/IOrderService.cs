@@ -20,6 +20,8 @@ namespace LotusRMS.Models.Service
         Guid UpdateStatus(Guid Id);
         Task<Guid> UpdateStatusAsync(Guid Id);
 
+        Task<Guid> PrintKotAsync(Guid OrderId, List<LotusRMS_Order_Details> orderDetails);
+        /*Task<LotusRMS_Order> GetUnPrintedDetail(string OrderNo);*/
         IEnumerable<LotusRMS_Order> GetAll();
         Task<IEnumerable<LotusRMS_Order>> GetAllAsync();
         LotusRMS_Order GetByGuid(Guid Id);
