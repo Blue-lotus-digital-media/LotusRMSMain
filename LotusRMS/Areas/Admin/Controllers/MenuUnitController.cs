@@ -1,4 +1,5 @@
-﻿using ClosedXML.Excel;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using ClosedXML.Excel;
 using LotusRMS.Models.Dto.UnitDto;
 
 using LotusRMS.Models.Service;
@@ -6,7 +7,7 @@ using LotusRMS.Models.Viewmodels.Unit;
 using LotusRMS.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NToastNotify;
+
 
 namespace LotusRMSweb.Areas.Admin.Controllers
 {
@@ -15,10 +16,10 @@ namespace LotusRMSweb.Areas.Admin.Controllers
     [Area("Admin")]
     public class MenuUnitController : Controller
     {
-        private readonly IToastNotification _toastNotification;
+        private readonly INotyfService _toastNotification;
         private readonly IMenuUnitService _MenuUnitService;
 
-        public MenuUnitController(IToastNotification toastNotification, IMenuUnitService MenuUnitService)
+        public MenuUnitController(INotyfService toastNotification, IMenuUnitService MenuUnitService)
         {
             _toastNotification = toastNotification;
             _MenuUnitService = MenuUnitService;
@@ -26,11 +27,10 @@ namespace LotusRMSweb.Areas.Admin.Controllers
 
         public IActionResult Index()
         {
-            //var MenuUnits = _IMenuUnitOfWork.MenuUnit.GetAll();
            
 
-            _toastNotification.AddInfoToastMessage("Added for test");
-            return View(/*MenuUnits*/);
+            
+            return View();
         }
         public IActionResult Create(string? returnUrl=null) {
             returnUrl ??= nameof(Index);
@@ -52,7 +52,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             var MenuUnitCreateDto = new UnitCreateDto(MenuUnitVM.Unit_Name, MenuUnitVM.Unit_Symbol, MenuUnitVM.Unit_Description);
             var id=_MenuUnitService.Create(MenuUnitCreateDto);
 
-            _toastNotification.AddSuccessToastMessage("Unit created successfully...");
+            _toastNotification.Success("Menu Unit created successfully...",5);
             return Redirect(returnUrl);
         }
 
@@ -61,13 +61,13 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             if (Id == Guid.Empty)
             {
 
-                _toastNotification.AddErrorToastMessage("Error while loading data! ");
+                _toastNotification.Error("Error while loading data! ",5);
                 return RedirectToAction(nameof(Index));
             }
             var unit = _MenuUnitService.GetByGuid((Guid)Id);
             if (unit == null)
             {
-                _toastNotification.AddErrorToastMessage("No data found !");
+                _toastNotification.Error("No data found !", 5);
                 return RedirectToAction(nameof(Index));
             }
 
@@ -97,7 +97,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         };
             _MenuUnitService.Update(dto);
 
-            _toastNotification.AddSuccessToastMessage("Unit updated successfully...");
+            _toastNotification.Success("Menu Unit updated successfully...",5);
             return RedirectToAction(nameof(Index));
 
 

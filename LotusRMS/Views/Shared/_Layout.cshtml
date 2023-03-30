@@ -224,7 +224,7 @@
         </a>
         <ul id="icons-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a  asp-controller="Admin" asp-action="User">
+            <a asp-controller="Admin" asp-action="User">
               <i class="bi bi-circle"></i><span>User</span>
             </a>
           </li>
@@ -276,7 +276,9 @@
   <script src="~/assets/js/main.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 
-    @await Component.InvokeAsync("NToastNotify")
 
+    @await Component.InvokeAsync("Notyf")
+
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

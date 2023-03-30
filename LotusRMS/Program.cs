@@ -14,6 +14,8 @@ using DinkToPdf.Contracts;
 using LotusRMS.Utility;
 using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using LotusRMSweb.Hubs;
+using AspNetCoreHero.ToastNotification;
+using AspNetCoreHero.ToastNotification.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,12 +58,7 @@ builder.Services.AddScoped<IUserClaimsPrincipalFactory<RMSUser>,
             ApplicationUserClaimsPrincipalFactory
             >();
 
-builder.Services.AddControllersWithViews().AddNToastNotifyNoty(new NToastNotify.NotyOptions()
-{
-    ProgressBar = true,
-    Timeout = 5000,
-    Theme = "mint"
-});
+builder.Services.AddControllersWithViews();
 
 builder.Services.AddSignalR(cfg=>cfg.EnableDetailedErrors=true);
 builder.Services.AddAuthorization(options =>
@@ -88,6 +85,7 @@ builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options => {
     options.IdleTimeout = TimeSpan.FromMinutes(60);//You can set Time   
 });
+builder.Services.AddNotyf(config => { config.DurationInSeconds = 10; config.IsDismissable = true; config.Position = NotyfPosition.BottomRight; });
 
 
 var app = builder.Build();
@@ -103,12 +101,13 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-app.UseNToastNotify();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
 app.UseSession();
+
+app.UseNotyf();
 app.UseAuthentication();
 app.UseAuthorization();
 

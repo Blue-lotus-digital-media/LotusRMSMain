@@ -1,12 +1,11 @@
-﻿using ClosedXML.Excel;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using ClosedXML.Excel;
 using LotusRMS.Models;
 using LotusRMS.Models.Dto.CategoryDTO;
-using LotusRMS.Models.IRepositorys;
 using LotusRMS.Models.Service;
 using LotusRMS.Models.Viewmodels.Category;
 using LotusRMS.Utility;
 using Microsoft.AspNetCore.Mvc;
-using NToastNotify;
 
 namespace LotusRMSweb.Areas.Admin.Controllers
 {
@@ -15,8 +14,8 @@ namespace LotusRMSweb.Areas.Admin.Controllers
     {
         private readonly ICategoryService _ICategoryService;
         private readonly ITypeService _ITypeService;
-        private readonly IToastNotification _toastNotification;
-        public CategoryController(ICategoryService iCategoryService, IToastNotification toastNotification, ITypeService iTypeService)
+        private readonly INotyfService _toastNotification;
+        public CategoryController(ICategoryService iCategoryService, INotyfService toastNotification, ITypeService iTypeService)
         {
             _ICategoryService = iCategoryService;
             _toastNotification = toastNotification;
@@ -63,7 +62,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                     Value = x.Id.ToString()
                 });
                 obj.TypeList = typeList;
-
+                _toastNotification.Error("One or move validation error !!! ", 5);
                 return View(obj);
 
             }
@@ -71,7 +70,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             
             var id = _ICategoryService.Create(category);
 
-
+            _toastNotification.Success("Product Category created successfully", 5);
                     return Redirect(returnUrl);
 
               
@@ -133,6 +132,8 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             };
 
             _ICategoryService.Update(dto);
+
+            _toastNotification.Success("Product Category updated successfully", 5);
             return RedirectToAction(nameof(Index));
 
         }
