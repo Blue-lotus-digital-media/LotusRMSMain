@@ -119,6 +119,7 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
                             Rate = item.Rate,
                             Quantity = item.Quantity,
                             IsComplete = item.IsComplete,
+                            IsPrinted = item.IsPrinted,
                             IsKitchenComplete = item.IsKitchenComplete,
                             Total = item.GetTotal
                         };
@@ -161,6 +162,7 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
                             Rate = item.Rate,
                             Quantity = item.Quantity,
                             IsComplete = item.IsComplete,
+                            IsPrinted = item.IsPrinted,
                             IsKitchenComplete = item.IsKitchenComplete,
                             Total = item.GetTotal
 
@@ -230,25 +232,72 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
                 TableName=order.Table.Table_Name,
                 OrderDetail=new List<OrderDetailVm>()
             };
-            foreach (var item in order.Order_Details.Where(x=>!x.IsPrinted))
+            if (order.Order_Details.Any(x =>!x.IsPrinted))
             {
-                var menu = _IMenuService.GetFirstOrDefault(item.MenuId);
-                var orderDetail = new OrderDetailVm()
-                {
-                    Id = item.Id,
-                    MenuId = item.MenuId,
-                    Item_Name = menu.Item_Name,
-                    Item_Unit = menu.Menu_Unit.Unit_Symbol,
-                    Rate = item.Rate,
-                    Quantity = item.Quantity,
-                    IsComplete = item.IsComplete,
-                    IsKitchenComplete = item.IsKitchenComplete,
-                    Total = item.GetTotal
-                };
-                printOrderVM.OrderDetail.Add(orderDetail);
 
+                foreach (var item in order.Order_Details.Where(x => !x.IsPrinted))
+                {
+                    var menu = _IMenuService.GetFirstOrDefault(item.MenuId);
+                    var orderDetail = new OrderDetailVm()
+                    {
+                        Id = item.Id,
+                        MenuId = item.MenuId,
+                        Item_Name = menu.Item_Name,
+                        Item_Unit = menu.Menu_Unit.Unit_Symbol,
+                        Rate = item.Rate,
+                        Quantity = item.Quantity,
+                        IsComplete = item.IsComplete,
+                        IsPrinted = item.IsPrinted,
+                        IsKitchenComplete = item.IsKitchenComplete,
+                        Total = item.GetTotal
+                    };
+                    printOrderVM.OrderDetail.Add(orderDetail);
+
+                }
+            }
+            else
+            {
+                foreach (var item in order.Order_Details)
+                {
+                    var menu = _IMenuService.GetFirstOrDefault(item.MenuId);
+                    var orderDetail = new OrderDetailVm()
+                    {
+                        Id = item.Id,
+                        MenuId = item.MenuId,
+                        Item_Name = menu.Item_Name,
+                        Item_Unit = menu.Menu_Unit.Unit_Symbol,
+                        Rate = item.Rate,
+                        Quantity = item.Quantity,
+                        IsComplete = item.IsComplete,
+                        IsPrinted = item.IsPrinted,
+                        IsKitchenComplete = item.IsKitchenComplete,
+                        Total = item.GetTotal
+                    };
+                    printOrderVM.OrderDetail.Add(orderDetail);
+
+                }
             }
             return View(printOrderVM);
+        }
+        public IActionResult PrintKOTComplete(string OrderNo)
+        {
+            var order = _IOrderService.GetFirstOrDefaultByOrderNo(OrderNo);
+            var printOrderVM = new PrintOrderDetailVM()
+            {
+                OrderNo = OrderNo,
+                TableName = order.Table.Table_Name,
+                OrderDetail = new List<OrderDetailVm>()
+            };
+            List<LotusRMS_Order_Details> orderDetails=new List<LotusRMS_Order_Details>();
+            foreach (var item in order.Order_Details.Where(x => !x.IsPrinted))
+            {
+
+                orderDetails.Add(item);
+
+            }
+            var id=_IOrderService.PrintKotAsync(order.Id, orderDetails);
+
+            return Ok();
         }
         #endregion
     }

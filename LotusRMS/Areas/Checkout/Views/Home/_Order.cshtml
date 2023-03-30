@@ -26,8 +26,9 @@
                 @if(Model.Id!=Guid.Empty){
                 <div class="kotWrapper">
                 <a asp-action="PrintKOT" asp-controller="Home" asp-area="Checkout" asp-route-OrderNO="@Model.Order_No" target="_blank" class="btn btn-info" id="printKot">Print KOT</a>
-               
+               @if(Model.Order_Details.Any(x=>!x.IsPrinted)){
             <span class="badge bg-primary badge-text">New</span>
+               }
                 </div>
                 }
 

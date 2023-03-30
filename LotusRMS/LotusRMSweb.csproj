@@ -25,7 +25,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.jQuery.Unobtrusive.Ajax" Version="3.2.6" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.12" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.13" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="NToastNotify" Version="8.0.0" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0" />
@@ -37,6 +37,8 @@
     <Folder Include="Areas\Checkout\Data\" />
     <Folder Include="Areas\Checkout\Models\" />
     <Folder Include="Areas\Identity\Controllers\" />
+    <Folder Include="Areas\Kitchen\Data\" />
+    <Folder Include="Areas\Kitchen\Models\" />
     <Folder Include="Areas\Order\Data\" />
     <Folder Include="Areas\Order\Models\" />
     <Folder Include="Areas\SuperAdmin\Data\" />

@@ -4,10 +4,12 @@ using LotusRMS.Models;
 using LotusRMS.Models.Dto.OrderDTO;
 using LotusRMS.Models.Service;
 using LotusRMS.Models.Viewmodels.Order;
+using LotusRMSweb.Hubs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.CodeAnalysis.Differencing;
 using Newtonsoft.Json;
 using System.Security.Claims;
@@ -23,14 +25,19 @@ namespace LotusRMSweb.Areas.Order.Controllers
         private readonly ITableService _ITableService;
         private readonly IMenuService _IMenuService;
         private readonly UserManager<RMSUser> _UserManager;
+        private readonly IHubContext<OrderHub,IOrderHub> _orderHub;
         private readonly IOrderService _IOrderService;
-        public HomeController(IOrderService iOrderService,ITableTypeService TableTypeService, ITableService iTableService, IMenuService iMenuService,UserManager<RMSUser> userManager)
+        public HomeController(IOrderService iOrderService,ITableTypeService TableTypeService, ITableService iTableService, IMenuService iMenuService,
+            UserManager<RMSUser> userManager,
+            IHubContext<OrderHub, IOrderHub> orderHub
+            )
         {
             _IOrderService = iOrderService;
             _ITableTypeService = TableTypeService;
             _ITableService = iTableService;
             _IMenuService = iMenuService;
             _UserManager = userManager;
+            _orderHub = orderHub;
         }
 
 
@@ -190,7 +197,7 @@ namespace LotusRMSweb.Areas.Order.Controllers
             return PartialView("_NewOrders",model:orderList);
         }
         [HttpPost]
-        public IActionResult CompleteNewOrder(Guid tableId)
+        public async Task<IActionResult> CompleteNewOrder(Guid tableId)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var orderList = new List<AddNewOrderVM>();
@@ -234,6 +241,7 @@ namespace LotusRMSweb.Areas.Order.Controllers
 
 
             HttpContext.Session.Remove(tableId.ToString());
+            await _orderHub.Clients.All.OrderReceived(tableId);
             var orders = GetOrderVM(tableId, "");
             
             ViewBag.NewOrder = GetNewOrder(tableId);
@@ -313,6 +321,13 @@ namespace LotusRMSweb.Areas.Order.Controllers
             var order = GetOrderVM(new Guid(), orderNo);
             ViewBag.NewOrder = GetNewOrder(order.TableId);
             return PartialView("_Order", model: order);
+        }
+        [HttpGet]
+        public IActionResult ReturnTableType(Guid Id)
+        {
+            var table = _ITableService.GetFirstOrDefaultById(Id);
+            var bookedCount = _ITableService.GetAllByTypeId(table.Table_Type_Id).Where(x => x.IsReserved).Count();
+            return Json(new { typeId = table.Table_Type_Id, count = bookedCount });
         }
 
     }
