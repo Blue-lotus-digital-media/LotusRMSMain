@@ -1,10 +1,10 @@
-﻿using ClosedXML.Excel;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using ClosedXML.Excel;
 using LotusRMS.Models.Dto.CategoryDTO;
 using LotusRMS.Models.Service;
 using LotusRMS.Models.Viewmodels.Category;
 using LotusRMS.Utility;
 using Microsoft.AspNetCore.Mvc;
-using NToastNotify;
 
 namespace LotusRMSweb.Areas.Admin.Controllers
 {
@@ -14,12 +14,12 @@ namespace LotusRMSweb.Areas.Admin.Controllers
 
         private readonly IMenuCategoryService _IMenuCategoryService;
         private readonly IMenuTypeService _IMenuTypeService;
-        private readonly IToastNotification _toastNotification;
+        private readonly INotyfService _notyf;
         public MenuCategoryController(IMenuCategoryService iMenuCategoryService,
-            IToastNotification toastNotification, IMenuTypeService iMenuTypeService)
+            INotyfService toastNotification, IMenuTypeService iMenuTypeService)
         {
             _IMenuCategoryService = iMenuCategoryService;
-            _toastNotification = toastNotification;
+            _notyf = toastNotification;
             _IMenuTypeService = iMenuTypeService;
         }
         public IActionResult Index()
@@ -64,6 +64,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 });
                 obj.TypeList = typeList;
 
+                _notyf.Error("Some form validation required!", 5);
                 return View(obj);
 
             }
@@ -71,6 +72,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
 
             var id = _IMenuCategoryService.Create(category);
 
+            _notyf.Success("New category created successfully !", 5);
 
             return Redirect(returnUrl);
 
@@ -82,6 +84,8 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         {
             if (Id == Guid.Empty)
             {
+
+                _notyf.Warning("Please selece valid category !", 5);
                 return RedirectToAction(nameof(Index));
             }
 

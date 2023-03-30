@@ -1,4 +1,5 @@
-﻿using ClosedXML.Excel;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using ClosedXML.Excel;
 using LotusRMS.DataAccess;
 using LotusRMS.Models;
 using LotusRMS.Models.Dto.UnitDto;
@@ -8,7 +9,6 @@ using LotusRMS.Models.Viewmodels;
 using LotusRMS.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NToastNotify;
 
 namespace LotusRMSweb.Areas.Admin.Controllers
 {
@@ -17,10 +17,10 @@ namespace LotusRMSweb.Areas.Admin.Controllers
     [Area("Admin")]
     public class UnitController : Controller
     {
-        private readonly IToastNotification _toastNotification;
+        private readonly INotyfService _toastNotification;
         private readonly IUnitService _unitService;
 
-        public UnitController(IToastNotification toastNotification, IUnitService unitService)
+        public UnitController(INotyfService toastNotification, IUnitService unitService)
         {
             _toastNotification = toastNotification;
             _unitService = unitService;
@@ -28,11 +28,8 @@ namespace LotusRMSweb.Areas.Admin.Controllers
 
         public IActionResult Index()
         {
-            //var units = _IUnitOfWork.Unit.GetAll();
-           
-
-            _toastNotification.AddInfoToastMessage("Added for test");
-            return View(/*units*/);
+            
+            return View();
         }
         public IActionResult Create(string? returnUrl=null) {
             returnUrl ??= nameof(Index);
@@ -53,7 +50,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
 
             var unitCreateDto = new UnitCreateDto(unitVM.Name, unitVM.Unit_Symbol, unitVM.Unit_Description);
             var id=_unitService.Create(unitCreateDto);
-
+            _toastNotification.Success("Product unit created successfully", 5);
             return Redirect(returnUrl);
         }
         [HttpPost]

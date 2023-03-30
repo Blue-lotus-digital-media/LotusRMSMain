@@ -1,10 +1,10 @@
-﻿using LotusRMS.Models.Dto.MenuDTO;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using LotusRMS.Models.Dto.MenuDTO;
 using LotusRMS.Models.Service;
 using LotusRMS.Models.Viewmodels.Menu;
 using LotusRMS.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NToastNotify;
 
 namespace LotusRMSweb.Areas.Admin.Controllers
 {
@@ -16,11 +16,11 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         private readonly IMenuTypeService _IMenuTypeService;
         private readonly IMenuCategoryService _IMenuCategoryService;
         private readonly IMenuUnitService _IMenuUnitService;
-        private readonly IToastNotification _toastNotification;
+        private readonly INotyfService _toastNotification;
 
      
 
-        public MenuController(IMenuService iMenuService,IMenuTypeService iMenuTypeService,IMenuCategoryService iMenuCategoryService, IMenuUnitService iMenuUnitService, IToastNotification toastNotification)
+        public MenuController(IMenuService iMenuService,IMenuTypeService iMenuTypeService,IMenuCategoryService iMenuCategoryService, IMenuUnitService iMenuUnitService, INotyfService toastNotification)
         {
             _IMenuService = iMenuService;
             _IMenuTypeService = iMenuTypeService;
@@ -87,12 +87,12 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         {
             if (Id == Guid.Empty)
             {
-                _toastNotification.AddErrorToastMessage("Error while loading data...");
+                _toastNotification.Warning("Error while loading data...");
                 return RedirectToAction(nameof(Index));
             }
             var menu = _IMenuService.GetByGuid(Id);
             if (menu == null) {
-                _toastNotification.AddErrorToastMessage("no such data...");
+                _toastNotification.Information("no such data...");
                 return RedirectToAction(nameof(Index));
             }
             var updateMenuVM = new UpdateMenuVM()
@@ -166,6 +166,8 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 dto.Image = ImageUpload.GetByteArrayFromImage(vm.Menu_Image);
             }
             _IMenuService.Update(dto);
+
+            _toastNotification.Success("Menu Updated successfully..",5);
             return RedirectToAction(nameof(Index));
 
         } 
