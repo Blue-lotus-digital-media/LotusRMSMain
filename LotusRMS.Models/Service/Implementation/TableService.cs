@@ -30,11 +30,27 @@ namespace LotusRMS.Models.Service.Implementation
         public IEnumerable<LotusRMS_Table> GetAll()
         {
             return _ITableRepository.GetAll(includeProperties: "Table_Type");
+        } 
+        public IEnumerable<LotusRMS_Table> GetAllAvailable()
+        {
+            return _ITableRepository.GetAll(x=>!x.IsDelete, includeProperties: "Table_Type");
+        }  public IEnumerable<LotusRMS_Table> GetAllReserved()
+        {
+            return _ITableRepository.GetAll(x=>!x.IsDelete && x.IsReserved, includeProperties: "Table_Type");
+        }
+
+        public IEnumerable<LotusRMS_Table> GetAllByTypeId(Guid Id)
+        {
+            return _ITableRepository.GetAll(x=>x.Table_Type_Id==Id,includeProperties: "Table_Type");
         }
 
         public LotusRMS_Table GetByGuid(Guid Id)
         {
             return _ITableRepository.GetByGuid(Id);
+        }
+        public LotusRMS_Table GetFirstOrDefaultById(Guid Id)
+        {
+            return _ITableRepository.GetFirstOrDefault(x=>x.Id==Id,includeProperties:"Table_Type");
         }
 
         public Guid Update(UpdateTableDTO dto)

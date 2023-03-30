@@ -142,7 +142,7 @@ namespace LotusRMS.Models.Service.Implementation
 
         public async Task<Guid> PrintKotAsync(Guid OrderId,List<LotusRMS_Order_Details> orderDetails )
         {
-            var order =await _IOrderRepository.GetFirstOrDefaultAsync(x => x.Id == OrderId, includeProperties: "Order_Details,User,Table");
+            var order =_IOrderRepository.GetFirstOrDefault(x => x.Id == OrderId, includeProperties: "Order_Details,User,Table");
             foreach(var item in orderDetails)
             {
                 order.Order_Details.Where(x => x.Id == item.Id).First().IsPrinted = true;

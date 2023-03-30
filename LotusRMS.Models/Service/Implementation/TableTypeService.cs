@@ -14,6 +14,7 @@ namespace LotusRMS.Models.Service.Implementation
     {
 
         public readonly ITableTypeRepository _ITableTypeRepository;
+        
         public TableTypeService(ITableTypeRepository iTableTypeRepository)
         {
             _ITableTypeRepository = iTableTypeRepository;
@@ -43,6 +44,10 @@ namespace LotusRMS.Models.Service.Implementation
         public async Task<IEnumerable<LotusRMS_Table_Type>> GetAllAsync()
         {
             return await _ITableTypeRepository.GetAllAsync();
+        }
+        public LotusRMS_Table_Type GetFirstOrDefaultById(Guid TypeId)
+        {
+            return _ITableTypeRepository.GetFirstOrDefault(x=>x.Id==TypeId);
         }
 
         public LotusRMS_Table_Type GetByGuid(Guid Id)

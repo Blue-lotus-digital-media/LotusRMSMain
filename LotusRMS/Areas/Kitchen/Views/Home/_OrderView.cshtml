@@ -1,0 +1,81 @@
+﻿@using LotusRMS.Models.Viewmodels.Checkout;
+@model IEnumerable<PrintOrderDetailVM>
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@foreach(var item in Model){
+<div class="col-md-6 col-lg-4 col-xxl-3 right-table">
+    <div class="card mt-0">
+        <div class="card-body card-right">
+            <div class="heading-section py-3 d-flex justify-content-between">
+                <div class="table-number text-primary fw-bolder h5 text-left ">
+                    <span>@item.TableName</span>@*<span class="table-no">O12</span>*@
+                </div>
+                <div class="table-number text-primary fw-bolder h5 text-right ">
+                    <span>#@item.OrderNo</span>@*<span class="table-no">O12</span>*@
+                </div>
+
+            </div>
+            <!-- <div class="border-line"></div> -->
+            <!-- Table with stripped rows -->
+            <table class="table table-striped table-right">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Item</th>
+                        <th scope="col">Qty</th>
+                        <th scope="col" class="">
+
+                        </th>
+
+                    </tr>
+                </thead>
+                <tbody class="bill-tbody">
+                    @{var i=0;}
+                    @foreach(var order in item.OrderDetail){
+                            i++;
+                            <tr class="bill-table-data">
+                        <th class="td-heading" scope="row">@i</th>
+                        <td>@order.Item_Name</td>
+                        <td>@order.Quantity @order.Item_Unit</td>
+                        <td class="status">
+                            <button class="done btn btn-primary">
+                                <i class="fa-solid fa-square-check check"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    }
+                   
+
+                </tbody>
+                <tfoot>
+                    <tr class="bill-table-data">
+                        <th class="td-heading" scope="row" colspan="4">
+                            <fieldset>
+                                    <legend> <h6>Remarks</h6></legend>
+                                    @{
+                                        var j = 0;
+                                        foreach (var order in item.OrderDetail)
+                                        {
+                                            j++;
+                                            if (order.Remarks != null)
+                                            {
+                                                <p>order NO: @j - @order.Remarks</p>
+                                            }
+                                        }
+                                        }
+                                        </fieldset>
+
+
+                        </th>
+                    </tr>
+                </tfoot>
+
+            </table>
+
+        </div>
+    </div>
+</div>
+}

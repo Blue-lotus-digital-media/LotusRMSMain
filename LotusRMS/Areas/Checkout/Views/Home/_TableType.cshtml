@@ -6,7 +6,7 @@
         <div >
             <form 
                 class="TypeForm"
-
+                typeId="@item.Id"
                 asp-action="getTable" 
                 asp-controller="Home" 
                 asp-area="checkout"
@@ -16,7 +16,7 @@
                   data-ajax-update="#tableSection"
                   data-ajax-loading="#overlay">
             <button type="submit" class="btn typeUnBooked">@item.Type_Name</button>
-
+            <span></span>
 
             </form>
             </div>

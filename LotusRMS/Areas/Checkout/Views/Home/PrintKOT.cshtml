@@ -232,14 +232,24 @@
             $("#Checkoutdate").html(date+" "+time);*@
             window.print();
 
-        setTimeout("closePrintView()", 10000);
-        window.onafterprint = (event) => {
-            console.log("After print");
-        };
+        setTimeout("closePrintView()", 2000);
+     
     });
     function closePrintView() {
 
         window.close();
+
+        AfterPrint('@Model.OrderNo');
         window.location.href = "@ViewBag.ReturnUrl";
+    }
+    function AfterPrint(orderNo){
+     $.ajax({
+        type: 'GET',
+        url: "/checkout/home/printKotComplete",
+        data: "orderNo=" + orderNo,
+        success: function (data) {
+        alert("Print completed");
+        }
+    });
     }
 </script>

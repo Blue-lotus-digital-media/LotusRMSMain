@@ -17,6 +17,7 @@ namespace LotusRMS.Models.Viewmodels.Order
         public float Rate { get; set; }
         private float total { get; set; }
         public bool IsComplete { get; set; }
+        public bool IsPrinted { get; set; }
         public bool IsKitchenComplete { get; set; }
         public string Remarks { get; set; }
 

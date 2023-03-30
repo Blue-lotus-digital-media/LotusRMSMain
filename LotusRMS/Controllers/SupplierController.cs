@@ -2,23 +2,30 @@
 using LotusRMS.Models.Service;
 using LotusRMS.Models.Service.Implementation;
 using LotusRMS.Models.Viewmodels.Supplier;
+using LotusRMSweb.Hubs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace LotusRMSweb.Controllers
 {
     [Authorize(Roles = "SuperAdmin,Admin,Cashier")]
     public class SupplierController : Controller
     {
-        public readonly ISupplierService _iSupplierService;
+        private readonly ISupplierService _iSupplierService;
+        private readonly IHubContext<OrderHub, IOrderHub> _orderHub;
 
-        public SupplierController(ISupplierService iSupplierService)
+        public SupplierController(ISupplierService iSupplierService,
+             IHubContext<OrderHub, IOrderHub> orderHub)
         {
             _iSupplierService = iSupplierService;
+            _orderHub = orderHub;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+
+            
             return View();
         }
 
@@ -105,9 +112,10 @@ namespace LotusRMSweb.Controllers
             return Json(new { data = suppliers });
         }
         [HttpGet]
-        public IActionResult StatusChange(Guid id)
+        public async Task<IActionResult> StatusChange(Guid id)
         {
-
+            var tableId = new Guid("08db215b-585b-4298-8e5a-5d1e8b98aec1");
+            await _orderHub.Clients.All.OrderReceived(tableId); ;
             var supplier = _iSupplierService.GetByGuid(id);
             if (supplier == null)
             {
