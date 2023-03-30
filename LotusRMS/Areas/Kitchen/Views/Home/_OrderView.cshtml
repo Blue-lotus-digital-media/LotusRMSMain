@@ -41,7 +41,7 @@
                         <td>@order.Item_Name</td>
                         <td>@order.Quantity @order.Item_Unit</td>
                         <td class="status">
-                            <button class="done btn btn-primary">
+                                    <button class="done btn btn-primary" onclick="CompleteOrder('@item.OrderNo','@order.Id')">
                                 <i class="fa-solid fa-square-check check"></i>
                             </button>
                         </td>

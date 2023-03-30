@@ -8,5 +8,10 @@ namespace LotusRMSweb.Hubs
         {
             await Clients.All.OrderReceived(tableId);
         }
+
+        public async Task OrderComplete(List<string> data)
+        {
+            await Clients.All.OrderComplete(data);
+        }
     }
 }

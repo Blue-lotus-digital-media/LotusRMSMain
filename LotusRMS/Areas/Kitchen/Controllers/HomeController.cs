@@ -3,7 +3,9 @@ using LotusRMS.Models.Service;
 using LotusRMS.Models.Service.Implementation;
 using LotusRMS.Models.Viewmodels.Checkout;
 using LotusRMS.Models.Viewmodels.Order;
+using LotusRMSweb.Hubs;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace LotusRMSweb.Areas.Kitchen.Controllers
 {
@@ -14,13 +16,17 @@ namespace LotusRMSweb.Areas.Kitchen.Controllers
         private readonly IOrderService _orderService;
         private readonly IMenuService _menuService;
 
+        private readonly IHubContext<OrderHub, IOrderHub> _orderHub;
+
         public HomeController(ITableService tableService, 
             IOrderService orderService, 
-            IMenuService menuService)
+            IMenuService menuService,
+            IHubContext<OrderHub, IOrderHub> orderHub)
         {
             _tableService = tableService;
             _orderService = orderService;
             _menuService = menuService;
+            _orderHub = orderHub;
         }
 
         public IActionResult Index()
@@ -79,6 +85,24 @@ namespace LotusRMSweb.Areas.Kitchen.Controllers
                 /*Json(new {data=orderVM});*/
 
 }
+
+
+        public async Task<IActionResult> CompleteKitchen(string orderNo,Guid orderDetailId)
+        {
+            var orderId = _orderService.UpdateKitchenComplete(orderNo, orderDetailId);
+            var order = _orderService.GetFirstOrDefaultByOrderNo(orderNo);
+            
+            var orderDetail = order.Order_Details.Where(x => x.Id == orderDetailId).FirstOrDefault();
+            var menu = _menuService.GetByGuid(orderDetail.MenuId);
+            var data = new List<string>()
+            {
+                order.Table.Table_Name,
+                menu.Item_Name
+            };
+            await _orderHub.Clients.All.OrderComplete(data);
+            return Ok(orderId);
+        }
+
         #endregion 
     }
 }

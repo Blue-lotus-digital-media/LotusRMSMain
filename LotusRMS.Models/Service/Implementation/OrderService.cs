@@ -133,6 +133,11 @@ namespace LotusRMS.Models.Service.Implementation
         {
             _IOrderRepository.CancelOrder(OrderNo, OrderDetailId);
             return OrderDetailId; 
+        } 
+        public Guid UpdateKitchenComplete(string OrderNo, Guid OrderDetailId)
+        {
+            _IOrderRepository.UpdateKitchenComplete(OrderNo, OrderDetailId);
+            return OrderDetailId; 
         }
         public Guid CompleteOrderDetail(string OrderNo, Guid OrderDetailId)
         {

@@ -115,7 +115,7 @@ namespace LotusRMSweb.Controllers
         public async Task<IActionResult> StatusChange(Guid id)
         {
             var tableId = new Guid("08db215b-585b-4298-8e5a-5d1e8b98aec1");
-            await _orderHub.Clients.All.OrderReceived(tableId); ;
+            await _orderHub.Clients.All.OrderReceived(tableId);
             var supplier = _iSupplierService.GetByGuid(id);
             if (supplier == null)
             {

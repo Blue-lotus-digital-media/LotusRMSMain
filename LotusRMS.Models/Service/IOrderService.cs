@@ -15,6 +15,7 @@ namespace LotusRMS.Models.Service
         Guid UpdateCompleteOrder(UpdateOrderDTO dto);
 
         Guid CancelOrder(string OrderNo, Guid OrderDetailId);
+        Guid UpdateKitchenComplete(string OrderNo, Guid OrderDetailId);
         Guid CompleteOrderDetail(string OrderNo, Guid OrderDetailId);
         Task<Guid> UpdateAsync(UpdateOrderDTO dto);
         Guid UpdateStatus(Guid Id);

@@ -14,6 +14,16 @@ document.addEventListener("DOMContentLoaded", () => {
     body.classList.add("toggle-sidebar");
     loadData();
     client.start();
+  /*  if ('speechSynthesis' in window) {
+        // Speech Synthesis supported 🎉
+        var msg = new SpeechSynthesisUtterance();
+        msg.text = "Good Morning";
+        window.speechSynthesis.speak(msg);
+
+    } else {
+        // Speech Synthesis Not Supported 😣
+        alert("Sorry, your browser doesn't support text to speech!");
+    }*/
 });
 function loadData() {
 
@@ -29,3 +39,18 @@ function loadData() {
         }
     })
 } 
+function CompleteOrder(orderNo, orderDetailId) {
+
+
+
+    $.ajax({
+        type: "get",
+        url: "/kitchen/home/CompleteKitchen",
+
+        contentType: 'application/json; charset=utf-8',
+        data: { orderNo: orderNo, orderDetailId: orderDetailId },
+        success: function (data) {
+            loadData();
+        }
+    });
+}
