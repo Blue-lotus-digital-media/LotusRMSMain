@@ -13,6 +13,7 @@ using DinkToPdf;
 using DinkToPdf.Contracts;
 using LotusRMS.Utility;
 using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
+using LotusRMSweb.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -61,6 +62,8 @@ builder.Services.AddControllersWithViews().AddNToastNotifyNoty(new NToastNotify.
     Timeout = 5000,
     Theme = "mint"
 });
+
+builder.Services.AddSignalR(cfg=>cfg.EnableDetailedErrors=true);
 builder.Services.AddAuthorization(options =>
 {
     /* options.AddPolicy("EmailID", policy =>
@@ -108,6 +111,7 @@ app.UseRouting();
 app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapAreaControllerRoute(
@@ -143,6 +147,7 @@ app.UseEndpoints(endpoints =>
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}");
     endpoints.MapRazorPages();
+    endpoints.MapHub<OrderHub>("/orderHub");
 });
 
 

@@ -90,5 +90,17 @@ namespace LotusRMS.DataAccess.Repository
             }
             Save();
         }
+
+        public void UpdateKitchenComplete(string OrderNo, Guid OrderDetailId)
+        {
+            var order = GetFirstOrDefault(filter: x => x.Order_No == OrderNo, includeProperties: "Order_Details,User");
+            if (order != null)
+            {
+                var orderDetail = order.Order_Details.FirstOrDefault(x => x.Id == OrderDetailId);
+                var index=order.Order_Details.IndexOf(orderDetail);
+                order.Order_Details[index].IsKitchenComplete = true;
+            }
+            Save();
+        }
     }
 }

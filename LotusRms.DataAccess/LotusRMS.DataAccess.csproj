@@ -21,4 +21,8 @@
     <ProjectReference Include="..\LotusRMS.Models\LotusRMS.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="HUBs\" />
+  </ItemGroup>
+
 </Project>

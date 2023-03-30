@@ -21,6 +21,13 @@
 .typeUnBooked {
     color: white;
     background-color: darkorange;
+}.tableBooked {
+    color: white;
+    background-color: green;
+}
+.typeUnBooked {
+    color: white;
+    background-color: darkorange;
 }
 
 */

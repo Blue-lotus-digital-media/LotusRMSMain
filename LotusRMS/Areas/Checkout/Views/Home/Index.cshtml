@@ -5,25 +5,25 @@
 *@
 @{
 }
-<link href="~/css/Order.css" rel="stylesheet"/>
+<link href="~/css/Order.css" rel="stylesheet" />
 
 <partial name="_TableType" model="@Model" />
 <div class="row">
-    
+
     <div class="col-12">
         <div id="orderSection">
-
         </div>
-       
+
     </div>
 
 
 </div>
 <div id="customerDue"></div>
 @section Scripts{
-    
+
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-   
+
+    <script src="~/js/checkout2.js"></script>
 }

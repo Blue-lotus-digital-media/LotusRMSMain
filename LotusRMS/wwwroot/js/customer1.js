@@ -1,6 +1,17 @@
-﻿var dataTable;
+﻿"use strict";
+var dataTable;
+
+const client = new signalR.HubConnectionBuilder()
+    .withUrl("/orderHub")
+    .build();
+client.on("OrderReceived", newCall => {
+    console.log("Order Placed");
+    console.log(newCall);
+});
+
 $(document).ready(function () {
     loadData();
+    client.start();
 });
 
 

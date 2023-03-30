@@ -15,6 +15,7 @@ namespace LotusRMS.Models.Service
         Task<Guid> UpdateAsync(UpdateTypeDTO dto);
         Guid UpdateStatus(Guid Id);
         Task<Guid> UpdateStatusAsync(Guid Id);
+        LotusRMS_Table_Type GetFirstOrDefaultById(Guid typeId);
 
         IEnumerable<LotusRMS_Table_Type> GetAll();
         Task<IEnumerable<LotusRMS_Table_Type>> GetAllAsync();
