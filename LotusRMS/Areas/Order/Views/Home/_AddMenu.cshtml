@@ -22,31 +22,27 @@ data-ajax-success="menuAdded()"
         <input asp-for="TableId" hidden/>
        
               </div>
-              <div class="qty">60 ml</div>
+              <div class="qty">60ml</div>
             </div>
 
 
             <span class="remarks-title">Remarks</span>
-            <textarea placeholder="Remarks....." id="remarks" name="remarks" rows="3" placeholder="Remarks....."
+            <textarea placeholder="Remarks....." id="remarks" name="remarks" rows="3" 
               class="textarea">
             </textarea>
-
-
-
-
             <div class="modal-body">
               <div class="grid">
-                <div class="item item-num" onclick="ordertable.answer.value += '1' ">1</div>
-                <div class="item item-num"onclick="ordertable.answer.value += '2' " >2</div>
-                <div class="item item-num" onclick="ordertable.answer.value += '3' ">3</div>
-                <div class="item item-num" onclick="ordertable.answer.value += '4' ">4</div>
-                <div class="item item-num" onclick="ordertable.answer.value += '5' ">5</div>
-                <div class="item item-num" onclick="ordertable.answer.value += '6' ">6</div>
-                <div class="item item-num" onclick="ordertable.answer.value += '7' ">7</div>
-                <div class="item item-num" onclick="ordertable.answer.value += '8' ">8</div>
-                <div class="item item-num" onclick="ordertable.answer.value += '9' ">9</div>
-                <div class="item item-num" onclick="ordertable.answer.value += '0' ">0</div>
-                <div class="item item-clear" onclick="ordertable.answer.value += ' ' "><i class="fa-solid fa-delete-left"></i></div>
+                <div class="item item-num" onclick="ordertable.quantity.value += '1' ">1</div>
+                <div class="item item-num"onclick="ordertable.quantity.value += '2' " >2</div>
+                <div class="item item-num" onclick="ordertable.quantity.value += '3' ">3</div>
+                <div class="item item-num" onclick="ordertable.quantity.value += '4' ">4</div>
+                <div class="item item-num" onclick="ordertable.quantity.value += '5' ">5</div>
+                <div class="item item-num" onclick="ordertable.quantity.value += '6' ">6</div>
+                <div class="item item-num" onclick="ordertable.quantity.value += '7' ">7</div>
+                <div class="item item-num" onclick="ordertable.quantity.value += '8' ">8</div>
+                <div class="item item-num" onclick="ordertable.quantity.value += '9' ">9</div>
+                <div class="item item-num" onclick="ordertable.quantity.value += '0' ">0</div>
+                <div class="item item-clear" onclick="ordertable.quantity.value += ' ' "><i class="fa-solid fa-delete-left"></i></div>
 
                 <div onclick="submitform()" class="item item-done" >Done</div>
               </div>
@@ -54,29 +50,7 @@ data-ajax-success="menuAdded()"
 
           </div>
           </form>
-          @*
-<form 
-    asp-action="AddNewOrder"
-asp-controller="home"
-asp-area="order"
-data-ajax=true
-data-ajax-success="menuAdded()"
-      data-ajax-update="#NewOrderSection"
-      data-ajax-loading="#overlay">
-
-<div class="row">
-    <div class="col=8">
-        <label for="quantity">Quantity</label>
-        <input asp-for="Quantity" class="form-control" />
-        <input asp-for="Rate" hidden/>
-        <input asp-for="MenuId" hidden/>
-        <input asp-for="TableId" hidden/>
-    </div>
-    <div class="col-4">
-        <input type="submit" value="Submit">
-    </div>
-</div>
-</form>*@
+        
 <script>
     function submitform(){
         $(".ordertable").submit();

@@ -1,93 +1,191 @@
 ﻿@using LotusRMS.Models.Viewmodels.Order
 @model List<AddNewOrderVM>
-@if(Model.Count>0){
-<fieldset>
+@*@if(Model.Count>0){
+    <fieldset>
     <legend >New Order</legend>
-<table class="table table-striped">
+    <table class="table table-striped">
     <thead>
-        <tr>
-            <th>S.N</th>
-            <th>Item Name</th>
-            <th>Quantity</th>
-            <th>Rate</th>
-            <th>Total</th>
-            <th>Action</th>
-        </tr>
+    <tr>
+    <th>S.N</th>
+    <th>Item Name</th>
+    <th>Quantity</th>
+    <th>Rate</th>
+    <th>Total</th>
+    <th>Action</th>
+    </tr>
     </thead>
     <tbody>
-        @{
-            var i = 1;
-        }
-        @foreach (var item in Model)
-        {
+    @{
+    var i = 1;
+    }
+    @foreach (var item in Model)
+    {
 
-            <tr>
-                <td>@i</td>
-                <td>@item.Item_Name</td>
-                <td>@item.Quantity</td>
-                <td>@item.Rate</td>
-                <td>@item.Total</td>
-                <td class="d-flex">
-                    <form 
-                        asp-action="EditNewOrder"
-                      asp-controller="Home"
-                      asp-area="Order"
-                      asp-route-tableId="@item.TableId"
-                      asp-route-menuId="@item.MenuId"
-                      asp-route-quantity="@item.Quantity"
-                                  data-ajax="true"
-                                  data-ajax-success="menuSelected()"
-                                  data-ajax-update="#AddmenuSection"
-                                  data-ajax-loading="#overlay">
-                                <button type="submit" class="btn btn-primary"><i class="bi bi-pencil-square"></i></button>
-                    </form>
-                    <form 
-                       method="get"
-                        asp-action="DeleteNewOrder"
-                      asp-controller="Home"
-                      asp-area="Order"
-                      asp-route-tableId="@item.TableId"
-                      asp-route-menuId="@item.MenuId"
-                      asp-route-quantity="@item.Quantity"
-                          data-ajax="true"
-                          data-ajax-update="#NewOrderSection"
-                                  data-ajax-loading="#overlay">
-                                <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i></button>
-                    </form>
-                </td>
-            </tr>
-            i++;
-        }
+    <tr>
+    <td>@i</td>
+    <td>@item.Item_Name</td>
+    <td>@item.Quantity</td>
+    <td>@item.Rate</td>
+    <td>@item.Total</td>
+    <td class="d-flex">
+    <form
+    asp-action="EditNewOrder"
+    asp-controller="Home"
+    asp-area="Order"
+    asp-route-tableId="@item.TableId"
+    asp-route-menuId="@item.MenuId"
+    asp-route-quantity="@item.Quantity"
+    data-ajax="true"
+    data-ajax-success="menuSelected()"
+    data-ajax-update="#AddmenuSection"
+    data-ajax-loading="#overlay">
+    <button type="submit" class="btn btn-primary"><i class="bi bi-pencil-square"></i></button>
+    </form>
+    <form
+    method="get"
+    asp-action="DeleteNewOrder"
+    asp-controller="Home"
+    asp-area="Order"
+    asp-route-tableId="@item.TableId"
+    asp-route-menuId="@item.MenuId"
+    asp-route-quantity="@item.Quantity"
+    data-ajax="true"
+    data-ajax-update="#NewOrderSection"
+    data-ajax-loading="#overlay">
+    <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i></button>
+    </form>
+    </td>
+    </tr>
+    i++;
+    }
     </tbody>
     <tfoot>
-        <tr>
-            <td colspan="4" class="text-align:right">
-                Total
-                </td>
-                <td>
-                        @{
-                            var gTotal = Model.Sum(x => x.Total);
-                        }
-                        @gTotal
+    <tr>
+    <td colspan="4" class="text-align:right">
+    Total
+    </td>
+    <td>
+    @{
+    var gTotal = Model.Sum(x => x.Total);
+    }
+    @gTotal
 
-                </td>
-                
-                <td>
-                <form 
-                    asp-action="CompleteNewOrder"
-                    asp-controller="Home"
-                    asp-area="Order"
-                    asp-route-tableId="@Model[0].TableId"
-                    data-ajax="true"
-                      data-ajax-success="$('#NewOrderSection').empty()"
-                      data-ajax-update="#orderSection"
-                              data-ajax-loading="#overlay">
-                  <button type="submit" class="btn btn-primary">Complete</button>
-                  </form>
-            </td>
-</tr>
+    </td>
+
+    <td>
+    <form
+    asp-action="CompleteNewOrder"
+    asp-controller="Home"
+    asp-area="Order"
+    asp-route-tableId="@Model[0].TableId"
+    data-ajax="true"
+    data-ajax-success="$('#NewOrderSection').empty()"
+    data-ajax-update="#orderSection"
+    data-ajax-loading="#overlay">
+    <button type="submit" class="btn btn-primary">Complete</button>
+    </form>
+    </td>
+    </tr>
     </tfoot>
-</table>
+    </table>
 
     </fieldset>
+*@
+
+@if(Model.Count>0){
+    <fieldset>
+       <legend>ujhf</legend>
+<div class="card mt-0">
+    <div class="card-body card-right">
+
+        <div class="border-line"></div>
+        <table class="table table-striped table-right">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Item Name</th>
+                    <th scope="col">Qty</th>
+                    <th scope="col">Rate</th>
+                    <th scope="col">Total</th>
+                    <th scope="col" class="">Action</th>
+
+                </tr>
+            </thead>
+            <tbody class="bill-tbody">
+                @{
+                    var i = 1;
+                }
+                @foreach (var item in Model)
+                {
+                    <tr class="bill-table-data">
+                        <th class="td-heading" scope="row">@i</th>
+                        <td>@item.Item_Name</td>
+                        <td>@item.Quantity </td>
+                        <td>@item.Rate</td>
+                        <td>@item.Total</td>
+                        <td class="action">
+
+                            <form asp-action="EditNewOrder"
+                              asp-controller="Home"
+                              asp-area="Order"
+                              asp-route-tableId="@item.TableId"
+                              asp-route-menuId="@item.MenuId"
+                              asp-route-quantity="@item.Quantity"
+                              data-ajax="true"
+                              data-ajax-success="menuSelected()"
+                              data-ajax-update="#AddmenuSection"
+                              data-ajax-loading="#overlay">
+                                <button type='submit' class="done btn btn-primary"><i class="fa-solid fa-square-pencil"></i></button>
+                            </form>
+
+                            <form method="get"
+                              asp-action="DeleteNewOrder"
+                              asp-controller="Home"
+                              asp-area="Order"
+                              asp-route-tableId="@item.TableId"
+                              asp-route-menuId="@item.MenuId"
+                              asp-route-quantity="@item.Quantity"
+                              data-ajax="true"
+                              data-ajax-update="#NewOrderSection"
+                              data-ajax-loading="#overlay">
+                                <button type="submit" class="delete btn btn-danger"><i class="fa-solid fa-trash-can trash"></i></button>
+                            </form>
+                            <button class="eye btn btn-secondary"><i class="fa-solid fa-eye eye"></i></button>
+                        </td>
+                    </tr>
+                    i++;
+                }
+            </tbody>
+            <tfoot class="font-weight-bold " style="background-color: whitesmoke;">
+                <tr class="odd">
+                    <th scope="row"></th>
+                    <td></td>
+                    <td></td>
+                    <td>Total</td>
+                    <td>
+                        <span>
+                            @{
+                                var gtotal = Model.Sum(x => x.Total);
+                            }@gtotal
+                        </span>/-
+                    </td>
+                    <td>
+                        <form asp-action="CompleteNewOrder"
+                              asp-controller="Home"
+                              asp-area="Order"
+                              asp-route-tableId="@Model"
+                              data-ajax="true"
+                              data-ajax-success="$('#NewOrderSection').empty()"
+                              data-ajax-update="#orderSection"
+                              data-ajax-loading="#overlay">
+                            <button type="submit" class="btn btn-primary">Complete</button>
+                        </form>
+                    </td>
+ 
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+</fieldset>
 }

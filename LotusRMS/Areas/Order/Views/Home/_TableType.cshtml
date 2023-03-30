@@ -1,47 +1,61 @@
 ﻿@model IEnumerable<LotusRMS_Table_Type>
 
+          <div class="card mb-3">
+                    <div class="card-body card-body-heading pt-0">
 
-<div class="d-flex">
-    @foreach(var item in Model){
-        <div >
-            <form 
-                class="TypeForm"
+                        <!-- Default Tabs -->
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+    @foreach (var item in Model)
+    {
+           
+                @*  <button type="submit" class="btn typeUnBooked">@item.Type_Name</button>*@
+          
+                            <li role="presentation">
+                                <form class="TypeForm"
+                                typeId="@item.Id"
+              asp-action="getTable"
+              asp-controller="Home"
+              asp-area="order"
+              asp-route-id="@item.Id"
+              data-ajax=true
+              data-ajax-success="afterTypeSuccess(this)"
+              data-ajax-update="#myTabContent"
+              data-ajax-loading="#overlay">
+                                    <div class="nav-item">
+                                        <button class="nav-link active" id="cabin-tab" data-bs-toggle="tab" data-bs-target="#cabin"
+                                            type="button" role="tab" aria-controls="cabin" aria-selected="true">
+                                            @item.Type_Name
+                                        </button>
+                                        <span class="badge bg-danger badge-number notification-item">3</span>
+                                    </div>
+                                </form>
+                            </li>
+                            }
+                        </ul>
+                          <div class="tab-content pt-2" id="myTabContent">
+                               </div>
+                    </div>
+                </div>
 
-                asp-action="getTable" 
-                asp-controller="Home" 
-                asp-area="order"
-                asp-route-id="@item.Id"
-            data-ajax=true
-            data-ajax-success="afterTypeSuccess(this)"
-                  data-ajax-update="#tableSection"
-                  data-ajax-loading="#overlay">
-            <button type="submit" class="btn typeUnBooked">@item.Type_Name</button>
 
-
-            </form>
-            </div>
-    }
-</div>
-<div id="tableSection">
-
-</div>
+ 
 
 
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        console.log("Hello World!");
-        if ($(".TypeForm").length > 0) {
-            $(".TypeForm:first").submit();
-        }
-    });
-  
-   function afterTypeSuccess(me){
-    $(".TypeForm").children("button").removeClass("typeSelected");
-    $(me).children("button").addClass("typeSelected");
+     document.addEventListener("DOMContentLoaded", () => {
+         console.log("Hello World!");
+         if ($(".TypeForm").length > 0) {
+             $(".TypeForm:first").submit();
+         }
+     });
 
-        if ($(".TableForm").length>0){
-            $(".TableForm:first").submit();
-        }
-    }
+    function afterTypeSuccess(me){
+     $(".TypeForm").children("button").removeClass("typeSelected");
+     $(me).children("button").addClass("typeSelected");
+
+         if ($(".TableForm").length>0){
+             $(".TableForm:first").submit();
+         }
+     }
 
 </script>
