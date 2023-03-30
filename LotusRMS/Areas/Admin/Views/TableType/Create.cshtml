@@ -6,30 +6,31 @@
 @{
 }
 
-<div class="header">
-    <h4>Add Table Type</h4>
-</div>
 
 <div class="row">
     <div class="col-md-6 ">
-        <form class="form" asp-area="admin" asp-action="create" asp-controller="tabletype" asp-route-returnUrl="@ViewBag.ReturnUrl">
-        <div class="form-group">
-            <label >Type Name</label>
-            <input asp-for="Type_Name" class="form-control" pplaceholder="eg. food , eg. liquor"/>
-            <span asp-validation-for="Type_Name" class="text-danger" ></span>
-        </div>
-    
-        <div class="form-group">
-            <label >Type Description</label>
-            <input asp-for="Type_Description" class="form-control" placeholder="Write short discription of type.."/>
-            <span asp-validation-for="Type_Description" class="text-danger"></span>
-        </div>
-        <div class="d-flex">
-            <button type="reset" class="btn btn-danger mx-2">Clear</button>  
-            <button type="submit" class="btn btn-primary mx-2">Add</button>  
-        </div>
-        </form>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Add Menu Type</h5>
+                <form class="form" asp-area="admin" asp-action="create" asp-controller="tabletype" asp-route-returnUrl="@ViewBag.ReturnUrl">
+                    <div class="form-group mb-3">
+                        <label class="mb-1">Type Name</label>
+                        <input asp-for="Type_Name" class="form-control" placeholder="eg. food , eg. liquor"/>
+                        <span asp-validation-for="Type_Name" class="text-danger"></span>
+                    </div>
 
+                    <div class="form-group mb-3">
+                        <label class="mb-1">Type Description</label>
+                        <input asp-for="Type_Description" class="form-control" placeholder="Write short discription of type.."/>
+                        <span asp-validation-for="Type_Description" class="text-danger"></span>
+                    </div>
+                    <div class="d-flex">
+                        <button type="reset" class="btn btn-danger mx-2">Clear</button>
+                        <button type="submit" class="btn btn-primary mx-2">Add</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
