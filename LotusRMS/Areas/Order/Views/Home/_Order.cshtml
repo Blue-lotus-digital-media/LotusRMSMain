@@ -1,105 +1,113 @@
 ﻿@using LotusRMS.Models.Viewmodels.Order;
-@model OrderVm
+    @model OrderVm
 
-<fieldset name="order">
-    
-    <legend>Orders</legend>
-    <div class="row">
-        <div class="col-3">
-            <button class="btn btn-info">refresh</button>
+
+<div class="card mt-0">
+    <div class="card-body card-right">
+        <div class="heading-section py-3 d-flex justify-content-between align-items-baseline">
+            <form>
+                <div class="refresh-menu">
+                    <i class="fa-sharp fa-solid fa-bars ham-icon" data-bs-toggle="modal"
+                       data-bs-target="#modalDialogScrollable"></i>
+                    <i class="fa-solid fa-arrows-rotate refresh-icon"></i>
+                    <div class="btn btn-primary refresh-btn">Refresh</div>
+                </div>
+            </form>
+            <div class="table-number text-secondary font-weight-bold h4">
+                @Model.Table_Name: <span class="table-no">5</span>
+            </div>
+            <div class="time text-secondary font-weight-bold font-size h5">
+                <span class="hour">12</span>:<span class="minutes">45</span>:<span class="seconds">08</span><span class="am-pm"> PM</span>
+            </div>
         </div>
-        <div class="col-6 align-center">
-            <h3>@Model.Table_Name</h3>
-            </div>
-            <div class="col-3">
-                time
-            </div>
-    </div>
+        <div class="border-line"></div>
+        <table class="table table-striped table-right">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Item Name</th>
+                    <th scope="col">Qty</th>
+                    <th scope="col">Rate</th>
+                    <th scope="col">Total</th>
+                    <th scope="col" class="">Action</th>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>S.N</th>
-            <th>Item Name</th>
-            <th>Quantity</th>
-            <th>Rate</th>
-            <th>Total</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        @{
-            var i = 1;
-        }
-        @foreach (var item in Model.Order_Details)
-        {
-
-            <tr>
-                <td>@i</td>
-                <td>@item.Item_Name</td>
-                <td>@item.Quantity @item.Item_Unit</td>
-                <td>@item.Rate</td>
-                <td>@item.Total</td>
-                    @if (item.IsComplete)
-                    {
- <td class="d-flex">
-                            <span class="text-primary"> <i class="bi bi-check"></i></span>
-                        </td>
-                    }
-                    else
-                    {
-
-                        <td class="d-flex">
-                           
-                                  <form asp-action="CompleteOrderDetail"
-                          asp-controller="Home"
-                          asp-area="Order"
-                          asp-route-OrderNo="@Model.Order_No"
-                          asp-route-OrderDetailId="@item.Id"
-                                      data-ajax="true"
-                                      data-ajax-update="#orderSection"
-                                  data-ajax-loading="#overlay">
-                            <button type="submit" class="btn btn-primary"><i class="bi bi-check"></i></button>
-                        </form>
-                            @if (!item.IsKitchenComplete)
+                </tr>
+            </thead>
+            <tbody class="bill-tbody">
+                @{
+                    var i = 1;
+                }
+                @foreach (var item in Model.Order_Details)
+                {
+                    <tr class="bill-table-data">
+                        <th class="td-heading" scope="row">@i</th>
+                        <td>@item.Item_Name</td>
+                        <td>@item.Quantity @item.Item_Unit</td>
+                        <td>@item.Rate</td>
+                        <td>@item.Total</td>
+                        <td class="action">
+                            @if (item.IsComplete)
                             {
-                                <form
-                          asp-action="CancelOrder"
-                          asp-controller="Home"
-                          asp-area="Order"
-                          asp-route-OrderNo="@Model.Order_No"
-                          asp-route-OrderDetailId="@item.Id"
-            data-ajax="true"
-            data-ajax-confirm="Are you sure?"
-            data-ajax-update="#orderSection"
-                                      data-ajax-loading="#overlay">
-                                    <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i></button>
-                                </form>
+
+                                <i class="fa-solid fa-check m"></i>
+
                             }
+                            else
+                            {
+                                <form asp-action="CompleteOrderDetail"
+                              asp-controller="Home"
+                              asp-area="Order"
+                              asp-route-OrderNo="@Model.Order_No"
+                              asp-route-OrderDetailId="@item.Id"
+                              data-ajax="true"
+                              data-ajax-update="#orderSection"
+                              data-ajax-loading="#overlay">
+                                    <button type='submit' class="done btn btn-primary"><i class="fa-solid fa-square-check check"></i></button>
+                                </form>
+                                @if (!item.IsKitchenComplete)
+                                {
+                                    <form asp-action="CancelOrder"
+                              asp-controller="Home"
+                              asp-area="Order"
+                              asp-route-OrderNo="@Model.Order_No"
+                              asp-route-OrderDetailId="@item.Id"
+                              data-ajax="true"
+                              data-ajax-confirm="Are you sure?"
+                              data-ajax-update="#orderSection"
+                              data-ajax-loading="#overlay">
+                                        <button type="submit" class="delete btn btn-danger"><i class="fa-solid fa-trash-can trash"></i></button>
+                                    </form>
+                                }
+
+                            }
+                            <button class="eye btn btn-secondary"><i class="fa-solid fa-eye eye"></i></button>
+
+
                         </td>
-                    }
-            </tr>
-            i++;
-        }
-    </tbody>
-   <tfoot>
-        <tr>
-            <td colspan="4" class="text-align:right">
-
-                Total
-            </td>
-            <td align="center">
-                    @{
-                        var gtotal = Model.Order_Details.Sum(x => x.Total);
-                    }
-                    @gtotal
-
-            </td>
-        </tr>
-    </tfoot>
-</table>
-    </fieldset>
-
-     <div id="NewOrderSection">
-            <partial name="_NewOrders" model="@ViewBag.NewOrder" />
-        </div>
+                    </tr>
+                }
+                i++;
+                }
+            </tbody>
+            <tfoot class="font-weight-bold " style="background-color: whitesmoke;">
+                <tr class="odd">
+                    <th scope="row"></th>
+                    <td></td>
+                    <td></td>
+                    <td>Total</td>
+                    <td>
+                        <span>
+                            @{
+                                var gtotal = Model.Order_Details.Sum(x => x.Total);
+                            }@gtotal
+                        </span>/-
+                    </td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+ <div id="NewOrderSection">
+    <partial name="_NewOrders" model="@ViewBag.NewOrder" />
+</div>
