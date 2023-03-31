@@ -1,38 +1,4 @@
-﻿/*.TypeForm{
-    margin:0 2px;
-}
-#tableSection {
-    padding: 0.5em;
-    background-color: blue;
-    border-radius: 5px;
-}
-    #tableSection form {
-        margin: 0 2px;
-    }
-.typeSelected {
-    color: white;
-    background-color: blue !important;
-    border-radius: 5px 5px 0 0;
-}
-.typeBooked {
-    color: white;
-    background-color: black;
-}
-.typeUnBooked {
-    color: white;
-    background-color: darkorange;
-}.tableBooked {
-    color: white;
-    background-color: green;
-}
-.typeUnBooked {
-    color: white;
-    background-color: darkorange;
-}
-
-*/
-
-@keyframes zoom-in-zoom-out {
+﻿@keyframes zoom-in-zoom-out {
     0% {
         transform: scale(1, 1);
     }
@@ -58,15 +24,24 @@
     align-items: first baseline;
 }
 
-.nav-link {
+
+button.nav-links {
     font-size: 1.2rem;
     padding-inline: 1rem;
-    padding-top: 0.5rem;
+    padding-top: 0.3rem;
+    padding-bottom: 0.3rem;
     transition: all 0.3s;
+    height:2.6rem;
+    border-radius:5px;
+    background-color:#23527a;
+    color:white;
 }
 
 .clickactive {
-    background-color: #17a2b8;
+    background-color: #007bff !important;
+    border-radius: 5px 5px 0 0 !important;
+    height: 3rem !important;
+    color: white !important;
 }
 
 .nav-item {
@@ -236,6 +211,10 @@ button {
     background: red;
     border-radius: 3px;
     text-transform: capitalize;
+}
+.tableSelected{
+    color:white;
+    background:#322285 !important;
 }
 
 .bi-search {

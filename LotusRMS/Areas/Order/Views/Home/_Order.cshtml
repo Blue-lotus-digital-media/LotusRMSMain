@@ -1,20 +1,31 @@
 ﻿@using LotusRMS.Models.Viewmodels.Order;
-    @model OrderVm
+@model OrderVm
 
 
 <div class="card mt-0">
     <div class="card-body card-right">
         <div class="heading-section py-3 d-flex justify-content-between align-items-baseline">
-            <form>
+          
                 <div class="refresh-menu">
                     <i class="fa-sharp fa-solid fa-bars ham-icon" data-bs-toggle="modal"
                        data-bs-target="#modalDialogScrollable"></i>
-                    <i class="fa-solid fa-arrows-rotate refresh-icon"></i>
-                    <div class="btn btn-primary refresh-btn">Refresh</div>
+                         <form class="refreshForm"
+                  asp-action="getOrder"
+                  asp-controller="home"
+                  asp-area="order"
+                  asp-route-id="@Model.TableId"
+                  tableId="@Model.TableId"
+                  data-ajax="true"
+                 
+                  data-ajax-update="#orderSection"
+                  data-ajax-loading="#overlay">
+                    <button type="submit"> <i class="fa-solid fa-arrows-rotate refresh-icon"></i></button>
+                    <button type="submit" class="btn btn-primary refresh-btn">Refresh</button>
+                    </form>
                 </div>
-            </form>
+           
             <div class="table-number text-secondary font-weight-bold h4">
-                @Model.Table_Name: <span class="table-no">5</span>
+                Table Name : @Model.Table_Name @*: <span class="table-no">5</span>*@
             </div>
             <div class="time text-secondary font-weight-bold font-size h5">
                 <span class="hour">12</span>:<span class="minutes">45</span>:<span class="seconds">08</span><span class="am-pm"> PM</span>
@@ -35,59 +46,56 @@
             </thead>
             <tbody class="bill-tbody">
                 @{
-                    var i = 1;
-                }
-                @foreach (var item in Model.Order_Details)
-                {
-                    <tr class="bill-table-data">
-                        <th class="td-heading" scope="row">@i</th>
-                        <td>@item.Item_Name</td>
-                        <td>@item.Quantity @item.Item_Unit</td>
-                        <td>@item.Rate</td>
-                        <td>@item.Total</td>
-                        <td class="action">
-                            @if (item.IsComplete)
-                            {
-
-                                <i class="fa-solid fa-check m"></i>
-
-                            }
-                            else
-                            {
-                                <form asp-action="CompleteOrderDetail"
-                              asp-controller="Home"
-                              asp-area="Order"
-                              asp-route-OrderNo="@Model.Order_No"
-                              asp-route-OrderDetailId="@item.Id"
-                              data-ajax="true"
-                              data-ajax-update="#orderSection"
-                              data-ajax-loading="#overlay">
-                                    <button type='submit' class="done btn btn-primary"><i class="fa-solid fa-square-check check"></i></button>
-                                </form>
-                                @if (!item.IsKitchenComplete)
+                    var i = 0;
+                    foreach (var item in Model.Order_Details)
+                    {
+                        i++;
+                        <tr class="bill-table-data">
+                            <th class="td-heading" scope="row">@i</th>
+                            <td>@item.Item_Name</td>
+                            <td>@item.Quantity @item.Item_Unit</td>
+                            <td>@item.Rate</td>
+                            <td>@item.Total</td>
+                            <td class="action">
+                                @if (item.IsComplete)
                                 {
-                                    <form asp-action="CancelOrder"
+                                    <i class="fa-solid fa-check m"></i>
+                                }
+                                else
+                                {
+                                    <form asp-action="CompleteOrderDetail"
                               asp-controller="Home"
                               asp-area="Order"
                               asp-route-OrderNo="@Model.Order_No"
                               asp-route-OrderDetailId="@item.Id"
-                              data-ajax="true"
-                              data-ajax-confirm="Are you sure?"
-                              data-ajax-update="#orderSection"
-                              data-ajax-loading="#overlay">
-                                        <button type="submit" class="delete btn btn-danger"><i class="fa-solid fa-trash-can trash"></i></button>
+                                      data-ajax="true"
+                                      data-ajax-update="#orderSection"
+                                      data-ajax-loading="#overlay">
+                                        <button type='submit' class="done btn btn-primary"><i class="fa-solid fa-square-check check"></i></button>
                                     </form>
+                                    @if (!item.IsKitchenComplete)
+                                    {
+                                        <form asp-action="CancelOrder"
+                              asp-controller="Home"
+                              asp-area="Order"
+                              asp-route-OrderNo="@Model.Order_No"
+                              asp-route-OrderDetailId="@item.Id"
+                                          data-ajax="true"
+                                          data-ajax-confirm="Are you sure?"
+                                          data-ajax-update="#orderSection"
+                                          data-ajax-loading="#overlay">
+                                            <button type="submit" class="delete btn btn-danger"><i class="fa-solid fa-trash-can trash"></i></button>
+                                        </form>
+                                    }
+
                                 }
-
-                            }
-                            <button class="eye btn btn-secondary"><i class="fa-solid fa-eye eye"></i></button>
+                                <button class="eye btn btn-secondary"><i class="fa-solid fa-eye eye"></i></button>
 
 
-                        </td>
-                    </tr>
-                }
-                i++;
-                }
+                            </td>
+                        </tr>
+                    }
+            }
             </tbody>
             <tfoot class="font-weight-bold " style="background-color: whitesmoke;">
                 <tr class="odd">
@@ -108,6 +116,6 @@
         </table>
     </div>
 </div>
- <div id="NewOrderSection">
+<div id="NewOrderSection">
     <partial name="_NewOrders" model="@ViewBag.NewOrder" />
 </div>

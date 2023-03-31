@@ -22,11 +22,11 @@
               data-ajax-update="#myTabContent"
               data-ajax-loading="#overlay">
                                     <div class="nav-item">
-                                        <button class="nav-link active" id="cabin-tab" data-bs-toggle="tab" data-bs-target="#cabin"
-                                            type="button" role="tab" aria-controls="cabin" aria-selected="true">
+                            <button class="nav-links "
+                                    type="submit" role="tab" >
                                             @item.Type_Name
                                         </button>
-                                        <span class="badge bg-danger badge-number notification-item">3</span>
+                                        <span class="badge bg-danger badge-number notification-item">1</span>
                                     </div>
                                 </form>
                             </li>
@@ -43,15 +43,14 @@
 
 <script>
      document.addEventListener("DOMContentLoaded", () => {
-         console.log("Hello World!");
          if ($(".TypeForm").length > 0) {
              $(".TypeForm:first").submit();
          }
      });
 
     function afterTypeSuccess(me){
-     $(".TypeForm").children("button").removeClass("typeSelected");
-     $(me).children("button").addClass("typeSelected");
+        $(".TypeForm").children("div").children("button").removeClass("clickactive");
+        $(me).children("div").children("button").addClass("clickactive");
 
          if ($(".TableForm").length>0){
              $(".TableForm:first").submit();

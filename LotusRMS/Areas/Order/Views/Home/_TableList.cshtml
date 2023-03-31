@@ -21,7 +21,7 @@
                       data-ajax-loading="#overlay">
                         @if (item.IsReserved)
                         {
-                            <button class="tab-content-item booked clickactive ">@item.Table_Name </button>
+                            <button class="tab-content-item booked">@item.Table_Name </button>
                             
                         }
                         else
@@ -39,6 +39,9 @@
 
 <script>
     function afterTableSuccess(form){
+        $(".TableForm").children("button").removeClass("tableSelected");
+        $(form).children("button").addClass("tableSelected");
+
         var table_No = $(form).attr("tableId");
         $('.menuForm').attr('action', function (i, value) {
 

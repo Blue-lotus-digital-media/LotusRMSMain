@@ -94,7 +94,7 @@
 
 @if(Model.Count>0){
     <fieldset>
-       <legend>ujhf</legend>
+       <legend><h5>New Order</h5></legend>
 <div class="card mt-0">
     <div class="card-body card-right">
 
@@ -120,7 +120,7 @@
                     <tr class="bill-table-data">
                         <th class="td-heading" scope="row">@i</th>
                         <td>@item.Item_Name</td>
-                        <td>@item.Quantity </td>
+                        <td>@item.Quantity @item.Item_Unit</td>
                         <td>@item.Rate</td>
                         <td>@item.Total</td>
                         <td class="action">
@@ -132,10 +132,12 @@
                               asp-route-menuId="@item.MenuId"
                               asp-route-quantity="@item.Quantity"
                               data-ajax="true"
-                              data-ajax-success="menuSelected()"
                               data-ajax-update="#AddmenuSection"
                               data-ajax-loading="#overlay">
-                                <button type='submit' class="done btn btn-primary"><i class="fa-solid fa-square-pencil"></i></button>
+                                        <button type='submit' data-bs-toggle="modal"
+                                                data-bs-target="#addMenuModal" class="done btn btn-primary">
+                                            <i class="fa-solid fa-pencil-square-o"></i>
+                                        </button>
                             </form>
 
                             <form method="get"
@@ -173,7 +175,7 @@
                         <form asp-action="CompleteNewOrder"
                               asp-controller="Home"
                               asp-area="Order"
-                              asp-route-tableId="@Model"
+                              asp-route-tableId="@Model[0].TableId"
                               data-ajax="true"
                               data-ajax-success="$('#NewOrderSection').empty()"
                               data-ajax-update="#orderSection"
