@@ -10,6 +10,7 @@ client.on("OrderReceived", newCall => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
+    console.log("here");
     var body = document.querySelector("body");
     body.classList.add("toggle-sidebar");
     loadData();
@@ -26,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }*/
 });
 function loadData() {
-
+    console.log("here");
     $.ajax({
         url: "/kitchen/home/getData",
         success: function (data) {

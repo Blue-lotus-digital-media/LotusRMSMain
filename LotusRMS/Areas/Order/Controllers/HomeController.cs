@@ -90,15 +90,16 @@ namespace LotusRMSweb.Areas.Order.Controllers
         {
             var OrderVM = new OrderVm()
             {
-                TableId = tableId,
-                Table_Name = _ITableService.GetByGuid(tableId).Table_Name,
+               
 
-                Order_Details = new List<OrderDetailVm>()
+            Order_Details = new List<OrderDetailVm>()
             };
-
+            var order = new LotusRMS_Order();
             if (tableId != Guid.Empty)
             {
-                var order = _IOrderService.GetFirstOrDefaultByTableId(tableId);
+                OrderVM.TableId = tableId;
+                OrderVM.Table_Name = _ITableService.GetByGuid(tableId).Table_Name;
+                order = _IOrderService.GetFirstOrDefaultByTableId(tableId);
                 if (order != null)
                 {
                     OrderVM = new OrderVm()
@@ -132,10 +133,10 @@ namespace LotusRMSweb.Areas.Order.Controllers
                     }
                 }
 
-
+               
             } else if (orderNo != null)
             {
-                var order = _IOrderService.GetFirstOrDefaultByOrderNo(orderNo);
+                order = _IOrderService.GetFirstOrDefaultByOrderNo(orderNo);
                 if (order != null)
                 {
                     OrderVM = new OrderVm()
@@ -170,8 +171,12 @@ namespace LotusRMSweb.Areas.Order.Controllers
 
                     }
                 }
+                OrderVM.TableId = order.Table_Id;
+                OrderVM.Table_Name = order.Table.Table_Name;
 
             }
+            
+          
             return OrderVM;
 
         }
@@ -187,8 +192,8 @@ namespace LotusRMSweb.Areas.Order.Controllers
                 orderList = JsonConvert.DeserializeObject<List<AddNewOrderVM>>(HttpContext.Session.GetString(vm.TableId.ToString()));
             }
             var menu=_IMenuService.GetAll().Where(x=>x.Id== vm.MenuId).FirstOrDefault();
-            vm.Item_Name = menu.Item_Name +"("+menu.Menu_Unit.Unit_Symbol+")";
-            vm.Total = vm.Quantity * vm.Rate;
+            vm.Item_Name = menu.Item_Name;
+            vm.Item_Unit= menu.Menu_Unit.Unit_Symbol;
             orderList.Add(vm);
 
             HttpContext.Session.SetString(vm.TableId.ToString(), JsonConvert.SerializeObject(orderList));

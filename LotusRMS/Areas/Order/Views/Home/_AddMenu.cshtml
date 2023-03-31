@@ -16,7 +16,7 @@ data-ajax-success="menuAdded()"
             <div class="head-bar">
               <div class="left-side">
                 <div class="quantity">Quantity</div>
-                  <input type="number" asp-for="Quantity" name="quantity" class="form-control" placeholder="1" disabled class="disabled-icon">
+                  <input type="number" asp-for="Quantity" name="quantity" class="form-control" placeholder="quantity" readonly class="disabled-icon">
                    <input asp-for="Rate" hidden/>
         <input asp-for="MenuId" hidden/>
         <input asp-for="TableId" hidden/>
@@ -53,7 +53,8 @@ data-ajax-success="menuAdded()"
         
 <script>
     function submitform(){
-        $(".ordertable").submit();
+        console.log("here");
+        $("#ordertable").submit();
     }
     function menuAdded(){
 
