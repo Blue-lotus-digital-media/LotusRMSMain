@@ -13,22 +13,22 @@ namespace LotusRMSweb.Areas.Admin.Controllers
     public class CategoryController : Controller
     {
         private readonly ICategoryService _ICategoryService;
-        private readonly ITypeService _ITypeService;
-        private readonly INotyfService _toastNotification;
-        public CategoryController(ICategoryService iCategoryService, INotyfService toastNotification, ITypeService iTypeService)
+        private readonly ITypeService _ITypeService;    
+        private readonly INotyfService _notyf;
+
+        public CategoryController(ICategoryService iCategoryService, INotyfService notyf, ITypeService iTypeService)
         {
             _ICategoryService = iCategoryService;
-            _toastNotification = toastNotification;
-            _ITypeService = iTypeService;   
+            _notyf = notyf;
+            _ITypeService = iTypeService;
         }
+
         public IActionResult Index()
         {
-            
-
             return View();
         }
 
-        public IActionResult Create(string? returnUrl=null)
+        public IActionResult Create(string? returnUrl = null)
         {
             returnUrl ??= nameof(Index);
 
@@ -41,14 +41,9 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             category.TypeList = typeList;
 
             ViewBag.ReturnUrl = returnUrl;
-                return View(category);
-           
-            
-
-
-            
-
+            return View(category);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(CreateCategoryVM obj, string? returnUrl = null)
@@ -62,19 +57,16 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                     Value = x.Id.ToString()
                 });
                 obj.TypeList = typeList;
-                _toastNotification.Error("One or move validation error !!! ", 5);
+                _notyf.Error("One or move validation error !!! ", 5);
                 return View(obj);
-
             }
-              var category = new CreateCategoryDTO(obj.Category_Name,obj.Category_Description,obj.Type_Id);
-            
+
+            var category = new CreateCategoryDTO(obj.Category_Name, obj.Category_Description, obj.Type_Id);
+
             var id = _ICategoryService.Create(category);
 
-            _toastNotification.Success("Product Category created successfully", 5);
-                    return Redirect(returnUrl);
-
-              
-
+            _notyf.Success("Product Category created successfully", 5);
+            return Redirect(returnUrl);
         }
 
         public IActionResult Update(Guid? Id)
@@ -101,19 +93,19 @@ namespace LotusRMSweb.Areas.Admin.Controllers
 
             updateCategoryVM.Id = category.Id;
             updateCategoryVM.Category_Name = category.Category_Name;
-            
+
             updateCategoryVM.Category_Description = category.Category_Description;
             updateCategoryVM.Type_Id = category.Type_Id;
 
 
-
             return View(updateCategoryVM);
         }
+
         [HttpPost]
         public IActionResult Update(UpdateCategoryVM vm)
         {
-           
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 vm.TypeList = _ITypeService.GetAll().Where(x => x.Status).Select(x => new SelectListItem()
                 {
                     Text = x.Type_Name,
@@ -126,20 +118,20 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 category_Name: vm.Category_Name,
                 category_Description: vm.Category_Description,
                 type_Id: vm.Type_Id
-                )
+            )
             {
                 Id = vm.Id
             };
 
             _ICategoryService.Update(dto);
 
-            _toastNotification.Success("Product Category updated successfully", 5);
+            _notyf.Success("Product Category updated successfully", 5);
             return RedirectToAction(nameof(Index));
-
         }
-             
+
 
         #region API CALLS
+
         [HttpPost]
         [AutoValidateAntiforgeryToken]
         public IActionResult ExportToExcel()
@@ -155,7 +147,8 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 {
                     xl.SaveAs(mstream);
                     var date = CurrentTime.DateTimeToday();
-                    return File(mstream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ProductCategory-" + date + ".xlsx");
+                    return File(mstream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        "ProductCategory-" + date + ".xlsx");
                 }
             }
         }
@@ -164,18 +157,14 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-
-            var categorys =_ICategoryService.GetAll().Select(x => new CategoryVM()
+            var categorys = _ICategoryService.GetAll().Select(x => new CategoryVM()
             {
                 Id = x.Id,
                 Category_Name = x.Category_Name,
                 Category_Description = x.Category_Description,
-                Status=x.Status,
-                IsDelete=x.IsDelete,
-                Type_Name=x.Product_Type.Type_Name
-
-
-
+                Status = x.Status,
+                IsDelete = x.IsDelete,
+                Type_Name = x.Product_Type.Type_Name
             });
             return Json(new { data = categorys });
         }
@@ -187,19 +176,15 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             if (category == null)
             {
                 return BadRequest();
-
             }
             else
             {
-              
                 _ICategoryService.UpdateStatus(Id);
-               
+
                 return Ok(category.Status);
             }
-
         }
 
         #endregion
-
     }
 }

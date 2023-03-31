@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using QRCoder;
 using System.Drawing;
+using AspNetCoreHero.ToastNotification.Abstractions;
 
 namespace LotusRMSweb.Areas.Admin.Controllers
 {
@@ -22,17 +23,22 @@ namespace LotusRMSweb.Areas.Admin.Controllers
 
         public readonly ITableTypeService _ITableTypeService;
 
-        public TableController(ITableService iTableService, ITableTypeService iTableTypeService, IConverter converter)
+        private readonly INotyfService _notyf;
+
+        public TableController(ITableService iTableService, ITableTypeService iTableTypeService, IConverter converter,
+            INotyfService notyf)
         {
             _ITableService = iTableService;
             _ITableTypeService = iTableTypeService;
             _converter = converter;
+            _notyf = notyf;
         }
 
         public IActionResult Index()
         {
             return View();
         }
+
         public IActionResult Create()
         {
             var tableVM = new CreateTableVM();
@@ -40,11 +46,11 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             {
                 Text = type.Type_Name,
                 Value = type.Id.ToString()
-
             }).ToList();
 
             return View(tableVM);
         }
+
         [HttpPost]
         public IActionResult Create(CreateTableVM tableVM)
         {
@@ -52,24 +58,27 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             {
                 Text = type.Type_Name,
                 Value = type.Id.ToString()
-
             }).ToList();
             if (!ModelState.IsValid)
             {
                 return View(tableVM);
             }
+
             var dto = new CreateTableDTO(
                 table_Name: tableVM.Table_Name,
                 table_No: tableVM.Table_No,
                 no_Of_Chair: tableVM.No_Of_Chair,
                 table_Type_Id: tableVM.Table_Type_Id);
             _ITableService.Create(dto);
-            return RedirectToAction(nameof(Index));
 
+            _notyf.Success("Table created successfully !", 5);
+
+            return RedirectToAction(nameof(Index));
         }
+
         public IActionResult Update(Guid? Id)
         {
-            if (Id == Guid.Empty)
+            if (Id == Guid.Empty || Id == null)
             {
                 return RedirectToAction(nameof(Index));
             }
@@ -80,25 +89,24 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var tableVM = new UpdateTableVM() { 
+            var tableVM = new UpdateTableVM()
+            {
+                Table_Name = table.Table_Name,
+                Table_No = table.Table_No,
+                No_Of_Chair = table.No_Of_Chair,
+                Table_Type_Id = table.Table_Type_Id,
 
-                Table_Name= table.Table_Name,
-                Table_No= table.Table_No,
-                No_Of_Chair= table.No_Of_Chair,
-                Table_Type_Id= table.Table_Type_Id,
-            
 
                 Id = table.Id
-
             };
             tableVM.Table_Type_List = _ITableTypeService.GetAll().Select(type => new SelectListItem()
             {
                 Text = type.Type_Name,
                 Value = type.Id.ToString()
-
             }).ToList();
             return View(tableVM);
         }
+
         [HttpPost]
         public IActionResult Update(UpdateTableVM tableVM)
         {
@@ -106,50 +114,52 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             {
                 return RedirectToAction(nameof(Index));
             }
+
             if (!ModelState.IsValid)
             {
                 tableVM.Table_Type_List = _ITableTypeService.GetAll().Select(type => new SelectListItem()
                 {
                     Text = type.Type_Name,
                     Value = type.Id.ToString()
-
                 }).ToList();
                 return View(tableVM);
             }
+
             var dto = new UpdateTableDTO(
                 table_Name: tableVM.Table_Name,
                 table_No: tableVM.Table_No,
-
                 no_Of_Chair: tableVM.No_Of_Chair,
                 table_Type_Id: tableVM.Table_Type_Id)
             {
-                Id=tableVM.Id
+                Id = tableVM.Id
             };
             _ITableService.Update(dto);
-            return RedirectToAction(nameof(Index));
 
+            _notyf.Success("Table updated successfully...", 5);
+
+            return RedirectToAction(nameof(Index));
         }
+
         #region API CALLS
+
         [HttpGet]
         public IActionResult DownloadQr(Guid Id)
         {
             String strUrl = HttpContext.Request.Path;
-          /*  String strUrl = HttpContext.Current.Request.Url.AbsoluteUri.Replace(strPathAndQuery, "/");
-          */  
+            /*  String strUrl = HttpContext.Current.Request.Url.AbsoluteUri.Replace(strPathAndQuery, "/");
+            */
             var table = _ITableService.GetByGuid(Id);
             if (table == null)
             {
                 return BadRequest("Table not found");
-
             }
+
             var stringImage = GetQR(Id);
-           
-
-            return Ok(new { hotelName="abc",tableName=table.Table_Name, stringImage=stringImage});
 
 
-
+            return Ok(new { hotelName = "abc", tableName = table.Table_Name, stringImage = stringImage });
         }
+
         public string GetQR(Guid Id)
         {
             QRCodeGenerator qrGenerator = new QRCodeGenerator();
@@ -179,7 +189,8 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 {
                     xl.SaveAs(mstream);
                     var date = CurrentTime.DateTimeToday();
-                    return File(mstream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Table-" + date + ".xlsx");
+                    return File(mstream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        "Table-" + date + ".xlsx");
                 }
             }
         }
@@ -188,7 +199,6 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-
             var categorys = _ITableService.GetAll().Select(x => new TableVM()
             {
                 Id = x.Id,
@@ -199,9 +209,6 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 Status = x.Status,
                 IsReserved = x.IsReserved,
                 IsDelete = x.IsDelete
-
-
-
             });
             return Json(new { data = categorys });
         }
@@ -213,25 +220,29 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             if (category == null)
             {
                 return BadRequest();
-
             }
             else
             {
-
                 _ITableService.UpdateStatus(Id);
-
+                if (category.Status == true)
+                {
+                    _notyf.Success("Status Activated successfully..", 2);  
+                }
+                else
+                {
+                    _notyf.Warning("Status Deactivated...",2);
+                }
                 return Ok(category.Status);
+               
             }
-
         }
 
         public IActionResult DownloadAllQr()
         {
             var tables = _ITableService.GetAll().Where(x => x.Status && !x.IsDelete).Select(tbl => new QrTableVM()
             {
-                Table_Name=tbl.Table_Name,
-                imageString=GetQR(tbl.Id)
-
+                Table_Name = tbl.Table_Name,
+                imageString = GetQR(tbl.Id)
             }).ToList();
             var globalSettings = new GlobalSettings
             {
@@ -240,13 +251,16 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 PaperSize = PaperKind.A4,
                 Margins = new MarginSettings { Top = 10 },
                 DocumentTitle = "PDF Report",
-                
             };
             var objectSettings = new ObjectSettings
             {
                 PagesCount = true,
                 HtmlContent = TemplateGenerator.GetHTMLString(tables),
-                WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(Directory.GetCurrentDirectory(), "assets", "styles.css") },
+                WebSettings =
+                {
+                    DefaultEncoding = "utf-8",
+                    UserStyleSheet = Path.Combine(Directory.GetCurrentDirectory(), "assets", "styles.css")
+                },
                 HeaderSettings = { FontName = "Arial", FontSize = 9, Right = "Page [page] of [toPage]", Line = true },
                 FooterSettings = { FontName = "Arial", FontSize = 9, Line = true, Center = "Report Footer" }
             };
@@ -256,11 +270,9 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 Objects = { objectSettings }
             };
             var file = _converter.Convert(pdf);
-            return File(file ,"application/pdf","QrTables.pdf");
+            return File(file, "application/pdf", "QrTables.pdf");
         }
 
-
         #endregion
-
     }
 }

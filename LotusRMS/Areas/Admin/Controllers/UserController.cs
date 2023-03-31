@@ -9,8 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace LotusRMSweb.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles ="Admin,SuperAdmin")]
-
+    [Authorize(Roles = "Admin,SuperAdmin")]
     public class UserController : Controller
     {
         private readonly UserManager<RMSUser> userManager;
@@ -18,7 +17,8 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         private readonly RoleManager<IdentityRole> roleManager;
 
 
-        public UserController(UserManager<RMSUser> userManager, IUserService iUserService, RoleManager<IdentityRole> roleManager)
+        public UserController(UserManager<RMSUser> userManager, IUserService iUserService,
+            RoleManager<IdentityRole> roleManager)
         {
             this.userManager = userManager;
             _iUserService = iUserService;
@@ -28,20 +28,19 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         public IActionResult Index()
         {
             var users = userManager.Users;
-            var roles = roleManager.Roles.Where(x=>x.Name!="SuperAdmin");
+            var roles = roleManager.Roles.Where(x => x.Name != "SuperAdmin");
             var userList = new List<RMSUserVM>();
-            foreach(var role in roles)
+            foreach (var role in roles)
             {
-                var userAtRole=userManager.GetUsersInRoleAsync(role.Name).Result.Select(u=>new RMSUserVM()
+                var userAtRole = userManager.GetUsersInRoleAsync(role.Name).Result.Select(u => new RMSUserVM()
                 {
-                    Id=u.Id,
-                    FirstName=u.FirstName,
-                    MiddleName=u.MiddleName,
-                    LastName=u.LastName,
-                    Contact=u.Contact,
-                    Email=u.Email,
-                    Role=role.Name
-
+                    Id = u.Id,
+                    FirstName = u.FirstName,
+                    MiddleName = u.MiddleName,
+                    LastName = u.LastName,
+                    Contact = u.Contact,
+                    Email = u.Email,
+                    Role = role.Name
                 });
                 userList.AddRange(userAtRole);
             }

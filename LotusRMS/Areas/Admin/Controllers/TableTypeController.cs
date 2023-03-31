@@ -1,4 +1,5 @@
-﻿using ClosedXML.Excel;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using ClosedXML.Excel;
 using LotusRMS.Models.Dto.TypeDTO;
 using LotusRMS.Models.Service;
 using LotusRMS.Models.Viewmodels.Type;
@@ -14,21 +15,26 @@ namespace LotusRMSweb.Areas.Admin.Controllers
     {
         public readonly ITableTypeService _ITableTypeService;
 
-        public TableTypeController(ITableTypeService iTableTypeService)
+        private readonly INotyfService _notyf;
+
+        public TableTypeController(ITableTypeService iTableTypeService, INotyfService notyf)
         {
             _ITableTypeService = iTableTypeService;
+            _notyf = notyf;
         }
 
         public IActionResult Index()
         {
             return View();
         }
+
         public IActionResult Create(string? returnUrl = null)
         {
             returnUrl ??= nameof(Index);
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
+
         [HttpPost]
         public IActionResult Create(CreateTypeVM type, string? returnUrl = null)
         {
@@ -36,16 +42,20 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             {
                 return View(type);
             }
+
             var dto = new CreateTypeDTO(type_Name: type.Type_Name, type_Description: type.Type_Description);
 
 
             _ITableTypeService.Create(dto);
+
+            _notyf.Success("Table Type created successfully !", 5);
 
 
             returnUrl ??= nameof(Index);
 
             return Redirect(returnUrl);
         }
+
         public IActionResult Update(Guid? Id)
 
         {
@@ -53,6 +63,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             {
                 return BadRequest("No data Found");
             }
+
             var type = _ITableTypeService.GetByGuid((Guid)Id);
 
             var updateTypeVM = new UpdateTypeVM()
@@ -64,6 +75,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
 
             return View(updateTypeVM);
         }
+
         [HttpPost]
         public IActionResult Update(UpdateTypeVM type)
         {
@@ -71,6 +83,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             {
                 return View(type);
             }
+
             var dto = new UpdateTypeDTO(type_Name: type.Type_Name, type_Description: type.Type_Description)
             {
                 Id = type.Id
@@ -78,7 +91,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
 
 
             _ITableTypeService.Update(dto);
-
+            _notyf.Success("Table Type updated successfully !", 5);
 
             return RedirectToAction(nameof(Index));
         }
@@ -98,7 +111,8 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 {
                     xl.SaveAs(mstream);
                     var date = CurrentTime.DateTimeToday();
-                    return File(mstream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ProductType-" + date + ".xlsx");
+                    return File(mstream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        "ProductType-" + date + ".xlsx");
                 }
             }
         }
@@ -108,15 +122,12 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-
             var types = _ITableTypeService.GetAll().Select(x => new TypeVM()
             {
                 Id = x.Id,
                 Type_Name = x.Type_Name,
                 Type_Description = x.Type_Description,
                 Status = x.Status
-
-
             });
             return Json(new { data = types });
         }
@@ -128,18 +139,15 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             if (unit == null)
             {
                 return BadRequest();
-
             }
             else
             {
-
                 var id = _ITableTypeService.UpdateStatus(Id);
 
                 return Ok(unit.Status);
             }
-
         }
 
-        #endregion 
+        #endregion
     }
 }

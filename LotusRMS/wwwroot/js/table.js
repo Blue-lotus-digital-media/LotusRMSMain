@@ -18,10 +18,10 @@ function toggleMe(me) {
             console.log(data);
             if (data == true) {
 
-                $(me).removeClass("bi-toggle-off").addClass('bi-toggle-on');
+                $(me).removeClass("fa-toggle-off").removeClass("statusToggleOff").addClass('fa-toggle-on').addClass("statusToggleOn");
             } else {
 
-                $(me).removeClass("bi-toggle-on").addClass('bi-toggle-off');
+                $(me).removeClass("fa-toggle-on").removeClass("statusToggleOn").addClass('fa-toggle-off').addClass("statusToggleOff");
             }
 
         },
@@ -78,10 +78,10 @@ function loadData() {
                 render: function (data) {
                     return `<div class="text-center">
                               <a href="/Admin/table/Update/${data}" class="btn btn-success text-white" style="cursor:pointer">
-                                <i class="bi bi-pencil-square"></i>    
+                                <i class="fa-regular fa-pen-to-square"></i>
                               </a>
                               <a href="/Admin/table/Delete/${data}" class="btn btn-danger text-white" style="cursor:pointer">
-                                <i class="bi bi-trash"></i>    
+                                <i class="fa-regular fa-trash-can"></i>   
                               </a>
                             </div>`;
                 }
@@ -106,28 +106,29 @@ function loadData() {
             if (data["status"] == false) {
                 $('td:eq(5)', row).html(`
 <div class="text-center">
-<i class= "bi bi-toggle-off statusToggle" onclick = "toggleMe($(this));" data-id="${data['id']}"></i>
-</div > `);
+<i class= "fa-solid fa-toggle-off statusToggle statusToggleOff"  onclick = "toggleMe($(this));" data-id="${data['id']}"></i>
+ </div>`);
 
             }
             else {
-                $('td:eq(5)', row).html(`<div class="text-center">
-<i class= "bi bi-toggle-on statusToggle" onclick = "toggleMe($(this));" data-id="${data['id']}" >
-</i></div > `);
+                $('td:eq(5)', row).html(`
+<div class="text-center">
+<i class= "fa-solid fa-toggle-on statusToggle text-center statusToggleOn" onclick = "toggleMe($(this));" data-id="${data['id']}" >
+</i></div> `);
 
             }
 
             if (data["isReserved"] == false) {
                 $('td:eq(4)', row).html(`
-<div class="text-center">
-<h4 class="text-primary">Free</h3>
-</div > `);
+
+<div class="text-primary text-center">Free</div>
+ `);
 
             }
             else {
                 $('td:eq(4)', row).html(`<div class="text-center">
 
-<h4 class="text-danger ">Reserved</h3></div > `);
+<p class="text-danger ">Reserved</p></div > `);
 
             }
 
