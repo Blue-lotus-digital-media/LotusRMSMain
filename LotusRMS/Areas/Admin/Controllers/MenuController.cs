@@ -9,60 +9,61 @@ using Microsoft.AspNetCore.Mvc;
 namespace LotusRMSweb.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles="Admin,SuperAdmin")]
+    [Authorize(Roles = "Admin,SuperAdmin")]
     public class MenuController : Controller
     {
         private readonly IMenuService _IMenuService;
         private readonly IMenuTypeService _IMenuTypeService;
         private readonly IMenuCategoryService _IMenuCategoryService;
         private readonly IMenuUnitService _IMenuUnitService;
-        private readonly INotyfService _toastNotification;
+        private readonly INotyfService _notyf;
 
-     
 
-        public MenuController(IMenuService iMenuService,IMenuTypeService iMenuTypeService,IMenuCategoryService iMenuCategoryService, IMenuUnitService iMenuUnitService, INotyfService toastNotification)
+        public MenuController(IMenuService iMenuService, IMenuTypeService iMenuTypeService,
+            IMenuCategoryService iMenuCategoryService, IMenuUnitService iMenuUnitService, INotyfService notyf)
         {
             _IMenuService = iMenuService;
             _IMenuTypeService = iMenuTypeService;
             _IMenuCategoryService = iMenuCategoryService;
             _IMenuUnitService = iMenuUnitService;
-            _toastNotification = toastNotification;
+            _notyf = notyf;
         }
 
-       
 
         public IActionResult Index()
         {
             return View();
         }
+
         public IActionResult Create()
         {
             var createMenuVM = new CreateMenuVM()
             {
-                Menu_Type_List=_IMenuTypeService.GetAll().Where(x=>x.Status).Select(type=>new SelectListItem()
+                Menu_Type_List = _IMenuTypeService.GetAll().Where(x => x.Status).Select(type => new SelectListItem()
                 {
-                    Text=type.Type_Name,
-                    Value=type.Id.ToString()
+                    Text = type.Type_Name,
+                    Value = type.Id.ToString()
                 }).ToList(),
-                Menu_Unit_List=_IMenuUnitService.GetAll().Where(x=>x.Status).Select(type=>new SelectListItem()
+                Menu_Unit_List = _IMenuUnitService.GetAll().Where(x => x.Status).Select(type => new SelectListItem()
                 {
-                    Text=type.Unit_Name,
-                    Value=type.Id.ToString()
+                    Text = type.Unit_Name,
+                    Value = type.Id.ToString()
                 }).ToList()
-
             };
 
             return View(createMenuVM);
         }
+
         [HttpPost]
-        public IActionResult Create(CreateMenuVM vm) {
+        public IActionResult Create(CreateMenuVM vm)
+        {
             if (!ModelState.IsValid)
             {
                 return View(vm);
             }
+
             var dto = new CreateMenuDTO()
             {
-
                 Item_name = vm.Item_name,
                 Rate = vm.Rate,
                 OrderTo = vm.OrderTo,
@@ -77,24 +78,28 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 dto.Image = ImageUpload.GetByteArrayFromImage(vm.Menu_Image);
             }
 
-            var id=_IMenuService.Create(dto);
+            var id = _IMenuService.Create(dto);
 
-
+            _notyf.Success("Menu Created successfully..", 5);
 
             return RedirectToAction(nameof(Index));
         }
+
         public IActionResult Update(Guid Id)
         {
             if (Id == Guid.Empty)
             {
-                _toastNotification.Warning("Error while loading data...");
+                _notyf.Warning("Error while loading data...");
                 return RedirectToAction(nameof(Index));
             }
+
             var menu = _IMenuService.GetByGuid(Id);
-            if (menu == null) {
-                _toastNotification.Information("no such data...");
+            if (menu == null)
+            {
+                _notyf.Information("no such data...");
                 return RedirectToAction(nameof(Index));
             }
+
             var updateMenuVM = new UpdateMenuVM()
             {
                 Id = menu.Id,
@@ -106,16 +111,17 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 Category_Id = menu.Category_Id,
                 OrderTo = menu.OrderTo,
 
-                 Menu_Type_List = _IMenuTypeService.GetAll().Where(x => x.Status).Select(type => new SelectListItem()
-                 {
-                     Text = type.Type_Name,
-                     Value = type.Id.ToString()
-                 }).ToList(),
-                 Menu_Category_List = _IMenuCategoryService.GetAll().Where(x => x.Status&& x.Type_Id==menu.Type_Id).Select(type => new SelectListItem()
-                 {
-                     Text = type.Category_Name,
-                     Value = type.Id.ToString()
-                 }).ToList(),
+                Menu_Type_List = _IMenuTypeService.GetAll().Where(x => x.Status).Select(type => new SelectListItem()
+                {
+                    Text = type.Type_Name,
+                    Value = type.Id.ToString()
+                }).ToList(),
+                Menu_Category_List = _IMenuCategoryService.GetAll().Where(x => x.Status && x.Type_Id == menu.Type_Id)
+                    .Select(type => new SelectListItem()
+                    {
+                        Text = type.Category_Name,
+                        Value = type.Id.ToString()
+                    }).ToList(),
                 Menu_Unit_List = _IMenuUnitService.GetAll().Where(x => x.Status).Select(type => new SelectListItem()
                 {
                     Text = type.Unit_Name,
@@ -123,9 +129,8 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 }).ToList()
             };
             return View(updateMenuVM);
-
-
         }
+
         [HttpPost]
         public IActionResult Update(UpdateMenuVM vm)
         {
@@ -136,11 +141,12 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                     Text = type.Type_Name,
                     Value = type.Id.ToString()
                 }).ToList();
-                vm.Menu_Category_List = _IMenuCategoryService.GetAll().Where(x => x.Status && x.Type_Id == vm.Type_Id).Select(type => new SelectListItem()
-                {
-                    Text = type.Category_Name,
-                    Value = type.Id.ToString()
-                }).ToList();
+                vm.Menu_Category_List = _IMenuCategoryService.GetAll().Where(x => x.Status && x.Type_Id == vm.Type_Id)
+                    .Select(type => new SelectListItem()
+                    {
+                        Text = type.Category_Name,
+                        Value = type.Id.ToString()
+                    }).ToList();
                 vm.Menu_Unit_List = _IMenuUnitService.GetAll().Where(x => x.Status).Select(type => new SelectListItem()
                 {
                     Text = type.Unit_Name,
@@ -165,13 +171,13 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             {
                 dto.Image = ImageUpload.GetByteArrayFromImage(vm.Menu_Image);
             }
+
             _IMenuService.Update(dto);
 
-            _toastNotification.Success("Menu Updated successfully..",5);
+            _notyf.Success("Menu Updated successfully..", 5);
             return RedirectToAction(nameof(Index));
+        }
 
-        } 
-             
 
         #region Api Call
 
@@ -180,20 +186,17 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         {
             var menus = _IMenuService.GetAll().ToList().Select(menu => new MenuVM()
             {
-               Id=menu.Id,
-               Item_name=menu.Item_Name,
-                Rate=menu.Rate,
-                OrderTo=menu.OrderTo,
+                Id = menu.Id,
+                Item_name = menu.Item_Name,
+                Rate = menu.Rate,
+                OrderTo = menu.OrderTo,
 
-                Unit_Quantity=menu.Unit_Quantity,
-                Menu_Unit_Name=menu.Menu_Unit.Unit_Name,
-                Menu_Category_Name=menu.Menu_Category.Category_Name,
-                Menu_Type_Name=menu.Menu_Type.Type_Name,
-                Menu_Image=ImageUpload.GetStrigFromByteArray(menu.Image),
+                Unit_Quantity = menu.Unit_Quantity,
+                Menu_Unit_Name = menu.Menu_Unit.Unit_Name,
+                Menu_Category_Name = menu.Menu_Category.Category_Name,
+                Menu_Type_Name = menu.Menu_Type.Type_Name,
+                Menu_Image = ImageUpload.GetStrigFromByteArray(menu.Image),
                 Status = menu.Status
-
-
-
             }).ToList();
             return Json(new { data = menus });
         }
@@ -205,34 +208,37 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             if (unit == null)
             {
                 return BadRequest();
-
             }
             else
             {
-
                 var id = _IMenuService.UpdateStatus(Id);
-
+                if (unit.Status == true)
+                {
+                    _notyf.Success("Status Activated successfully..", 2);  
+                }
+                else
+                {
+                    _notyf.Warning("Status Deactivated...",2);
+                }
                 return Ok(unit.Status);
+                
+                
             }
-
         }
 
 
         [HttpGet]
         public List<SelectListItem> GetCategory(Guid Id)
         {
-
-            var CategoryList = _IMenuCategoryService.GetAll().Where(x => x.Status && x.Type_Id == Id).Select(type => new SelectListItem()
-            {
-                Text = type.Category_Name,
-                Value = type.Id.ToString()
-            }).ToList();
+            var CategoryList = _IMenuCategoryService.GetAll().Where(x => x.Status && x.Type_Id == Id).Select(type =>
+                new SelectListItem()
+                {
+                    Text = type.Category_Name,
+                    Value = type.Id.ToString()
+                }).ToList();
             return CategoryList;
-
         }
+
         #endregion
-
-
-
     }
 }

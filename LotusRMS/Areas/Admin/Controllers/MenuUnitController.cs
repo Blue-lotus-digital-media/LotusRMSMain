@@ -1,7 +1,6 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using ClosedXML.Excel;
 using LotusRMS.Models.Dto.UnitDto;
-
 using LotusRMS.Models.Service;
 using LotusRMS.Models.Viewmodels.Unit;
 using LotusRMS.Utility;
@@ -11,37 +10,35 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LotusRMSweb.Areas.Admin.Controllers
 {
-    [Authorize(Roles ="Admin,SuperAdmin")]
-
+    [Authorize(Roles = "Admin,SuperAdmin")]
     [Area("Admin")]
     public class MenuUnitController : Controller
     {
-        private readonly INotyfService _toastNotification;
+        private readonly INotyfService _notyf;
         private readonly IMenuUnitService _MenuUnitService;
 
-        public MenuUnitController(INotyfService toastNotification, IMenuUnitService MenuUnitService)
+        public MenuUnitController(INotyfService notyf, IMenuUnitService MenuUnitService)
         {
-            _toastNotification = toastNotification;
+            _notyf = notyf;
             _MenuUnitService = MenuUnitService;
         }
 
         public IActionResult Index()
         {
-           
-
-            
             return View();
         }
-        public IActionResult Create(string? returnUrl=null) {
+
+        public IActionResult Create(string? returnUrl = null)
+        {
             returnUrl ??= nameof(Index);
             ViewBag.ReturnUrl = returnUrl;
 
             return View();
-
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(CreateUnitVM MenuUnitVM,string? returnUrl=null)
+        public IActionResult Create(CreateUnitVM MenuUnitVM, string? returnUrl = null)
         {
             if (!ModelState.IsValid)
             {
@@ -49,10 +46,11 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 return View(MenuUnitVM);
             }
 
-            var MenuUnitCreateDto = new UnitCreateDto(MenuUnitVM.Unit_Name, MenuUnitVM.Unit_Symbol, MenuUnitVM.Unit_Description);
-            var id=_MenuUnitService.Create(MenuUnitCreateDto);
+            var MenuUnitCreateDto =
+                new UnitCreateDto(MenuUnitVM.Unit_Name, MenuUnitVM.Unit_Symbol, MenuUnitVM.Unit_Description);
+            var id = _MenuUnitService.Create(MenuUnitCreateDto);
 
-            _toastNotification.Success("Menu Unit created successfully...",5);
+            _notyf.Success("Menu Unit created successfully...", 5);
             return Redirect(returnUrl);
         }
 
@@ -60,14 +58,14 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         {
             if (Id == Guid.Empty)
             {
-
-                _toastNotification.Error("Error while loading data! ",5);
+                _notyf.Error("Error while loading data! ", 5);
                 return RedirectToAction(nameof(Index));
             }
+
             var unit = _MenuUnitService.GetByGuid((Guid)Id);
             if (unit == null)
             {
-                _toastNotification.Error("No data found !", 5);
+                _notyf.Error("No data found !", 5);
                 return RedirectToAction(nameof(Index));
             }
 
@@ -76,11 +74,11 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 Unit_Name = unit.Unit_Name,
                 Unit_Description = unit.Unit_Description,
                 Unit_Symbol = unit.Unit_Symbol
-
             };
 
             return View(vm);
         }
+
         [HttpPost]
         public IActionResult Update(UpdateUnitVM vm)
         {
@@ -88,23 +86,20 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             {
                 return View(vm);
             }
+
             var dto = new UnitUpdateDto(
                 unitName: vm.Unit_Name,
                 unitSymbol: vm.Unit_Symbol,
                 unitDescription: vm.Unit_Description
-                ) {
+            )
+            {
                 Id = vm.Id
-        };
+            };
             _MenuUnitService.Update(dto);
 
-            _toastNotification.Success("Menu Unit updated successfully...",5);
+            _notyf.Success("Menu Unit updated successfully...", 5);
             return RedirectToAction(nameof(Index));
-
-
         }
-
-
-
 
 
         [HttpPost]
@@ -112,7 +107,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         public IActionResult ExportToExcel()
         {
             var arraylist = _MenuUnitService.GetAll();
-        
+
 
             using (XLWorkbook xl = new XLWorkbook())
             {
@@ -122,7 +117,8 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 {
                     xl.SaveAs(mstream);
                     var date = CurrentTime.DateTimeToday();
-                    return File(mstream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "MenuUnit-"+date+".xlsx");
+                    return File(mstream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        "MenuUnit-" + date + ".xlsx");
                 }
             }
         }
@@ -132,16 +128,13 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-
             var MenuUnits = _MenuUnitService.GetAll().Select(x => new UnitVM()
             {
-                Id=x.Id,
-                Unit_Name= x.Unit_Name,
-                Unit_Symbol=x.Unit_Symbol,
-                Unit_Description=x.Unit_Description,
-                Status= x.Status
-                
-
+                Id = x.Id,
+                Unit_Name = x.Unit_Name,
+                Unit_Symbol = x.Unit_Symbol,
+                Unit_Description = x.Unit_Description,
+                Status = x.Status
             });
             return Json(new { data = MenuUnits });
         }
@@ -153,19 +146,15 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             if (MenuUnit == null)
             {
                 return BadRequest();
-
             }
             else
             {
-              
-                var id= _MenuUnitService.UpdateStatus(Id);
-                
+                var id = _MenuUnitService.UpdateStatus(Id);
+
                 return Ok(MenuUnit.Status);
             }
-            
         }
 
-        #endregion 
-
+        #endregion
     }
 }

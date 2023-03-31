@@ -1,5 +1,4 @@
-﻿
-using LotusRMS.Models.Dto.BillSettingDTO;
+﻿using LotusRMS.Models.Dto.BillSettingDTO;
 using LotusRMS.Models.Dto.FiscalYearDTO;
 using LotusRMS.Models.Service;
 using LotusRMS.Models.Service.Implementation;
@@ -10,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LotusRMSweb.Areas.Admin.Controllers
 {
-
     [Area("Admin")]
     [Authorize(Roles = "Admin , SuperAdmin")]
     public class BillSettingController : Controller
@@ -19,7 +17,8 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         private readonly ICompanyService _iCompanyService;
         private readonly IFiscalYearService _iFiscalYearService;
 
-        public BillSettingController(IBillSettingService iBillSettingService, ICompanyService iCompanyService, IFiscalYearService iFiscalYearService)
+        public BillSettingController(IBillSettingService iBillSettingService, ICompanyService iCompanyService,
+            IFiscalYearService iFiscalYearService)
         {
             _iBillSettingService = iBillSettingService;
             _iCompanyService = iCompanyService;
@@ -30,6 +29,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         {
             return View();
         }
+
         public string GetBillPrefix(string text)
         {
             string ShortName = "";
@@ -44,29 +44,30 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             {
                 return RedirectToAction(nameof(Index));
             }
+
             var fiscalyear = _iFiscalYearService.GetActiveYear();
             if (fiscalyear == null)
             {
                 return RedirectToAction(nameof(Index));
             }
+
             var bill = new CreateBillSettingVM()
             {
                 BillTitle = company.CompanyName,
                 BillAddress = company.Tole + ", " + company.City,
                 BillPrefix = GetBillPrefix(company.CompanyName),
-                FiscalYear=fiscalyear.Name,
-                PanOrVat=company.PanOrVat,
-                Contact=company.Contact,
-                IsPhone=true,
-                IsPanOrVat=true,
-                IsFiscalYear=true,
-                BillNote="Good once sold cannot be returned. this bill is not supported for legal purpose "
-
-
+                FiscalYear = fiscalyear.Name,
+                PanOrVat = company.PanOrVat,
+                Contact = company.Contact,
+                IsPhone = true,
+                IsPanOrVat = true,
+                IsFiscalYear = true,
+                BillNote = "Good once sold cannot be returned. this bill is not supported for legal purpose "
             };
 
             return View(bill);
         }
+
         [HttpPost]
         public IActionResult Create(CreateBillSettingVM vm)
         {
@@ -74,6 +75,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             {
                 return View(vm);
             }
+
             var dto = new CreateBillSettingDTO()
             {
                 BillPrefix = vm.BillPrefix,
@@ -83,7 +85,6 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 IsPanOrVat = vm.IsPanOrVat,
                 IsPhone = vm.IsPhone,
                 IsActive = vm.IsActive
-
             };
             var id = _iBillSettingService.Create(dto);
 
@@ -96,11 +97,13 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             {
                 return RedirectToAction(nameof(Index));
             }
+
             var billSetting = _iBillSettingService.GetByGuid(Id);
             if (billSetting == null)
             {
                 return RedirectToAction(nameof(Index));
             }
+
             var updateVM = new UpdateBillSettingVM()
             {
                 BillPrefix = billSetting.BillPrefix,
@@ -113,6 +116,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             };
             return View(updateVM);
         }
+
         [HttpPost]
         public IActionResult Update(UpdateBillSettingVM vm)
         {
@@ -120,10 +124,10 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             {
                 return View(vm);
             }
+
             var billSetting = _iBillSettingService.GetActive();
             if (billSetting.Id == vm.Id && !vm.IsActive)
             {
-
                 return View(vm);
             }
 
@@ -137,7 +141,6 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 IsPanOrVat = vm.IsPanOrVat,
                 IsPhone = vm.IsPhone,
                 IsActive = vm.IsActive
-
             };
             var id = _iBillSettingService.Update(dto);
 
@@ -145,6 +148,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         }
 
         #region API
+
         [HttpGet]
         public IActionResult GetAll()
         {
@@ -157,17 +161,14 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 BillNote = vm.BillNote,
                 IsPanOrVat = vm.IsPanOrVat,
                 IsPhone = vm.IsPhone,
-                IsFiscalYear=vm.IsFiscalYear,
-                
+                IsFiscalYear = vm.IsFiscalYear,
+
                 IsActive = vm.IsActive
-
-
             });
 
             return Json(new { data = billSettings });
-
-
         }
+
         [HttpGet]
         public IActionResult ActiveChange(Guid id)
         {
@@ -178,12 +179,13 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 {
                     return Ok(false);
                 }
+
                 var rid = _iBillSettingService.UpdateActive(id);
             }
+
             return Ok(true);
         }
 
         #endregion
-
     }
 }

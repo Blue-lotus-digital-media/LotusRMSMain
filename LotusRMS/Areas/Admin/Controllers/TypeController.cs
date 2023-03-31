@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace LotusRMSweb.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles ="Admin , SuperAdmin")]
+    [Authorize(Roles = "Admin , SuperAdmin")]
     public class TypeController : Controller
     {
         public readonly ITypeService _ITypeService;
@@ -23,19 +23,22 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         {
             return View();
         }
-        public IActionResult Create(string? returnUrl=null)
+
+        public IActionResult Create(string? returnUrl = null)
         {
             returnUrl ??= nameof(Index);
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
+
         [HttpPost]
-        public IActionResult Create(CreateTypeVM type, string? returnUrl=null)
+        public IActionResult Create(CreateTypeVM type, string? returnUrl = null)
         {
             if (!ModelState.IsValid)
             {
                 return View(type);
             }
+
             var dto = new CreateTypeDTO(type_Name: type.Type_Name, type_Description: type.Type_Description);
 
 
@@ -46,13 +49,15 @@ namespace LotusRMSweb.Areas.Admin.Controllers
 
             return Redirect(returnUrl);
         }
+
         public IActionResult Update(Guid? Id)
 
         {
-            if(Id== Guid.Empty)
+            if (Id == Guid.Empty)
             {
                 return BadRequest("No data Found");
             }
+
             var type = _ITypeService.GetByGuid((Guid)Id);
 
             var updateTypeVM = new UpdateTypeVM()
@@ -64,6 +69,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
 
             return View(updateTypeVM);
         }
+
         [HttpPost]
         public IActionResult Update(UpdateTypeVM type)
         {
@@ -71,9 +77,10 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             {
                 return View(type);
             }
-            var dto = new UpdateTypeDTO( type_Name: type.Type_Name, type_Description: type.Type_Description)
+
+            var dto = new UpdateTypeDTO(type_Name: type.Type_Name, type_Description: type.Type_Description)
             {
-                Id=type.Id 
+                Id = type.Id
             };
 
 
@@ -98,7 +105,8 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 {
                     xl.SaveAs(mstream);
                     var date = CurrentTime.DateTimeToday();
-                    return File(mstream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ProductType-" + date + ".xlsx");
+                    return File(mstream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        "ProductType-" + date + ".xlsx");
                 }
             }
         }
@@ -108,15 +116,12 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-
             var types = _ITypeService.GetAll().Select(x => new TypeVM()
             {
                 Id = x.Id,
                 Type_Name = x.Type_Name,
-                Type_Description=x.Type_Description,
+                Type_Description = x.Type_Description,
                 Status = x.Status
-
-
             });
             return Json(new { data = types });
         }
@@ -128,18 +133,15 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             if (unit == null)
             {
                 return BadRequest();
-
             }
             else
             {
-
                 var id = _ITypeService.UpdateStatus(Id);
 
                 return Ok(unit.Status);
             }
-
         }
 
-        #endregion 
+        #endregion
     }
 }

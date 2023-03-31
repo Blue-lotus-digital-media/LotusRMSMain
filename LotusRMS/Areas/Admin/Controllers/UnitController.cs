@@ -12,35 +12,35 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LotusRMSweb.Areas.Admin.Controllers
 {
-    [Authorize(Roles ="Admin,SuperAdmin")]
-
+    [Authorize(Roles = "Admin,SuperAdmin")]
     [Area("Admin")]
     public class UnitController : Controller
     {
-        private readonly INotyfService _toastNotification;
+        private readonly INotyfService _notyf;
         private readonly IUnitService _unitService;
 
-        public UnitController(INotyfService toastNotification, IUnitService unitService)
+        public UnitController(INotyfService notyf, IUnitService unitService)
         {
-            _toastNotification = toastNotification;
+            _notyf = notyf;
             _unitService = unitService;
         }
 
         public IActionResult Index()
         {
-            
             return View();
         }
-        public IActionResult Create(string? returnUrl=null) {
+
+        public IActionResult Create(string? returnUrl = null)
+        {
             returnUrl ??= nameof(Index);
             ViewBag.ReturnUrl = returnUrl;
 
             return View();
-
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(UnitVM unitVM,string? returnUrl=null)
+        public IActionResult Create(UnitVM unitVM, string? returnUrl = null)
         {
             if (!ModelState.IsValid)
             {
@@ -49,16 +49,17 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             }
 
             var unitCreateDto = new UnitCreateDto(unitVM.Name, unitVM.Unit_Symbol, unitVM.Unit_Description);
-            var id=_unitService.Create(unitCreateDto);
-            _toastNotification.Success("Product unit created successfully", 5);
+            var id = _unitService.Create(unitCreateDto);
+            _notyf.Success("Product unit created successfully", 5);
             return Redirect(returnUrl);
         }
+
         [HttpPost]
         [AutoValidateAntiforgeryToken]
         public IActionResult ExportToExcel()
         {
             var arraylist = _unitService.GetAll();
-        
+
 
             using (XLWorkbook xl = new XLWorkbook())
             {
@@ -68,7 +69,8 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 {
                     xl.SaveAs(mstream);
                     var date = CurrentTime.DateTimeToday();
-                    return File(mstream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Unit-"+date+".xlsx");
+                    return File(mstream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        "Unit-" + date + ".xlsx");
                 }
             }
         }
@@ -78,16 +80,13 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-
             var units = _unitService.GetAll().Select(x => new UnitVMUpdate()
             {
-                Id=x.Id,
-                Name= x.Unit_Name,
-                Unit_Symbol=x.Unit_Symbol,
-                Unit_Description=x.Unit_Description,
-                Status= x.Status
-                
-
+                Id = x.Id,
+                Name = x.Unit_Name,
+                Unit_Symbol = x.Unit_Symbol,
+                Unit_Description = x.Unit_Description,
+                Status = x.Status
             });
             return Json(new { data = units });
         }
@@ -99,19 +98,15 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             if (unit == null)
             {
                 return BadRequest();
-
             }
             else
             {
-              
-                var id= _unitService.UpdateStatus(Id);
-                
+                var id = _unitService.UpdateStatus(Id);
+
                 return Ok(unit.Status);
             }
-            
         }
 
-        #endregion 
-
+        #endregion
     }
 }

@@ -8,49 +8,58 @@
 
 <div class="row">
     <div class="col-lg-6">
-          <div class="card">
+        <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Update Table </h5>
-              <!-- Vertical Form -->
-              <form class="row g-3" asp-action="Update" asp-controller="Table" asp-area="admin">
-                  <input asp-for="Id" hidden />
-                <div class="col-12">
-                  <label for="cName" class="form-label">Catgory Name</label>
-                  <input asp-for="Table_Name" class="form-control" id="cName">
-                  <span asp-validation-for="Table_Name" class="text-danger"></span>
-                </div>
-                <div class="col-12">
-                  <label for="dText" class="form-label">Table Numbetr</label>
-                  <textarea asp-for="Table_No" class="form-control" id="dText"> </textarea>    
-                  
-                  <span asp-validation-for="Table_No" class="text-danger"></span>
-                </div> 
-                
-                <div class="col-12">
-                  <label for="dText" class="form-label">Total No. Of Chair</label>
-                  <input asp-for="No_Of_Chair" class="form-control" id="dText"/>    
-                  
-                  <span asp-validation-for="No_Of_Chair" class="text-danger"></span>
-                </div> 
-                 <div class="col-12">
-                    <lable for="typeText" class="form-label">Type</lable>
-                    <select asp-for="Table_Type_Id" class="form-control" id="typeText">
-                        <option>Select a type</option>
-                        @foreach (var item in Model.Table_Type_List)
-                        {
-                            <option value="@item.Value">@item.Text</option>
-                        }
-                    </select>
-                     <span asp-validation-for="Table_Type_Id" class="text-danger"></span>
-                </div>
-                <div class="col-12 d-flex ">
-            <button type="reset" class="btn btn-danger mx-2">Clear</button>  
-            <button type="submit" class="btn btn-primary mx-2">Update</button>  
-        </div>
-              </form><!-- Vertical Form -->
+                <h5 class="card-title">Update Table </h5>
+                <!-- Vertical Form -->
+                <form class="row g-3" asp-action="Update" asp-controller="Table" asp-area="admin">
+                    <input asp-for="Id" hidden/>
+                    <div class="col-12">
+                        <label for="cName" class="form-label">Category Name</label>
+                        <input asp-for="Table_Name" class="form-control" id="cName">
+                        <span asp-validation-for="Table_Name" class="text-danger"></span>
+                    </div>
+                    <div class="col-12">
+                        <label for="tableNumber" class="form-label">Table Number</label>
+                        <input asp-for="Table_No" class="form-control" id="tableNumber"> </input>
+                        <span asp-validation-for="Table_No" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="noOfChair" class="form-label">Total No. Of Chair</label>
+                        <input asp-for="No_Of_Chair" class="form-control" id="noOfChair"/>
+
+                        <span asp-validation-for="No_Of_Chair" class="text-danger"></span>
+                    </div>
+                    <div class="col-12">
+                        <label for="typeText" class="form-label">Type</label>
+                        <div class="row">
+                            <div class="col-10">
+
+                                <select asp-for="Table_Type_Id" class="form-control" id="typeText">
+                                    <option>Select a type</option>
+                                    @foreach (var item in Model.Table_Type_List)
+                                    {
+                                        <option value="@item.Value">@item.Text</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-2">
+                                <a class="btn btn-primary" asp-action="create" asp-controller="tabletype" asp-area="admin" asp-route-returnUrl="~/admin/Table/create">
+                                    <i class="bi bi-plus-lg"></i>
+                                </a>
+                            </div>
+
+                        </div>
+                        <span asp-validation-for="Table_Type_Id" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-12 d-flex ">
+                        <button type="reset" class="btn btn-danger mx-2">Clear</button>
+                        <button type="submit" class="btn btn-primary mx-2">Update</button>
+                    </div>
+                </form><!-- Vertical Form -->
             </div>
-          </div>
         </div>
+    </div>
 </div>
-
-
