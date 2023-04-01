@@ -14,14 +14,14 @@
                 <h5 class="card-title">Add Table Type</h5>
                 <form class="form" asp-area="admin" asp-action="create" asp-controller="tabletype" asp-route-returnUrl="@ViewBag.ReturnUrl">
                     <div class="form-group mb-3">
-                        <label class="mb-1">Type Name</label>
-                        <input asp-for="Type_Name" class="form-control" placeholder="eg. cabin , eg. outdoor"/>
+                        <label for="tType" class="mb-1">Type Name</label>
+                        <input asp-for="Type_Name" class="form-control" placeholder="eg. cabin , eg. outdoor" id="tType" />
                         <span asp-validation-for="Type_Name" class="text-danger"></span>
                     </div>
 
                     <div class="form-group mb-3">
-                        <label class="mb-1">Type Description</label>
-                        <input asp-for="Type_Description" class="form-control" placeholder="Write short description of type.."/>
+                        <label for="tDesc" class="mb-1">Type Description</label>
+                        <input asp-for="Type_Description" class="form-control" placeholder="Write short description of type.." id="tDesc" />
                         <span asp-validation-for="Type_Description" class="text-danger"></span>
                     </div>
                     <div class="d-flex">

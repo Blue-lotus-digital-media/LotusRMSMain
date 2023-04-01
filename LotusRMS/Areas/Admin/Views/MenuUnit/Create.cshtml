@@ -16,18 +16,18 @@
 
                 <form class="form" asp-action="create" asp-controller="MenuUnit" asp-area="admin" asp-route-returnUrl="@ViewBag.ReturnUrl">
                     <div class="form-group mb-3">
-                        <label clsas="mb-1">Unit Name</label>
-                        <input asp-for="Unit_Name" class="form-control" placeholder="eg. Kilogram"/>
+                        <label for="mUnitName" class="mb-1">Unit Name</label>
+                        <input asp-for="Unit_Name" class="form-control" placeholder="eg. Kilogram" id="mUnitName"/>
                         <span asp-validation-for="Unit_Name" class="text-danger"></span>
                     </div>
                     <div class="form-group mb-3">
-                        <label class="mb-1">Unit Symbol</label>
-                        <input asp-for="Unit_Symbol" class="form-control" placeholder="eg. k"/>
+                        <label for="mUnitSymbol" class="mb-1">Unit Symbol</label>
+                        <input asp-for="Unit_Symbol" class="form-control" placeholder="eg. k" id="mUnitSymbol" />
                         <span asp-validation-for="Unit_Symbol" class="text-danger"></span>
                     </div>
                     <div class="form-group mb-3">
-                        <label class="mb-1">Unit Description</label>
-                        <input asp-for="Unit_Description" class="form-control" placeholder="Write short discription of unit.."/>
+                        <label for="mUnitDesc" class="mb-1">Unit Description</label>
+                        <input asp-for="Unit_Description" class="form-control" placeholder="Write short discription of unit.." id="mUnitDesc" />
                         <span asp-validation-for="Unit_Description" class="text-danger"></span>
                     </div>
                     <div class="d-flex">

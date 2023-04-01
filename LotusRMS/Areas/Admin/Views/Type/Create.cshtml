@@ -9,17 +9,20 @@
 
 
 <div class="row">
-    <div class="col-md-6 ">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Add Product Type</h5>
         <form class="form" asp-area="admin" asp-action="create" asp-controller="type" asp-route-returnUrl="@ViewBag.ReturnUrl">
-        <div class="form-group">
-            <label >Type Name</label>
-            <input asp-for="Type_Name" class="form-control" pplaceholder="eg. food , eg. liquor"/>
+                    <div class="form-group mb-3">
+                        <label class="mb-1"  for="typeName">Type Name</label>
+            <input asp-for="Type_Name" class="form-control" id="typeName" placeholder="eg. food , eg. liquor"/>
             <span asp-validation-for="Type_Name" class="text-danger" ></span>
         </div>
-    
-        <div class="form-group">
-            <label >Type Description</label>
-            <input asp-for="Type_Description" class="form-control" placeholder="Write short discription of type.."/>
+
+                    <div class="form-group mb-3">
+                        <label class="mb-1" for="typeDescription">Type Description</label>
+            <input asp-for="Type_Description" class="form-control" id="typeDescription" placeholder="Write short description of type.." />
             <span asp-validation-for="Type_Description" class="text-danger"></span>
         </div>
         <div class="d-flex">
@@ -27,6 +30,7 @@
             <button type="submit" class="btn btn-primary mx-2">Add</button>  
         </div>
         </form>
-
+        </div>
+        </div>
     </div>
 </div>

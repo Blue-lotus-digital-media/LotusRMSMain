@@ -9,6 +9,19 @@
     var title = "Create";
 }
 
+@*<style> 
+    .accordion-button[aria-expanded="false"] {
+        background-color: #808080;
+        color:red;
+    }
+
+    .accordion-button[aria-expanded="true"] {
+        background-color:#0d6efd;
+    }
+
+
+</style>*@
+
 <div class="row">
 <div class="col-md-6">
     <div class="card">
@@ -32,11 +45,11 @@
                 </div>
 
                 <div class="col-md-12">
-                    <label class="col-sm-12 col-form-label">Product Type</label>
+                    <label for="pType"class="col-sm-12 col-form-label">Product Type</label>
                     <div class="row">
                         <div class="col-10">
-                            <select asp-for="Product_Type_Id" class="form-control" id="typeId" onchange="loadData(this)">
-                                <option>Select a product type</option>
+                                <select asp-for="Product_Type_Id" class="form-control" id="pType" onchange="loadData(this)">
+                                <option>--Select a product type--</option>
                                 @foreach (var item in Model.TypeList)
                                 {
                                     <option value="@item.Value">@item.Text</option>
@@ -54,11 +67,11 @@
 
                 </div>
                 <div class="col-md-12">
-                    <label class="col-sm-12 col-form-label">Product Category</label>
+                    <label for="pCategory"class="col-sm-12 col-form-label">Product Category</label>
                     <div class="row">
                         <div class="col-10">
 
-                            <select asp-for="Product_Category_Id" class="form-control" id="CategoryId">
+                                <select asp-for="Product_Category_Id" class="form-control" id="pCategory">
                                 <option>--Select a category--</option>
                                
                             </select>
@@ -76,15 +89,15 @@
 
                 
                 <div class="col-md-12">
-                    <label class="col-sm-12 col-form-label">Product Unit</label>
+                    <label for="pUnit" class="col-sm-12 col-form-label">Product Unit</label>
                     <div class="row" >
                          <div class="col-10">
 
-                            <select asp-for="Product_Unit_Id" class="form-control">
-                                <option>Select a unit</option>
+                            <select asp-for="Product_Unit_Id" class="form-control" id="pUnit" >
+                                <option>--Select a unit--</option>
                                 @foreach (var item in Model.UnitList)
                                 {
-                                    <option value="@item.Value">@item.Text</option>
+                                        <option value="@item.Value" >@item.Text</option>
                                 }
                             </select>
                         </div>
@@ -99,16 +112,16 @@
                 </div>
                 <div class="col-md-12">
                     <label for="Quantity" class="form-label">Unit Quantity </label>
-                    <input asp-for="Unit_Quantity" class="form-control" id="Quantity">
+                        <input asp-for="Unit_Quantity" class="form-control" id="Quantity" onClick="this.select();">
                 </div>
                 <div class="col-md-12">
                     <label for="pDescription" class="form-label">Product Description</label>
-                    <textarea asp-for="Product_Description" class="form-control" > </textarea>
+                    <textarea asp-for="Product_Description" class="form-control" id="pDescription"> </textarea>
                     <span asp-validation-for="Product_Description" class="text-denger"></span>
                 </div>
 
-                <div class="form-check form-switch" data-bs-target="#open-div" data-bs-toggle="collapse">
-                    <input class="form-check-input accordion-button" data-bs-toggle="collapse" type="checkbox" data-bs-target="#collapseOne" id="flexSwitchCheckDefault"
+                <div class="form-check form-switch" data-bs-target="#open-div" data-bs-toggle="collapse" id="open-div">
+                        <input class="form-check-input accordion-button" data-bs-toggle="collapse" type="checkbox" data-bs-target="#collapseOne" id="flexSwitchCheckDefault"
                            aria-expanded="true" aria-controls="collapseOne">
                     <label class="form-check-label" for="flexSwitchCheckDefault">Has previous stock? </label>
                 </div>
@@ -118,11 +131,11 @@
                             <div class="accordion-body">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <label for="Quantity" class="form-label">Quantity</label>
-                                        <input type="number" class="form-control" id="Quantity">
+                                        <label for="Qty" class="form-label">Quantity</label>
+                                        <input type="number" class="form-control" id="Qty">
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="col-sm-2 col-form-label">Unit</label>
+                                        <label for="unit" class="form-label">Unit</label>
                                         <input type="number" class="form-control" id="unit">
                                     </div>
                                 </div>
@@ -132,7 +145,17 @@
                         <div class="text-end">
 
                             <button type="reset" class="btn btn-danger mr-2">Clear</button>
-                            <button type="submit" class="btn btn-primary">Create</button>
+
+                                @if (Model.Id != Guid.Empty)
+                                {
+                                    //edit
+                                    <button type="submit" class="btn btn-primary">Update</button>
+                                
+                                } else
+                                {
+                                    <button type="submit" class="btn btn-primary">Create</button>
+                                }
+                                
 
                         </div>
                     </div>
