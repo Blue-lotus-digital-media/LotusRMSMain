@@ -15,5 +15,7 @@ namespace LotusRMS.Models.Viewmodels.Customer
         public string Contact { get; set; }
         public string? PanOrVat { get; set; }
         public float DueAmount { get; set; }
+
+       
     }
 }

@@ -10,24 +10,24 @@
     <div class="col-lg-6">
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Update Table </h5>
+                <h5 class="card-title">Update Table</h5>
                 <!-- Vertical Form -->
                 <form class="row g-3" asp-action="Update" asp-controller="Table" asp-area="admin">
                     <input asp-for="Id" hidden/>
                     <div class="col-12">
-                        <label for="cName" class="form-label">Category Name</label>
+                        <label for="cName" class="form-label">Table Name</label>
                         <input asp-for="Table_Name" class="form-control" id="cName">
                         <span asp-validation-for="Table_Name" class="text-danger"></span>
                     </div>
                     <div class="col-12">
                         <label for="tableNumber" class="form-label">Table Number</label>
-                        <input asp-for="Table_No" class="form-control" id="tableNumber"> </input>
+                        <input asp-for="Table_No" class="form-control" id="tableNumber" onclick="this.select();">
                         <span asp-validation-for="Table_No" class="text-danger"></span>
                     </div>
 
                     <div class="col-12">
                         <label for="noOfChair" class="form-label">Total No. Of Chair</label>
-                        <input asp-for="No_Of_Chair" class="form-control" id="noOfChair"/>
+                        <input asp-for="No_Of_Chair" class="form-control" id="noOfChair" onclick="this.select();" />
 
                         <span asp-validation-for="No_Of_Chair" class="text-danger"></span>
                     </div>
@@ -54,9 +54,9 @@
                         <span asp-validation-for="Table_Type_Id" class="text-danger"></span>
                     </div>
 
-                    <div class="col-12 d-flex ">
-                        <button type="reset" class="btn btn-danger mx-2">Clear</button>
-                        <button type="submit" class="btn btn-primary mx-2">Update</button>
+                     <div class="col-md-12 text-end">
+                       
+                        <button type="submit" class="btn btn-primary">Update</button>
                     </div>
                 </form><!-- Vertical Form -->
             </div>

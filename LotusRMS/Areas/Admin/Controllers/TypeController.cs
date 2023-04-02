@@ -1,4 +1,5 @@
-﻿using ClosedXML.Excel;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using ClosedXML.Excel;
 using LotusRMS.Models.Dto.TypeDTO;
 using LotusRMS.Models.Service;
 using LotusRMS.Models.Viewmodels.Type;
@@ -13,10 +14,12 @@ namespace LotusRMSweb.Areas.Admin.Controllers
     public class TypeController : Controller
     {
         public readonly ITypeService _ITypeService;
+        private readonly INotyfService _notyf;
 
-        public TypeController(ITypeService iTypeService)
+        public TypeController(ITypeService iTypeService,INotyfService notyf)
         {
             _ITypeService = iTypeService;
+            _notyf = notyf;
         }
 
         public IActionResult Index()
@@ -43,6 +46,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
 
 
             _ITypeService.Create(dto);
+            _notyf.Success("Product Type Created Successfully!",5);
 
 
             returnUrl ??= nameof(Index);
@@ -85,6 +89,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
 
 
             _ITypeService.Update(dto);
+            _notyf.Success("Product Type Updated Successfully!",5);
 
 
             return RedirectToAction(nameof(Index));

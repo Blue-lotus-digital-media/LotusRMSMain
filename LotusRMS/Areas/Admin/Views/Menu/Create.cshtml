@@ -16,25 +16,25 @@
                 <form class="row g-3 bordered" asp-action="Create" asp-controller="menu" asp-area="admin" enctype="multipart/form-data">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                    <div class="col-md-11">
-                        <label for="pName" class="form-label">Menu Name</label>
-                        <input asp-for="Item_name" class="form-control" id="pName" placeholder="Menu Name">
+                    <div class="col-md-12">
+                        <label for="mName" class="form-label">Menu Name</label>
+                        <input asp-for="Item_name" class="form-control" id="mName" placeholder="Menu Name">
 
                         <span asp-validation-for="Item_name" class="text-denger"></span>
                     </div>
 
                     <div class="col-md-12">
-                        <label class="col-sm-12 col-form-label">Menu Type</label>
+                        <label for="mType" class="col-sm-12 col-form-label">Menu Type</label>
                         <div class="row">
                             <div class="col-10">
-                                <select asp-for="Type_Id" class="form-control" onchange="loadData(this)" id="typeId">
-                                    <option>Select a menu type</option>
+                                <select asp-for="Type_Id" class="form-control" onchange="loadData(this)" id="mType">
+                                    <option>-- Select a menu type --</option>
                                     @foreach (var item in Model.Menu_Type_List)
                                     {
                                         <option value="@item.Value">@item.Text</option>
                                     }
                                 </select>
-                            </div>
+                                        </div>
                             <div class="col-2">
                                 <a class="btn btn-primary" asp-area="admin" asp-action="create" asp-controller="MenuType" asp-route-returnUrl="~/admin/menu/create">
                                     <i class="bi bi-plus-lg"></i>
@@ -46,12 +46,12 @@
 
                     </div>
                     <div class="col-md-12">
-                        <label class="col-sm-12 col-form-label">Menu Category</label>
+                        <label for="mCategory" class="col-sm-12 col-form-label">Menu Category</label>
                         <div class="row">
                             <div class="col-10">
 
-                                <select asp-for="Category_Id" class="form-control" id="CategoryId">
-                                    <option>--Select a category--</option>
+                                <select asp-for="Category_Id" class="form-control" id="mCategory">
+                                    <option>-- Select a category --</option>
 
                                 </select>
                             </div>
@@ -68,12 +68,12 @@
 
 
                     <div class="col-md-12">
-                        <label class="col-sm-12 col-form-label">Menu Unit</label>
+                        <label for="mUnit" class="col-sm-12 col-form-label">Menu Unit</label>
                         <div class="row">
                             <div class="col-10">
 
-                                <select asp-for="Unit_Id" class="form-control">
-                                    <option>Select a unit</option>
+                                <select asp-for="Unit_Id" class="form-control" id="mUnit">
+                                    <option>-- Select a unit --</option>
                                     @foreach (var item in Model.Menu_Unit_List)
                                     {
                                         <option value="@item.Value">@item.Text</option>
@@ -90,18 +90,18 @@
                         <span asp-validation-for="Unit_Id" class="text-denger"></span>
                     </div>
                     <div class="col-md-12">
-                        <label for="Quantity" class="form-label">Unit Quantity </label>
-                        <input asp-for="Unit_Quantity" class="form-control" id="Quantity">
+                        <label for="Uquantity" class="form-label">Unit Quantity </label>
+                        <input asp-for="Unit_Quantity" class="form-control" id="Uquantity" onclick="this.select();">
                     </div>
                     <div class="col-md-12">
                         <label for="rate" class="form-label">Unit Rate</label>
-                        <input asp-for="Rate" class="form-control" id="rate"/>
+                        <input asp-for="Rate" class="form-control" id="rate" onclick="this.select();">
                         <span asp-validation-for="Rate" class="text-denger"></span>
                     </div>
                     <div class="col-md-12">
                         <label for="orderTo" class="form-label">Order To </label>
                         <select asp-for="OrderTo" class="form-control" id="orderTo">
-                            <option >--Select to whom order goes--</option>
+                            <option>-- Select to whom order goes --</option>
                             <option value="Kitchen">Kitchen</option>
                             <option value="Waiter">Waiter</option>
                             <option value="Bar">Bar</option>
@@ -112,14 +112,14 @@
                     </div>
                     <div class="col-md-12">
                         <label for="image" class="form-label">Image</label>
-                        <input asp-for="Menu_Image" class="form-control" id="image"/>
+                        <input asp-for="Menu_Image" class="form-control" id="image" />
                         <span asp-validation-for="Menu_Image" class="text-denger"></span>
                     </div>
 
 
                     <div class="col-md-12 text-end">
 
-                        <button type="reset" class="btn btn-danger mr-2">Clear</button>
+                        <button type="reset" class="btn btn-danger me-3">Clear</button>
                         <button type="submit" class="btn btn-primary">Create</button>
 
                     </div>

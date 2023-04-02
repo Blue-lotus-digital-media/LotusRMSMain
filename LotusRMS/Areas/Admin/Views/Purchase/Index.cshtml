@@ -25,13 +25,13 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="pItemName"></h5>
+                <h5 class="modal-title fw-bold" id="pItemName"></h5>
                 <input type="text" hidden id="pId">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-5">Quantity</div>
+                <div class="row mb-1">
+                    <div class="col-md-5 ">Quantity</div>
                     <div class="col-md-5">
                         <input type="number" class="form-control" id="pQuantity" min="1" value="1" onkeyUp="CalculatePTotal();">
                     </div>
@@ -39,14 +39,14 @@
                         <input type="text" class="form-control-plaintext" readonly id="pUnit">
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mb-1">
                     <div class="col-md-5">Rate</div>
                     <div class="col-md-7">
                         <input type="number" class="form-control" id="pRate" min="1" onkeyUp="CalculatePTotal();">
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-5">Rate</div>
+                <div class="row mb-1">
+                    <div class="col-md-5">Total</div>
                     <div class="col-md-7">
                         <input type="number" class="form-control" id="pTotal" min="1" readonly>
                     </div>

@@ -1,4 +1,5 @@
-﻿using LotusRMS.DataAccess.Constants;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using LotusRMS.DataAccess.Constants;
 using LotusRMS.Models;
 using LotusRMS.Models.Dto.ProductDTO;
 using LotusRMS.Models.IRepositorys;
@@ -19,15 +20,17 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         private readonly ICategoryService _ICategoryService;
         private readonly IUnitService _IUnitService;
         private readonly ITypeService _ITypeService;
+        private readonly INotyfService _notyf;
 
 
         public ProductController(IProductService iProductService, ICategoryService iCategoryService,
-            IUnitService iUnitService, ITypeService iTypeService)
+            IUnitService iUnitService, ITypeService iTypeService,INotyfService notyf)
         {
             _IProductService = iProductService;
             _ICategoryService = iCategoryService;
             _IUnitService = iUnitService;
             _ITypeService = iTypeService;
+            _notyf = notyf;
         }
 
         public IActionResult Index()
@@ -96,6 +99,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
 
 
                     _IProductService.Create(dto);
+                    _notyf.Success("Product created successfully", 5);
                 }
                 else
                 {
@@ -116,6 +120,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                         Id = productVMs.Id
                     };
                     _IProductService.Update(dto);
+                    _notyf.Success("Product updated successfully", 5);
                 }
 
                 return RedirectToAction(nameof(Index));
@@ -174,8 +179,17 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             else
             {
                 var id = _IProductService.UpdateStatus(Id);
-
+                if (unit.Status == true)
+                {
+                    _notyf.Success("Status Activated successfully..", 2);
+                }
+                else
+                {
+                    _notyf.Warning("Status Deactivated...", 2);
+                }
                 return Ok(unit.Status);
+
+            
             }
         }
 

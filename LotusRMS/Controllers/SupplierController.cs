@@ -1,4 +1,5 @@
-﻿using LotusRMS.Models.Dto.SupplierDTO;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using LotusRMS.Models.Dto.SupplierDTO;
 using LotusRMS.Models.Service;
 using LotusRMS.Models.Service.Implementation;
 using LotusRMS.Models.Viewmodels.Supplier;
@@ -14,12 +15,14 @@ namespace LotusRMSweb.Controllers
     {
         private readonly ISupplierService _iSupplierService;
         private readonly IHubContext<OrderHub, IOrderHub> _orderHub;
+        private readonly INotyfService _notyf;
 
         public SupplierController(ISupplierService iSupplierService,
-             IHubContext<OrderHub, IOrderHub> orderHub)
+             IHubContext<OrderHub, IOrderHub> orderHub,INotyfService notyf)
         {
             _iSupplierService = iSupplierService;
             _orderHub = orderHub;
+            _notyf = notyf;
         }
 
         public async Task<IActionResult> Index()
@@ -49,6 +52,7 @@ namespace LotusRMSweb.Controllers
                 PanOrVat = vm.PanOrVat
             };
             var id = _iSupplierService.Create(dto);
+            _notyf.Success("Supplier Created Successfully..", 5);
 
             return RedirectToAction(nameof(Index));
         }
@@ -91,6 +95,7 @@ namespace LotusRMSweb.Controllers
                 PanOrVat = vm.PanOrVat
             };
             _iSupplierService.Update(dto);
+            _notyf.Success("Supplier updated Successfully..", 5);
 
             return RedirectToAction(nameof(Index));
         }
@@ -125,7 +130,14 @@ namespace LotusRMSweb.Controllers
             {
 
                 _iSupplierService.UpdateStatus(id);
-
+                if (supplier.Status == true)
+                {
+                    _notyf.Success("Status Activated Successfully..",2);
+                }
+                else
+                {
+                    _notyf.Warning("Status Deactivated..", 2);
+                }
                 return Ok(supplier.Status);
             }
         }
