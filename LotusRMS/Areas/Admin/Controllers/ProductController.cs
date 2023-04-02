@@ -179,8 +179,17 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             else
             {
                 var id = _IProductService.UpdateStatus(Id);
-
+                if (unit.Status == true)
+                {
+                    _notyf.Success("Status Activated successfully..", 2);
+                }
+                else
+                {
+                    _notyf.Warning("Status Deactivated...", 2);
+                }
                 return Ok(unit.Status);
+
+            
             }
         }
 

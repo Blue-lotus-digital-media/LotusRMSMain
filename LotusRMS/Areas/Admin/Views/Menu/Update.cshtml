@@ -7,137 +7,137 @@
 
 
 <div class="row">
-<div class="col-md-6">
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Update menu</h5>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Update menu</h5>
 
-            <!-- Multi Columns Form -->
-            <form class="row g-3 bordered" asp-action="Update" 
-            asp-controller="menu" asp-area="admin" enctype="multipart/form-data">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-              <input asp-for="Id"hidden />
-                <div class="col-md-11">
-                    <label for="pName" class="form-label">Menu Name</label>
-                    <input asp-for="Item_name" class="form-control" id="pName" placeholder="Menu Name">
-                    
-                    <span asp-validation-for="Item_name" class="text-denger"></span>
-                </div>
+                <!-- Multi Columns Form -->
+                <form class="row g-3 bordered" asp-action="Update"
+                      asp-controller="menu" asp-area="admin" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input asp-for="Id" hidden />
+                    <div class="col-md-12">
+                        <label for="pName" class="form-label">Menu Name</label>
+                        <input asp-for="Item_name" class="form-control" id="pName" placeholder="Menu Name">
 
-                <div class="col-md-12">
-                    <label class="col-sm-12 col-form-label">Menu Type</label>
-                    <div class="row">
-                        <div class="col-10">
-                            <select asp-for="Type_Id" class="form-control" onchange="loadData(this)" id="typeId">
-                                <option>Select a menu type</option>
-                                @foreach (var item in Model.Menu_Type_List)
-                                {
-                                    <option value="@item.Value">@item.Text</option>
-                                }
-                            </select>
-                        </div>
-                        <div class="col-2">
-                            <a class="btn btn-primary" asp-area="admin" asp-action="create" asp-controller="MenuType" asp-route-returnUrl="~/admin/menu/create">
-                                <i class="bi bi-plus-lg"></i>
-                            </a>
-                        </div>
+                        <span asp-validation-for="Item_name" class="text-denger"></span>
                     </div>
-                    
-                    <span asp-validation-for="Type_Id" class="text-denger"></span>
 
-                </div>
-                <div class="col-md-12">
-                    <label class="col-sm-12 col-form-label">Product Category</label>
-                    <div class="row">
-                        <div class="col-10">
+                    <div class="col-md-12">
+                        <label for="mType" class="col-sm-12 col-form-label">Menu Type</label>
+                        <div class="row">
+                            <div class="col-10">
+                                <select asp-for="Type_Id" class="form-control" onchange="loadData(this)" id="mType">
+                                    <option>Select a menu type</option>
+                                    @foreach (var item in Model.Menu_Type_List)
+                                    {
+                                        <option value="@item.Value">@item.Text</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-2">
+                                <a class="btn btn-primary" asp-area="admin" asp-action="create" asp-controller="MenuType" asp-route-returnUrl="~/admin/menu/create">
+                                    <i class="bi bi-plus-lg"></i>
+                                </a>
+                            </div>
+                        </div>
 
-                            <select asp-for="Category_Id" class="form-control" id="CategoryId">
-                                <option>--Select a category--</option>
-                                @foreach (var item in Model.Menu_Category_List)
-                                {
-                                    <option value="@item.Value">@item.Text</option>
-                                }
-                            </select>
-                        </div>
-                        <div class="col-2">
-                            <a class="btn btn-primary" asp-area="admin" asp-action="create" asp-controller="menucategory" asp-route-returnUrl="~/admin/menu/create">
-                                <i class="bi bi-plus-lg"></i>
-                            </a>
-                        </div>
+                        <span asp-validation-for="Type_Id" class="text-denger"></span>
+
                     </div>
-                    
-                    <span asp-validation-for="Category_Id" class="text-denger"></span>
+                    <div class="col-md-12">
+                        <label for="mCategory" class="col-sm-12 col-form-label">Menu Category</label>
+                        <div class="row">
+                            <div class="col-10">
 
-                </div>
-
-                
-                <div class="col-md-12">
-                    <label class="col-sm-12 col-form-label">Product Unit</label>
-                    <div class="row" >
-                         <div class="col-10">
-
-                            <select asp-for="Unit_Id" class="form-control">
-                                <option>Select a unit</option>
-                                @foreach (var item in Model.Menu_Unit_List)
-                                {
-                                    <option value="@item.Value">@item.Text</option>
-                                }
-                            </select>
+                                <select asp-for="Category_Id" class="form-control" id="mCategory">
+                                    <option>--Select a category--</option>
+                                    @foreach (var item in Model.Menu_Category_List)
+                                    {
+                                        <option value="@item.Value">@item.Text</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-2">
+                                <a class="btn btn-primary" asp-area="admin" asp-action="create" asp-controller="menucategory" asp-route-returnUrl="~/admin/menu/create">
+                                    <i class="bi bi-plus-lg"></i>
+                                </a>
+                            </div>
                         </div>
-                        <div class="col-2">
-                            <a class="btn btn-primary" asp-area="admin" asp-action="create" asp-controller="MenuUnit" asp-route-returnUrl="~/admin/menu/create">
-                                <i class="bi bi-plus-lg"></i>
-                            </a>
-                        </div>
+
+                        <span asp-validation-for="Category_Id" class="text-denger"></span>
+
                     </div>
-                    
-                    <span asp-validation-for="Unit_Id" class="text-denger"></span>
-                </div>
-                <div class="col-md-12">
-                    <label for="Quantity" class="form-label">Unit Quantity </label>
-                    <input asp-for="Unit_Quantity" class="form-control" id="Quantity">
-                </div>
-                <div class="col-md-12">
-                    <label for="rate" class="form-label">Unit Rate</label>
-                    <input asp-for="Rate" class="form-control" id="rate" />
-                    <span asp-validation-for="Rate" class="text-denger"></span>
-                </div>
-                <div class="col-md-12">
-                    <label for="orderTo" class="form-label">Order To </label>
-                    <select asp-for="OrderTo" class="form-control" id="orderTo" >
-                        <option >--Select to whom order goes--</option>
-                        <option value="Kitchen">Kitchen</option>
-                        <option value="Waiter">Waiter</option>
-                        <option value="Bar">Bar</option>
 
 
+                    <div class="col-md-12">
+                        <label for="mUnit" class="col-sm-12 col-form-label">Menu Unit</label>
+                        <div class="row">
+                            <div class="col-10">
 
-                    </select>
-                    <span asp-validation-for="OrderTo" class="text-denger"></span>
-                </div>
-                <div class="col-md-12">
-                    <label for="image" class="form-label">Image</label>
-                    <input asp-for="Menu_Image" class="form-control" id="image" />
-                    <span asp-validation-for="Menu_Image" class="text-denger"></span>
-                </div>
-
-               
-
-                        <div class="col-md-12 text-end">
-
-                            <button type="reset" class="btn btn-danger mr-2">Clear</button>
-                            <button type="submit" class="btn btn-primary">Update</button>
-
+                                <select asp-for="Unit_Id" class="form-control" id="mUnit">
+                                    <option>Select a unit</option>
+                                    @foreach (var item in Model.Menu_Unit_List)
+                                    {
+                                        <option value="@item.Value">@item.Text</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-2">
+                                <a class="btn btn-primary" asp-area="admin" asp-action="create" asp-controller="MenuUnit" asp-route-returnUrl="~/admin/menu/create">
+                                    <i class="bi bi-plus-lg"></i>
+                                </a>
+                            </div>
                         </div>
-               
 
-            </form><!-- End Multi Columns Form -->
+                        <span asp-validation-for="Unit_Id" class="text-denger"></span>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="Quantity" class="form-label">Unit Quantity </label>
+                        <input asp-for="Unit_Quantity" class="form-control" id="Quantity" onclick="this.select();">
+                    </div>
+                    <div class="col-md-12">
+                        <label for="rate" class="form-label">Unit Rate</label>
+                        <input asp-for="Rate" class="form-control" id="rate" onclick="this.select();" />
+                        <span asp-validation-for="Rate" class="text-denger"></span>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="orderTo" class="form-label">Order To </label>
+                        <select asp-for="OrderTo" class="form-control" id="orderTo">
+                            <option>--Select to whom order goes--</option>
+                            <option value="Kitchen">Kitchen</option>
+                            <option value="Waiter">Waiter</option>
+                            <option value="Bar">Bar</option>
 
+
+
+                        </select>
+                        <span asp-validation-for="OrderTo" class="text-denger"></span>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="image" class="form-label">Image</label>
+                        <input asp-for="Menu_Image" class="form-control" id="image" />
+                        <span asp-validation-for="Menu_Image" class="text-denger"></span>
+                    </div>
+
+
+
+                    <div class="col-md-12 text-end">
+
+
+                        <button type="submit" class="btn btn-primary">Update</button>
+
+                    </div>
+
+
+                </form><!-- End Multi Columns Form -->
+
+            </div>
         </div>
     </div>
-    </div>
-    </div>
-    @section Scripts{
+</div>
+@section Scripts{
     <script src="~/js/createupdatemenu.js"></script>
 }
 

@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.Office2010.Excel;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using LotusRMS.Models;
 using LotusRMS.Models.Dto.CustomerDTO;
 using LotusRMS.Models.Dto.DueBookDTO;
@@ -16,9 +17,12 @@ namespace LotusRMSweb.Controllers
     {
         private readonly ICustomerService _customerService;
 
-        public CustomerController(ICustomerService customerService)
+        private readonly INotyfService _notyf;
+
+        public CustomerController(ICustomerService customerService, INotyfService notyf)
         {
             _customerService = customerService;
+            _notyf = notyf;
         }
 
         public IActionResult Index()
@@ -53,6 +57,7 @@ namespace LotusRMSweb.Controllers
                 dto.DueBook = due;
             }
             var id = _customerService.Create(dto);
+            _notyf.Success("Customer created successfully", 5);
 
             return RedirectToAction(nameof(Index));
         }
@@ -104,7 +109,9 @@ namespace LotusRMSweb.Controllers
                 PanOrVat = vm.PanOrVat
             };
             _customerService.Update(dto);
+            _notyf.Success("Product Category updated successfully", 5);
             return RedirectToAction(nameof(Index));
+
         }
         #region ApiCall
         [HttpGet]
@@ -151,6 +158,15 @@ namespace LotusRMSweb.Controllers
             {
 
                 _customerService.UpdateStatus(id);
+
+                if (customer.Status == true)
+                {
+                    _notyf.Success("Status Activated successfully..", 2);
+                }
+                else
+                {
+                    _notyf.Warning("Status Deactivated...", 2);
+                }
 
                 return Ok(customer.Status);
             }

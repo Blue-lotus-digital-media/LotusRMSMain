@@ -7,61 +7,67 @@
 @{
 }
 
-<div class="col-lg-12">
+
+<div class="row">
+
+<div class="col-md-6">
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">Customer Detail</h5>
+            <h5 class="card-title">Create New Customer</h5>
 
             <!-- General Form Elements -->
-            <form asp-action="Create" asp-area="" asp-controller="Customer">
-                <div class="row mb-3">
-                    <label for="name" class="col-sm-2 col-form-label">Customer Name</label>
-                    <div class="col-sm-10">
+                <form class="row g-3 bordered" asp-action="Create" asp-area="" asp-controller="Customer">
+                <div class="col-md-12">
+                    <label for="name" class="form-label">Customer Name</label>
+                   
                         <input asp-for="Name" class="form-control" id="name">
                         <span asp-validation-for="Name" class="text-danger"></span>
-                    </div>
+                   
 
                 </div>
-                <div class="row mb-3">
-                    <label for="address" class="col-sm-2 col-form-label">Customer Address</label>
-                    <div class="col-sm-10">
+                    <div class="col-md-12">
+                    <label for="address" class="form-label">Customer Address</label>
+                    
                         <input asp-for="Address" class="form-control" id="address">
                         <span asp-validation-for="Address" class="text-danger"></span>
-                    </div>
+                    
 
                 </div>
-                <div class="row mb-3">
-                    <label for="contact" class="col-sm-2 col-form-label">Customer Contact</label>
-                    <div class="col-sm-10">
+                    <div class="col-md-12">
+                    <label for="contact" class="form-label">Customer Contact</label>
+                    
                         <input asp-for="Contact" class="form-control" id="contact">
                         <span asp-validation-for="Contact" class="text-danger"></span>
-                    </div>
-                </div> 
-                <div class="row mb-3">
-                    <label for="panorvat" class="col-sm-2 col-form-label">PAN or VAT</label>
-                    <div class="col-sm-10">
+                   
+                </div>
+                    <div class="col-md-12">
+                    <label for="panorvat" class="form-label">PAN or VAT</label>
+                  
                         <input asp-for="PanOrVat" class="form-control" id="panorvat">
                         <span asp-validation-for="PanOrVat" class="text-danger"></span>
-                    </div>
-                </div> 
-                <div class="row mb-3">
-                    <label for="due" class="col-sm-2 col-form-label">Previous Due Amount</label>
-                    <div class="col-sm-10">
+                
+                </div>
+                    <div class="col-md-12">
+                    <label for="due" class="form-label">Previous Due Amount</label>
+                   
                         <input asp-for="DueAmount" class="form-control" id="due">
                         <span asp-validation-for="DueAmount" class="text-danger"></span>
-                    </div>
+                    
                 </div>
 
 
 
-          
-                <div class="row mb-3">
-                    <div class="col-sm-10">
+
+
+                    <div class="col-md-12 text-end">
+
+                        <button type="reset" class="btn btn-danger me-3">Clear</button>
                         <button type="submit" class="btn btn-primary">Create</button>
+
                     </div>
-                </div>
             </form><!-- End General Form Elements -->
         </div>
     </div>
 </div>
 
+</div>

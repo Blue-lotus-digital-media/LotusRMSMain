@@ -7,6 +7,11 @@
 @{
 
     var title = "Create";
+    if
+    (Model.Id != Guid.Empty)
+    {
+        //edit
+        title = "Update"; }
 }
 
 @*<style> 
@@ -34,7 +39,6 @@
                 @if (Model.Id != Guid.Empty)
                 {
                     //edit
-                    title = "Update";
                     <input type="hidden" asp-for="Id" />
                 }
                 <div class="col-md-11">
@@ -142,9 +146,9 @@
                             </div>
                         </div>
 
-                        <div class="text-end">
+                        <div class="col-md-12 text-end">
 
-                            <button type="reset" class="btn btn-danger mr-2">Clear</button>
+                            
 
                                 @if (Model.Id != Guid.Empty)
                                 {
@@ -153,6 +157,7 @@
                                 
                                 } else
                                 {
+                                    <button type="reset" class="btn btn-danger me-3">Clear</button>
                                     <button type="submit" class="btn btn-primary">Create</button>
                                 }
                                 
