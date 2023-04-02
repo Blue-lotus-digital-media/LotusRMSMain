@@ -17,6 +17,7 @@ namespace LotusRMS.Models
         public float Quantity { get; set; }
         public float Rate { get; set; }
 
+        public string? Remarks { get; set; }
         private float Total { get; set; }
         public float GetTotal {
             get { return Total; }

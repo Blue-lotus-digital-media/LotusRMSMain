@@ -12,6 +12,7 @@ namespace LotusRMS.Models.Service
         Task<Guid> Create(CreateTableDTO dto);
         Guid Update(UpdateTableDTO dto);
         Guid UpdateStatus(Guid Id);
+        bool UpdateReserved(Guid Id);
 
         public IEnumerable<LotusRMS_Table> GetAll();
         public IEnumerable<LotusRMS_Table> GetAllAvailable();

@@ -153,7 +153,7 @@
                 @if (User.IsInRole("Admin") || User.IsInRole("Cashier"))
                 {
                     <li class="nav-item">
-                        <a class="nav-link collapsed" href="pages-register.html">
+                        <a class="nav-link collapsed" asp-action="index" asp-controller="purchase" asp-area="admin">
           <i class="bi bi-cash"></i>
           <span>Purchase</span>
         </a>
@@ -166,7 +166,7 @@
         </a>
         <ul id="report-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a href="icons-bootstrap.html">
+            <a asp-action="index" asp-controller="purchaseReport" asp-area="admin">
               <i class="bi bi-circle"></i><span>Purchase</span>
             </a>
           </li>
@@ -186,7 +186,7 @@
                 @if (User.IsInRole("Admin") || User.IsInRole("Cashier"))
                 {
                     <li class="nav-item">
-                        <a class="nav-link collapsed" asp-controller="Customer" asp-action="Index">
+                        <a class="nav-link collapsed" asp-controller="Customer" asp-action="Index" asp-area="">
           <i class="bi bi-person"></i>
           <span>Customer</span>
         </a>
@@ -194,7 +194,7 @@
       }
        @if (User.IsInRole("Admin") || User.IsInRole("Cashier")){
      <li class="nav-item">
-        <a class="nav-link collapsed" asp-controller="Supplier" asp-action=" Index">
+        <a class="nav-link collapsed" asp-controller="Supplier" asp-action="Index" asp-area="">
           <i class="bi bi-person"></i>
           <span>Suppliers </span>
         </a>

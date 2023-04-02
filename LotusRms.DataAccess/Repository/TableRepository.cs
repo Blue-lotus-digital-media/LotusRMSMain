@@ -38,6 +38,16 @@ namespace LotusRMS.DataAccess.Repository
                 table.Status = !table.Status;
                 Save();
             }
+        } 
+        public bool UpdateReserved(Guid Id)
+        {
+            var table = _dal.LotusRMS_Tables.FirstOrDefault(x => x.Id == Id);
+            if (table != null)
+            {
+                table.IsReserved = !table.IsReserved;
+                Save();
+            }
+            return table.IsReserved;
         }
     }
 }

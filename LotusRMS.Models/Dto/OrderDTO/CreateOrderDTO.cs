@@ -18,5 +18,6 @@ namespace LotusRMS.Models.Dto.OrderDTO
         public Guid Menu_Id { get; set; }
         public float Quantity { get; set; }
         public float Rate { get; set; }
+        public string Remarks { get; set; }
     }
 }

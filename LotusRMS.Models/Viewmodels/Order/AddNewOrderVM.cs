@@ -14,7 +14,7 @@ namespace LotusRMS.Models.Viewmodels.Order
         public string? Item_Unit { get; set; }
         public float Quantity { get; set; }
         public float Rate { get; set; }
-        public string Remarks { get; set; }  
+        public string? Remarks { get; set; }  
         public float Total
         {
             get { return Quantity * Rate; }

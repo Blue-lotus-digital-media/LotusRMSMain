@@ -73,7 +73,6 @@ namespace LotusRMS.DataAccess.Repository
                     query = query.Include(includeProperty);
                 }
             }
-          
             return query.FirstOrDefault();
         }
 
