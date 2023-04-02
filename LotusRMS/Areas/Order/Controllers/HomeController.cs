@@ -90,8 +90,6 @@ namespace LotusRMSweb.Areas.Order.Controllers
         {
             var OrderVM = new OrderVm()
             {
-               
-
             Order_Details = new List<OrderDetailVm>()
             };
             var order = new LotusRMS_Order();
@@ -121,19 +119,15 @@ namespace LotusRMSweb.Areas.Order.Controllers
                             Item_Name = menu.Item_Name,
                             Item_Unit=menu.Menu_Unit.Unit_Symbol,
                             Rate = item.Rate,
+                            Remarks=item.Remarks,
                             Quantity = item.Quantity,
                             IsComplete = item.IsComplete,
                             IsKitchenComplete = item.IsKitchenComplete,
                             Total = item.GetTotal
-
-
                         };
                         OrderVM.Order_Details.Add(orderDetail);
-
                     }
                 }
-
-               
             } else if (orderNo != null)
             {
                 order = _IOrderService.GetFirstOrDefaultByOrderNo(orderNo);
@@ -160,25 +154,19 @@ namespace LotusRMSweb.Areas.Order.Controllers
                             Item_Name = menu.Item_Name,
                             Item_Unit= menu.Menu_Unit.Unit_Symbol ,
                             Rate = item.Rate,
+                            Remarks = item.Remarks,
                             Quantity = item.Quantity,
                             IsComplete = item.IsComplete,
                             IsKitchenComplete = item.IsKitchenComplete,
                             Total = item.GetTotal
-
-
                         };
                         OrderVM.Order_Details.Add(orderDetail);
-
                     }
                 }
                 OrderVM.TableId = order.Table_Id;
                 OrderVM.Table_Name = order.Table.Table_Name;
-
             }
-            
-          
             return OrderVM;
-
         }
 
         //new order region
@@ -218,7 +206,8 @@ namespace LotusRMSweb.Areas.Order.Controllers
                 {
                     Menu_Id = item.MenuId,
                     Quantity = item.Quantity,
-                    Rate = item.Rate
+                    Rate = item.Rate,
+                    Remarks=item.Remarks
                 };
                 orderDetailDTO.Add(detailDto);
             }
@@ -242,6 +231,9 @@ namespace LotusRMSweb.Areas.Order.Controllers
                     OrderDetails = orderDetailDTO
                 };
                 var id = _IOrderService.Create(dto);
+                if(id!=Guid.Empty){
+                    _ITableService.UpdateReserved(tableId);
+                }
             }
 
 
@@ -278,7 +270,7 @@ namespace LotusRMSweb.Areas.Order.Controllers
             return PartialView("_NewOrders", orderList);
         }
         [HttpPost]
-        public IActionResult EditNewOrder(Guid tableId,Guid menuId,float quantity)
+        public IActionResult EditNewOrder(Guid tableId,Guid menuId,float quantity,string remarks)
         {
             var orderList = new List<AddNewOrderVM>();
             if (HttpContext.Session.GetString(tableId.ToString()) != null)
@@ -299,7 +291,9 @@ namespace LotusRMSweb.Areas.Order.Controllers
                 TableId = tableId,
                 Item_Name = menu.Item_Name,
                 Rate = menu.Rate,
-                Quantity = quantity
+                Quantity = quantity,
+                Remarks= remarks
+
 
             };
 

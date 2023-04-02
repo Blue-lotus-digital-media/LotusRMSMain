@@ -23,6 +23,7 @@ namespace LotusRMS.DataAccess.Repository
         {
             var order = _dal.LotusRMS_Orders.FirstOrDefault(x => x.Id == Id);
             order.IsCheckout = true;
+            Save();
 
         }
          

@@ -204,7 +204,7 @@ id="CustomerDueForm" hidden
     </button>
 </form>
 @*return Order form*@
-<form asp-action="ReturnOrder" id="ReturnOrderForm" hidden
+@*<form asp-action="ReturnOrder" id="ReturnOrderForm" hidden
       asp-route-OrderId="@Model.Order_Id"
       data-ajax=true
       data-ajax-success=""
@@ -213,7 +213,7 @@ id="CustomerDueForm" hidden
     <button type="submit" class="btn btn-success" form="returnForm">
         return order <i class="fa fa-book-open"></i>
     </button>
-</form>
+</form>*@
                 <script>
     document.addEventListener("DOMContentLoaded", () => {
         calculateDiscount();

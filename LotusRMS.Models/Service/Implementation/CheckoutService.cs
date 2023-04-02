@@ -13,7 +13,8 @@ namespace LotusRMS.Models.Service.Implementation
     {
         public ICheckoutRepository _CheckoutRepository;
         public IInvoiceService _invoiceService;
-        public CheckoutService(ICheckoutRepository checkoutRepository, IInvoiceService invoiceService)
+        public CheckoutService(ICheckoutRepository checkoutRepository, 
+            IInvoiceService invoiceService )
         {
             _CheckoutRepository = checkoutRepository;
             _invoiceService = invoiceService;
@@ -46,7 +47,6 @@ namespace LotusRMS.Models.Service.Implementation
 
             _CheckoutRepository.UpdateOrder(checkout.Order_Id);
 
-            _CheckoutRepository.Save();
 
             
 

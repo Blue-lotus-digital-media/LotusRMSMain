@@ -77,6 +77,8 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
 
             };
             var id=_ICheckoutService.Create(dto);
+            var order = _IOrderService.GetByGuid(vm.Order_Id);
+            _ITableService.UpdateReserved(order.Table_Id);
 
             return RedirectToAction("InvoicePrint", "Invoice", new {area="",Id = id.Result,returnUrl="/checkout" });
 
@@ -86,15 +88,14 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
         {
             var OrderVM = new OrderVm()
             {
-                TableId = tableId,
-                Table_Name = _ITableService.GetByGuid(tableId).Table_Name,
-
                 Order_Details = new List<OrderDetailVm>()
             };
-
+            var order = new LotusRMS_Order();
             if (tableId != Guid.Empty)
             {
-                var order = _IOrderService.GetFirstOrDefaultByTableId(tableId);
+                OrderVM.TableId = tableId;
+                OrderVM.Table_Name = _ITableService.GetByGuid(tableId).Table_Name;
+                order = _IOrderService.GetFirstOrDefaultByTableId(tableId);
                 if (order != null)
                 {
                     OrderVM = new OrderVm()
@@ -102,7 +103,6 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
                         Id = order.Id,
                         TableId = order.Table_Id,
                         Table_Name = order.Table.Table_Name,
-                        OrderBy=order.User.FirstName +" "+ order.User.MiddleName +" "+ order.User.LastName,
                         Date = order.DateTime,
                         Order_No = order.Order_No,
                         Order_Details = new List<OrderDetailVm>()
@@ -114,37 +114,30 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
                         {
                             Id = item.Id,
                             MenuId = item.MenuId,
-                            Item_Name = menu.Item_Name ,
+                            Item_Name = menu.Item_Name,
                             Item_Unit = menu.Menu_Unit.Unit_Symbol,
                             Rate = item.Rate,
+                            Remarks = item.Remarks,
                             Quantity = item.Quantity,
                             IsComplete = item.IsComplete,
-                            IsPrinted = item.IsPrinted,
                             IsKitchenComplete = item.IsKitchenComplete,
                             Total = item.GetTotal
                         };
                         OrderVM.Order_Details.Add(orderDetail);
-
                     }
                 }
-                else
-                {
-
-                }
-
-
             }
             else if (orderNo != null)
             {
-                var order = _IOrderService.GetFirstOrDefaultByOrderNo(orderNo);
+                order = _IOrderService.GetFirstOrDefaultByOrderNo(orderNo);
                 if (order != null)
                 {
                     OrderVM = new OrderVm()
                     {
                         Id = order.Id,
                         TableId = order.Table_Id,
+
                         Table_Name = order.Table.Table_Name,
-                        OrderBy = order.User.FirstName + " " + order.User.MiddleName + " " + order.User.LastName,
                         Date = order.DateTime,
                         Order_No = order.Order_No,
                         Order_Details = new List<OrderDetailVm>()
@@ -158,24 +151,21 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
                             Id = item.Id,
                             MenuId = item.MenuId,
                             Item_Name = menu.Item_Name,
-                            Item_Unit=menu.Menu_Unit.Unit_Symbol,
+                            Item_Unit = menu.Menu_Unit.Unit_Symbol,
                             Rate = item.Rate,
+                            Remarks = item.Remarks,
                             Quantity = item.Quantity,
                             IsComplete = item.IsComplete,
-                            IsPrinted = item.IsPrinted,
                             IsKitchenComplete = item.IsKitchenComplete,
                             Total = item.GetTotal
-
-
                         };
                         OrderVM.Order_Details.Add(orderDetail);
-
                     }
                 }
-
+                OrderVM.TableId = order.Table_Id;
+                OrderVM.Table_Name = order.Table.Table_Name;
             }
             return OrderVM;
-
         }
 
         public CreateCheckoutVM CreateCheckOut(Guid Order_Id,float Total)
@@ -298,6 +288,21 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
             var id=_IOrderService.PrintKotAsync(order.Id, orderDetails);
 
             return Ok();
+        }
+        [HttpPost]
+        public IActionResult CompleteOrderDetail(string orderNo, Guid OrderDetailId)
+        {
+            var id = _IOrderService.CompleteOrderDetail(orderNo, OrderDetailId);
+            var order = GetOrderVM(new Guid(), orderNo);
+            return PartialView("_Order", model: order);
+        }
+        [HttpPost]
+        public IActionResult CancelOrder(string orderNo, Guid OrderDetailId)
+        {
+
+            var id = _IOrderService.CancelOrder(orderNo, OrderDetailId);
+            var order = GetOrderVM(new Guid(), orderNo);
+            return PartialView("_Order", model: order);
         }
         #endregion
     }

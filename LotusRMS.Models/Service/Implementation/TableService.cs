@@ -71,5 +71,11 @@ namespace LotusRMS.Models.Service.Implementation
 
             return Id;
         }
+        public bool UpdateReserved(Guid Id)
+        {
+            var state= _ITableRepository.UpdateReserved(Id);
+
+            return state;
+        }
     }
 }

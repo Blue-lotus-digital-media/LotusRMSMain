@@ -177,7 +177,7 @@
                               asp-area="Order"
                               asp-route-tableId="@Model[0].TableId"
                               data-ajax="true"
-                              data-ajax-success="$('#NewOrderSection').empty()"
+                              data-ajax-success="completeNewOrder('@Model[0].TableId')"
                               data-ajax-update="#orderSection"
                               data-ajax-loading="#overlay">
                             <button type="submit" class="btn btn-primary">Complete</button>
@@ -191,3 +191,14 @@
 </div>
 </fieldset>
 }
+<script>
+   function completeNewOrder(tableId){
+        $('#NewOrderSection').empty();
+        var tableFormBtn = $(".TableForm[tableId='" + tableId + "']").children("button");
+        console.log(tableFormBtn);
+        if(!tableFormBtn.hasClass("booked")){
+            tableFormBtn.addClass("booked")
+        }
+
+    }
+</script>

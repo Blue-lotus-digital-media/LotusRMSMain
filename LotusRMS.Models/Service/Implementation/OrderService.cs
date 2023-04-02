@@ -40,7 +40,8 @@ namespace LotusRMS.Models.Service.Implementation
                 {
                     MenuId = item.Menu_Id,
                     Quantity = item.Quantity,
-                    Rate = item.Rate
+                    Rate = item.Rate,
+                    Remarks=item.Remarks
                 };
                 order.Order_Details.Add(orderDetail);
             }
@@ -106,7 +107,8 @@ namespace LotusRMS.Models.Service.Implementation
                 {
                     MenuId = item.Menu_Id,
                     Quantity = item.Quantity,
-                    Rate = item.Rate
+                    Rate = item.Rate,
+                    Remarks = item.Remarks
                 };
                 order.Order_Details.Add(orderDetail);
             }
