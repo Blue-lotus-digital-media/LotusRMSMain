@@ -170,7 +170,7 @@ button.nav-links {
 
 
 .menu-card {
-    max-height: 65vh;
+    max-height: 90vh;
     overflow: auto;
 }
 
@@ -253,6 +253,9 @@ button {
     display: flex;
     align-items: center;
     gap: 0.4rem;
+}
+.refresh-menu{
+    display:flex;
 }
 
 .refresh-icon,
@@ -393,10 +396,7 @@ button {
     .menu-div {
         display: none;
     }
-}
 
-
-@media screen and (max-width: 768px) {
     .refresh-btn {
         display: none;
     }
