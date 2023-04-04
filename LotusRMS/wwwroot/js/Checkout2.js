@@ -36,6 +36,6 @@ function checkTableType(tableId) {
 
 $(document).ready(function () {
     client.start();
-})
+});
 
 
