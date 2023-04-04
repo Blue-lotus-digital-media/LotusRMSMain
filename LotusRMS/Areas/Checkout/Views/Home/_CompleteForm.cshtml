@@ -16,6 +16,7 @@
     input[type=number] {
         -moz-appearance: textfield;
     }
+
     .checkoutDetail {
         display: flex;
     }
@@ -45,126 +46,213 @@
         .billDetail .row {
             padding: 3px;
         }
+
+
+    fieldset {
+        width: fit-content;
+    }
+
+
+    legend {
+        font-size:1.4rem;
+    }
 </style>
 <form id="checkoutForm"
       asp-action="CompleteCheckout"
-    asp-controller="home"
-    asp-area="checkout"
-  >
+      asp-controller="home"
+      asp-area="checkout">
 
-<div class="checkoutDetail">
-    <div class="customerDetail">
-        <div class="row">
-            <div class="col-5">
-                Customer Name
-            </div>
-            <div class="col-7">
-                <input class="form-control" id="customer_Name" asp-for="Customer_Name" />
-                <input class="form-control" id="customer_Id" asp-for="Customer_Id" hidden value="0" />
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-5">
-                Address
-            </div>
-            <div class="col-7">
-                <input class="form-control" id="customer_Address" asp-for="Customer_Address" />
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-5">
-                Contact
-            </div>
-            <div class="col-7">
-                <input type="number" class="form-control" id="customer_Contact" asp-for="Customer_Contact" />
-            </div>
-        </div>
-        <div class="w-100 mt-5">
-            <h2 class="text-danger text-center">
-                Refund = <label id="refundAmount"> 0.0 </label>
-                <input type="text" name="RefundAmount" hidden id="refAmt" />
-            </h2>
-        </div>
-
-
-
-
-    </div>
-    <div class="billDetail">
-        <div class="row">
-            <div class="col-5">
-                Total rs.
-            </div>
-            <div class="col-7">
-                <input type="text" id="GTotal" class="form-control" asp-for="Total" readonly />
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-5">
-                Discount rs.
-            </div>
-            <div class="col-7">
-                <div class="discountDiv row">
-                    <div class="col-7 p-0 pl-3">
-                        <input type="number" id="DiscountAmount" onkeyup="calculateDiscount()" asp-for="Discount" value="0" class="form-control" />
-                    </div>
-                    <div class="col-5 p-0 pr-3">
-                            <select id="discountType" class="form-control" onchange="calculateDiscount()" asp-for="Discount_Type" asp-items="Html.GetEnumSelectList<DiscountTypeEnum>()">
-                            
-                        </select>
-                    </div>
+    <div class="checkoutDetail">
+        <div class="customerDetail">
+            <div class="row">
+                <div class="col-5">
+                    Customer Name
                 </div>
+                <div class="col-7">
+                    <input class="form-control" id="customer_Name" asp-for="Customer_Name" />
+                    <input class="form-control" id="customer_Id" asp-for="Customer_Id" hidden value="0" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-5">
+                    Address
+                </div>
+                <div class="col-7">
+                    <input class="form-control" id="customer_Address" asp-for="Customer_Address" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-5">
+                    Contact
+                </div>
+                <div class="col-7">
+                    <input type="number" class="form-control" id="customer_Contact" asp-for="Customer_Contact" />
+                </div>
+            </div>
+            <div class="w-100 mt-5">
+                <h2 class="text-danger text-center">
+                    Refund = <label id="refundAmount"> 0.0 </label>
+                    <input type="text" name="RefundAmount" hidden id="refAmt" />
+                </h2>
+            </div>
 
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-5">
-                Grand Total Rs.
-            </div>
-            <div class="col-7">
-                <input type="text" id="GrandAmount" class="form-control" value="@Model.Total" readonly />
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-5">
-                Tender Amount
-            </div>
-            <div class="col-7">
-                <input type="number" id="TenderAmount" onkeyup="calculateRefund()" value="0" class="form-control" asp-for="Paid_Amount" />
 
-                <div class="invalid-tooltip">Tender amount must be equal or greater then grand total.</div>
+
+
+        </div>
+        <div class="billDetail">
+            <div class="row">
+                <div class="col-5">
+                    Total rs.
+                </div>
+                <div class="col-7">
+                    <input type="text" id="GTotal" class="form-control" asp-for="Total" readonly />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-5">
+                    Discount rs.
+                </div>
+                <div class="col-7">
+                    <div class="discountDiv row">
+                        <div class="col-7 p-0 pl-3">
+                            <input type="number" id="DiscountAmount" onkeyup="calculateDiscount()" asp-for="Discount" value="0" class="form-control" />
+                        </div>
+                        <div class="col-5 p-0 pr-3">
+                            <select id="discountType" class="form-control" onchange="calculateDiscount()" asp-for="Discount_Type" asp-items="Html.GetEnumSelectList<DiscountTypeEnum>()">
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-5">
+                    Grand Total Rs.
+                </div>
+                <div class="col-7">
+                    <input type="text" id="GrandAmount" class="form-control" value="@Model.Total" readonly />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-5">
+                    Tender Amount
+                </div>
+                <div class="col-7">
+                    <input type="number" id="TenderAmount" onkeyup="calculateRefund()" value="0" class="form-control" asp-for="Paid_Amount" />
+
+                    <div class="invalid-tooltip">Tender amount must be equal or greater then grand total.</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-5">
+                    Payment
+                </div>
+                <div class="col-7">
+                    <select asp-for="Payment_Mode" id="CheckoutMode" onchange="CheckPaymentMode()" class="form-control" asp-items="Html.GetEnumSelectList<PaymentModeEnum>()">
+                    </select>
+                </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-5">
-                Payment
-            </div>
-            <div class="col-7">
-                <select asp-for="Payment_Mode" id="CheckoutMode" onchange="CheckPaymentMode()" class="form-control" asp-items="Html.GetEnumSelectList<PaymentModeEnum>()">
-                    
-                </select>
-            </div>
-        </div>
+
     </div>
+    <div class="footer row">
+        <div class="col-6">
 
-</div>
-<div class="footer row">
-    <div class="col-6">
-        
             <tr>
                 <td colspan="2" class="align-left">
                     @*<a asp-action="GoToRoom" asp-route-TableId="@Model.Table_No" class="btn btn-info">Go To Room</a>*@
 
-                    <a class="Switch btn" style="color:white ; background-color:#009900" onclick="$('#TableSwitchForm').submit();">Switch Table</a>
+                    <a class="Switch btn btn-success" data-bs-toggle="modal"
+                       data-bs-target="#tableSwitchModal" onclick="$('#TableSwitchForm').submit();">Switch Table</a>
                     <a class="btn" style="color:white ; background-color:#229966" onclick="$('#ReturnOrderForm').submit();">Return Order</a>
 
                 </td>
             </tr>
-       
-    </div>
-    <div class="col-6 pr-3 text-right">
-        <div id="mainBtn">
-            <input type="text" asp-for="Order_Id" id="OrderID" hidden />
+
+        </div>
+
+
+
+        @*Table Switch Modal Starts*@
+        <div class="modal fade" id="tableSwitchModal" tabindex="-1">
+            <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-center fw-bold">Switch Table</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="row g-3">
+
+
+
+                                <fieldset class="border border-3 p-2 col-auto me-3">
+                                    <legend class="float-none w-auto p-2">Cabin</legend>
+                                    <div class="table-list d-flex gap-3 flex-wrap">
+                                        <button tableId="tableIdText1" type="button" class="btn btn-primary tableNo">C121</button>
+                                        <button tableId="tableIdText2"  type="button" class="btn btn-primary tableNo">C14</button>
+                                        <button tableId="tableIdText3" type="button" class="btn btn-danger tableNo">C15</button>
+                                        <button  type="button" class="btn btn-primary">C16</button>
+                                        <button  type="button" class="btn btn-primary">C14</button>
+                                        <button   type="button" class="btn btn-danger">C15</button>
+                                        <button  type="button" class="btn btn-primary">C16</button>
+                                    </div>
+                                </fieldset>
+
+                                <fieldset class="border border-3 p-2 col-auto me-3">
+                                    <legend class="float-none w-auto p-2">Rooftop</legend>
+                                    <div class="table-list d-flex gap-3 flex-wrap">
+                                        <button id="tableNo" type="button" class="btn btn-primary">R12</button>
+                                        <button id="tableNo" type="button" class="btn btn-primary">R14</button>
+                                        <button id="tableNo" type="button" class="btn btn-danger">R15</button>
+                                        <button id="tableNo" type="button" class="btn btn-primary">R16</button>
+                                        <button id="tableNo" type="button" class="btn btn-primary">R14</button>
+                                        <button id="tableNo" type="button" class="btn btn-danger">R15</button>
+                                 
+                                    </div>
+                                </fieldset>
+
+
+                      
+
+                      
+                         
+
+
+                            </div>
+                        </div>  
+                    </div>
+                    <div class="modal-footer d-flex justify-content-between align-items-end">
+                        <div class="left-section d-inline-flex align-items-baseline ps-5">
+                            <div class="me-3">
+                                <h4 class="current-table fw-bold">C13</h4>
+                                <input readonly hidden />
+                               
+                            </div>
+                            <div class="me-3"><i class="fa-solid fa-arrow-right-long"></i></div>
+                            <div>
+                                <h4 class="selected-table fw-bold">S02</h4>
+                               <input class="form-control selectedInput" readonly />
+                            </div>
+                        </div>
+                        <div class="right-section ps-5">
+                            <button type="button" class="btn btn-danger me-3" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary">Switch</button>
+                        </div>
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*Table Switch Modal Ends*@
+
+
+        <div class="col-6 pr-3 text-right">
+            <div id="mainBtn">
+                <input type="text" asp-for="Order_Id" id="OrderID" hidden />
                 @if (Model.Order_Id == Guid.Empty)
                 {
 
@@ -174,33 +262,31 @@
                 }
                 else
                 {
-                    
 
-            <button type="button" class="btn btn-success" onclick="validateCheckout()" id="checkoutSubmitBtn">
-                Checkout <i class="fa fa-shopping-cart"></i>
-            </button>
+                    <button type="button" class="btn btn-success" onclick="validateCheckout()" id="checkoutSubmitBtn">
+                        Checkout <i class="fa fa-shopping-cart"></i>
+                    </button>
 
                 }
 
+            </div>
+
+
+
         </div>
-
-
-
     </div>
-</div>
 </form>
 @*get customer form*@
-<form asp-action="GetCustomerView" 
-asp-area="checkout"
-asp-controller="home"
-id="CustomerDueForm" hidden
+<form asp-action="GetCustomerView"
+      asp-area="checkout"
+      asp-controller="home"
+      id="CustomerDueForm" hidden
       data-ajax=true
       data-ajax-method="get"
       data-ajax-success="loadData()"
       data-ajax-update="#customerDue"
       data-ajax-loading="#overlay">
     <button type="submit" class="btn btn-success" hidden>
-       
     </button>
 </form>
 @*return Order form*@
@@ -214,9 +300,10 @@ id="CustomerDueForm" hidden
         return order <i class="fa fa-book-open"></i>
     </button>
 </form>*@
-                <script>
+<script>
     document.addEventListener("DOMContentLoaded", () => {
         calculateDiscount();
+
         $("#discountType").change(function () {
             calculateDiscount();
 
@@ -227,15 +314,15 @@ id="CustomerDueForm" hidden
 
     });
 
-    function CheckPaymentMode(){
-       var mode=$("#CheckoutMode option:Selected").text();
-       console.log(mode);
-       if(mode=="Credit"){
-        $("#CustomerDueForm").submit();
-       }else{
-           $("#customer_Id").val("");
-           $("#customerDue").empty();
-       }
+    function CheckPaymentMode() {
+        var mode = $("#CheckoutMode option:Selected").text();
+        console.log(mode);
+        if (mode == "Credit") {
+            $("#CustomerDueForm").submit();
+        } else {
+            $("#customer_Id").val("");
+            $("#customerDue").empty();
+        }
     }
     function calculateDiscount() {
         var total = $("#GTotal").val();
@@ -281,22 +368,22 @@ id="CustomerDueForm" hidden
     }
     function checkValid() {
         if (document.getElementsByClassName("unserved").length > 0) {
-             $("#mainBtn").children("button").attr("disabled", "true");
-            } else {
+            $("#mainBtn").children("button").attr("disabled", "true");
+        } else {
             $("#mainBtn").children("button").removeAttr("disabled");
         }
     }
 
-    function selectCustomer(me){
+    function selectCustomer(me) {
 
-        var tr=$(me).closest("tr");
+        var tr = $(me).closest("tr");
         $(".selectCustomerBtn").removeClass("selectedCustomer");
         $(me).addClass("selectedCustomer");
-        var id=$(me).attr("id");
+        var id = $(me).attr("id");
         $("#customer_Id").val(id);
-        var name= tr.children("td").children(".name").text().trim();
+        var name = tr.children("td").children(".name").text().trim();
         $("#customer_Name").val(name);
-        var address=tr.children("td").children(".address").text().trim();
+        var address = tr.children("td").children(".address").text().trim();
         $("#customer_Address").val(address);
         var contact = tr.children("td").children(".contact").text().trim();
         $("#customer_Contact").val(contact);
@@ -305,8 +392,21 @@ id="CustomerDueForm" hidden
 
 
 
+    //for selecting table switch
+   
+  
+    const tableNumbers = document.querySelectorAll(".tableNo");
+    tableNumbers.forEach(tableNumber => {
+        tableNumber.addEventListener("click", function() {
+            let btnClicked = tableNumber.textContent;
+            document.querySelector(".selected-table").textContent = btnClicked;
+
+            let value = tableNumber.getAttribute("tableId");
+            document.querySelector(".selectedInput").value = value;
+            
+        })
+    });
 
 
-
-    
-</script>
+   
+</script>   
