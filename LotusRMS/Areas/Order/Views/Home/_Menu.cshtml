@@ -1,34 +1,34 @@
 ﻿@using LotusRMS.Models.Viewmodels.Order;
-@model IEnumerable<OrderMenu> 
+@model IEnumerable<OrderMenu>
 
- 
-    
-        <div class="card menu-card ">
-            <h5 class="card-title text-center menu">Menu <span class="close-btn"> </span></h5>
-            <div class=" search-bar">
+
+
+<div class="card menu-card ">
+    <h5 class="card-title text-center menu">Menu <span class="close-btn"> </span></h5>
+    <div class=" search-bar">
         <input type="text" name="query" placeholder="Search" title="Enter search keyword" onkeyup="mySearchFunction(this);">
-                  <i class="bi bi-search text-primary"></i>
-      
+        <i class="bi bi-search text-primary"></i>
 
-        </div>
+
+    </div>
     <table class="table table-striped tableSearch">
-              <thead>
-                <tr>
-                  <th scope="col" class="text-start">Item Name</th>
-                  <th scope="col" class="text-start">Price</th>
-                  <th scope="col" class="text-center"></th>
+        <thead>
+            <tr>
+                <th scope="col" class="text-start">Item Name</th>
+                <th scope="col" class="text-start">Price</th>
+                <th scope="col" class="text-center"></th>
 
-                </tr>
-              </thead>
-              <tbody class="menu-tbody">
-                          @foreach (var item in Model)
+            </tr>
+        </thead>
+        <tbody class="menu-tbody">
+            @foreach (var item in Model)
             {
                 <tr>
-                  <td class="text-start">@item.Item_Name</td>
-                  <td class="text-start"> <span>@item.Rate</span>/-</td>
-                    
-                  <td class="text-center">
-                       <form class="menuForm"
+                    <td class="text-start">@item.Item_Name</td>
+                    <td class="text-start"> <span>@item.Rate</span>/-</td>
+
+                    <td class="text-center">
+                        <form class="menuForm"
                           asp-action="Selectmenu"
                           asp-controller="home"
                           asp-area="Order"
@@ -37,47 +37,26 @@
                               data-ajax-update="#AddmenuSection"
                               data-ajax-success="menuSelected()"
                               data-ajax-loading="#overlay">
-                             <button type="submit" data-bs-toggle="modal"
-                          data-bs-target="#addMenuModal"><i class="fa-solid fa-circle-plus text-primary"></i> </button> 
-                  </form></td>
-                  
+                            <button type="submit" data-bs-toggle="modal"
+                                    data-bs-target="#addMenuModal">
+                                <i class="fa-solid fa-circle-plus text-primary"></i>
+                            </button>
+                        </form>
+                    </td>
+
                 </tr>
-                
-                }
-              </tbody>
-            </table>
-            </div>
-            
+
+            }
+        </tbody>
+    </table>
+</div>
+
 
 <script>
-    function menuSelected(){
-   @* $("#addMenuModal").toggle();*@
-    }
-   
-    function mySearchFunction(input) {
-        /*Declare variables*/
-        var input, filter, table, tr, td, i, txtValue;
-        filter = input.value.toUpperCase();
-        table = input.parent().closest(".tableSearch");
-        console.log(table);
-        tr = table.getElementsByTagName("tr");
-
-
-        {/*  // Loop through all table rows, and hide those who don't match the search query*/ }
-        for (i = 1; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[0];
-
-
-            if (td) {
-                txtValue = td.textContent || td.innerText;
-
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = "";
-                } else {
-                    tr[i].style.display = "none";
-                }
-            }
+    function menuSelected() {
+    @* $("#addMenuModal").toggle();*@
         }
-    }
+
+
 </script>
 

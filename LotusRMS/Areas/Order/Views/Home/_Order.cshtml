@@ -5,25 +5,25 @@
 <div class="card mt-0">
     <div class="card-body card-right">
         <div class="heading-section py-3 d-flex justify-content-between align-items-baseline">
-          
-                <div class="refresh-menu">
-                    <i class="fa-sharp fa-solid fa-bars ham-icon" data-bs-toggle="modal"
-                       data-bs-target="#modalDialogScrollable"></i>
-                         <form class="refreshForm"
-                  asp-action="getOrder"
-                  asp-controller="home"
-                  asp-area="order"
-                  asp-route-id="@Model.TableId"
-                  tableId="@Model.TableId"
-                  data-ajax="true"
-                 
-                  data-ajax-update="#orderSection"
-                  data-ajax-loading="#overlay">
+
+            <div class="refresh-menu">
+                <i class="fa-sharp fa-solid fa-bars ham-icon" data-bs-toggle="modal"
+                   data-bs-target="#menuModal"></i>
+
+              @*  <form class="refreshForm"
+                      asp-action="getOrder"
+                      asp-controller="home"
+                      asp-area="order"
+                      asp-route-id="@Model.TableId"
+                      tableId="@Model.TableId"
+                      data-ajax="true"
+                      data-ajax-update="#orderSection"
+                      data-ajax-loading="#overlay">
                     <button type="submit"> <i class="fa-solid fa-arrows-rotate refresh-icon"></i></button>
                     <button type="submit" class="btn btn-primary refresh-btn">Refresh</button>
-                    </form>
-                </div>
-           
+                </form>*@
+            </div>
+
             <div class="table-number text-secondary font-weight-bold h4">
                 Table Name : @Model.Table_Name @*: <span class="table-no">5</span>*@
             </div>
@@ -95,7 +95,7 @@
                             </td>
                         </tr>
                     }
-            }
+                }
             </tbody>
             <tfoot class="font-weight-bold " style="background-color: whitesmoke;">
                 <tr class="odd">

@@ -22,18 +22,31 @@ client.on("OrderComplete", newCall => {
 
 document.addEventListener("DOMContentLoaded", () => {
     client.start();
-    speechSynthesis.getVoices().forEach(function (voice) {
-        console.log(voice.name, voice.default ? voice.default : '');
-    });
-    var msg = new SpeechSynthesisUtterance();
-    var voices = window.speechSynthesis.getVoices();
-    console.log(voices);
-    msg.voice = voices[1];
-    msg.volume = 1; // From 0 to 1
-    msg.rate = 1; // From 0.1 to 10
-    msg.pitch = 2; // From 0 to 2
-    msg.text = "welcome to the RMS  ";
-    msg.lang = 'en';
-    speechSynthesis.speak(msg);
+   
 
 });
+
+function mySearchFunction(input) {
+    /*Declare variables*/
+    var input, filter, table, tr, td, i, txtValue;
+    filter = input.value.toUpperCase();
+    table = input.closest("div").nextElementSibling;
+    tr = table.getElementsByTagName("tr");
+
+
+    {/*  // Loop through all table rows, and hide those who don't match the search query*/ }
+    for (i = 1; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[0];
+
+
+        if (td) {
+            txtValue = td.textContent || td.innerText;
+
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+}
