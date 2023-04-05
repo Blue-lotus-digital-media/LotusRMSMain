@@ -6,11 +6,12 @@
     <div class="card-body card-right">
         <div class="heading-section py-3 d-flex justify-content-between align-items-baseline">
 
-            <div class="refresh-menu">
-                <i class="fa-sharp fa-solid fa-bars ham-icon" data-bs-toggle="modal"
-                   data-bs-target="#menuModal"></i>
-
-              @*  <form class="refreshForm"
+            <div class="refresh-menu d-flex">
+                <div>
+                <i class="fa-sharp fa-solid fa-bars ham-icon" onclick="openMenu();"></i>
+                </div>
+                   <div>
+                <form class="refreshForm"
                       asp-action="getOrder"
                       asp-controller="home"
                       asp-area="order"
@@ -19,13 +20,14 @@
                       data-ajax="true"
                       data-ajax-update="#orderSection"
                       data-ajax-loading="#overlay">
-                    <button type="submit"> <i class="fa-solid fa-arrows-rotate refresh-icon"></i></button>
+                        <i class="fa-solid fa-arrows-rotate refresh-icon" onclick="$('.refreshForm').submit()"></i>
                     <button type="submit" class="btn btn-primary refresh-btn">Refresh</button>
-                </form>*@
+                </form>
+                </div>
             </div>
 
             <div class="table-number text-secondary font-weight-bold h4">
-                Table Name : @Model.Table_Name @*: <span class="table-no">5</span>*@
+                Table : @Model.Table_Name @*: <span class="table-no">5</span>*@
             </div>
             <div class="time text-secondary font-weight-bold font-size h5">
                 <span class="hour">12</span>:<span class="minutes">45</span>:<span class="seconds">08</span><span class="am-pm"> PM</span>

@@ -21,12 +21,12 @@
                       data-ajax-loading="#overlay">
                         @if (item.IsReserved)
                         {
-                            <button class="tab-content-item booked">@item.Table_Name </button>
+                            <button type="submit" class="tab-content-item booked">@item.Table_Name </button>
                             
                         }
                         else
                         {
-                        <button class=" tab-content-item free-table">@item.Table_Name</button> 
+                        <button type="submit" class=" tab-content-item free-table">@item.Table_Name</button> 
                         }
                         
                     </form>

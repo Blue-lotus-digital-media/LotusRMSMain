@@ -1,4 +1,5 @@
-@model IEnumerable<LotusRMS_Table_Type>
+@using LotusRMS.Models.Viewmodels.Order;
+@model IEnumerable<TableTypeBookedVM>
 
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -11,8 +12,12 @@
 
 <div class="row">
     <div class="col-md-5 menu-div" id="menuSection">
+        <div class="card menu-card">
+            <h5 class="card-title text-center menu">Menu <span class="close-btn"> </span></h5>
+            <div id="menuDiv"> 
         <partial name="_menu" model="@ViewBag.Menu" />
-
+            </div>
+        </div>
 
     </div>
     <div class="col-md-7">
@@ -29,12 +34,13 @@
     </div>
 </div>
 <div class="modal fade" id="menuModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title modal-titles h5">Menu</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            <div id="modalMenuDiv"></div>
 
         </div>
     </div>
@@ -46,8 +52,8 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    <script src="~/js/order.js">
+    <script src="~/js/order2.js">
 
     </script>
-
+ 
 }

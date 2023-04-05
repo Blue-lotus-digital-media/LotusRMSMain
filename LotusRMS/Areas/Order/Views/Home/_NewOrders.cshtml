@@ -195,7 +195,7 @@
    function completeNewOrder(tableId){
         $('#NewOrderSection').empty();
         var tableFormBtn = $(".TableForm[tableId='" + tableId + "']").children("button");
-        console.log(tableFormBtn);
+       
         if(!tableFormBtn.hasClass("booked")){
             tableFormBtn.addClass("booked")
         }

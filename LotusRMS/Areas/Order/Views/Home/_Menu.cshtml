@@ -3,8 +3,7 @@
 
 
 
-<div class="card menu-card ">
-    <h5 class="card-title text-center menu">Menu <span class="close-btn"> </span></h5>
+
     <div class=" search-bar">
         <input type="text" name="query" placeholder="Search" title="Enter search keyword" onkeyup="mySearchFunction(this);">
         <i class="bi bi-search text-primary"></i>
@@ -35,7 +34,6 @@
                           asp-route-MenuId="@item.Id"
                               data-ajax=true
                               data-ajax-update="#AddmenuSection"
-                              data-ajax-success="menuSelected()"
                               data-ajax-loading="#overlay">
                             <button type="submit" data-bs-toggle="modal"
                                     data-bs-target="#addMenuModal">
@@ -49,14 +47,6 @@
             }
         </tbody>
     </table>
-</div>
 
 
-<script>
-    function menuSelected() {
-    @* $("#addMenuModal").toggle();*@
-        }
-
-
-</script>
 

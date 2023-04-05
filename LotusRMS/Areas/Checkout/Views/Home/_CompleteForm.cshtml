@@ -162,11 +162,12 @@
             <tr>
                 <td colspan="2" class="align-left">
                     @*<a asp-action="GoToRoom" asp-route-TableId="@Model.Table_No" class="btn btn-info">Go To Room</a>*@
-
+                      @if (Model.Order_Id != Guid.Empty)
+                {
                     <a class="Switch btn btn-success" data-bs-toggle="modal"
-                       data-bs-target="#tableSwitchModal" onclick="$('#TableSwitchForm').submit();">Switch Table</a>
+                       data-bs-target="#tableSwitchModal" onclick="$('#SwitchTableForm').submit();">Switch Table</a>
                     <a class="btn" style="color:white ; background-color:#229966" onclick="$('#ReturnOrderForm').submit();">Return Order</a>
-
+                }
                 </td>
             </tr>
 
@@ -174,80 +175,7 @@
 
 
 
-        @*Table Switch Modal Starts*@
-        <div class="modal fade" id="tableSwitchModal" tabindex="-1">
-            <div class="modal-dialog modal-xl modal-dialog-scrollable">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title text-center fw-bold">Switch Table</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="container">
-                            <div class="row g-3">
-
-
-
-                                <fieldset class="border border-3 p-2 col-auto me-3">
-                                    <legend class="float-none w-auto p-2">Cabin</legend>
-                                    <div class="table-list d-flex gap-3 flex-wrap">
-                                        <button tableId="tableIdText1" type="button" class="btn btn-primary tableNo">C121</button>
-                                        <button tableId="tableIdText2"  type="button" class="btn btn-primary tableNo">C14</button>
-                                        <button tableId="tableIdText3" type="button" class="btn btn-danger tableNo">C15</button>
-                                        <button  type="button" class="btn btn-primary">C16</button>
-                                        <button  type="button" class="btn btn-primary">C14</button>
-                                        <button   type="button" class="btn btn-danger">C15</button>
-                                        <button  type="button" class="btn btn-primary">C16</button>
-                                    </div>
-                                </fieldset>
-
-                                <fieldset class="border border-3 p-2 col-auto me-3">
-                                    <legend class="float-none w-auto p-2">Rooftop</legend>
-                                    <div class="table-list d-flex gap-3 flex-wrap">
-                                        <button id="tableNo" type="button" class="btn btn-primary">R12</button>
-                                        <button id="tableNo" type="button" class="btn btn-primary">R14</button>
-                                        <button id="tableNo" type="button" class="btn btn-danger">R15</button>
-                                        <button id="tableNo" type="button" class="btn btn-primary">R16</button>
-                                        <button id="tableNo" type="button" class="btn btn-primary">R14</button>
-                                        <button id="tableNo" type="button" class="btn btn-danger">R15</button>
-                                 
-                                    </div>
-                                </fieldset>
-
-
-                      
-
-                      
-                         
-
-
-                            </div>
-                        </div>  
-                    </div>
-                    <div class="modal-footer d-flex justify-content-between align-items-end">
-                        <div class="left-section d-inline-flex align-items-baseline ps-5">
-                            <div class="me-3">
-                                <h4 class="current-table fw-bold">C13</h4>
-                                <input readonly hidden />
-                               
-                            </div>
-                            <div class="me-3"><i class="fa-solid fa-arrow-right-long"></i></div>
-                            <div>
-                                <h4 class="selected-table fw-bold">S02</h4>
-                               <input class="form-control selectedInput" readonly />
-                            </div>
-                        </div>
-                        <div class="right-section ps-5">
-                            <button type="button" class="btn btn-danger me-3" data-bs-dismiss="modal">Cancel</button>
-                            <button type="button" class="btn btn-primary">Switch</button>
-                        </div>
-                       
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        @*Table Switch Modal Ends*@
+    
 
 
         <div class="col-6 pr-3 text-right">
@@ -289,6 +217,10 @@
     <button type="submit" class="btn btn-success" hidden>
     </button>
 </form>
+@*switchtable form*@
+
+@*switchtable form*@
+
 @*return Order form*@
 @*<form asp-action="ReturnOrder" id="ReturnOrderForm" hidden
       asp-route-OrderId="@Model.Order_Id"
@@ -314,99 +246,11 @@
 
     });
 
-    function CheckPaymentMode() {
-        var mode = $("#CheckoutMode option:Selected").text();
-        console.log(mode);
-        if (mode == "Credit") {
-            $("#CustomerDueForm").submit();
-        } else {
-            $("#customer_Id").val("");
-            $("#customerDue").empty();
-        }
-    }
-    function calculateDiscount() {
-        var total = $("#GTotal").val();
-        var discount = $("#DiscountAmount").val();
-        var discountType = $("#discountType option:selected").text();
-        console.log(discountType);
-        var gt = 0;
-        if (discountType != "Rs.") {
-
-            gt = total - discount * total / 100;
-        } else {
-            gt = total - discount;
-        }
-
-        $("#GrandAmount").val(gt);
-
-        calculateRefund();
-
-    }
-    function calculateRefund() {
-        var tanderAmount = $("#TenderAmount").val();
-        var gt = $("#GrandAmount").val();
-        var refund = tanderAmount - gt;
-        $("#refundAmount").text(refund);
-        $("#refAmt").val(refund);
-    }
-    function validateCheckout() {
-        console.log($("#CheckoutMode option:selected").text());
-        if ($("#CheckoutMode option:selected").text() == "Cash" && parseInt($("#TenderAmount").val()) < parseInt($("#GrandAmount").val())) {
-            $("#TenderAmount").css("border", "1px solid red");
-            $("#TenderAmount").attr("focused", "true");
-            $(".invalid-tooltip").css("display", "block");
-
-            return false;
-        } else if ($("#CheckoutMode option:selected").text() == "Credit" && $("#customer_Id").val() == 0) {
-            alert("Please select customer before checkout or change payment mode");
-        }
-
-        else {
-            $("#checkoutSubmitBtn").attr("disabled", "true");
-            $("#checkoutForm").submit();
-        }
-    }
-    function checkValid() {
-        if (document.getElementsByClassName("unserved").length > 0) {
-            $("#mainBtn").children("button").attr("disabled", "true");
-        } else {
-            $("#mainBtn").children("button").removeAttr("disabled");
-        }
-    }
-
-    function selectCustomer(me) {
-
-        var tr = $(me).closest("tr");
-        $(".selectCustomerBtn").removeClass("selectedCustomer");
-        $(me).addClass("selectedCustomer");
-        var id = $(me).attr("id");
-        $("#customer_Id").val(id);
-        var name = tr.children("td").children(".name").text().trim();
-        $("#customer_Name").val(name);
-        var address = tr.children("td").children(".address").text().trim();
-        $("#customer_Address").val(address);
-        var contact = tr.children("td").children(".contact").text().trim();
-        $("#customer_Contact").val(contact);
-
-    }
-
-
-
     //for selecting table switch
    
-  
-    const tableNumbers = document.querySelectorAll(".tableNo");
-    tableNumbers.forEach(tableNumber => {
-        tableNumber.addEventListener("click", function() {
-            let btnClicked = tableNumber.textContent;
-            document.querySelector(".selected-table").textContent = btnClicked;
+  @*
+    
 
-            let value = tableNumber.getAttribute("tableId");
-            document.querySelector(".selectedInput").value = value;
-            
-        })
-    });
-
-
+    *@
    
 </script>   
