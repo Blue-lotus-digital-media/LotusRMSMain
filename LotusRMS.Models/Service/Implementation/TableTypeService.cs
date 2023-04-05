@@ -40,6 +40,10 @@ namespace LotusRMS.Models.Service.Implementation
         {
             return _ITableTypeRepository.GetAll();
         }
+        public IEnumerable<LotusRMS_Table_Type> GetAllAvailable()
+        {
+            return _ITableTypeRepository.GetAll(x=>!x.IsDelete&&x.Status);
+        }
 
         public async Task<IEnumerable<LotusRMS_Table_Type>> GetAllAsync()
         {

@@ -1,0 +1,29 @@
+﻿@using LotusRMS.Models.Viewmodels.Table;
+@model IEnumerable<TypeTableVM>
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@foreach(var item in Model){
+    <fieldset class="border border-3 p-2 col-auto me-3">
+        <legend class="float-none w-auto p-2">@item.Type.Type_Name</legend>
+        <div class="table-list d-flex gap-3 flex-wrap">
+            @foreach(var table in item.Table){
+                if(table.Id==item.Selected){
+                    <button tableId="@table.Id" type="button" class="btn btn-primary tableNo" disabled>@table.Table_Name</button>
+                }
+                else if (table.IsReserved)
+                {
+                    <button tableId="@table.Id" type="button" class="btn btn-danger tableNo" disabled>@table.Table_Name</button>
+                }
+                else
+                {
+                    <button tableId="@table.Id" type="button" class="btn btn-info tableNo" onclick="SwitchTable(this);">@table.Table_Name</button>
+                }
+            }
+           
+        </div>
+    </fieldset>
+}

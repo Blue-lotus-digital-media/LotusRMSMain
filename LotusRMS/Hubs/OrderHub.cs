@@ -1,12 +1,17 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using LotusRMS.Models.Viewmodels.signalRVM;
+using Microsoft.AspNetCore.SignalR;
 
 namespace LotusRMSweb.Hubs
 {
     public class OrderHub : Hub<IOrderHub>
     {
-        public async Task OrderReceived(Guid tableId)
+        public async Task OrderReceived(tableReturnVM vm)
         {
-            await Clients.All.OrderReceived(tableId);
+            await Clients.All.OrderReceived(vm);
+        } 
+        public async Task CheckoutComplete(tableReturnVM vm)
+        {
+            await Clients.All.CheckoutComplete(vm);
         }
 
         public async Task OrderComplete(List<string> data)

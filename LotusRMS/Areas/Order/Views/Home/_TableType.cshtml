@@ -1,4 +1,5 @@
-﻿@model IEnumerable<LotusRMS_Table_Type>
+﻿@using LotusRMS.Models.Viewmodels.Order;
+@model IEnumerable<TableTypeBookedVM>
 
           <div class="card mb-3">
                     <div class="card-body card-body-heading pt-0">
@@ -12,11 +13,11 @@
           
                             <li role="presentation">
                                 <form class="TypeForm"
-                                typeId="@item.Id"
+                                typeId="@item.Type_Id"
               asp-action="getTable"
               asp-controller="Home"
               asp-area="order"
-              asp-route-id="@item.Id"
+              asp-route-id="@item.Type_Id"
               data-ajax=true
               data-ajax-success="afterTypeSuccess(this)"
               data-ajax-update="#myTabContent"
@@ -26,8 +27,12 @@
                                     type="submit" role="tab" >
                                             @item.Type_Name
                                         </button>
-                                        <span class="badge bg-danger badge-number notification-item">1</span>
-                                    </div>
+                            @if (item.BookedCount > 0)
+                            {
+                                <span class="badge bg-danger badge-number notification-item ">@item.BookedCount</span>
+                            } else{ <span class="badge bg-danger badge-number notification-item d-none">@item.BookedCount</span>
+                            }
+                        </div>
                                 </form>
                             </li>
                             }

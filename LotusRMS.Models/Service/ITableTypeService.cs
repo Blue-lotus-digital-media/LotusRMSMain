@@ -18,6 +18,7 @@ namespace LotusRMS.Models.Service
         LotusRMS_Table_Type GetFirstOrDefaultById(Guid typeId);
 
         IEnumerable<LotusRMS_Table_Type> GetAll();
+        IEnumerable<LotusRMS_Table_Type> GetAllAvailable();
         Task<IEnumerable<LotusRMS_Table_Type>> GetAllAsync();
         LotusRMS_Table_Type GetByGuid(Guid Id);
         Task<LotusRMS_Table_Type> GetByGuidAsync(Guid Id);

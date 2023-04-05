@@ -11,6 +11,11 @@ using LotusRMS.Models.Dto.CheckoutDTO;
 using LotusRMS.Utility;
 using LotusRMS.Models.Viewmodels.FiscalYear;
 using DocumentFormat.OpenXml.Drawing.Charts;
+using LotusRMS.Models.Viewmodels.signalRVM;
+using LotusRMSweb.Hubs;
+using Microsoft.AspNetCore.SignalR;
+using LotusRMS.Models.Viewmodels.Table;
+using LotusRMS.Models.Viewmodels.Type;
 
 namespace LotusRMSweb.Areas.Checkout.Controllers
 {
@@ -27,7 +32,17 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
         private readonly ICheckoutService _ICheckoutService;
         private readonly IBillSettingService _IBillSettingService;
         private readonly ICustomerService _ICustomerService;
-        public HomeController(IOrderService iOrderService, ITableTypeService TableTypeService, ITableService iTableService, IMenuService iMenuService, ICheckoutService iCheckoutService, UserManager<RMSUser> userManager, IBillSettingService iBillSettingService, ICustomerService iCustomerService)
+
+        private readonly IHubContext<OrderHub, IOrderHub> _orderHub;
+        public HomeController(IOrderService iOrderService, 
+            ITableTypeService TableTypeService,
+            ITableService iTableService,
+            IMenuService iMenuService, 
+            ICheckoutService iCheckoutService, 
+            UserManager<RMSUser> userManager,
+            IBillSettingService iBillSettingService, 
+            ICustomerService iCustomerService, 
+            IHubContext<OrderHub, IOrderHub> orderHub)
         {
             _IOrderService = iOrderService;
             _ITableTypeService = TableTypeService;
@@ -37,6 +52,7 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
             _ICheckoutService = iCheckoutService;
             _IBillSettingService = iBillSettingService;
             _ICustomerService = iCustomerService;
+            _orderHub = orderHub;
         }
         public IActionResult Index()
         {
@@ -44,8 +60,27 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
                 
             }
 
-            var type = _ITableTypeService.GetAll().Where(x => !x.IsDelete && x.Status);
-            return View(type);
+            var type = _ITableTypeService.GetAll().Where(x => !x.IsDelete && x.Status).ToList();
+            var tableType = new List<TableTypeBookedVM>();
+            if (type != null)
+            {
+                foreach (var item in type)
+                {
+                    var tablesCount = _ITableService.GetAllByTypeId(item.Id).Where(x => x.IsReserved).Count();
+                    var tvm = new TableTypeBookedVM()
+                    {
+                        Type_Id = item.Id,
+                        Type_Name = item.Type_Name,
+                        BookedCount = tablesCount
+
+                    };
+
+                    tableType.Add(tvm);
+
+                }
+
+            }
+            return View(tableType);
         }
         public IActionResult GetTable(Guid Id)
         {
@@ -60,7 +95,7 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
         }
 
 
-        public IActionResult CompleteCheckout(CreateCheckoutVM vm)
+        public async Task<IActionResult> CompleteCheckout(CreateCheckoutVM vm)
         {
             var dto = new CreateCheckoutDTO()
             {
@@ -80,6 +115,8 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
             var order = _IOrderService.GetByGuid(vm.Order_Id);
             _ITableService.UpdateReserved(order.Table_Id);
 
+
+            await SetCheckoutNotification(order.Table_Id);
             return RedirectToAction("InvoicePrint", "Invoice", new {area="",Id = id.Result,returnUrl="/checkout" });
 
         }
@@ -290,20 +327,98 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
             return Ok();
         }
         [HttpPost]
-        public IActionResult CompleteOrderDetail(string orderNo, Guid OrderDetailId)
+        public async Task<IActionResult> CompleteOrderDetail(string orderNo, Guid OrderDetailId)
         {
             var id = _IOrderService.CompleteOrderDetail(orderNo, OrderDetailId);
             var order = GetOrderVM(new Guid(), orderNo);
+           await SetOrderNotification(order.TableId);
+
+            ViewBag.Checkout = CreateCheckOut(order.Id, order.Order_Details.Sum(x => x.Total));
             return PartialView("_Order", model: order);
         }
         [HttpPost]
-        public IActionResult CancelOrder(string orderNo, Guid OrderDetailId)
+        public async Task<IActionResult> CancelOrder(string orderNo, Guid OrderDetailId)
         {
 
             var id = _IOrderService.CancelOrder(orderNo, OrderDetailId);
             var order = GetOrderVM(new Guid(), orderNo);
+
+            await SetOrderNotification(order.TableId);
+
+            ViewBag.Checkout = CreateCheckOut(order.Id, order.Order_Details.Sum(x => x.Total));
             return PartialView("_Order", model: order);
         }
+
+        public IActionResult GetSwitchTableView(Guid TableId)
+        {
+            var typeTable = new List<TypeTableVM>();
+            var type = _ITableTypeService.GetAllAvailable().Select(t=>new TypeVM()
+            {
+                Id=t.Id,
+                Type_Name=t.Type_Name
+            });
+            foreach(var item in type)
+            {
+                var tables = _ITableService.GetAllByTypeId(item.Id).Select(tab => new TableVM() {
+                    Id = tab.Id,
+                    Table_Name=tab.Table_Name,
+                    IsReserved=tab.IsReserved
+                }).ToList();
+
+                typeTable.Add(new TypeTableVM()
+                {
+                    Selected=TableId,
+                    Type = item,
+                    Table = tables
+                });
+
+            }
+            return PartialView("_SwitchTableView", model: typeTable);
+
+        }
+
+        public IActionResult SwitchTable(Guid OldTable,Guid NewTable)
+        {
+            var order = _IOrderService.GetFirstOrDefaultByTableId(OldTable);
+            order.Table_Id = NewTable;
+
+            var status = _ITableService.UpdateReserved(OldTable);
+            var newStatus = _ITableService.UpdateReserved(NewTable);
+
+            return RedirectToAction(nameof(Index));
+        }
         #endregion
+
+
+
+        public async Task SetCheckoutNotification(Guid Table_Id)
+        {
+            var typeId = _ITableService.GetFirstOrDefaultById(Table_Id).Table_Type_Id;
+            var tableBooked = _ITableService.GetAllByTypeId(typeId).Count(x => x.IsReserved);
+            var tvm = new tableReturnVM()
+            {
+                Type_Id = typeId,
+                Table_Id = Table_Id,
+                BookCount = tableBooked
+
+
+            };
+            await _orderHub.Clients.All.CheckoutComplete(tvm);
+        }
+        public async Task SetOrderNotification(Guid Table_Id)
+        {
+            var typeId = _ITableService.GetFirstOrDefaultById(Table_Id).Table_Type_Id;
+            var tableBooked = _ITableService.GetAllByTypeId(typeId).Count(x => x.IsReserved);
+            var tvm = new tableReturnVM()
+            {
+                Type_Id = typeId,
+                Table_Id = Table_Id,
+                BookCount = tableBooked
+
+
+            };
+            await _orderHub.Clients.All.OrderReceived(tvm);
+        }
+
     }
 }

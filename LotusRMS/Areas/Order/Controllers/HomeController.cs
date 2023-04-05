@@ -4,6 +4,7 @@ using LotusRMS.Models;
 using LotusRMS.Models.Dto.OrderDTO;
 using LotusRMS.Models.Service;
 using LotusRMS.Models.Viewmodels.Order;
+using LotusRMS.Models.Viewmodels.signalRVM;
 using LotusRMSweb.Hubs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -43,7 +44,27 @@ namespace LotusRMSweb.Areas.Order.Controllers
 
         public IActionResult Index()
         {
-            var type = _ITableTypeService.GetAll().Where(x => !x.IsDelete && x.Status);
+            var type = _ITableTypeService.GetAll().Where(x => !x.IsDelete && x.Status).ToList();
+            var tableType = new List<TableTypeBookedVM>();
+            if (type != null)
+            {
+                foreach (var item in type)
+                {
+                    var tablesCount = _ITableService.GetAllByTypeId(item.Id).Where(x => x.IsReserved).Count();
+                    var tvm = new TableTypeBookedVM()
+                    {
+                        Type_Id = item.Id,
+                        Type_Name = item.Type_Name,
+                        BookedCount = tablesCount
+
+                    };
+
+                    tableType.Add(tvm);
+
+                }
+
+            }
+
             var menu = _IMenuService.GetAll().Where(x => !x.IsDelete && x.Status).Select(menu => new OrderMenu()
             {
                 Item_Name = menu.Item_Name,
@@ -53,7 +74,7 @@ namespace LotusRMSweb.Areas.Order.Controllers
             }).ToList();
             ViewBag.Menu = menu;
 
-            return View(type);
+            return View(tableType);
         }
         public IActionResult GetTable(Guid Id)
         {
@@ -238,9 +259,11 @@ namespace LotusRMSweb.Areas.Order.Controllers
 
 
             HttpContext.Session.Remove(tableId.ToString());
-            await _orderHub.Clients.All.OrderReceived(tableId);
+           
             var orders = GetOrderVM(tableId, "");
-            
+            await SetNotification(tableId);
+
+
             ViewBag.NewOrder = GetNewOrder(tableId);
             return PartialView("_Order",model:orders);
         }
@@ -303,21 +326,24 @@ namespace LotusRMSweb.Areas.Order.Controllers
 
         //new order region
         [HttpPost]
-        public IActionResult CancelOrder(string orderNo, Guid OrderDetailId)
+        public async Task<IActionResult> CancelOrder(string orderNo, Guid OrderDetailId)
         {
 
             var id = _IOrderService.CancelOrder(orderNo, OrderDetailId);
             var order = GetOrderVM(new Guid(), orderNo);
             ViewBag.NewOrder = GetNewOrder(order.TableId);
+            await SetNotification(order.TableId);
             return PartialView("_Order", model: order);
         }
 
         [HttpPost]
-        public IActionResult CompleteOrderDetail(string orderNo,Guid OrderDetailId)
+        public async Task<IActionResult> CompleteOrderDetail(string orderNo,Guid OrderDetailId)
         {
 
             var id = _IOrderService.CompleteOrderDetail(orderNo, OrderDetailId);
             var order = GetOrderVM(new Guid(), orderNo);
+
+            await SetNotification(order.TableId);
             ViewBag.NewOrder = GetNewOrder(order.TableId);
             return PartialView("_Order", model: order);
         }
@@ -327,6 +353,21 @@ namespace LotusRMSweb.Areas.Order.Controllers
             var table = _ITableService.GetFirstOrDefaultById(Id);
             var bookedCount = _ITableService.GetAllByTypeId(table.Table_Type_Id).Where(x => x.IsReserved).Count();
             return Json(new { typeId = table.Table_Type_Id, count = bookedCount });
+        }
+
+        public async Task SetNotification(Guid Table_Id) 
+        {
+            var typeId = _ITableService.GetFirstOrDefaultById(Table_Id).Table_Type_Id;
+            var tableBooked = _ITableService.GetAllByTypeId(typeId).Count(x => x.IsReserved);
+            var tvm = new tableReturnVM()
+            {
+                Type_Id = typeId,
+                Table_Id = Table_Id,
+                BookCount = tableBooked
+
+
+            };
+            await _orderHub.Clients.All.OrderReceived(tvm);
         }
 
     }
