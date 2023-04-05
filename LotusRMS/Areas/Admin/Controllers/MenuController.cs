@@ -1,6 +1,7 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using LotusRMS.Models.Dto.MenuDTO;
 using LotusRMS.Models.Service;
+using LotusRMS.Models.Service.Implementation;
 using LotusRMS.Models.Viewmodels.Menu;
 using LotusRMS.Utility;
 using Microsoft.AspNetCore.Authorization;
@@ -17,21 +18,26 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         private readonly IMenuCategoryService _IMenuCategoryService;
         private readonly IMenuUnitService _IMenuUnitService;
         private readonly INotyfService _notyf;
+        private readonly IUnitService _IUnitService;
 
 
         public MenuController(IMenuService iMenuService, IMenuTypeService iMenuTypeService,
-            IMenuCategoryService iMenuCategoryService, IMenuUnitService iMenuUnitService, INotyfService notyf)
+            IMenuCategoryService iMenuCategoryService, IMenuUnitService iMenuUnitService, INotyfService notyf,
+            IUnitService IUnitService)
         {
             _IMenuService = iMenuService;
             _IMenuTypeService = iMenuTypeService;
             _IMenuCategoryService = iMenuCategoryService;
             _IMenuUnitService = iMenuUnitService;
             _notyf = notyf;
+            _IUnitService = IUnitService;
         }
 
 
         public IActionResult Index()
         {
+
+
             return View();
         }
 
@@ -46,11 +52,16 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 }).ToList(),
                 Menu_Unit_List = _IMenuUnitService.GetAll().Where(x => x.Status).Select(type => new SelectListItem()
                 {
-                    Text = type.Unit_Name,
+                    Text = type.Unit_Symbol,
                     Value = type.Id.ToString()
                 }).ToList()
             };
 
+            ViewBag.UnitList = _IUnitService.GetAll().Select(i => new SelectListItem()
+            {
+                Text = i.Unit_Symbol,
+                Value = i.Id.ToString()
+            }).ToList();
             return View(createMenuVM);
         }
 
@@ -124,7 +135,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                     }).ToList(),
                 Menu_Unit_List = _IMenuUnitService.GetAll().Where(x => x.Status).Select(type => new SelectListItem()
                 {
-                    Text = type.Unit_Name,
+                    Text = type.Unit_Symbol,
                     Value = type.Id.ToString()
                 }).ToList()
             };
@@ -149,7 +160,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                     }).ToList();
                 vm.Menu_Unit_List = _IMenuUnitService.GetAll().Where(x => x.Status).Select(type => new SelectListItem()
                 {
-                    Text = type.Unit_Name,
+                    Text = type.Unit_Symbol,
                     Value = type.Id.ToString()
                 }).ToList();
                 return View(vm);
@@ -192,7 +203,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 OrderTo = menu.OrderTo,
 
                 Unit_Quantity = menu.Unit_Quantity,
-                Menu_Unit_Name = menu.Menu_Unit.Unit_Name,
+                Menu_Unit_Name = menu.Menu_Unit.Unit_Symbol,
                 Menu_Category_Name = menu.Menu_Category.Category_Name,
                 Menu_Type_Name = menu.Menu_Type.Type_Name,
                 Menu_Image = ImageUpload.GetStrigFromByteArray(menu.Image),
@@ -214,15 +225,15 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 var id = _IMenuService.UpdateStatus(Id);
                 if (unit.Status == true)
                 {
-                    _notyf.Success("Status Activated successfully..", 2);  
+                    _notyf.Success("Status Activated successfully..", 2);
                 }
                 else
                 {
-                    _notyf.Warning("Status Deactivated...",2);
+                    _notyf.Warning("Status Deactivated...", 2);
                 }
                 return Ok(unit.Status);
-                
-                
+
+
             }
         }
 
