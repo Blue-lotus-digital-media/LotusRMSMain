@@ -1,5 +1,7 @@
 ﻿
+using LotusRMS.DataAccess.Constants;
 using LotusRMS.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,7 +33,40 @@ namespace LotusRMS.DataAccess
         public DbSet<LotusRMS_Supplier> LotusRMS_Suppliers { get; set; }
         public DbSet<LotusRMS_Purchase> LotusRMS_Purchases { get; set; }
 
+        // Specify DbSet properties etc
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
 
-       
+            // add your own configuration here
+            modelBuilder.Entity<RMSUser>(entity => entity.Property(m => m.NormalizedEmail).HasMaxLength(100));
+            modelBuilder.Entity<RMSUser>(entity => entity.Property(m => m.Id).HasMaxLength(100));
+            modelBuilder.Entity<RMSUser>(entity => entity.Property(m => m.NormalizedUserName).HasMaxLength(100));
+
+
+            modelBuilder.Entity<IdentityRole>(entity => entity.Property(m => m.NormalizedName).HasMaxLength(100));
+            modelBuilder.Entity<IdentityRole>(entity => entity.Property(m => m.Id).HasMaxLength(100));
+
+            //modelBuilder.Entity<AspNetUserLogins>(entity => entity.Property(m => m.Id).HasMaxLength(200));
+
+
+
+            modelBuilder.Entity<IdentityUserLogin<string>>(entity => entity.Property(m => m.UserId).HasMaxLength(100));
+            modelBuilder.Entity<IdentityUserLogin<string>>(entity => entity.Property(m => m.LoginProvider).HasMaxLength(100));
+            modelBuilder.Entity<IdentityUserLogin<string>>(entity => entity.Property(m => m.ProviderKey).HasMaxLength(100));
+            
+
+            modelBuilder.Entity<IdentityUserRole<string>>(entity => entity.Property(m => m.UserId).HasMaxLength(100));
+            modelBuilder.Entity<IdentityUserRole<string>>(entity => entity.Property(m => m.RoleId).HasMaxLength(100));
+
+
+            modelBuilder.Entity<IdentityUserToken<string>>(entity => entity.Property(m => m.UserId).HasMaxLength(80));
+            modelBuilder.Entity<IdentityUserToken<string>>(entity => entity.Property(m => m.LoginProvider).HasMaxLength(80));
+            modelBuilder.Entity<IdentityUserToken<string>>(entity => entity.Property(m => m.Name).HasMaxLength(80));
+
+            modelBuilder.Entity<IdentityUserClaim<string>>(entity => entity.Property(m => m.UserId).HasMaxLength(100));
+            modelBuilder.Entity<IdentityRoleClaim<string>>(entity => entity.Property(m => m.RoleId).HasMaxLength(100));
+        }
+
     }   
 }

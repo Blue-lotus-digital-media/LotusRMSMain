@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace LotusRMS.Migrations
+namespace LotusRMS.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -16,7 +16,7 @@ namespace LotusRMS.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.3")
+                .HasAnnotation("ProductVersion", "7.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("LotusRMS.Models.ContactPerson", b =>
@@ -44,7 +44,7 @@ namespace LotusRMS.Migrations
 
                     b.HasIndex("LotusRMS_CompanyId");
 
-                    b.ToTable("ContactPerson", (string)null);
+                    b.ToTable("ContactPerson");
                 });
 
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_BillSetting", b =>
@@ -89,7 +89,7 @@ namespace LotusRMS.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("LotusRMS_BillSettings", (string)null);
+                    b.ToTable("LotusRMS_BillSettings");
                 });
 
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_Checkout", b =>
@@ -141,7 +141,7 @@ namespace LotusRMS.Migrations
 
                     b.HasIndex("Order_Id");
 
-                    b.ToTable("LotusRMS_Checkout", (string)null);
+                    b.ToTable("LotusRMS_Checkout");
                 });
 
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_Company", b =>
@@ -208,7 +208,7 @@ namespace LotusRMS.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Company", (string)null);
+                    b.ToTable("Company");
                 });
 
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_Customer", b =>
@@ -240,7 +240,7 @@ namespace LotusRMS.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("LotusRMS_Customers", (string)null);
+                    b.ToTable("LotusRMS_Customers");
                 });
 
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_DueBook", b =>
@@ -277,7 +277,7 @@ namespace LotusRMS.Migrations
 
                     b.HasIndex("LotusRMS_CustomerId");
 
-                    b.ToTable("LotusRMS_DueBooks", (string)null);
+                    b.ToTable("LotusRMS_DueBooks");
                 });
 
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_FiscalYear", b =>
@@ -317,7 +317,7 @@ namespace LotusRMS.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("LotusRMS_FiscalYears", (string)null);
+                    b.ToTable("LotusRMS_FiscalYears");
                 });
 
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_Invoice", b =>
@@ -353,7 +353,7 @@ namespace LotusRMS.Migrations
 
                     b.HasIndex("FiscalYear_Id");
 
-                    b.ToTable("LotusRMS_Invoices", (string)null);
+                    b.ToTable("LotusRMS_Invoices");
                 });
 
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_Menu", b =>
@@ -402,7 +402,7 @@ namespace LotusRMS.Migrations
 
                     b.HasIndex("Unit_Id");
 
-                    b.ToTable("LotusRMS_Menus", (string)null);
+                    b.ToTable("LotusRMS_Menus");
                 });
 
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_Menu_Category", b =>
@@ -432,7 +432,7 @@ namespace LotusRMS.Migrations
 
                     b.HasIndex("Type_Id");
 
-                    b.ToTable("LotusRMS_Menu_Categories", (string)null);
+                    b.ToTable("LotusRMS_Menu_Categories");
                 });
 
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_Menu_Type", b =>
@@ -456,7 +456,7 @@ namespace LotusRMS.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("LotusRMS_Menu_Types", (string)null);
+                    b.ToTable("LotusRMS_Menu_Types");
                 });
 
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_Menu_Unit", b =>
@@ -485,7 +485,7 @@ namespace LotusRMS.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("LotusRMS_Menu_Units", (string)null);
+                    b.ToTable("LotusRMS_Menu_Units");
                 });
 
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_Order", b =>
@@ -506,7 +506,7 @@ namespace LotusRMS.Migrations
 
                     b.Property<string>("OrderBy")
                         .IsRequired()
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Order_No")
                         .IsRequired()
@@ -527,7 +527,7 @@ namespace LotusRMS.Migrations
 
                     b.HasIndex("Table_Id");
 
-                    b.ToTable("LotusRMS_Orders", (string)null);
+                    b.ToTable("LotusRMS_Orders");
                 });
 
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_Order_Details", b =>
@@ -575,7 +575,7 @@ namespace LotusRMS.Migrations
 
                     b.HasIndex("MenuId");
 
-                    b.ToTable("LotusRMS_Order_Details", (string)null);
+                    b.ToTable("LotusRMS_Order_Details");
                 });
 
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_Product", b =>
@@ -618,7 +618,7 @@ namespace LotusRMS.Migrations
 
                     b.HasIndex("Product_Unit_Id");
 
-                    b.ToTable("LotusRMS_Products", (string)null);
+                    b.ToTable("LotusRMS_Products");
                 });
 
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_Product_Category", b =>
@@ -648,7 +648,7 @@ namespace LotusRMS.Migrations
 
                     b.HasIndex("Type_Id");
 
-                    b.ToTable("LotusRMS_Product_Categories", (string)null);
+                    b.ToTable("LotusRMS_Product_Categories");
                 });
 
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_Product_Type", b =>
@@ -672,7 +672,7 @@ namespace LotusRMS.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("LotusRMS_Product_Types", (string)null);
+                    b.ToTable("LotusRMS_Product_Types");
                 });
 
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_Purchase", b =>
@@ -715,7 +715,7 @@ namespace LotusRMS.Migrations
 
                     b.HasIndex("Supplier_Id");
 
-                    b.ToTable("LotusRMS_Purchases", (string)null);
+                    b.ToTable("LotusRMS_Purchases");
                 });
 
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_PurchaseDetail", b =>
@@ -742,7 +742,7 @@ namespace LotusRMS.Migrations
 
                     b.HasIndex("Product_Id");
 
-                    b.ToTable("LotusRMS_PurchaseDetail", (string)null);
+                    b.ToTable("LotusRMS_PurchaseDetail");
                 });
 
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_Supplier", b =>
@@ -777,7 +777,7 @@ namespace LotusRMS.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("LotusRMS_Suppliers", (string)null);
+                    b.ToTable("LotusRMS_Suppliers");
                 });
 
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_Table", b =>
@@ -812,7 +812,7 @@ namespace LotusRMS.Migrations
 
                     b.HasIndex("Table_Type_Id");
 
-                    b.ToTable("LotusRMS_Tables", (string)null);
+                    b.ToTable("LotusRMS_Tables");
                 });
 
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_Table_Type", b =>
@@ -836,7 +836,7 @@ namespace LotusRMS.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("LotusRMS_Table_Types", (string)null);
+                    b.ToTable("LotusRMS_Table_Types");
                 });
 
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_Unit", b =>
@@ -865,13 +865,14 @@ namespace LotusRMS.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("LotusRMS_Units", (string)null);
+                    b.ToTable("LotusRMS_Units");
                 });
 
             modelBuilder.Entity("LotusRMS.Models.RMSUser", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("varchar(255)");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
@@ -909,12 +910,12 @@ namespace LotusRMS.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256)
-                        .HasColumnType("varchar(256)");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("varchar(256)");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("longtext");
@@ -950,7 +951,8 @@ namespace LotusRMS.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("varchar(255)");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -961,8 +963,8 @@ namespace LotusRMS.Migrations
                         .HasColumnType("varchar(256)");
 
                     b.Property<string>("NormalizedName")
-                        .HasMaxLength(256)
-                        .HasColumnType("varchar(256)");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.HasKey("Id");
 
@@ -987,7 +989,8 @@ namespace LotusRMS.Migrations
 
                     b.Property<string>("RoleId")
                         .IsRequired()
-                        .HasColumnType("varchar(255)");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.HasKey("Id");
 
@@ -1010,7 +1013,8 @@ namespace LotusRMS.Migrations
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("varchar(255)");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.HasKey("Id");
 
@@ -1022,17 +1026,20 @@ namespace LotusRMS.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("varchar(255)");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("varchar(255)");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("longtext");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("varchar(255)");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -1044,10 +1051,12 @@ namespace LotusRMS.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("varchar(255)");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("RoleId")
-                        .HasColumnType("varchar(255)");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -1059,13 +1068,16 @@ namespace LotusRMS.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("varchar(255)");
+                        .HasMaxLength(80)
+                        .HasColumnType("varchar(80)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("varchar(255)");
+                        .HasMaxLength(80)
+                        .HasColumnType("varchar(80)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("varchar(255)");
+                        .HasMaxLength(80)
+                        .HasColumnType("varchar(80)");
 
                     b.Property<string>("Value")
                         .HasColumnType("longtext");
