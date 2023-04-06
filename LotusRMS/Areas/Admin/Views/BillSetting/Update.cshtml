@@ -1,6 +1,6 @@
 ﻿@using LotusRMS.Models.Viewmodels.BillSetting;
 @using LotusRMS.Utility;
-@model CreateBillSettingVM
+@model UpdateBillSettingVM
 
 <link href="~/css/BillSetting.css" rel="stylesheet" />
 <div class="row">
@@ -115,11 +115,11 @@
                         <p>Thank You</p>
                     </div>
                     <div class="note">
-                        <p>Note: <span id="notes">...</span></p>
+                        <p>Note: <span id="notes">@Model.BillNote</span></p>
                     </div>
                     <div class="serve-printby">
-                        <p>Serve by: <span>Raju Mishra</span> </p>
-                        <p>Printed by: <span>Bhuwan</span> </p>
+                        <p>Serve by: <span>Waiter Name</span> </p>
+                        <p>Printed by: <span>Cashier Name</span> </p>
                     </div>
                 </div>
             </div>
@@ -128,7 +128,7 @@
     </div>
 
     <div class="col-lg-6">
-        <form asp-action="create"
+        <form asp-action="update"
               asp-area="admin"
               asp-controller="billsetting">
             <div class="card">
@@ -139,6 +139,7 @@
                                 <div class="cName bottomflex-cName">
                                     <input type="text" class="form-control" id="companyNameInput" placeholder="Company Name"
                                            onkeyup="changeName(this)" asp-for="BillTitle">
+                                           <input asp-for="Id" hidden/>
                                     <!-- <h2 class="cHead">Company Name</h2> -->
                                 </div>
                                 <div class="address bottomflex-address">

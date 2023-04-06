@@ -45,8 +45,11 @@ namespace LotusRMS.Models.Service.Implementation
 
             if (dto.IsActive)
             {
-                var years = _fiscalYearRepository.GetFirstOrDefault(x => x.IsActive);
-                years.IsActive = false;
+                var years = _fiscalYearRepository.GetFirstOrDefault(x => x.IsActive && x.Id!=FY.Id);
+                if (years != null)
+                {
+                    years.IsActive = false;
+                }
 
             }
             _fiscalYearRepository.Save();
