@@ -1,7 +1,16 @@
 ﻿
 
+function setDate(startDate, endDate) {
+    
+    
+}
+
+
 window.onload = function () {
+
+  
     var startDate = document.getElementById("startDate");
+  
     startDate.nepaliDatePicker({
         ndpYear: true,
         ndpMonth: true,
@@ -11,6 +20,8 @@ window.onload = function () {
         disableDaysAfter: 0,
     
     });
+    
+
     var endDate = document.getElementById("endDate");
         endDate.nepaliDatePicker({
         ndpYear: true,
@@ -20,7 +31,18 @@ window.onload = function () {
         language: "english",
         disableDaysAfter: 0,
     
-    });
+        });
+
+    var date = NepaliFunctions.GetCurrentBsDate();
+    var previousMonth = date.month - 1;
+    var dateFrom = date.year + "-" + previousMonth + "-" + date.day;
+    var dateTo = date.year + "-" + date.month + "-" + date.day;
+
+    startDate.value = dateFrom;
+    endDate.value = dateTo;
+
+    GetPurchase();
+
 }
 
 
@@ -35,6 +57,9 @@ function GetPurchase() {
         alert("Please Select startdate and end date first");
         return false;
     }
+    console.log(startDateAD);
+    console.log(endDateAD);
+
 
 
     dataTable = $("#tblData").DataTable({
@@ -47,37 +72,15 @@ function GetPurchase() {
         },
         
         "columns": [
-
-            {
-                data: "date",
-              
-            },
-            {
-                data: "purchase_Date"
-               
-               
-            },
-            {
-                data: "supplier_Name"
-
-            },
-            {
-                data: "bill_No"
-
-            },
-            {
-                data: "bill_Amount"
-
-            },
-            { data: "discount" },
+            {data: "date",},
+            {data: "purchase_Date"},
+            {data: "supplier_Name"},
+            {data: "bill_No"},
+            {data: "bill_Amount"},
+            {data: "discount" },
             {data:"paid_Amount"},
-            {
-                data: "detailCount"
-
-            },
-            {
-                data: "id",
-
+            {data: "detailCount"},
+            {data: "id",
                 render: function (data) {
                     return `<div class="text-center">
                               <a href="/Admin/purchaseReport/Viewdetail/${data}" class="btn btn-success text-white" style="cursor:pointer">

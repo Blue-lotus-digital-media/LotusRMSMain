@@ -3,7 +3,7 @@
 $(document).ready(function () {
     loadData();
 
-   
+
 
 });
 function toggleMe(me) {
@@ -11,7 +11,7 @@ function toggleMe(me) {
     console.log(id);
     $.ajax({
         type: 'GET',
-        url: "/admin/unit/statuschange",
+        url: "/admin/productType/statuschange",
         data: "id=" + id,
         success: function (data) {
 
@@ -23,76 +23,73 @@ function toggleMe(me) {
 
                 $(me).removeClass("bi-toggle-on").addClass('bi-toggle-off');
             }
-            
+
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
             alert(errorThrown);
         }
-    });  
+    });
 
-   /* if ($(me).hasClass("bi-toggle-on")) {
-
-
-        $(me).removeClass("bi-toggle-on").addClass('bi-toggle-off');
-    } else {
-        $(me).removeClass("bi-toggle-off").addClass('bi-toggle-on');
-    }*/
+    /* if ($(me).hasClass("bi-toggle-on")) {
+ 
+ 
+         $(me).removeClass("bi-toggle-on").addClass('bi-toggle-off');
+     } else {
+         $(me).removeClass("bi-toggle-off").addClass('bi-toggle-on');
+     }*/
 }
 function loadData() {
     dataTable = $("#tblData").DataTable({
         "ajax": {
-            "url": "/Admin/Unit/GetAll",
-           /* "success": function (data) {
-                console.log(data);
-            }*/
+            "url": "/Admin/productType/GetAll",
+            /* "success": function (data) {
+                 console.log(data);
+             }*/
         },
-       /* columnDefs: [{
-            "defaultContent": "-",
-            "targets": "_all"
-        }],*/
+        /* columnDefs: [{
+             "defaultContent": "-",
+             "targets": "_all"
+         }],*/
         "columns": [
-            
+
             {
-                data: "name"
-               
+                data: "type_Name"
+
             },
             {
-                data: "unit_Symbol"
-            },
-            {
-                data: "unit_Description"
+                data: "type_Description"
             },
             {
                 data: "status"
-               
+
             },
             {
                 data: "id",
 
                 render: function (data) {
                     return `<div class="text-center">
-                              <a href="/Admin/Unit/UpCreate/${data}" class="btn btn-success text-white" style="cursor:pointer">
+                              <a href="/Admin/productType/Update/${data}" class="btn btn-success text-white" style="cursor:pointer">
                                 <i class="bi bi-pencil-square"></i>    
                               </a>
-                              <a href="/Admin/Unit/Delete/${data}" class="btn btn-danger text-white" style="cursor:pointer">
+                              <a href="/Admin/productType/Delete/${data}" class="btn btn-danger text-white" style="cursor:pointer">
                                 <i class="bi bi-trash"></i>    
                               </a>
                             </div>`;
                 }
             }
-           
+
         ],
         searching: false,
         rowCallback: function (row, data) {
             if (data["status"] == false) {
-                $('td:eq(3)', row).html(`
+                $('td:eq(2)', row).html(`
 <div class="text-center">
 <i class= "bi bi-toggle-off statusToggle" onclick = "toggleMe($(this));" data-id="${data['id']}"></i>
 </div > `);
 
             }
             else {
-                $('td:eq(3)', row).html(`<div class="text-center">
+                $('td:eq(2)', row).html(`<div class="text-center">
 <i class= "bi bi-toggle-on statusToggle" onclick = "toggleMe($(this));" data-id="${data['id']}" >
 </i></div > `);
 

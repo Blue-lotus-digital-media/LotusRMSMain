@@ -1,68 +1,78 @@
-﻿@*
+﻿@using LotusRMS.Utility;
+@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
 }
-<div class="header d-flex justify-content-center" >
+<div class="header d-flex justify-content-center">
     <h2>Purchase Report</h2>
-</div>
 <div class="searchDiv row p-2">
     <div class="col-md-4">
         <div class="input-group">
             <span class="input-group-text">From </span>
-</div>
-        <input type="text" id="startDate" class="form-control"/> 
+        </div>
+        <input type="text" id="startDate" class="form-control" />
     </div>
     <div class="col-md-4">
         <div class="input-group">
             <span class="input-group-text">To </span>
-</div>
-        <input type="text" id="endDate" class="form-control"/> 
+        </div>
+        <input type="text" id="endDate" class="form-control" />
     </div>
     <div class="col-md-4">
         <div class="input-group">
-           <button type="button" class="btn btn-info" onclick="GetPurchase()">Search</button>
+            <button type="button" class="btn btn-info" onclick="GetPurchase()">Search</button>
+        </div>
+
     </div>
-  
+
+    </div>
+    <div class="p-4 border rounded">
+        <table id="tblData" class="table table-striped table-bordered" style="width:100%">
+            <thead class="thead-dark">
+                <tr class="table-info">
+                    <th>
+                        Date
+                    </th>
+                    <th>
+                        Purchase Date
+                    </th>
+                    <th>
+                        Supplier
+                    </th>
+                    <th>
+                        Bill No.
+                    </th>
+                    <th>
+                        Bill Total
+                    </th>
+                    <th>
+                        Discount
+                    </th>
+                    <th>
+                        Paid Amount
+                    </th>
+                    <th>
+                        Total Item
+                    </th>
+                    <th>
+                        Action
+                    </th>
+
+                </tr>
+
+            </thead>
+        </table>
+    </div>
+
 </div>
-
-
-<div class="p-4 border rounded">
-    <table id="tblData" class="table table-striped table-bordered" style="width:100%">
-        <thead class="thead-dark">
-            <tr class="table-info">
-                <th>
-                    Date
-                </th>
-                <th>
-                    Purchase Date
-                </th>
-                <th>
-                    Supplier
-                </th>
-                <th>
-                    Bill No.
-                </th> <th>
-                    Bill Total
-                </th>
-                <th>Discount
-                </th>
-                <th>
-                    Paid Amount
-                </th>
-                <th>
-                    Total Item
-                </th>
-                <th>
-                    Action
-                </th>
-
-            </tr>
-
-        </thead>
-    </table>
-</div>
-
-@section Scripts{
-    <script src="~/js/PurchaseReport1.js"></script>
-}
+    @section Scripts{
+        <script src="~/js/PurchaseReport2.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                var startDate = '@CurrentTime.DateTimeNow().AddMonths(-1).ToShortDateString()';
+                var endDate = '@CurrentTime.DateTimeNow().ToShortDateString()';
+                setDate(startDate, endDate);
+            });
+        </script>
+    }

@@ -1,5 +1,4 @@
-﻿@using LotusRMS.Models.Viewmodels.Type
-@model IEnumerable<TypeVM>
+﻿@model IEnumerable<LotusRMS_Unit>
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
@@ -10,16 +9,13 @@
     color:blue;
     font-size:30px;
     }
-    .title{
-        font-size:2rem;
-    }
 </style>
 
-<div class="d-flex justify-content-between px-10 mb-1">
-    <a asp-area="admin" asp-action="create" asp-controller="Type" class="btn btn-primary">Create</a>
-    <div class="title">Type list</div> 
+<div class="d-flex justify-content-between px-10">
+    <a asp-area="admin" asp-action="create" asp-controller="ProductUnit" class="btn btn-primary">Create</a>
+    <div class="title">Unit list</div> 
     <div class="exportBtns">
-        <form enctype="multipart/form-data" asp-area="Admin" asp-controller="Type" asp-action="ExportToExcel">
+        <form enctype="multipart/form-data" asp-area="Admin" asp-controller="ProductUnit" asp-action="ExportToExcel">
              <input class="btn btn-primary" type="submit" value="Excel" />
  
         </form> 
@@ -34,7 +30,10 @@
                 <th> 
                     Name   
                 </th>
-               <th> 
+                <th> 
+                   Symbol   
+                </th>
+                <th> 
                     Description
                 </th>
                 <th>
@@ -51,5 +50,5 @@
 </div>
 
 @section Scripts{
-    <script src="~/js/type.js"></script>
+    <script src="~/js/productunit.js"></script>
 }

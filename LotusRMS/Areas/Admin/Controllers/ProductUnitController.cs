@@ -14,12 +14,12 @@ namespace LotusRMSweb.Areas.Admin.Controllers
 {
     [Authorize(Roles = "Admin,SuperAdmin")]
     [Area("Admin")]
-    public class UnitController : Controller
+    public class ProductUnitController : Controller
     {
         private readonly INotyfService _notyf;
         private readonly IUnitService _unitService;
 
-        public UnitController(INotyfService notyf, IUnitService unitService)
+        public ProductUnitController(INotyfService notyf, IUnitService unitService)
         {
             _notyf = notyf;
             _unitService = unitService;

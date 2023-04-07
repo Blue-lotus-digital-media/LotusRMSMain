@@ -12,7 +12,7 @@
             <div class="card-body">
                 <h5 class="card-title">Create Product Category</h5>
                 <!-- Vertical Form -->
-                <form class="row g-3" asp-action="Create" asp-controller="category" asp-area="admin" asp-route-returnUrl="@ViewBag.ReturnUrl">
+                <form class="row g-3" asp-action="Create" asp-controller="ProductCategory" asp-area="admin" asp-route-returnUrl="@ViewBag.ReturnUrl">
                     <div class="col-12">
                         <label for="cName" class="form-label">Category Name</label>
                         <input asp-for="Category_Name" class="form-control" id="cName">
