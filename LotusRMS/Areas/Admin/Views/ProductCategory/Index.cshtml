@@ -16,10 +16,10 @@
 </style>
 
 <div class="d-flex justify-content-between px-10" mb-1>
-    <a asp-area="admin" asp-action="Create" asp-controller="Category" class="btn btn-primary">Create</a>
+    <a asp-area="admin" asp-action="Create" asp-controller="ProductCategory" class="btn btn-primary">Create</a>
     <div class="title">Category list</div> 
     <div class="exportBtns">
-        <form enctype="multipart/form-data" asp-area="Admin" asp-controller="Category" asp-action="ExportToExcel">
+        <form enctype="multipart/form-data" asp-area="Admin" asp-controller="ProductCategory" asp-action="ExportToExcel">
              <input class="btn btn-primary" type="submit" value="Excel" />
  
         </form> 
@@ -54,7 +54,7 @@
 </div>
 
 @section Scripts{
-    <script src="~/js/category1.js"></script>
+    <script src="~/js/productcategory.js"></script>
 }
 
 

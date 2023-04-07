@@ -11,12 +11,12 @@ namespace LotusRMSweb.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Authorize(Roles = "Admin , SuperAdmin")]
-    public class TypeController : Controller
+    public class ProductTypeController : Controller
     {
         public readonly ITypeService _ITypeService;
         private readonly INotyfService _notyf;
 
-        public TypeController(ITypeService iTypeService,INotyfService notyf)
+        public ProductTypeController(ITypeService iTypeService,INotyfService notyf)
         {
             _ITypeService = iTypeService;
             _notyf = notyf;

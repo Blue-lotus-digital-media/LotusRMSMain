@@ -10,13 +10,13 @@ using Microsoft.AspNetCore.Mvc;
 namespace LotusRMSweb.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class CategoryController : Controller
+    public class ProductCategoryController : Controller
     {
         private readonly ICategoryService _ICategoryService;
         private readonly ITypeService _ITypeService;    
         private readonly INotyfService _notyf;
 
-        public CategoryController(ICategoryService iCategoryService, INotyfService notyf, ITypeService iTypeService)
+        public ProductCategoryController(ICategoryService iCategoryService, INotyfService notyf, ITypeService iTypeService)
         {
             _ICategoryService = iCategoryService;
             _notyf = notyf;
