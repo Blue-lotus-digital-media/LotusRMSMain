@@ -1,4 +1,5 @@
-﻿using LotusRMS.Models.Dto.BillSettingDTO;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using LotusRMS.Models.Dto.BillSettingDTO;
 using LotusRMS.Models.Dto.FiscalYearDTO;
 using LotusRMS.Models.Service;
 using LotusRMS.Models.Service.Implementation;
@@ -17,12 +18,15 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         private readonly ICompanyService _iCompanyService;
         private readonly IFiscalYearService _iFiscalYearService;
 
+        private readonly INotyfService _notyf;
+
         public BillSettingController(IBillSettingService iBillSettingService, ICompanyService iCompanyService,
-            IFiscalYearService iFiscalYearService)
+            IFiscalYearService iFiscalYearService, INotyfService notyf)
         {
             _iBillSettingService = iBillSettingService;
             _iCompanyService = iCompanyService;
             _iFiscalYearService = iFiscalYearService;
+            _notyf = notyf;
         }
 
         public IActionResult Index()
@@ -42,12 +46,14 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             var company = _iCompanyService.GetCompany();
             if (company.CompanyName == null)
             {
+                _notyf.Error("Company not setuped contact developer to register company... ", 5);
                 return RedirectToAction(nameof(Index));
             }
 
             var fiscalyear = _iFiscalYearService.GetActiveYear();
             if (fiscalyear == null)
             {
+                _notyf.Error("Fiscal year not added yet pleas add fiscal year first... ", 5);
                 return RedirectToAction(nameof(Index));
             }
 
@@ -64,7 +70,6 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 IsFiscalYear = true,
                 BillNote = "Good once sold cannot be returned. this bill is not supported for legal purpose "
             };
-
             return View(bill);
         }
 
@@ -73,6 +78,8 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         {
             if (!ModelState.IsValid)
             {
+                _notyf.Error("Some validation error... ", 5);
+
                 return View(vm);
             }
 
@@ -87,6 +94,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 IsActive = vm.IsActive
             };
             var id = _iBillSettingService.Create(dto);
+            _notyf.Success("Bill setting added successfully... ", 5);
 
             return RedirectToAction(nameof(Index));
         }
@@ -95,12 +103,16 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         {
             if (Id == Guid.Empty)
             {
+                _notyf.Error("Bill setting id not found ... ", 5);
+
                 return RedirectToAction(nameof(Index));
             }
 
             var billSetting = _iBillSettingService.GetByGuid(Id);
             if (billSetting == null)
             {
+                _notyf.Success("Company not setuped contact developer to register company... ", 5);
+
                 return RedirectToAction(nameof(Index));
             }
 
@@ -122,12 +134,16 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         {
             if (!ModelState.IsValid)
             {
+                _notyf.Error("Some validation error... ", 5);
+
                 return View(vm);
             }
 
             var billSetting = _iBillSettingService.GetActive();
             if (billSetting.Id == vm.Id && !vm.IsActive)
             {
+                _notyf.Error("Active Bill setting cannot be deactive now... ", 5);
+
                 return View(vm);
             }
 
@@ -143,6 +159,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 IsActive = vm.IsActive
             };
             var id = _iBillSettingService.Update(dto);
+            _notyf.Success("Bill Setting Updated Successfully... ", 5);
 
             return RedirectToAction(nameof(Index));
         }
@@ -177,11 +194,14 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             {
                 if (activeBill.Id == id)
                 {
+                    _notyf.Error("Active cannot change... ", 5);
+
                     return Ok(false);
                 }
 
                 var rid = _iBillSettingService.UpdateActive(id);
             }
+            _notyf.Success("Active billsetting status changed... ", 5);
 
             return Ok(true);
         }

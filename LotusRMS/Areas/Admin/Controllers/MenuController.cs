@@ -36,8 +36,6 @@ namespace LotusRMSweb.Areas.Admin.Controllers
 
         public IActionResult Index()
         {
-
-
             return View();
         }
 
