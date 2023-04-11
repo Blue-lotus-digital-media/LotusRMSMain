@@ -18,6 +18,36 @@
 }
 <meta charset="UTF-8">
 <style>
+
+
+    #invoice-POS, th {
+     
+        font-size: 0.8rem !important;
+        font-weight:400 !important;
+        font-style:normal !important;
+        text-transform: uppercase !important;
+        font-family: "Courier New", Courier, monospace !important;
+    }
+
+ 
+
+    .date, .bill {
+        font-family: "Courier New", Courier, monospace !important;
+        font-weight: normal !important;
+        font-size: 0.8rem !important;
+    }
+
+
+    p {
+        margin-bottom: 0 !important;
+        margin-top: 0 !important;
+    }
+
+    .pan {
+        margin-bottom:0.5rem !important;
+    }
+
+
     #invoice-POS {
         box-shadow: 0 0 1in -0.25in rgba(0, 0, 0, 0.5);
         padding: 2mm;
@@ -51,7 +81,7 @@
     }
 
     #invoice-POS p {
-        font-size: .7em;
+       
         color: #000;
         line-height: 1.2em;
     }
@@ -92,7 +122,7 @@
     }
 
     #invoice-POS .tabletitle {
-        font-size: .5em;
+        font-size: .8rem;
         background: #EEE;
     }
 
@@ -122,13 +152,14 @@
         }
 
     .myfontsize {
-        font-size: 1.5em;
+       
     }
 
 
-    body {
-        font-size: larger
-    }
+   #legalcopy {
+       margin-top:0.5rem !important;
+   }
+
 </style>
 
 <script>
@@ -155,22 +186,22 @@
 <div id="invoice-POS">
     <center id="top">
         <div class="info">
-            <h3><b><b>@billSetting.BillTitle</b></b></h3>
-            <h4>@billSetting.BillAddress</h4>
+            <p>@billSetting.BillTitle</p>
+            <p>@billSetting.BillAddress</p>
             @if (billSetting.IsPhone)
             {
-                <h4>
+                <p>
                     @company.Contact
-                </h4>
+                </p>
             }
            @if (billSetting.IsPanOrVat)
             {
-                <h4>PAN Or VAT: @company.PanOrVat</h4>
+                <p class="pan">PAN Or VAT: @company.PanOrVat</p>
             }
-            <table style="border: none; font-size: smaller;">
+            <table style="border: none; ">
                 <tr style="border: none;">
-                    <th style="border: none;  text-align: left;">Bill NO:<label style="font-size:0.8em"> @Model.Invoice_String</label></th>
-                    <th style="text-align: right; border: none;">Date:<label style="font-size:0.8em"@* id="Checkoutdate"*@> @checkout.DateTime</label> </th>
+                    <th class="bill" style="border: none;  text-align: left;">Bill NO:<label style="font-size:0.8rem" > @Model.Invoice_String</label></th>
+                    <th class="date" style="text-align: right; border: none;">Date:<label style="font-size:0.8rem"@* id="Checkoutdate"*@> @checkout.DateTime</label> </th>
                 </tr>
             </table>
         </div><!--End Info-->
@@ -182,7 +213,7 @@
             
          
             
-            <p style="font-weight: bolder;">
+            <p>
                 Name: @checkout.Customer_Name<br />
                 Address: @checkout.Customer_Address<br />
                 Phone: @checkout.Customer_Contact<br />
@@ -196,13 +227,13 @@
     <div id="bot">
 
         <div id="table" style="">
-            <table style="font-weight: bolder;">
+            <table>
                 <tr class="tabletitle" style="border-bottom: 2px solid black">
-                    <th class="item"><h2>S.n</h2></th>
-                    <th class="item"><h2>Item</h2></th>
-                    <th class="Hours"><h2>Qty</h2></th>
-                    <th class="Rate"><h2>Rate (rs.)</h2></th>
-                    <th class="Rate"><h2>Total</h2></th>
+                    <th class="sn"><p>Sn</p></th>
+                    <th class="item" style="text-align:left;"><p class="">Item</p></th>
+                    <th class="Hours"><p>Qty</p></th>
+                    <th class="Rate" style="text-align:right;"><p>Rate</p></th>
+                    <th class="Total" style="text-align:right;"><p>Total</p></th>
                 </tr>
                 @{ int i = 0;}
                 @foreach (var item in order.Order_Details)
@@ -213,14 +244,14 @@
 
                         <td class="tableitem" style="text-align: left;" width="47%"><p class="itemtext">@item.Item_Name </p></td>
                        
-                        <td class="tableitem" style="text-align: center;" width="11%"><p class="itemtext">@item.Quantity @item.Item_Unit </p></td>
+                        <td class="tableitem" style="text-align: center;" width="10%"><p class="itemtext">@item.Quantity </p></td>
                         <td class="tableitem" style="text-align: right;" width="14%"><p class="itemtext">@item.Rate</p></td>
                         <td class="tableitem" style="text-align: right;"><p class="itemtext">@item.Total</p></td>
 
                     </tr>
                 }
                 <tr class="tabletitle total-calc" style="border-top: 2px solid black ;margin-top:10px;">
-                    <td colspan="4" class="Rate" style="text-align: right;"><label class="myfontsize">Total(rs.)</label></td>
+                    <td colspan="4" class="Rate" style="text-align: right;"><label class="myfontsize">Total</label></td>
                     <td class="payment" style="text-align: right;"><label class="myfontsize">
                         @*@{var total = Model.Table_Order_Details.Sum(x => x.Qty * x.Rate); 
                      }*@
@@ -237,13 +268,13 @@
                 </tr>*@
 
                 <tr class="tabletitle total-calc" style="border-bottom: 2px solid black">
-                    <td colspan="4" class="Rate" style="text-align: right;"><label class="myfontsize">Discount ( 
+                    <td colspan="4" class="Rate" style="text-align: right;"><label class="myfontsize">Discount  
                     
                             @{
                                float discountAmount=0;
                                 if (checkout.Discount_Type.ToString() == "Cash")
                                 {
-                                    <label>Rs.</label>
+                              
                                     discountAmount = checkout.Discount;
 
                             }
@@ -255,13 +286,13 @@
 
                             }}
 
-                    )
+                    
                     </label></td>
                     <td class="payment" style="text-align: right;"><label class="myfontsize">@discountAmount</label></td>
                 </tr>
 
                 <tr class="tabletitle total-calc">
-                    <td colspan="4" class="Rate" style="text-align: right; "><label class="myfontsize">Gross Amount (rs.)</label></td>
+                    <td colspan="4" class="Rate" style="text-align: right; "><label class="myfontsize">Gross Amount</label></td>
                     <td class="payment" style="text-align: right; "><label class="myfontsize">@{var gross = checkout.Total - discountAmount;}@gross</label></td>
                 </tr>
 
@@ -306,13 +337,13 @@
             
 
             <p class="legal">
-                <strong>Thank you for your visit!</strong>
-                <strong>@billSetting.BillNote</strong>
+                <span>Thank you for your visit!</span>
+                <span>@billSetting.BillNote</span>
             </p>
         </div>
 
         <div id="legalcopy">
-            <small>
+            <span>
                 Served by: @{
 
                     var servedBy = order.OrderBy;
@@ -320,7 +351,7 @@
                     var Printer = PrintedBy.FirstName + " " + PrintedBy.MiddleName + " " + PrintedBy.LastName;
 
                 } @servedBy || Printed by: @Printer
-            </small> 
+            </span> 
         </div>
 
     </div><!--End InvoiceBot-->
@@ -336,7 +367,7 @@
         $("#Checkoutdate").html(date+" "+time);*@
         window.print();
        
-        setTimeout("closePrintView()", 200);
+       // setTimeout("closePrintView()", 200);
        
     });
    function closePrintView() {
