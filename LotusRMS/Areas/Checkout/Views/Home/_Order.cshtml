@@ -1,39 +1,42 @@
 ﻿@using LotusRMS.Models.Viewmodels.Order;
 @model OrderVm
 <style>
-    .kotWrapper{
-        position:relative;
+    .kotWrapper {
+        position: relative;
     }
-    .kotWrapper span{
-        position:absolute;
-        top:0;
-        right:0;
-    }
+
+        .kotWrapper span {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
 </style>
 
-    <div class="row">
-        <div class="col-3">
-            <button class="btn btn-info">refresh</button>
-        </div>
-        <div class="col-6 align-center d-flex justify-spacebetween">
-            <h3>@Model.Table_Name</h3>
+<div class="row">
+    <div class="col-3">
+        <button class="btn btn-info">Refresh</button>
+    </div>
+    <div class="col-6 align-center d-flex justify-spacebetween">
+        <h3>@Model.Table_Name</h3>
         @if (Model.OrderBy != null)
         {
             <h2>by : @Model.OrderBy</h2>
         }
-            </div>
-            <div class="col-3">
-                @if(Model.Id!=Guid.Empty){
-                <div class="kotWrapper">
-                <a asp-action="PrintKOT" asp-controller="Home" asp-area="Checkout" asp-route-OrderNO="@Model.Order_No" target="_blank" class="btn btn-info" id="printKot">Print KOT</a>
-               @if(Model.Order_Details.Any(x=>!x.IsPrinted)){
-            <span class="badge bg-primary badge-text">New</span>
-               }
-                </div>
-                }
-
-            </div>
     </div>
+    <div class="col-3">
+        @if (Model.Id != Guid.Empty)
+        {
+            <div class="kotWrapper">
+                <a asp-action="PrintKOT" asp-controller="Home" asp-area="Checkout" asp-route-OrderNO="@Model.Order_No" target="_blank" class="btn btn-info" id="printKot">Print KOT</a>
+                @if (Model.Order_Details.Any(x => !x.IsPrinted))
+                {
+                    <span class="badge bg-primary badge-text">New</span>
+                }
+            </div>
+        }
+
+    </div>
+</div>
 
 <table class="table table-striped">
     <thead>
@@ -59,59 +62,76 @@
                 <td>@item.Quantity @item.Item_Unit</td>
                 <td>@item.Rate</td>
                 <td>@item.Total</td>
+                <td class="d-flex align-items-center" style="gap:0.4rem">
                     @if (item.IsComplete)
                     {
- <td class="d-flex">
-                            <span class="text-primary"> <i class="bi bi-check"></i></span>
-                        </td>
+
+                        <i class="fa-solid fa-check m"></i>
+
                     }
                     else
                     {
 
-                        <td class="d-flex">
-                           
-                                  <form asp-action="CompleteOrderDetail"
-                          asp-controller="Home"
-                          asp-area="Checkout"
-                          asp-route-OrderNo="@Model.Order_No"
-                          asp-route-OrderDetailId="@item.Id"
-                                      data-ajax="true"
-                                      data-ajax-update="#orderSection"
-                                  data-ajax-loading="#overlay">
-                            <button type="submit" class="btn btn-primary"><i class="bi bi-check"></i></button>
-                        </form>
-                            @if (!item.IsKitchenComplete)
-                            {
-                                <form
-                          asp-action="CancelOrder"
-                          asp-controller="Home"
+
+                        <form asp-action="CompleteOrderDetail"
+                      asp-controller="Home"
                       asp-area="Checkout"
-                          asp-route-OrderNo="@Model.Order_No"
-                          asp-route-OrderDetailId="@item.Id"
-            data-ajax="true"
-            data-ajax-confirm="Are you sure?"
-            data-ajax-update="#orderSection"
-                                      data-ajax-loading="#overlay">
-                                    <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i></button>
-                                </form>
-                            }
-                        </td>
+                      asp-route-OrderNo="@Model.Order_No"
+                      asp-route-OrderDetailId="@item.Id"
+                              data-ajax="true"
+                              data-ajax-update="#orderSection"
+                              data-ajax-loading="#overlay">
+                            <button type="submit" class="btn btn-primary"><i class="fa-solid fa-square-check check"></i></button>
+                        </form>
+                        @if (!item.IsKitchenComplete)
+                        {
+                            <form asp-action="CancelOrder"
+                      asp-controller="Home"
+                      asp-area="Checkout"
+                      asp-route-OrderNo="@Model.Order_No"
+                      asp-route-OrderDetailId="@item.Id"
+                                  data-ajax="true"
+                                  data-ajax-confirm="Are you sure?"
+                                  data-ajax-update="#orderSection"
+                                  data-ajax-loading="#overlay">
+                                <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash-can trash"></i></button>
+                            </form>
+
+
+                        }
+
                     }
+                    <div class="dropstart">
+                        @if (item.Remarks != null)
+                        {
+                            <button class="eye btn btn-secondary dropstart" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-eye eye"></i></button>
+
+                            <div class="dropdown-menu" style="min-width:15rem;">
+
+                                <div class="container">
+                                    @item.Remarks
+                                </div>
+
+                            </div>
+                        }
+
+                    </div>
+                </td>
             </tr>
             i++;
         }
     </tbody>
-   <tfoot>
+    <tfoot>
         <tr>
             <td colspan="4" class="text-align:right">
 
                 Total
             </td>
             <td align="center">
-                    @{
-                        var gtotal = Model.Order_Details.Sum(x => x.Total);
-                    }
-                    @gtotal
+                @{
+                    var gtotal = Model.Order_Details.Sum(x => x.Total);
+                }
+                @gtotal
 
             </td>
         </tr>
@@ -150,22 +170,22 @@
             <div class="modal-footer">
                 <form asp-action="SwitchTable" asp-controller="home" asp-area="checkout">
                     <div class=" d-flex justify-content-between align-items-end">
-                    <div class="left-section d-inline-flex align-items-baseline ps-5">
-                    <div class="me-3">
-                        <h4 class="current-table fw-bold">@Model.Table_Name</h4>
-                        <input readonly hidden value="@Model.TableId" name="OldTable"/>
+                        <div class="left-section d-inline-flex align-items-baseline ps-5">
+                            <div class="me-3">
+                                <h4 class="current-table fw-bold">@Model.Table_Name</h4>
+                                <input readonly hidden value="@Model.TableId" name="OldTable" />
 
-                    </div>
-                    <div class="me-3"><i class="fa-solid fa-arrow-right-long"></i></div>
-                    <div>
-                        <h4 class="selected-table fw-bold"></h4>
-                        <input class="form-control selectedInput" readonly name="NewTable" hidden/>
-                    </div>
-                </div>
-                <div class="right-section ps-5">
-                    <button type="button" class="btn btn-danger me-3" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Switch</button>
-                </div>
+                            </div>
+                            <div class="me-3"><i class="fa-solid fa-arrow-right-long"></i></div>
+                            <div>
+                                <h4 class="selected-table fw-bold"></h4>
+                                <input class="form-control selectedInput" readonly name="NewTable" hidden />
+                            </div>
+                        </div>
+                        <div class="right-section ps-5">
+                            <button type="button" class="btn btn-danger me-3" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Switch</button>
+                        </div>
                     </div>
 
                 </form>
