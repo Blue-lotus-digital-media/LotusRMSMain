@@ -8,6 +8,32 @@
     }
 <meta charset="UTF-8">
 <style>
+
+
+    #invoice-POS, th {
+        font-size: 0.7rem !important;
+        font-weight: 400 !important;
+        font-style: normal !important;
+        text-transform: uppercase !important;
+        font-family: "Courier New", Courier, monospace !important;
+    }
+
+
+
+    .date, .bill {
+        font-family: "Courier New", Courier, monospace !important;
+        font-weight: normal !important;
+        font-size: 0.7rem !important;
+    }
+
+
+    p {
+        margin-bottom: 0 !important;
+        margin-top: 0 !important;
+    }
+
+
+
     #invoice-POS {
         box-shadow: 0 0 1in -0.25in rgba(0, 0, 0, 0.5);
         padding: 2mm;
@@ -82,7 +108,7 @@
     }
 
     #invoice-POS .tabletitle {
-        font-size: .5em;
+        font-size: .7rem;
         background: #EEE;
     }
 
@@ -95,7 +121,7 @@
     }
 
     #invoice-POS .itemtext {
-        font-size: .7em;
+        font-size: .7rem;
     }
 
     #invoice-POS #legalcopy {
@@ -112,7 +138,8 @@
         }
 
     .myfontsize {
-        font-size: 1.5em;
+        font-size:0.7rem;
+       
     }
 
 
@@ -147,13 +174,13 @@
         <div class="info">
             <table style="border: none; font-size: smaller;">
                 <tr style="border: none;">
-                    <th style="border: none;  text-align: left;">Order NO:<label style="font-size:0.8em"> @Model.OrderNo</label></th>
+                    <th style="border: none;  text-align: left;">Order No:<label style="font-size:0.7rem"> @Model.OrderNo</label></th>
                     </tr>
                 <tr style="border: none;">
-                    <th style="text-align: left; border: none;">Table Name<label style="font-size:0.8em" @* id="Checkoutdate"*@> @Model.TableName</label> </th>
+                    <th style="text-align: left; border: none;">Table Name:<label style="font-size:0.7rem" @* id="Checkoutdate"*@> @Model.TableName</label> </th>
                 </tr>
                 <tr style="border: none;">
-                    <th style="text-align: left; border: none;">Time<label style="font-size:0.8em" @* id="Checkoutdate"*@> @Model.Time</label> </th>
+                    <th style="text-align: left; border: none;">Time<label style="font-size:0.7rem" @* id="Checkoutdate"*@> @Model.Time</label> </th>
                 </tr>
             </table>
         </div><!--End Info-->
@@ -179,12 +206,12 @@
     <div id="bot">
 
         <div id="table" style="">
-            <table style="font-weight: bolder;">
-                <tr class="tabletitle" style="border-bottom: 2px solid black">
-                    <th class="item"><h2>S.n</h2></th>
-                    <th class="item"><h2>Item</h2></th>
-                    <th class="Hours"><h2>Qty</h2></th>
-                    <th class="item"><h2>Remarks</h2></th>
+            <table>
+                <tr class="tabletitle" style="border-bottom: 1px dotted black;font-size:0.8rem;" >
+                    <th class="item"><p style="font-size:.8rem;">Sn</p></th>
+                    <th class="item" style="text-align:left;"><p style="font-size:.8rem;">Item</p></th>
+                    <th class="Hours"><p style="font-size:.8rem;">Qty</p></th>
+                    <th class="item"><p style="font-size:.8rem;">Remarks</p></th>
                 </tr>
                 @{
                     int i = 0;
@@ -192,12 +219,12 @@
                 @foreach (var item in Model.OrderDetail)
                 {
                     i++;
-                    <tr class="service" style="border-bottom: 1px solid gray">
+                    <tr class="service" style="border-bottom: 1px dotted gray">
                         <td class="tableitem" style="text-align: center;" width="8%"><p class="itemtext">@i</p></td>
 
                         <td class="tableitem" style="text-align: left;" width="47%"><p class="itemtext">@item.Item_Name </p></td>
 
-                        <td class="tableitem" style="text-align: center;" width="11%"><p class="itemtext">@item.Quantity @item.Item_Unit </p></td>
+                        <td class="tableitem" style="text-align: center;" width="11%"><p class="itemtext">@item.Quantity </p></td>
                          <td class="tableitem" style="text-align: right;"><p class="itemtext">@item.Remarks</p></td>
 
                     </tr>
@@ -212,11 +239,20 @@
 
                 </tr>*@
 
+
+
+
               
 
             </table>
-        </div><!--End Table-->
 
+            <div  style="margin-top:0.7rem;margin-left:0.5rem;">
+
+                Served by:
+                <span>User 1</span>
+            </div>
+
+        </div><!--End Table-->
 
 
     </div><!--End InvoiceBot-->
