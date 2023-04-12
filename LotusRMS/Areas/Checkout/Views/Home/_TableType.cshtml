@@ -52,7 +52,15 @@
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         if ($(".TypeForm").length > 0) {
-            $(".TypeForm:first").submit();
+            var TypeIdMain = document.getElementById("TypeIdMain").getAttribute("value");
+
+            if (TypeIdMain != null && TypeIdMain != "") {
+                $(".TypeForm[TypeId='" + TypeIdMain + "']").submit();
+                document.getElementById("TypeIdMain").setAttribute("value", "");
+            } else {
+
+                $(".TypeForm:first").submit();
+            }
         }
     });
 
@@ -61,7 +69,13 @@
         $(me).children("div").children("button").addClass("clickactive");
 
         if ($(".TableForm").length > 0) {
-            $(".TableForm:first").submit();
+            var TableIdMain = document.getElementById("TableIdMain").getAttribute("value");
+            if (TableIdMain != null && TableIdMain != "") {
+                $(".TableForm[TableId='" + TableIdMain + "']").submit();
+                document.getElementById("TableIdMain").setAttribute("value", "");
+            } else {
+                $(".TableForm:first").submit();
+            }
         }
     }
 

@@ -16,13 +16,13 @@ data-ajax-success="menuAdded()"
             <div class="head-bar">
               <div class="left-side">
                 <div class="quantity">Quantity</div>
-                  <input type="number" asp-for="Quantity" name="quantity" class="form-control" placeholder="quantity" readonly class="disabled-icon">
+                <input type="number" asp-for="Quantity" name="quantity" class="form-control" placeholder="quantity" readonly class="disabled-icon" onfocus="showTooltip()" onfocusout="removeTooltip()" title="Quantity goes here...">
                    <input asp-for="Rate" hidden/>
         <input asp-for="MenuId" hidden/>
         <input asp-for="TableId" hidden/>
        
               </div>
-              <div class="qty">60ml</div>
+            <div class="qty">@Model.Item_Unit</div>
             </div>
 
 
@@ -32,17 +32,17 @@ data-ajax-success="menuAdded()"
             </textarea>
             <div class="modal-body">
               <div class="grid">
-                <div class="item item-num" onclick="ordertable.quantity.value += '1' ">1</div>
-                <div class="item item-num"onclick="ordertable.quantity.value += '2' " >2</div>
-                <div class="item item-num" onclick="ordertable.quantity.value += '3' ">3</div>
-                <div class="item item-num" onclick="ordertable.quantity.value += '4' ">4</div>
-                <div class="item item-num" onclick="ordertable.quantity.value += '5' ">5</div>
-                <div class="item item-num" onclick="ordertable.quantity.value += '6' ">6</div>
-                <div class="item item-num" onclick="ordertable.quantity.value += '7' ">7</div>
-                <div class="item item-num" onclick="ordertable.quantity.value += '8' ">8</div>
-                <div class="item item-num" onclick="ordertable.quantity.value += '9' ">9</div>
-                <div class="item item-num" onclick="ordertable.quantity.value += '0' ">0</div>
-                <div class="item item-clear" onclick="ordertable.quantity.value += ' ' "><i class="fa-solid fa-delete-left"></i></div>
+                <div class="item item-num" onclick="addQuantity(1);">1</div>
+                <div class="item item-num" onclick="addQuantity(2);">2</div>
+                <div class="item item-num" onclick="addQuantity(3);">3</div>
+                <div class="item item-num" onclick="addQuantity(4);">4</div>
+                <div class="item item-num" onclick="addQuantity(5);">5</div>
+                <div class="item item-num" onclick="addQuantity(6);">6</div>
+                <div class="item item-num" onclick="addQuantity(7);">7</div>
+                <div class="item item-num" onclick="addQuantity(8);">8</div>
+                <div class="item item-num" onclick="addQuantity(9);">9</div>
+                <div class="item item-num" onclick="addQuantity(0);">0</div>
+                <div class="item item-clear" onclick="ClearQuantity();"><i class="fa-solid fa-delete-left"></i></div>
 
                 <div onclick="submitform()" class="item item-done" >Done</div>
               </div>
@@ -52,12 +52,34 @@ data-ajax-success="menuAdded()"
           </form>
         
 <script>
+    function addQuantity(num){
+
+        var quantity = document.getElementsByName("quantity")[0].value;
+        quantity=parseInt(quantity)*10+num;
+        console.log(quantity)
+        document.getElementsByName("quantity")[0].value=quantity;
+
+    }
+    function ClearQuantity(){
+        document.getElementsByName("quantity")[0].value = 0;
+    }
+
     function submitform(){
-        console.log("here");
+        var quantity=document.getElementsByName("quantity")[0].value;
+        if(parseInt(quantity)>0){
         $("#ordertable").submit();
+        }else{
+            document.getElementsByName("quantity")[0].focus();
+        }
     }
     function menuAdded(){
-
         $('#addMenuModal').modal('hide');
+    }
+    function showTooltip() {
+        $("input[name='quantity']").tooltip('show');
+    }
+
+    function removeTooltip() {
+        $("input[name='quantity']").tooltip('hide');
     }
 </script>

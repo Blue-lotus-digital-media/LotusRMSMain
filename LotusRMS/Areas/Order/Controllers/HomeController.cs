@@ -56,15 +56,10 @@ namespace LotusRMSweb.Areas.Order.Controllers
                         Type_Id = item.Id,
                         Type_Name = item.Type_Name,
                         BookedCount = tablesCount
-
                     };
-
                     tableType.Add(tvm);
-
                 }
-
             }
-
             var menu = _IMenuService.GetAll().Where(x => !x.IsDelete && x.Status).Select(menu => new OrderMenu()
             {
                 Item_Name = menu.Item_Name,
@@ -86,21 +81,19 @@ namespace LotusRMSweb.Areas.Order.Controllers
         public IActionResult GetOrder(Guid Id)
         {
             var order = GetOrderVM(Id,"");
-
             ViewBag.NewOrder = GetNewOrder(Id);
-
-
             return PartialView("_Order",model:order);
         }
 
         public IActionResult Selectmenu(Guid MenuId,Guid TableId)
         {
-            var menu=_IMenuService.GetByGuid(MenuId);
+            var menu=_IMenuService.GetFirstOrDefault(MenuId);
             var vm = new AddNewOrderVM()
             {
                 MenuId = MenuId,
                 TableId=TableId,
                 Item_Name = menu.Item_Name,
+                Item_Unit=menu.Unit_Quantity +" "+ menu.Menu_Unit.Unit_Symbol,
                 Rate = menu.Rate,
                 Quantity = 0
 

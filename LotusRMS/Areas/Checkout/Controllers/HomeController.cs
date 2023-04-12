@@ -16,6 +16,7 @@ using LotusRMSweb.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using LotusRMS.Models.Viewmodels.Table;
 using LotusRMS.Models.Viewmodels.Type;
+using AspNetCoreHero.ToastNotification.Abstractions;
 
 namespace LotusRMSweb.Areas.Checkout.Controllers
 {
@@ -32,17 +33,20 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
         private readonly ICheckoutService _ICheckoutService;
         private readonly IBillSettingService _IBillSettingService;
         private readonly ICustomerService _ICustomerService;
+        private readonly INotyfService _notyf;
 
         private readonly IHubContext<OrderHub, IOrderHub> _orderHub;
-        public HomeController(IOrderService iOrderService, 
+        public HomeController(IOrderService iOrderService,
             ITableTypeService TableTypeService,
             ITableService iTableService,
-            IMenuService iMenuService, 
-            ICheckoutService iCheckoutService, 
+            IMenuService iMenuService,
+            ICheckoutService iCheckoutService,
             UserManager<RMSUser> userManager,
-            IBillSettingService iBillSettingService, 
-            ICustomerService iCustomerService, 
-            IHubContext<OrderHub, IOrderHub> orderHub)
+            IBillSettingService iBillSettingService,
+            ICustomerService iCustomerService,
+            IHubContext<OrderHub, IOrderHub> orderHub
+,
+            INotyfService notyf)
         {
             _IOrderService = iOrderService;
             _ITableTypeService = TableTypeService;
@@ -53,11 +57,12 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
             _IBillSettingService = iBillSettingService;
             _ICustomerService = iCustomerService;
             _orderHub = orderHub;
+            _notyf = notyf;
         }
-        public IActionResult Index()
+        public IActionResult Index(Guid? TypeId,Guid? TableId)
         {
             if (_IBillSettingService.GetActive() == null) {
-                
+                _notyf.Warning("No Active Bill setting. Contact your admin first...", 20);
             }
 
             var type = _ITableTypeService.GetAll().Where(x => !x.IsDelete && x.Status).ToList();
@@ -80,11 +85,17 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
                 }
 
             }
+            ViewBag.TypeId = TypeId;
+            ViewBag.TableId = TableId;
             return View(tableType);
         }
         public IActionResult GetTable(Guid Id)
         {
             var table = _ITableService.GetAll().Where(x => !x.IsDelete && x.Status && x.Table_Type_Id == Id);
+            if (table.Count() == 0)
+            {
+                _notyf.Error("No any table in this table type...", 5);
+            }
             return PartialView("_TableList", model: table);
         }
         public IActionResult GetOrder(Guid Id)
