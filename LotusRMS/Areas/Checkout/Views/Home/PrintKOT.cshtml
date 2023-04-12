@@ -11,7 +11,7 @@
 
 
     #invoice-POS, th {
-        font-size: 0.7rem !important;
+        font-size: 0.8rem !important;
         font-weight: 400 !important;
         font-style: normal !important;
         text-transform: uppercase !important;
@@ -23,7 +23,7 @@
     .date, .bill {
         font-family: "Courier New", Courier, monospace !important;
         font-weight: normal !important;
-        font-size: 0.7rem !important;
+        font-size: 0.8rem !important;
     }
 
 
@@ -67,7 +67,7 @@
     }
 
     #invoice-POS p {
-        font-size: .7em;
+        font-size: .8rem;
         color: #000;
         line-height: 1.2em;
     }
@@ -112,16 +112,14 @@
         background: #EEE;
     }
 
-    #invoice-POS .service {
-        border-bottom: 1px solid #EEE;
-    }
+ 
 
     #invoice-POS .item {
         width: 24mm;
     }
 
     #invoice-POS .itemtext {
-        font-size: .7rem;
+        font-size: .8rem;
     }
 
     #invoice-POS #legalcopy {
@@ -170,23 +168,23 @@
     }
 </script>
 <div id="invoice-POS">
-    <center id="top">
+    <center id="top">   
         <div class="info">
-            <table style="border: none; font-size: smaller;">
+            <table style="border-bottom:1px dashed grey; ">
                 <tr style="border: none;">
-                    <th style="border: none;  text-align: left;">Order No:<label style="font-size:0.7rem"> @Model.OrderNo</label></th>
+                    <th style="border: none;  text-align: left;">Order No:<label style="font-size:0.8rem"> @Model.OrderNo</label></th>
                     </tr>
                 <tr style="border: none;">
-                    <th style="text-align: left; border: none;">Table Name:<label style="font-size:0.7rem" @* id="Checkoutdate"*@> @Model.TableName</label> </th>
+                    <th style="text-align: left; border: none;">Table Name:<label style="font-size:0.8rem" @* id="Checkoutdate"*@> @Model.TableName</label> </th>
                 </tr>
                 <tr style="border: none;">
-                    <th style="text-align: left; border: none;">Time<label style="font-size:0.7rem" @* id="Checkoutdate"*@> @Model.Time</label> </th>
+                    <th style="text-align: left; border: none;">Time<label style="font-size:0.8rem" @* id="Checkoutdate"*@> @Model.Time</label> </th>
                 </tr>
             </table>
         </div><!--End Info-->
     </center><!--End InvoiceTop-->
 
-    <hr>
+  
   @*  <div id="mid" style="line-height: 0;">
         <div class="info">
 
@@ -207,7 +205,7 @@
 
         <div id="table" style="">
             <table>
-                <tr class="tabletitle" style="border-bottom: 1px dotted black;font-size:0.8rem;" >
+                <tr class="tabletitle" style="border-bottom: 1px dashed grey;font-size:0.8rem;" >
                     <th class="item"><p style="font-size:.8rem;">Sn</p></th>
                     <th class="item" style="text-align:left;"><p style="font-size:.8rem;">Item</p></th>
                     <th class="Hours"><p style="font-size:.8rem;">Qty</p></th>
@@ -219,7 +217,7 @@
                 @foreach (var item in Model.OrderDetail)
                 {
                     i++;
-                    <tr class="service" style="border-bottom: 1px dotted gray">
+                    <tr class="service" style="border-bottom: 1px dashed gray">
                         <td class="tableitem" style="text-align: center;" width="8%"><p class="itemtext">@i</p></td>
 
                         <td class="tableitem" style="text-align: left;" width="47%"><p class="itemtext">@item.Item_Name </p></td>
@@ -268,7 +266,7 @@
             $("#Checkoutdate").html(date+" "+time);*@
             window.print();
 
-        setTimeout("closePrintView()", 2000);
+        // setTimeout("closePrintView()", 2000);
      
     });
     function closePrintView() {
