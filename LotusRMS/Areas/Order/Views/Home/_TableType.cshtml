@@ -50,7 +50,7 @@
      document.addEventListener("DOMContentLoaded", () => {
          if ($(".TypeForm").length > 0) {
             var TypeIdMain = document.getElementById("TypeIdMain").getAttribute("value");
-            console.log(TypeIdMain);
+           
             if(TypeIdMain!=null && TypeIdMain!="" ){
                 $(".TypeForm[TypeId='"+TypeIdMain+"']").submit();
                 document.getElementById("TypeIdMain").setAttribute("value","");
@@ -68,7 +68,7 @@
 
          if ($(".TableForm").length>0){
             var TableIdMain = document.getElementById("TableIdMain").getAttribute("value");
-            console.log(TableIdMain);
+          
             if (TableIdMain != null && TableIdMain != "") {
                 $(".TableForm[TableId='" + TableIdMain + "']").submit();
                 document.getElementById("TableIdMain").setAttribute("value", "");
