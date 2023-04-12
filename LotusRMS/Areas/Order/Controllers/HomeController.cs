@@ -41,9 +41,9 @@ namespace LotusRMSweb.Areas.Order.Controllers
             _orderHub = orderHub;
         }
 
-
-        public IActionResult Index()
+        public IActionResult Index(Guid? TableId,Guid? TypeId)
         {
+            
             var type = _ITableTypeService.GetAll().Where(x => !x.IsDelete && x.Status).ToList();
             var tableType = new List<TableTypeBookedVM>();
             if (type != null)
@@ -73,7 +73,8 @@ namespace LotusRMSweb.Areas.Order.Controllers
                 Id = menu.Id
             }).ToList();
             ViewBag.Menu = menu;
-
+            ViewBag.TableId = TableId;
+            ViewBag.TypeId = TypeId;
             return View(tableType);
         }
         public IActionResult GetTable(Guid Id)
