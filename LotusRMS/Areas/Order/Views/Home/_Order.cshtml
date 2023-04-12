@@ -91,7 +91,21 @@
                                     }
 
                                 }
-                                <button class="eye btn btn-secondary"><i class="fa-solid fa-eye eye"></i></button>
+                                <div class="dropstart">
+                                    @if (item.Remarks != null)
+                                    {
+                                        <button class="eye btn btn-secondary dropstart" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-eye eye"></i></button>
+
+                                        <div class="dropdown-menu" style="min-width:15rem;">
+
+                                            <div class="container">
+                                                @item.Remarks
+                                            </div>
+
+                                        </div>
+                                    }
+
+                                </div>
 
 
                             </td>
