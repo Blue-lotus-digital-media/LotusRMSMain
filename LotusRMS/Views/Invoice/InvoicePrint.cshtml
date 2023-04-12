@@ -22,7 +22,7 @@
 
     #invoice-POS, th {
      
-        font-size: 0.8rem !important;
+        font-size: 0.7rem !important;
         font-weight:400 !important;
         font-style:normal !important;
         text-transform: uppercase !important;
@@ -34,7 +34,7 @@
     .date, .bill {
         font-family: "Courier New", Courier, monospace !important;
         font-weight: normal !important;
-        font-size: 0.8rem !important;
+        font-size: 0.7rem !important;
     }
 
 
@@ -122,7 +122,7 @@
     }
 
     #invoice-POS .tabletitle {
-        font-size: .8rem;
+        font-size: .7rem;
         background: #EEE;
     }
 
@@ -135,7 +135,7 @@
     }
 
     #invoice-POS .itemtext {
-        font-size: .7em;
+        font-size: .7rem;
     }
 
     #invoice-POS #legalcopy {
@@ -151,14 +151,22 @@
             padding-right: 5px;
         }
 
-    .myfontsize {
-       
-    }
+   td,th {
+       font-size:0.8rem !important;
+   }
 
 
    #legalcopy {
        margin-top:0.5rem !important;
    }
+
+   #table {
+       border:none !important;
+   }
+
+    .myfontsize {
+        font-size:0.7rem;
+    }
 
 </style>
 
@@ -196,12 +204,12 @@
             }
            @if (billSetting.IsPanOrVat)
             {
-                <p class="pan">PAN Or VAT: @company.PanOrVat</p>
+                <p class="pan">PAN: @company.PanOrVat</p>
             }
             <table style="border: none; ">
                 <tr style="border: none;">
-                    <th class="bill" style="border: none;  text-align: left;">Bill NO:<label style="font-size:0.8rem" > @Model.Invoice_String</label></th>
-                    <th class="date" style="text-align: right; border: none;">Date:<label style="font-size:0.8rem"@* id="Checkoutdate"*@> @checkout.DateTime</label> </th>
+                    <th class="bill" style="border: none;  text-align: left;">Bill NO:<label style="font-size:0.7rem" > @Model.Invoice_String</label></th>
+                    <th class="date" style="text-align: right; border: none;">Date:<label style="font-size:0.7rem"@* id="Checkoutdate"*@> @checkout.DateTime</label> </th>
                 </tr>
             </table>
         </div><!--End Info-->
@@ -214,9 +222,9 @@
          
             
             <p>
-                Name: @checkout.Customer_Name<br />
-                Address: @checkout.Customer_Address<br />
-                Phone: @checkout.Customer_Contact<br />
+                Customer: <span style="text-transform:capitalize;"> @checkout.Customer_Name </span><br />
+                @*Address: @checkout.Customer_Address<br />
+                Phone: @checkout.Customer_Contact<br />*@
                 Table : @order.Table_Name <br/>
             </p>
 
@@ -227,13 +235,13 @@
     <div id="bot">
 
         <div id="table" style="">
-            <table>
-                <tr class="tabletitle" style="border-bottom: 2px solid black">
+            <table >
+                <tr class="tabletitle" style="border-bottom: 1px dotted black">
                     <th class="sn"><p>Sn</p></th>
                     <th class="item" style="text-align:left;"><p class="">Item</p></th>
                     <th class="Hours"><p>Qty</p></th>
                     <th class="Rate" style="text-align:right;"><p>Rate</p></th>
-                    <th class="Total" style="text-align:right;"><p>Total</p></th>
+                    <th class="Amount" style="text-align:right;"><p>Amount</p></th>
                 </tr>
                 @{ int i = 0;}
                 @foreach (var item in order.Order_Details)
@@ -250,11 +258,11 @@
 
                     </tr>
                 }
-                <tr class="tabletitle total-calc" style="border-top: 2px solid black ;margin-top:10px;">
-                    <td colspan="4" class="Rate" style="text-align: right;"><label class="myfontsize">Total</label></td>
+                <tr class="tabletitle total-calc" style="border-top: 1px dotted black ;margin-top:10px; border-bottom:1px dotted black;">
+                    <td colspan="4" class="Rate" style="text-align: right; text-transform:capitalize;"><label class="myfontsize">Gross Amount : </label></td>
                     <td class="payment" style="text-align: right;"><label class="myfontsize">
                         @*@{var total = Model.Table_Order_Details.Sum(x => x.Qty * x.Rate); 
-                     }*@
+                      
                     @checkout.Total</label></td>
 
                 </tr>
@@ -267,8 +275,8 @@
 
                 </tr>*@
 
-                <tr class="tabletitle total-calc" style="border-bottom: 2px solid black">
-                    <td colspan="4" class="Rate" style="text-align: right;"><label class="myfontsize">Discount  
+                <tr class="tabletitle total-calc">
+                    <td colspan="4" class="Rate" style="text-align: right; text-transform:capitalize;"><label class="myfontsize">Tender Amount :  
                     
                             @{
                                float discountAmount=0;
@@ -292,33 +300,33 @@
                 </tr>
 
                 <tr class="tabletitle total-calc">
-                    <td colspan="4" class="Rate" style="text-align: right; "><label class="myfontsize">Gross Amount</label></td>
+                    <td colspan="4" class="Rate" style="text-align: right; text-transform:capitalize"><label class="myfontsize">Return Amount : </label></td>
                     <td class="payment" style="text-align: right; "><label class="myfontsize">@{var gross = checkout.Total - discountAmount;}@gross</label></td>
                 </tr>
 
                 @if (ViewBag.customer != null)
                 {
-                    <tr class="tabletitle total-calc" style="border-bottom: 2px solid black">
+                    <tr class="tabletitle total-calc" style="border-bottom: 1px dotted black">
                         <td colspan="4" class="Rate" style="text-align: right;"><label class="myfontsize">Previous Due (rs.)</label></td>
                         <td class="payment" style="text-align: right;"><label class="myfontsize"> @{var deuAmt = ViewBag.customer.DueAmount + ViewBag.DueBook.PaidAmount - gross;}@deuAmt</label></td>
 
 
                     </tr>
 
-                    <tr class="tabletitle total-calc" style="border-bottom: 2px solid black">
+                    <tr class="tabletitle total-calc" style="border-bottom: 1px dotted black">
                         <td colspan="4" class="Rate" style="text-align: right;"><label class="myfontsize">Paid Amount (rs.)</label></td>
                         <td class="payment" style="text-align: right;"><label class="myfontsize">@ViewBag.DueBook.PaidAmount</label></td>
                     </tr>
                     if (ViewBag.DueBook.DueAmount < 0)
                     {
-                        <tr class="tabletitle total-calc" style="border-bottom: 2px solid black">
+                        <tr class="tabletitle total-calc" style="border-bottom: 1px dotted black">
                             <td colspan="4" class="Rate" style="text-align: right;"><label class="myfontsize">Advance</label></td>
                             <td class="payment" style="text-align: right;"><label class="myfontsize">@ViewBag.Advance</label></td>
                         </tr>
                     }
                     else
                     {
-                        <tr class="tabletitle total-calc" style="border-bottom: 2px solid black">
+                        <tr class="tabletitle total-calc" style="border-bottom: 1px dotted black">
                             <td colspan="4" class="Rate" style="text-align: right;"><label class="myfontsize">New Due</label></td>
                             <td class="payment" style="text-align: right;"><label class="myfontsize">@ViewBag.DueBook.DueAmount</label></td>
                         </tr>
@@ -326,8 +334,8 @@
 
 
                 }
-                <tr class="tabletitle total-calc" style="border-bottom: 2px solid black">
-                    <td colspan="5" class="Rate" style="text-align: left;"><p style="font-size:13px" class="myfontsize">In Word : @NumberToWord.MoneyToWords(gross)</p></td>
+                <tr class="tabletitle total-calc" style="border-bottom: 1px dotted black">
+                    <td colspan="5" class="Rate" style="text-align: left;"><p style="text-transform:capitalize;"   class="myfontsize">Rs. @NumberToWord.MoneyToWords(gross)</p></td>
                 </tr>
 
             </table>
@@ -336,13 +344,13 @@
         <div id="legalcopy">
             
 
-            <p class="legal">
+            <p class="legal" style="text-transform:capitalize;">
                 <span>Thank you for your visit!</span>
                 <span>@billSetting.BillNote</span>
             </p>
         </div>
 
-        <div id="legalcopy">
+        <div id="legalcopy" style="margin-top:0">
             <span>
                 Served by: @{
 
@@ -352,6 +360,13 @@
 
                 } @servedBy || Printed by: @Printer
             </span> 
+        </div>
+
+        <div id="printTime">
+            <span>
+               Print Date and Time:
+               
+            </span>
         </div>
 
     </div><!--End InvoiceBot-->
@@ -367,7 +382,7 @@
         $("#Checkoutdate").html(date+" "+time);*@
         window.print();
        
-       // setTimeout("closePrintView()", 200);
+       
        
     });
    function closePrintView() {
