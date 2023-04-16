@@ -267,19 +267,12 @@
                     </td>
                     <td class="payment" style="text-align: right;">
                         <label class="myfontsize">
-                            @*@{var total = Model.Table_Order_Details.Sum(x => x.Qty * x.Rate);
+                            @{var total = Model.Checkout.Order.Order_Details.Sum(x => x.Total);}
 
                             @checkout.Total</label></td>
 
                             </tr>
-                            @* <tr class="tabletitle total-calc" style="border-top: 2px solid black ;margin-top:10px;">
-                            <td colspan="4" class="Rate" style="text-align: right;"><label class="myfontsize">Others(rs.)</label></td>
-                            <td class="payment" style="text-align: right;"><label class="myfontsize">
-                            @{
-                            var servicecharge = 0.05 * total; }
-                            @servicecharge</label></td>
-
-                            </tr>*@
+                           
 
                 <tr class="tabletitle total-calc">
                     <td colspan="4" class="Rate" style="text-align: right; text-transform:capitalize;">

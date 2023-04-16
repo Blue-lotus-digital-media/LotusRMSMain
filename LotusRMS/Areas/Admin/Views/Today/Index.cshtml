@@ -1,6 +1,46 @@
-﻿@*
+﻿
+@using LotusRMS.Models.Viewmodels.Today;
+@model IEnumerable<TodayTableVM>
+
+@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
 }
-<a asp-action="index" asp-area="checkout" asp-controller="home" asp-route-typeid="08db3684-cd1b-4de1-81c0-d68ea937fd2c" asp-route-tableid="08db3b22-a39a-4fe9-8e8f-fb9d53de313e">go to rs2</a>
+@foreach (var item in Model)
+{
+    <fieldset class="border border-3 p-2 col-auto me-3">
+        <legend class="float-none w-auto p-2">@item.Type.Type_Name</legend>
+        <div class="table-list d-flex gap-3 flex-wrap">
+            @foreach (var table in item.Table)
+            { if (table.IsReserved)
+                {
+                    <a class="btn btn-danger" asp-route-TableId="@table.Table_Id" asp-route-TypeId="@item.Type.Id" asp-area="order" asp-controller="home" asp-action="index">
+                        <div class="card">
+                            <div class="card-title">
+                                @table.Table_Name
+                                @table.Transaction
+                            </div>
+                                
+                        </div>
+                        
+                        </a>
+                }
+                else
+                {
+                    <a class="btn btn-primary" asp-route-TableId="@table.Table_Id" asp-route-TypeId="@item.Type.Id" asp-area="order" asp-controller="home" asp-action="index">
+                        <div class="card">
+                            <div class="card-title">
+                                @table.Table_Name
+                                @table.Transaction
+                            </div>
+                        </div>
+
+
+                    </a>
+                }
+            }
+
+        </div>
+    </fieldset>
+}
