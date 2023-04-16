@@ -18,10 +18,8 @@ namespace LotusRMS.Models
         public float Rate { get; set; }
 
         public string? Remarks { get; set; }
-        private float Total { get; set; }
         public float GetTotal {
-            get { return Total; }
-            set { Total = Quantity * Rate; }
+            get { return  Quantity * Rate; }
         }
         public bool IsComplete { get; set; } = false;
         public bool IsKitchenComplete { get; set; } = false;

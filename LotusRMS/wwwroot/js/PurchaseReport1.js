@@ -34,10 +34,17 @@ window.onload = function () {
         });
 
     var date = NepaliFunctions.GetCurrentBsDate();
+    var year = date.year;
     var previousMonth = date.month - 1;
-    var dateFrom = date.year + "-" + previousMonth + "-" + date.day;
+    if (previousMonth == 0) {
+        previousMonth = 12;
+        year = year - 1;
+    }
+    var dateFrom =year + "-" + previousMonth + "-" + date.day;
     var dateTo = date.year + "-" + date.month + "-" + date.day;
 
+    console.log(dateFrom);
+    console.log(dateTo);
     startDate.value = dateFrom;
     endDate.value = dateTo;
 
