@@ -4,96 +4,155 @@
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
-@{
+ 
 
-   
-}
 
-       <a asp-action="Update" asp-controller="company" asp-area="superadmin">Update</a>
-   
-       <div class="container">
-           <h2>Organization Detail</h2>
-           <div class="row">
-             <div class="col-12 p-2">
-                 <h2>
-                <label>Name: </label>
-                     @Model.CompanyName
-                 </h2>
-             </div>  
-             <div class="col-md-4 p-1">
-                 <label >Registration No.: </label>
-                 @Model.CompanyRegistrationNumber
-             
-             </div>
-        <div class="col-md-4 p-1">
-            <label>PAN  / VAT : </label>
-            @Model.PanOrVat
-        </div>
-             <div class="col-md-4 p-1">
-            <label>Registration Date.: </label>
-                 @Model.RegistrationDate
-             </div>
-             <div class="col-md-6 p-2">
-            <label>Email : </label>
-                 @Model.Email</div>
-             <div class="col-md-6 p-2">
-            <label>Contact No.: </label>
-                 @Model.Contact</div>
-             <div class="col-md-3 p-2">
-                 <p>Country</p>
-                 @Model.Country</div>
-             <div class="col-md-3 p-2">
+        <section class="section profile">
+      <div class="row">
+        <div class="col-xl-4">
 
-            <p>Province</p>
-                 @Model.Province</div>
-             <div class="col-md-3 p-2">
-                 <p>City</p>
-                 @Model.City</div>
+          <div class="card">
+            <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
 
-             <div class="col-md-3 p-2">
-                 <p>Tole</p>
-                 @Model.Tole</div>
-             
-    </div>
-    <fieldSet>
-        <legend>Contact person detail</legend>
-        <div class="row">
-        <div class="col-md-4 p-2">Name </div>
-        <div class="col-md-4 p-2">Contact</div>
-        <div class="col-md-4 p-2">Address</div>
-        <div class="col-md-4 p-2">@Model.ContactPerson[0].PersonName</div>
-        <div class="col-md-4 p-2">@Model.ContactPerson[0].ContactNumber</div>
-        <div class="col-md-4 p-2">@Model.ContactPerson[0].Address</div>
-        <div class="col-md-4 p-2">@Model.ContactPerson[1].PersonName</div>
-        <div class="col-md-4 p-2">@Model.ContactPerson[1].ContactNumber</div>
-        <div class="col-md-4 p-2">@Model.ContactPerson[1].Address</div>
-        </div>
-    </fieldSet>
-
-    <fieldset>
-        <legend>
-            System Detail
-        </legend>
-        <div class="row">
-            <div class="col-md-3">
-                <p>Contract No.</p>
-                @Model.RegistrationNo
+              <img src="assets/img/profile-img.jpg" alt="Organization Logo" class="rounded-circle">
+              <h2>@Model.CompanyName</h2>
+              <h3>Pan Or Vat No: @Model.PanOrVat</h3>
+               
             </div>
-            <div class="col-md-3">
-                <p>Contract Date</p>
-                @Model.ContractDate
-            </div>
-            <div class="col-md-3">
-                <p>Service start Date</p>
-                @Model.ServiceStartDate
-            </div>
-            <div class="col-md-3">
-                <p>Service Valid Till</p>
-                @Model.ValidTill
-            </div>
-            
+          </div>
+
         </div>
 
-    </fieldset>
+        <div class="col-xl-8">
 
-       </div>
+          <div class="card">
+            <div class="card-body pt-3">
+              
+              <!-- Bordered Tabs -->
+              <ul class="nav nav-tabs nav-tabs-bordered">
+                 
+
+                <li class="nav-item">
+                  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Company Details</button>
+                </li>
+
+                <li class="nav-item">
+                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit">Contact Person Details</button>
+                </li>     
+                 <li class="nav-item">
+                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#system-details">System Details </button>
+                </li>          
+
+                 
+              </ul>
+              <div class="tab-content pt-2">
+
+                <div class="tab-pane fade show active profile-overview" id="profile-overview">
+                  <form>
+                      <div class="row mb-3">
+                      <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Profile Image</label>
+                      <div class="col-md-8 col-lg-9">
+                        <img src="assets/img/profile-img.jpg" alt="Profile">
+                        <div class="pt-2">
+                          <a href="#" class="btn btn-primary btn-sm" title="Upload Company Logo"><i class="bi bi-upload"></i></a>
+                          <a href="#" class="btn btn-danger btn-sm" title="Remove Company Logo"><i class="bi bi-trash"></i></a>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Contact Number</div>
+                    <div class="col-lg-9 col-md-8">@Model.Contact</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Email</div>
+                    <div class="col-lg-9 col-md-8">@Model.Email</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Country</div>
+                    <div class="col-lg-9 col-md-8">@Model.Country</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">City</div>
+                    <div class="col-lg-9 col-md-8">@Model.City</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Provience</div>
+                    <div class="col-lg-9 col-md-8">@Model.Province</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Tole</div>
+                    <div class="col-lg-9 col-md-8">@Model.Tole</div>
+                  </div>                 
+
+                </div>
+
+                <div class="tab-pane fade show  profile-overview" id="profile-edit">
+                   
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">First Persone Name</div>
+                    <div class="col-lg-9 col-md-8">@Model.ContactPerson[0].PersonName</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Contact Number</div>
+                    <div class="col-lg-9 col-md-8">@Model.ContactPerson[0].ContactNumber</div>
+                  </div>
+                   <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Address</div>
+                    <div class="col-lg-9 col-md-8">@Model.ContactPerson[0].Address</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Second Person Name</div>
+                    <div class="col-lg-9 col-md-8">@Model.ContactPerson[1].PersonName</div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Contact Name</div>
+                    <div class="col-lg-9 col-md-8">@Model.ContactPerson[1].ContactNumber</div>
+                  </div>        
+                   <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Address</div>
+                    <div class="col-lg-9 col-md-8">@Model.ContactPerson[1].Address</div>
+                  </div>
+
+                </div>   
+                <div class="tab-pane fade show  profile-overview" id="system-details">
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Contract Number</div>
+                    <div class="col-lg-9 col-md-8"> @Model.RegistrationNo</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Contract Date</div>
+                    <div class="col-lg-9 col-md-8"> @Model.ContractDate </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Service Started Date</div>
+                    <div class="col-lg-9 col-md-8">@Model.ServiceStartDate</div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Service Valid Till </div>
+                    <div class="col-lg-9 col-md-8">@Model.ValidTill</div>
+                  </div>                       
+
+                </div>   
+  
+
+              </div><!-- End Bordered Tabs -->
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
