@@ -32,6 +32,7 @@ namespace LotusRMS.DataAccess
         public DbSet<LotusRMS_DueBook> LotusRMS_DueBooks { get; set; }
         public DbSet<LotusRMS_Supplier> LotusRMS_Suppliers { get; set; }
         public DbSet<LotusRMS_Purchase> LotusRMS_Purchases { get; set; }
+        public DbSet<LotusRMS_Galla> LotusRMS_Gallas { get; set; }
 
         // Specify DbSet properties etc
         protected override void OnModelCreating(ModelBuilder modelBuilder)

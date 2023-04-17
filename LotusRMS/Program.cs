@@ -60,6 +60,7 @@ builder.Services.AddScoped<IUserClaimsPrincipalFactory<RMSUser>,
             >();
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddSignalR(cfg=>cfg.EnableDetailedErrors=true);
 builder.Services.AddAuthorization(options =>
