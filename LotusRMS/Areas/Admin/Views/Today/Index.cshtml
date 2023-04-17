@@ -1,5 +1,4 @@
-﻿
-@using LotusRMS.Models.Viewmodels.Today;
+﻿@using LotusRMS.Models.Viewmodels.Today;
 @model IEnumerable<TodayTableVM>
 
 @*
@@ -7,34 +6,54 @@
 *@
 @{
 }
+
+<style>
+
+    .table-field-set {
+        width: fit-content;
+        display: inline-block;
+    }
+
+    .opening-balance {
+        vertical-align:center;
+    }
+</style>
+
+
 @foreach (var item in Model)
+
 {
-    <fieldset class="border border-3 p-2 col-auto me-3">
-        <legend class="float-none w-auto p-2">@item.Type.Type_Name</legend>
+    <fieldset class="border border-3 p-2 table-field-set me-3 mb-3">
+        <legend class="float-none w-auto" align="center">@item.Type.Type_Name</legend>
         <div class="table-list d-flex gap-3 flex-wrap">
             @foreach (var table in item.Table)
-            { if (table.IsReserved)
+            {
+                if (table.IsReserved)
                 {
-                    <a class="btn btn-danger" asp-route-TableId="@table.Table_Id" asp-route-TypeId="@item.Type.Id" asp-area="order" asp-controller="home" asp-action="index">
-                        <div class="card">
-                            <div class="card-title">
-                                @table.Table_Name
-                                @table.Transaction
-                            </div>
-                                
+                    <a class="card px-2 mb-0 bg-danger" style="min-width:5rem;" asp-route-TableId="@table.Table_Id" asp-route-TypeId="@item.Type.Id" asp-area="order" asp-controller="home" asp-action="index">
+
+                        <div class=" d-flex flex-column py-0 text-white align-items-center">
+                            <span class="fs-5">@table.Table_Name</span>
+                            <span>
+                               
+                                <span class="fs-5">@table.Transaction</span>
+                                <span class="">/-</span>
+                            </span>
                         </div>
-                        
-                        </a>
+
+
+
+                    </a>
                 }
                 else
                 {
-                    <a class="btn btn-primary" asp-route-TableId="@table.Table_Id" asp-route-TypeId="@item.Type.Id" asp-area="order" asp-controller="home" asp-action="index">
-                        <div class="card">
-                            <div class="card-title">
-                                @table.Table_Name
-                                @table.Transaction
-                            </div>
+                    <a class="card px-2 mb-0 bg-primary" style="min-width:5rem;" asp-route-TableId="@table.Table_Id" asp-route-TypeId="@item.Type.Id" asp-area="order" asp-controller="home" asp-action="index">
+
+                        <div class="d-flex flex-column py-0 text-white  align-items-center">
+                            <span class="fs-5">@table.Table_Name</span>
+                            <span class="fs-5">@table.Transaction</span>
                         </div>
+
 
 
                     </a>
@@ -43,4 +62,58 @@
 
         </div>
     </fieldset>
+
+
 }
+
+<div class="container py-5">
+
+    <!-- NORMAL MODAL -->
+    <button class="btn btn-primary" data-bs-target="#ourModal" data-bs-toggle="modal">Galla Setting For Today</button>
+
+
+    <div class="modal fade" id="ourModal" data-bs-backdrop="static">
+
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h5 class="modal-title w-100 text-primary">Galla Setup</h5>
+                </div>
+                <form>
+                <div class="modal-body">
+                   
+                        <fieldset class="p-1">
+                            <label for="date" class="fw-bold">Date:</label>
+                            <span class="date" id="date">20-mar-2023</span>
+                        </fieldset>
+                        <fieldset class="p-1">
+                            <label for="user" class="fw-bold">User:</label>
+                            <span class="user" id="user">Raju Mishra</span>
+                        </fieldset>
+                        <fieldset class="row d-flex align-items-center p-1 fw-bold">
+                            <div class="col-5">
+                            <label for="opening">Opening Balance:</label>
+                            </div>
+                            <div class="col-7"> 
+                            <input class="form-control" id="opening" value="0" onclick="this.select();">
+                            </div>
+                        </fieldset>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary">Submit</button>
+                </div>
+                </form>
+
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+</div>
+
+
+
