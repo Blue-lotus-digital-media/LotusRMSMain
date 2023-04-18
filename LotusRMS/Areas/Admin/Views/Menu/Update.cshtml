@@ -37,7 +37,7 @@
                                 </select>
                             </div>
                             <div class="col-2">
-                                <a class="btn btn-primary" asp-area="admin" asp-action="create" asp-controller="MenuType" asp-route-returnUrl="~/admin/menu/create">
+                                <a class="btn btn-primary" asp-area="admin" asp-action="create" asp-controller="MenuType" asp-route-returnUrl="~/admin/menu/create" target="_blank">
                                     <i class="bi bi-plus-lg"></i>
                                 </a>
                             </div>
@@ -60,7 +60,7 @@
                                 </select>
                             </div>
                             <div class="col-2">
-                                <a class="btn btn-primary" asp-area="admin" asp-action="create" asp-controller="menucategory" asp-route-returnUrl="~/admin/menu/create">
+                                <a class="btn btn-primary" asp-area="admin" asp-action="create" asp-controller="menucategory" asp-route-returnUrl="~/admin/menu/create" target="_blank">
                                     <i class="bi bi-plus-lg"></i>
                                 </a>
                             </div>
@@ -70,7 +70,7 @@
 
                     </div>
 
-
+@*
                     <div class="col-md-12">
                         <label for="mUnit" class="col-sm-12 col-form-label">Menu Unit</label>
                         <div class="row">
@@ -101,7 +101,53 @@
                         <label for="rate" class="form-label">Unit Rate</label>
                         <input asp-for="Rate" class="form-control" id="rate" onclick="this.select();" />
                         <span asp-validation-for="Rate" class="text-denger"></span>
-                    </div>
+                    </div>*@
+
+                    <table class="table table-striped mb-0">
+                        <div class="col-md-12 ">
+
+                            <div class="row mb-2">
+                                <div class="col-9 my-auto">
+                                    <p class="fs-5 mb-0">Unit</p>
+                                </div>
+                                <div class="col-3">
+                                    <a class="btn btn-primary" asp-area="admin" asp-action="create" asp-controller="MenuUnit" asp-route-returnUrl="~/admin/menu/create" target="_blank">
+                                        Add
+                                    </a>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                        <div class="wrappers mt-1">
+                            <div class="fieldset">
+                                <div class="fields">
+                                    <div class="d-flex mb-2">
+                                        <input class="form-control me-2" placeholder="unit" />
+                                        <input class="form-control me-2" placeholder="quantity" />
+                                        <input type="number" class="form-control me-2" placeholder="rate" />
+                                        <input type="radio" class="me-2" name="unitDefault" checked />
+                                        <button type="button" class="add_button btn btn-primary"> <i class="fa-solid fa-plus"></i></button>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+
+
+                    </table>
+
+
+
+
+
+
                     <div class="col-md-12">
                         <label for="orderTo" class="form-label">Order To </label>
                         <select asp-for="OrderTo" class="form-control" id="orderTo">
@@ -138,7 +184,7 @@
     </div>
 </div>
 @section Scripts{
-    <script src="~/js/createupdatemenu2.js"></script>
+    <script src="~/js/createupdatemenu.js"></script>
 }
 
 
