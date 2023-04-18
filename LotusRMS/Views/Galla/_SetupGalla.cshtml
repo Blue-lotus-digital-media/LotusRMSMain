@@ -1,0 +1,42 @@
+﻿@using LotusRMS.Models.Viewmodels.Galla;
+@using LotusRMS.Utility;
+@model CreateGallaVM
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<form 
+    asp-action="CreateGalla" 
+    asp-controller="galla" 
+    asp-area="" 
+    data-ajax="true"
+      data-success="$('#GallaAddModal').modal('toggle')"
+>
+    <div class="modal-body">
+
+        <fieldset class="p-1">
+            <label for="date" class="fw-bold">Date:</label>
+            <span class="date" id="date">@CurrentTime.DateTimeToday()</span>
+        </fieldset>
+        <fieldset class="p-1">
+            <label for="user" class="fw-bold">User:</label>
+            <span class="user" id="user">@Model.User</span>
+        </fieldset>
+        <fieldset class="row d-flex align-items-center p-1 fw-bold">
+            <div class="col-5">
+                <label for="opening">Opening Balance:</label>
+            </div>
+            <div class="col-7">
+                <input class="form-control" id="opening" value="0" onclick="this.select();" asp-for="Opening_Balance">
+                <span asp-validation-for="Opening_Balance" class="text-danger"></span>
+            </div>
+        </fieldset>
+
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>

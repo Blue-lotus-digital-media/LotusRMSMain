@@ -17,6 +17,8 @@ using Microsoft.AspNetCore.SignalR;
 using LotusRMS.Models.Viewmodels.Table;
 using LotusRMS.Models.Viewmodels.Type;
 using AspNetCoreHero.ToastNotification.Abstractions;
+using LotusRMS.Models.Viewmodels.Galla;
+using System.Security.Claims;
 
 namespace LotusRMSweb.Areas.Checkout.Controllers
 {
@@ -34,6 +36,7 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
         private readonly IBillSettingService _IBillSettingService;
         private readonly ICustomerService _ICustomerService;
         private readonly INotyfService _notyf;
+        private readonly IGallaService _gallaService;
 
         private readonly IHubContext<OrderHub, IOrderHub> _orderHub;
         public HomeController(IOrderService iOrderService,
@@ -46,7 +49,8 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
             ICustomerService iCustomerService,
             IHubContext<OrderHub, IOrderHub> orderHub
 ,
-            INotyfService notyf)
+            INotyfService notyf,
+            IGallaService gallaService)
         {
             _IOrderService = iOrderService;
             _ITableTypeService = TableTypeService;
@@ -58,9 +62,34 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
             _ICustomerService = iCustomerService;
             _orderHub = orderHub;
             _notyf = notyf;
+            _gallaService = gallaService;
         }
         public IActionResult Index(Guid? TypeId,Guid? TableId)
         {
+            var galla = _gallaService.GetTodayGalla();
+            var createGallaVM = new CreateGallaVM()
+            {
+                User= User.FindFirstValue("firstname") +" "+ User.FindFirstValue("middlename")+" "+ User.FindFirstValue("lastname")
+            };
+
+            if (galla == null)
+            {
+                var date = Convert.ToDateTime(CurrentTime.DateTimeToday()).AddDays(-1).ToString();
+                var userId= User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var yesterday = _gallaService.GetGallaByDate(date,userId);
+                if (yesterday != null)
+                {
+                    createGallaVM.Opening_Balance = yesterday.Closing_Balance;
+                }
+                ViewBag.Galla = 0;
+            }
+            else
+            {
+                ViewBag.Galla = 1;
+            }
+            ViewBag.TodayGalla = createGallaVM;
+
+
             if (_IBillSettingService.GetActive() == null) {
                 _notyf.Warning("No Active Bill setting. Contact your admin first...", 20);
             }
@@ -411,8 +440,6 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
                 Type_Id = typeId,
                 Table_Id = Table_Id,
                 BookCount = tableBooked
-
-
             };
             await _orderHub.Clients.All.CheckoutComplete(tvm);
         }

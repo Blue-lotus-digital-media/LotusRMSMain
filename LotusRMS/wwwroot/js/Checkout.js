@@ -48,6 +48,10 @@ client.on("CheckoutComplete", newCall => {
 
 $(document).ready(function () {
     client.start();
+    var checkGalla = document.getElementById('checkGalla').getAttribute('value');
+    if (checkGalla == 0) {
+        $("#GallaAddModal").modal("toggle");
+    }
 });
 
 

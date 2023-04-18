@@ -1,8 +1,10 @@
 ﻿using DocumentFormat.OpenXml.Drawing.Charts;
 using LotusRMS.Models;
+using LotusRMS.Models.Dto.GallaDTO;
 using LotusRMS.Models.Service;
 using LotusRMS.Models.Service.Implementation;
 using LotusRMS.Models.Viewmodels.Checkout;
+using LotusRMS.Models.Viewmodels.Galla;
 using LotusRMS.Models.Viewmodels.Invoice;
 using LotusRMS.Models.Viewmodels.Order;
 using Microsoft.AspNetCore.Mvc;
@@ -15,13 +17,19 @@ namespace LotusRMSweb.Controllers
         private readonly ICompanyService _iCompanyService;
         private readonly ICustomerService _iCustomerService;
         private readonly IMenuService _iMenuService;
+        private readonly IGallaService _gallaService;
 
-        public InvoiceController(IInvoiceService invoiceService, ICompanyService iCompanyService, ICustomerService iCustomerService, IMenuService iMenuService)
+        public InvoiceController(IInvoiceService invoiceService,
+            ICompanyService iCompanyService, 
+            ICustomerService iCustomerService, 
+            IMenuService iMenuService, 
+            IGallaService gallaService)
         {
             _invoiceService = invoiceService;
             _iCompanyService = iCompanyService;
             _iCustomerService = iCustomerService;
             _iMenuService = iMenuService;
+            _gallaService = gallaService;
         }
 
         public IActionResult InvoicePrint(Guid Id, string? returnUrl = null)
@@ -33,6 +41,7 @@ namespace LotusRMSweb.Controllers
                 var dueAmount = due.DueBooks.FirstOrDefault(x => x.Invoice_Id == Id).BalanceDue;
                 ViewBag.DueAmount = dueAmount;
             }
+            var checkout = GetCheckout(invoice.Checkout);
             var invoiceVM = new InvoiceVM()
             {
                 Id = invoice.Id,
@@ -44,12 +53,26 @@ namespace LotusRMSweb.Controllers
                 BillSetting_Id = invoice.BillSetting_Id,
                 BillSetting = invoice.BillSetting,
                 Checkout_Id = invoice.Checkout_Id,
-                Checkout = GetCheckout(invoice.Checkout)
+                Checkout = checkout
+              };
 
 
+            var galla = _gallaService.GetTodayGalla();
+            var gallaDetail = new CreateGallaDetailVM()
+            {
+                Title=  invoice.Invoice_String,
+                Deposit = checkout.Paid_Amount,
 
+                Withdrawl = checkout.Paid_Amount - checkout.Total + checkout.Discount,
 
             };
+
+            var addGallaDetail = new AddGallaDetailDTO() {
+                Galla_Id = galla.Id,
+            GallaDetail = gallaDetail
+            };
+
+            _gallaService.AddGallaDetail(addGallaDetail);
 
 
             ViewBag.Company = _iCompanyService.GetCompany();

@@ -9,6 +9,7 @@ namespace LotusRMS.Models.Viewmodels.Galla
     public class CreateGallaDetailVM
     {
         public DateTime Time { get; set; }
+        public string Title { get; set; }  
         public double Withdrawl { get; set; }
         public double Deposit { get; set; }
     }

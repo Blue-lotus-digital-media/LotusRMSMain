@@ -17,6 +17,8 @@ using LotusRMSweb.Hubs;
 using AspNetCoreHero.ToastNotification;
 using AspNetCoreHero.ToastNotification.Extensions;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -60,7 +62,8 @@ builder.Services.AddScoped<IUserClaimsPrincipalFactory<RMSUser>,
             >();
 
 builder.Services.AddControllersWithViews();
-builder.Services.AddHttpContextAccessor();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
 builder.Services.AddSignalR(cfg=>cfg.EnableDetailedErrors=true);
 builder.Services.AddAuthorization(options =>

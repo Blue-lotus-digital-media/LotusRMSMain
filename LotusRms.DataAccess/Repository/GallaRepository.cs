@@ -29,9 +29,11 @@ namespace LotusRMS.DataAccess.Repository
 
         }
 
-        public LotusRMS_Galla GetGallaByDate(string Date)
+        public LotusRMS_Galla GetGallaByDate(string Date,string UserId)
         {
-            throw new NotImplementedException();
+            var date = Convert.ToDateTime(Date);
+            var galla = GetFirstOrDefault(filter: x => x.Date == date && x.Cashier == UserId, includeProperties: "Galla_Details,User");
+            return galla;
         }
 
         public LotusRMS_Galla GetGallaByGuid(Guid Id)

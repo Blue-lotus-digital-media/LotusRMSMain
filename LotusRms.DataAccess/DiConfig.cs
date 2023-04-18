@@ -34,6 +34,7 @@ namespace LotusRMS.DataAccess
             services.AddScoped<IUserRepository,UserRepository >();
             services.AddScoped<ISupplierRepository,SupplierRepository >();
             services.AddScoped<IPurchaseRepository,PurchaseRepository >();
+            services.AddScoped<IGallaRepository,GallaRepository >();
             //services.AddScoped<, >();
         }
         }

@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace LotusRMS.Models.Dto.GallaDTO
 {
-    public class CreateGallaDTO
+    public class AddGallaDetailDTO
     {
-        public string Cashier { get; set; }
-        public double Opening_Balance { get; set; }
+        public Guid Galla_Id { get; set; }
+        public double Closing_Balance { get; set; }
+        public CreateGallaDetailVM GallaDetail { get; set; }
     }
 }
