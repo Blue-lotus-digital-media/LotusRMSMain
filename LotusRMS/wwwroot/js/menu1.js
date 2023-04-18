@@ -2,7 +2,7 @@
 
 $(document).ready(function () {
     loadData();
-    });
+});
 function toggleMe(me) {
     var id = $(me).attr("data-id");
     console.log(id);
@@ -86,14 +86,54 @@ function loadData() {
             },
             {
                 data: "id",
-                render: function (data) {
-                    return `<div class="text-center">
+                render: function (data) { 
+                    return `<div class="d-flex gap-1">
+                               <div class="dropstart">
+                                    <button class="eye btn btn-secondary dropstart" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-eye eye"></i></button>
+
+                                            <div class="dropdown-menu">
+                                            <div class="container">
+
+
+                                                  <table class="table table-striped">
+                                                 
+                                                  <thead>
+                                                   <tr>
+                                                        <th>Unit</th>
+                                                        <th>Qty </th>
+                                                        <th>Price</th>
+                                                    </tr>
+                                                  </thead>
+                                                  <tbody>
+                                                  <tr>
+                                                        <td>ml</td>
+                                                        <td>30</td>
+                                                        <td>180.00</td>
+                                                    </tr>
+                                                     <tr>
+                                                        <td>ml</td>
+                                                        <td>60</td>
+                                                        <td>340.00</td>
+                                                    </tr>
+                                                     <tr>
+                                                        <td>ml</td>
+                                                        <td>90</td>
+                                                        <td>510.00</td>
+                                                    </tr>
+                                                  </tbody>
+                                                  </table>
+
+
+                                                </div>
+                                            </div>
+                                </div>
                               <a href="/Admin/menu/update/${data}" class="btn btn-success text-white" style="cursor:pointer">
                                  <i class="fa-regular fa-pen-to-square"></i>   
                               </a>
                               <a href="/Admin/menu/Delete/${data}" class="btn btn-danger text-white" style="cursor:pointer">
                                <i class="fa-regular fa-trash-can"></i>    
                               </a>
+                             
                             </div>`;
                 }
             }
