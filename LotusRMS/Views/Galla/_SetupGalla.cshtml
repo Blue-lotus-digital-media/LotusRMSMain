@@ -13,7 +13,7 @@
     asp-controller="galla" 
     asp-area="" 
     data-ajax="true"
-      data-success="$('#GallaAddModal').modal('toggle')"
+      data-ajax-success="$('#GallaAddModal').modal('toggle')"
 >
     <div class="modal-body">
 
@@ -30,7 +30,7 @@
                 <label for="opening">Opening Balance:</label>
             </div>
             <div class="col-7">
-                <input class="form-control" id="opening" value="0" onclick="this.select();" asp-for="Opening_Balance">
+                <input class="form-control" id="opening" onclick="this.select();" asp-for="Opening_Balance">
                 <span asp-validation-for="Opening_Balance" class="text-danger"></span>
             </div>
         </fieldset>

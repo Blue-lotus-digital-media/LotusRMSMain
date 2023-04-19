@@ -69,7 +69,8 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
             var galla = _gallaService.GetTodayGalla();
             var createGallaVM = new CreateGallaVM()
             {
-                User= User.FindFirstValue("firstname") +" "+ User.FindFirstValue("middlename")+" "+ User.FindFirstValue("lastname")
+                User = User.FindFirstValue("firstname") + " " + User.FindFirstValue("middlename") + " " + User.FindFirstValue("lastname"),
+                Opening_Balance = 0
             };
 
             if (galla == null)
