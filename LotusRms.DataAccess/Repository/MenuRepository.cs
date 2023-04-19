@@ -18,14 +18,12 @@ namespace LotusRMS.DataAccess.Repository
 
         public void Update(LotusRMS_Menu lMenu)
         {
-            var menu = _dal.LotusRMS_Menus.FirstOrDefault(x => x.Id == lMenu.Id);
+            var menu = GetFirstOrDefault(x => x.Id == lMenu.Id,includeProperties: "Menu_Details");
             if (menu != null)
             {
                 menu.Update(
                     item_name: lMenu.Item_Name,
-                    rate: lMenu.Rate,
                     unit_Id: lMenu.Unit_Id,
-                    unit_Quantity: lMenu.Unit_Quantity,
                     type_Id: lMenu.Type_Id,
                     category_Id: lMenu.Category_Id,
                     orderTo: lMenu.OrderTo

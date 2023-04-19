@@ -23,15 +23,25 @@ namespace LotusRMS.Models.Service.Implementation
             var  menu= new LotusRMS_Menu();
             menu.Update(
                 item_name: dto.Item_name,
-                rate: dto.Rate,
                 unit_Id: dto.Unit_Id,
-                unit_Quantity: dto.Unit_Quantity,
                 type_Id: dto.Type_Id,
                 category_Id:dto.Category_Id,
                 orderTo: dto.OrderTo
-            
-                
-                );
+            );
+            menu.Menu_Details = new List<LotusRMS_MenuDetail>();
+            foreach(var item in dto.Menu_Details)
+            {
+                var detail = new LotusRMS_MenuDetail()
+                {
+                    Quantity=item.Quantity,
+                    Rate=item.Rate,
+                    Default=item.Default
+                };
+                menu.Menu_Details.Add(detail);
+            }
+
+
+
             if (dto.Image != null)
             {
                 menu.Image = dto.Image;
@@ -50,7 +60,7 @@ namespace LotusRMS.Models.Service.Implementation
 
         public IEnumerable<LotusRMS_Menu> GetAll()
         {
-            return _IMenuRepository.GetAll(includeProperties: "Menu_Unit,Menu_Category,Menu_Type");
+            return _IMenuRepository.GetAll(includeProperties: "Menu_Unit,Menu_Category,Menu_Type,Menu_Details");
         }
 
         public async Task<IEnumerable<LotusRMS_Menu>> GetAllAsync()
@@ -71,7 +81,7 @@ namespace LotusRMS.Models.Service.Implementation
         public LotusRMS_Menu GetFirstOrDefault(Guid Id)
         {
 
-            return _IMenuRepository.GetFirstOrDefault(filter: x => x.Id == Id, includeProperties: "Menu_Unit,Menu_Category,Menu_Type");
+            return _IMenuRepository.GetFirstOrDefault(filter: x => x.Id == Id, includeProperties: "Menu_Unit,Menu_Category,Menu_Type,Menu_Details");
         }
 
         public Guid Update(UpdateMenuDTO dto)
@@ -80,9 +90,7 @@ namespace LotusRMS.Models.Service.Implementation
             var  menu= _IMenuRepository.GetByGuid(dto.Id) ?? throw new Exception();
             menu.Update(
                   item_name: dto.Item_name,
-                rate: dto.Rate,
                 unit_Id: dto.Unit_Id,
-                unit_Quantity: dto.Unit_Quantity,
                 type_Id: dto.Type_Id,
                 category_Id: dto.Category_Id,
                 orderTo: dto.OrderTo

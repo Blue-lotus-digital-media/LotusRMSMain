@@ -14,11 +14,11 @@ namespace LotusRMS.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
         public string Item_Name { get;private set; }
-        public float Rate { get; private set; }
         public Guid Unit_Id { get; private set; }
         [ForeignKey("Unit_Id")] 
         public LotusRMS_Menu_Unit Menu_Unit { get; set; }
-        public float Unit_Quantity { get; private set; }
+
+        public ICollection<LotusRMS_MenuDetail> Menu_Details { get; set; }
 
         public Guid Type_Id { get; private set; }
 
@@ -33,14 +33,12 @@ namespace LotusRMS.Models
         public string OrderTo { get; private set; }
         public bool Status { get; set; } = true;
         public bool IsDelete { get; set; } = false;
-        public void Update(string item_name,float rate, Guid unit_Id,float unit_Quantity,  Guid type_Id,Guid category_Id,string orderTo)
+        public void Update(string item_name,Guid unit_Id,Guid type_Id,Guid category_Id,string orderTo)
         {
             Item_Name = item_name;
-            Rate = rate;
             Type_Id = type_Id;
             Category_Id = category_Id;
             Unit_Id = unit_Id;
-            Unit_Quantity = unit_Quantity;
             OrderTo = orderTo;
         }
     }

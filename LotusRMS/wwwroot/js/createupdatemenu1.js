@@ -130,12 +130,15 @@ function loadProduct() {
 
 
 $(document).ready(function () {
+    $("#mCategory").attr("disabled", "true");
+
     var max_fields = 10;
     var wrapper = $(".wrappers");
-    var add_button = $(".add_button");
+    var add_unit_button = $(".add_unit_button");
 
     var x = 0;
-    $(add_button).click(function (e) {
+    $(add_unit_button).click(function (e) {
+        console.log("here");
         e.preventDefault();
         if (x < max_fields) {
             x++;
@@ -143,15 +146,22 @@ $(document).ready(function () {
                 '<div class="fieldset" id="fieldset_' + x + '">' +
                 '  <div class="fields">' +
                 '    <div class="d-flex mb-2">' +
-                '      <input class="form-control me-2" placeholder="unit" />' +
-                '      <input class="form-control me-2" placeholder="quantity" />' +
-                '      <input type="number" class="form-control me-2" placeholder="rate" />' +
-                '      <input type="radio" class="me-2" name="unitDefault" />' +
+                '      <input class="form-control me-2" placeholder="quantity" name="MenuDetail['+x+'].Quantity" />' +
+                '      <span class="unitSection">unit</span>'+
+                '      <input type="number" class="form-control me-2" placeholder="rate" name="MenuDetail[' + x +'].Rate" />' +
+                '      <input type="radio" class="me-2 unitDefault" name="MenuDetail['+ x +'].IsDefault" />' +
                 '      <button type="button" class="remove_button btn btn-danger" data-id="' + x + '"><i class="fa-solid fa-minus"></i></button>' +
                 '    </div>' +
                 '  </div>' +
                 '</div>');
         }
+    });
+    $(document).on('change',' .unitDefault', function () {
+        $('.unitDefault').not(this).prop('checked', false);
+        $('.unitDefault').not(this).prop('value', false);
+        $(this).prop("value", true);
+
+
     });
 
     $(document).on('click', '.remove_button', function (e) {

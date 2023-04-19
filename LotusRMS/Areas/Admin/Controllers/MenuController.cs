@@ -55,11 +55,11 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 }).ToList()
             };
 
-            ViewBag.UnitList = _IUnitService.GetAll().Select(i => new SelectListItem()
+           /* ViewBag.UnitList = _IUnitService.GetAll().Select(i => new SelectListItem()
             {
                 Text = i.Unit_Symbol,
                 Value = i.Id.ToString()
-            }).ToList();
+            }).ToList();*/
             return View(createMenuVM);
         }
 
@@ -68,20 +68,47 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         {
             if (!ModelState.IsValid)
             {
+                vm.Menu_Type_List = _IMenuTypeService.GetAll().Where(x => x.Status).Select(type => new SelectListItem()
+                {
+                    Text = type.Type_Name,
+                    Value = type.Id.ToString()
+                }).ToList();
+                vm.Menu_Category_List = _IMenuCategoryService.GetAll().Where(x => x.Status && x.Type_Id == vm.Type_Id)
+                    .Select(type => new SelectListItem()
+                    {
+                        Text = type.Category_Name,
+                        Value = type.Id.ToString()
+                    }).ToList();
+                vm.Menu_Unit_List = _IMenuUnitService.GetAll().Where(x => x.Status).Select(type => new SelectListItem()
+                {
+                    Text = type.Unit_Symbol,
+                    Value = type.Id.ToString()
+                }).ToList();
+
+
                 return View(vm);
             }
 
             var dto = new CreateMenuDTO()
             {
                 Item_name = vm.Item_name,
-                Rate = vm.Rate,
                 OrderTo = vm.OrderTo,
-
-                Unit_Quantity = vm.Unit_Quantity,
                 Unit_Id = vm.Unit_Id,
                 Category_Id = vm.Category_Id,
                 Type_Id = vm.Type_Id,
+                Menu_Details=new List<CreateMenuDetailDTO>()
+
             };
+            foreach(var item in vm.MenuDetail)
+            {
+                var detail = new CreateMenuDetailDTO()
+                {
+                    Quantity = item.Quantity,
+                    Rate = item.Rate,
+                    Default = item.IsDefault
+                };
+                dto.Menu_Details.Add(detail);
+            }
             if (vm.Menu_Image != null)
             {
                 dto.Image = ImageUpload.GetByteArrayFromImage(vm.Menu_Image);
@@ -113,9 +140,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             {
                 Id = menu.Id,
                 Item_name = menu.Item_Name,
-                Rate = menu.Rate,
                 Unit_Id = menu.Unit_Id,
-                Unit_Quantity = menu.Unit_Quantity,
                 Type_Id = menu.Type_Id,
                 Category_Id = menu.Category_Id,
                 OrderTo = menu.OrderTo,
@@ -168,10 +193,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             {
                 Id = vm.Id,
                 Item_name = vm.Item_name,
-                Rate = vm.Rate,
                 OrderTo = vm.OrderTo,
-
-                Unit_Quantity = vm.Unit_Quantity,
                 Unit_Id = vm.Unit_Id,
                 Category_Id = vm.Category_Id,
                 Type_Id = vm.Type_Id,
@@ -197,10 +219,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             {
                 Id = menu.Id,
                 Item_name = menu.Item_Name,
-                Rate = menu.Rate,
                 OrderTo = menu.OrderTo,
-
-                Unit_Quantity = menu.Unit_Quantity,
                 Menu_Unit_Name = menu.Menu_Unit.Unit_Symbol,
                 Menu_Category_Name = menu.Menu_Category.Category_Name,
                 Menu_Type_Name = menu.Menu_Type.Type_Name,

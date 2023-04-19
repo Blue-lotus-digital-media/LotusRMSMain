@@ -63,7 +63,6 @@ namespace LotusRMSweb.Areas.Order.Controllers
             var menu = _IMenuService.GetAll().Where(x => !x.IsDelete && x.Status).Select(menu => new OrderMenu()
             {
                 Item_Name = menu.Item_Name,
-                Rate=menu.Rate,
                 Symbol=menu.Menu_Unit.Unit_Symbol,
                 Id = menu.Id
             }).ToList();
@@ -93,8 +92,8 @@ namespace LotusRMSweb.Areas.Order.Controllers
                 MenuId = MenuId,
                 TableId=TableId,
                 Item_Name = menu.Item_Name,
-                Item_Unit=menu.Unit_Quantity +" "+ menu.Menu_Unit.Unit_Symbol,
-                Rate = menu.Rate,
+                Item_Unit= menu.Menu_Unit.Unit_Symbol,
+                Rate = 00,
                 Quantity = 0
 
             };
@@ -307,7 +306,6 @@ namespace LotusRMSweb.Areas.Order.Controllers
                 MenuId = menuId,
                 TableId = tableId,
                 Item_Name = menu.Item_Name,
-                Rate = menu.Rate,
                 Quantity = quantity,
                 Remarks= remarks
 

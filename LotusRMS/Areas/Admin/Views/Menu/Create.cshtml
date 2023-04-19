@@ -98,18 +98,35 @@
                     <span asp-validation-for="Rate" class="text-denger"></span>
                     </div>
                     *@
+                    <div class="col-md-12">
+                        <label for="mUnit" class="col-sm-12 col-form-label">Menu Unit</label>
+                    <div class="row">
+                        <div class="col-10">
 
+                            <select asp-for="Unit_Id" class="form-control" id="mUnit">
+                                <option>-- Select a unit --</option>
+                                @foreach (var item in Model.Menu_Unit_List)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-2">
+                            <a class="btn btn-primary" asp-area="admin" asp-action="create" asp-controller="MenuUnit" asp-route-returnUrl="~/admin/menu/create">
+                                <i class="bi bi-plus-lg"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                        <span asp-validation-for="Unit_Id" class="text-denger"></span>
+                    </div>
                     <table class="table table-striped mb-0">
                         <div class="col-md-12 ">
 
                             <div class="row mb-2">
-                                <div class="col-9 my-auto">
-                                    <p class="fs-5 mb-0">Unit</p>
-                                </div>
-                                <div class="col-3">
-                                    <a class="btn btn-primary" asp-area="admin" asp-action="create" asp-controller="MenuUnit" asp-route-returnUrl="~/admin/menu/create" target="_blank">
-                                        Add
-                                    </a>
+                                <div class="col-12 my-auto">
+                                    <p class="fs-5 mb-0">Unit Detail</p>
+
                                 </div>
                             </div>
 
@@ -120,11 +137,11 @@
                             <div class="fieldset">
                                 <div class="fields">
                                     <div class="d-flex mb-2">
-                                        <input class="form-control me-2" placeholder="unit" />
-                                        <input class="form-control me-2" placeholder="quantity" />
-                                        <input type="number" class="form-control me-2" placeholder="rate" />
-                                        <input type="radio" class="me-2" name="unitDefault" checked /> 
-                                        <button type="button" class="add_button btn btn-primary"> <i class="fa-solid fa-plus"></i></button>
+                                        <input class="form-control me-2" placeholder="quantity" name="MenuDetail[0].Quantity"/>
+                                        <span class="unitSection">unit</span>
+                                        <input type="number" class="form-control me-2" placeholder="rate" name="MenuDetail[0].Rate" />
+                                        <input type="radio" class="me-2 unitDefault" name="MenuDetail[0].IsDefault" />
+                                        <button type="button" class="add_unit_button btn btn-primary"> <i class="fa-solid fa-plus"></i></button>
                                                                            
                                     </div>
                                     
@@ -254,7 +271,7 @@
 
                         <select class="form-control" id="pUnit">
 
-                            @foreach (var item in ViewBag.UnitList)
+                            @foreach (var item in Model.Menu_Unit_List)
                             {
                                 <option value="@item.Value">@item.Text</option>
                             }
@@ -286,11 +303,8 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    <script src="~/js/createupdatemenu.js">
-         $(document).ready(function () {
-        $("#mCategoryId").attr("disabled", "true");
-        })
+    <script src="~/js/createupdatemenu1.js">
+       
     </script>
-    
 }
 
