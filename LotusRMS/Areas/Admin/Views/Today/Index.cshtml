@@ -19,6 +19,7 @@
     }
 </style>
 
+<div class="bg-white shadow p-3 ">
 
 @foreach (var item in Model)
 
@@ -65,55 +66,8 @@
 
 
 }
-
-<div class="container py-5">
-
-    <!-- NORMAL MODAL -->
-    <button class="btn btn-primary" data-bs-target="#GallaAddModal" data-bs-toggle="modal">Galla Setting For Today</button>
-
-
-    <div class="modal fade" id="GallaAddModal" data-bs-backdrop="static">
-
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header text-center">
-                    <h5 class="modal-title w-100 text-primary">Galla Setup</h5>
-                </div>
-                <form>
-                <div class="modal-body">
-                   
-                        <fieldset class="p-1">
-                            <label for="date" class="fw-bold">Date:</label>
-                            <span class="date" id="date">20-mar-2023</span>
-                        </fieldset>
-                        <fieldset class="p-1">
-                            <label for="user" class="fw-bold">User:</label>
-                            <span class="user" id="user">Raju Mishra</span>
-                        </fieldset>
-                        <fieldset class="row d-flex align-items-center p-1 fw-bold">
-                            <div class="col-5">
-                            <label for="opening">Opening Balance:</label>
-                            </div>
-                            <div class="col-7"> 
-                            <input class="form-control" id="opening" value="0" onclick="this.select();">
-                            </div>
-                        </fieldset>
-                    
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-primary">Submit</button>
-                </div>
-                </form>
-
-            </div>
-        </div>
-
-
-    </div>
-
-
-
 </div>
+
 
 
 
