@@ -1,37 +1,84 @@
 ﻿@using LotusRMS.Models.Viewmodels.Galla;
-@model  GallaVM
+@model GallaVM
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
 }
 
+
 @if (Model == null)
 {
-    
-<div class="card p-3">
-    <h3 class="text-denger align-center">@ViewBag.Message</h3>
-    </div>
-    
-}else{
 
-<div class="card p-3">
-   <div class="card-title d-flex align-items-center justify-content-between">
-       <p>Date: <span class="fs-5 text-dark">@Model.Date.ToShortDateString() </span></p>
-        
-        <p><button type="button" class="btn btn-primary me-1">Withdraw Galla</button><button type="button" class="btn btn-danger">Close Galla</button></p>
-   </div>
-    <div class="card-title d-flex align-items-center justify-content-between py-0">
-        <p>Opening Balance: <span class="fs-5 text-dark">@Model.Opening_Balance</span></p>
-        <p>Closing Balance: <span class="fs-5 text-dark">@Model.Closing_Balance</span></p>
-        @*<p>Withdrawal amount: <span class="fs-5 text-dark">0</span></p>*@
+    <div class="card p-3">
+        <h3 class="text-denger align-center">@ViewBag.Message</h3>
     </div>
-</div>
-<div class="card p-3">
-    <div class="card-title pt-0 text-center">
-        Transactions Details
+
+}
+else
+{
+
+    <div class="card p-3">
+        <div class="card-title d-flex align-items-center justify-content-between">
+            <p>Date: <span class="fs-5 text-dark">@Model.Date.ToShortDateString() </span></p>
+
+            <p><button type="button" class="btn btn-primary me-1" data-bs-target="#withdrawGalla" data-bs-toggle="modal">Withdraw Galla</button></p>
+
+            <div class="modal fade" id="withdrawGalla">
+                <div class="modal-dialog   modal-dialog-centered">
+                    <div class="modal-content"> 
+                        <div class="modal-header justify-content-center align-items-center">
+                            <h5 class="modal-title fw-bold ms-auto"> Register Withdrawal Form</h5>
+                            <button class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        
+                        <div class="modal-body">
+                            <form>
+                                <div class="row">
+                                    <fieldset class="d-flex align-items-center justify-content-between mb-1">
+                                        <label class="fs-6 text-secondary">Opening Balance :</label>
+                                        <span class="fs-6 text-dark"> @Model.Opening_Balance </span>
+                                    </fieldset>
+
+                                    <fieldset class="d-flex align-items-center justify-content-between mb-1">
+                                        <label class="fs-6 text-secondary">Closing Balance :</label>
+                                        <span class="fs-6 text-dark" id="closing"> @Model.Closing_Balance </span>
+                                    </fieldset>
+                                    <fieldset class="d-flex align-items-center justify-content-between mb-2">
+                                        <label for="withDraw" class=" fs-6 text-secondary">Withdraw amount :</label>
+                                        <input type="number" min="0" class="form-control w-25 " id="withDraw" value="0" onclick="this.select();" onkeyup="changeValue()" autofocus>
+
+                                    </fieldset>
+                                    <hr>
+
+                                    <fieldset class="d-flex d-block align-items-center justify-content-between mb-3">
+                                        <label for="remaining" class="fs-6 text-dark">Remaining Balance :</label>
+                                        <span class="fs-6 text-dark" id="remaining">  </span>
+                                    </fieldset>
+                                    <div class="d-flex gap-2 justify-content-end">
+                                        <button class="btn btn-danger d-inline-block"  type="button" data-bs-dismiss="modal">Close</button>
+                                        <button class="btn btn-primary d-inline-block " id="btnWithdraw" type="button" data-bs-dismiss="modal">Withdraw</button>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-title d-flex align-items-center justify-content-between py-0">
+            <p>Opening Balance: <span class="fs-5 text-dark">@Model.Opening_Balance</span></p>
+            <p>Closing Balance: <span class="fs-5 text-dark">@Model.Closing_Balance</span></p>
+            @*<p>Withdrawal amount: <span class="fs-5 text-dark">0</span></p>*@
+        </div>
     </div>
-    <div class="card-body">
+    <div class="card p-3">
+        <div class="card-title pt-0 text-center">
+            Transactions Details
+        </div>
+        <div class="card-body">
             @if (Model.Galla_Details.Count() > 0)
             {
                 <table class="table table-striped">
@@ -45,14 +92,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach(var item in Model.Galla_Details){
-                        <tr>
-                            <td>@item.Time.ToShortTimeString()</td>
-                            <td>@item.Title</td>
-                            <td>@item.Deposit</td>
-                            <td>@item.Withdrawl</td>
-                            <td>@item.Balance</td>
-                        </tr>
+                        @foreach (var item in Model.Galla_Details)
+                        {
+                            <tr>
+                                <td>@item.Time.ToShortTimeString()</td>
+                                <td>@item.Title</td>
+                                <td>@item.Deposit</td>
+                                <td>@item.Withdrawl</td>
+                                <td>@item.Balance</td>
+                            </tr>
                         }
                     </tbody>
                 </table>
@@ -60,9 +108,41 @@
             else
             {
                 <h3 class="align-center text-danger">No any transection done yet...</h3>
-                
+
             }
         </div>
-</div>
+    </div>
 
 }
+
+<script>
+
+    let withDrawAmount = document.getElementById('withDraw').value;
+    let closingAmount = document.getElementById('closing').textContent;
+    let remaining = document.getElementById('remaining');
+
+
+    
+    withdrawDisableEnable();
+    remaining.textContent = closingAmount - withDrawAmount;
+
+
+    function withdrawDisableEnable() {
+        if (withDrawAmount <= 0 || (remaining.textContent) < 0) {
+            document.getElementById('btnWithdraw').setAttribute('disabled', '');
+        } else 
+        {
+            document.getElementById('btnWithdraw').removeAttribute('disabled');
+        }
+
+    }
+
+
+    function changeValue() {
+        withDrawAmount = document.getElementById('withDraw').value;
+        remaining.textContent = closingAmount - withDrawAmount;
+        withdrawDisableEnable();
+    }
+
+
+</script>
