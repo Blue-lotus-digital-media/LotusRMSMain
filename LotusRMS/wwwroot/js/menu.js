@@ -86,7 +86,7 @@ function loadData() {
             },
             {
                 data: "id",
-                render: function (data) { 
+                render: function (data) {
                     return `<div class="d-flex gap-1">
                                <div class="dropstart">
                                     <button class="eye btn btn-secondary dropstart" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-eye eye"></i></button>
@@ -99,27 +99,14 @@ function loadData() {
                                                  
                                                   <thead>
                                                    <tr>
-                                                        <th>Unit</th>
+                                                        
                                                         <th>Qty </th>
                                                         <th>Price</th>
                                                     </tr>
                                                   </thead>
                                                   <tbody>
-                                                  <tr>
-                                                        <td>ml</td>
-                                                        <td>30</td>
-                                                        <td>180.00</td>
-                                                    </tr>
-                                                     <tr>
-                                                        <td>ml</td>
-                                                        <td>60</td>
-                                                        <td>340.00</td>
-                                                    </tr>
-                                                     <tr>
-                                                        <td>ml</td>
-                                                        <td>90</td>
-                                                        <td>510.00</td>
-                                                    </tr>
+                                                
+                                                   
                                                   </tbody>
                                                   </table>
 
@@ -154,6 +141,12 @@ function loadData() {
 </i></div > `);
 
             }
+            var tdSet = "";
+            data.menuDetail.forEach(index => {
+                tdSet += " <tr><td>" + index.quantity + "</td ><td>" + index.rate + "</td></tr > ";
+            });
+            console.log(tdSet);
+            $('td:eq(9)', row).find("table").children("tbody").append(tdSet);
 
         }
 

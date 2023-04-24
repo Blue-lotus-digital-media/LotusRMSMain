@@ -18,11 +18,15 @@ namespace LotusRMS.DataAccess.Repository
             _dal = dal;
         }
 
-      
+        public async Task<LotusRMS_Menu_Unit> GetByUnitName(string name)
+        {
+            var unit =await GetFirstOrDefaultAsync(filter: x => x.Unit_Name == name, includeProperties: "UnitDivision");
+            return unit;
+        }
 
         public void Update(LotusRMS_Menu_Unit lUnit)
         {
-            var unit = _dal.LotusRMS_Menu_Units.FirstOrDefault(s => s.Id ==  lUnit.Id);
+            var unit =GetFirstOrDefault(s => s.Id ==  lUnit.Id,includeProperties: "UnitDivision");
             if (unit != null)
             {
                 unit.Update(lUnit.Unit_Name, lUnit.Unit_Symbol, lUnit.Unit_Description);

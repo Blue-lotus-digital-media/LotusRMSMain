@@ -62,5 +62,11 @@ namespace LotusRMS.Models.Service.Implementation
             return Id;
 
         }
+
+        public LotusRMS_Menu_Unit GetFirstOrDefaultById(Guid Id)
+        {
+            var unit = _menuUnitRepository.GetFirstOrDefault(x => x.Id == Id, includeProperties: "UnitDivision");
+            return unit;
+        }
     }
 }

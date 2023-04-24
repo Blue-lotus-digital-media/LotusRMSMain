@@ -89,13 +89,12 @@ namespace LotusRMSweb.Areas.Order.Controllers
             var menu=_IMenuService.GetFirstOrDefault(MenuId);
             var vm = new AddNewOrderVM()
             {
+                Menu=menu,
                 MenuId = MenuId,
                 TableId=TableId,
                 Item_Name = menu.Item_Name,
                 Item_Unit= menu.Menu_Unit.Unit_Symbol,
-                Rate = 00,
                 Quantity = 0
-
             };
             
             return PartialView("_AddMenu",model:vm);

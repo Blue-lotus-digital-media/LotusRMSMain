@@ -16,6 +16,7 @@ namespace LotusRMS.Models
         public string Unit_Name { get; private set; }
         public string Unit_Symbol { get; private set; }
         public string Unit_Description { get; private set; }
+        public List<LotusRMS_Unit_Division> UnitDivision { get; set; }
         public bool Status { get; set; } = true;
         public bool IsDelete { get; set; } = false;
 
@@ -27,6 +28,8 @@ namespace LotusRMS.Models
 
         }
 
+
+
         protected LotusRMS_Menu_Unit()
         {
         }
@@ -37,5 +40,14 @@ namespace LotusRMS.Models
             Unit_Symbol = unit_Symbol;
             Unit_Description = unit_Description;
         }
+    }
+    public class LotusRMS_Unit_Division
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
+        public string Title { get; set; }
+        public double Value { get; set; }
+
     }
 }

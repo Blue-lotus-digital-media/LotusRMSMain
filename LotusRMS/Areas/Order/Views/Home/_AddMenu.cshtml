@@ -22,7 +22,20 @@ data-ajax-success="menuAdded()"
         <input asp-for="TableId" hidden/>
        
               </div>
-            <div class="qty">@Model.Item_Unit</div>
+            <div class="qty">
+                <select >
+                    @foreach(var item in Model.Menu.Menu_Details)
+                    {
+                        if(item.Default){
+                            <option qty="@item.Quantity" rate="@item.Rate" selected>@item.Quantity @Model.Item_Unit </option>
+                        }else{
+                        <option qty="@item.Quantity" rate="@item.Rate">@item.Quantity @Model.Item_Unit </option>
+                        }
+                    }
+                </select>
+
+
+            </div>
             </div>
 
 

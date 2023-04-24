@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\MenuUnit.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AspNetCoreHero.ToastNotification" Version="1.1.0" />
     <PackageReference Include="ClosedXML" Version="0.100.3" />
     <PackageReference Include="DinkToPdf" Version="1.0.8" />
@@ -63,6 +67,10 @@
   <Content Include="libwkhtmltox.dll">
     <CopyToOutputDirectory>Always</CopyToOutputDirectory>
   </Content>
+</ItemGroup>
+
+<ItemGroup>
+  <None Include="wwwroot\MenuUnit.json" />
 </ItemGroup>
 
 <ItemGroup>

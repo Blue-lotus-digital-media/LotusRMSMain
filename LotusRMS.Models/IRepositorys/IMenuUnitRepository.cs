@@ -10,5 +10,6 @@ namespace LotusRMS.Models.IRepositorys
     {
         void Update(LotusRMS_Menu_Unit unit);
         void UpdateStatus(Guid Id);
+       Task<LotusRMS_Menu_Unit> GetByUnitName(string name);
     }
 }

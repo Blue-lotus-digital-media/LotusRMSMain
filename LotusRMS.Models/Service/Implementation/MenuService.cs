@@ -33,6 +33,7 @@ namespace LotusRMS.Models.Service.Implementation
             {
                 var detail = new LotusRMS_MenuDetail()
                 {
+
                     Quantity=item.Quantity,
                     Rate=item.Rate,
                     Default=item.Default
@@ -52,6 +53,7 @@ namespace LotusRMS.Models.Service.Implementation
             return menu.Id;
 
         }
+       
 
         public async Task<Guid> CreateAsync(CreateMenuDTO dto)
         {
@@ -60,7 +62,7 @@ namespace LotusRMS.Models.Service.Implementation
 
         public IEnumerable<LotusRMS_Menu> GetAll()
         {
-            return _IMenuRepository.GetAll(includeProperties: "Menu_Unit,Menu_Category,Menu_Type,Menu_Details");
+            return _IMenuRepository.GetAll(includeProperties: "Menu_Unit,Menu_Category,Menu_Type,Menu_Details,Menu_Details.Divison");
         }
 
         public async Task<IEnumerable<LotusRMS_Menu>> GetAllAsync()

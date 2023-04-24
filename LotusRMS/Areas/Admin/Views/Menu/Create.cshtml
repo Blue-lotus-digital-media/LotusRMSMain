@@ -103,7 +103,7 @@
                     <div class="row">
                         <div class="col-10">
 
-                            <select asp-for="Unit_Id" class="form-control" id="mUnit">
+                            <select asp-for="Unit_Id" class="form-control" id="mUnit" onchange="getUnitDivision(this);">
                                 <option>-- Select a unit --</option>
                                 @foreach (var item in Model.Menu_Unit_List)
                                 {
@@ -112,7 +112,7 @@
                             </select>
                         </div>
                         <div class="col-2">
-                            <a class="btn btn-primary" asp-area="admin" asp-action="create" asp-controller="MenuUnit" asp-route-returnUrl="~/admin/menu/create">
+                            <a class="btn btn-primary" asp-area="admin" asp-action="create" asp-controller="MenuUnit" asp-route-returnUrl="~/admin/menu/create" >
                                 <i class="bi bi-plus-lg"></i>
                             </a>
                         </div>
@@ -134,14 +134,14 @@
 
                         </div>
                         <div class="wrappers mt-1">
-                            <div class="fieldset">
+                            <div class="fieldset" id="fieldset_0">
                                 <div class="fields">
                                     <div class="d-flex mb-2">
-                                        <input class="form-control me-2" placeholder="quantity" name="MenuDetail[0].Quantity"/>
-                                        <span class="unitSection">unit</span>
+                                        <select name="MenuDetail[0].Quantity" class="unitDivision form-control" id="unitDivision_0">
+                                        </select>
                                         <input type="number" class="form-control me-2" placeholder="rate" name="MenuDetail[0].Rate" />
-                                        <input type="radio" class="me-2 unitDefault" name="MenuDetail[0].IsDefault" />
-                                        <button type="button" class="add_unit_button btn btn-primary"> <i class="fa-solid fa-plus"></i></button>
+                                        <input type="radio" class="me-2 unitDefault" name="MenuDetail[0].IsDefault" checked value="true"/>
+                                        <button type="button" class="add_unit_button btn btn-primary" onclick="addDivision()"> <i class="fa-solid fa-plus"></i></button>
                                                                            
                                     </div>
                                     
@@ -303,7 +303,7 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    <script src="~/js/createupdatemenu1.js">
+    <script src="~/js/createupdatemenu.js">
        
     </script>
 }

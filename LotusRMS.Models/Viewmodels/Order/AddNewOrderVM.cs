@@ -9,6 +9,7 @@ namespace LotusRMS.Models.Viewmodels.Order
     public class AddNewOrderVM
     {
         public Guid MenuId { get; set; }
+        public virtual LotusRMS_Menu Menu { get; set; }
         public Guid TableId { get; set; }
         public string Item_Name { get; set; }
         public string? Item_Unit { get; set; }

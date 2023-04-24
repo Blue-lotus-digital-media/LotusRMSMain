@@ -120,6 +120,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+   
 
         public IActionResult Update(Guid Id)
         {
@@ -224,7 +225,14 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 Menu_Category_Name = menu.Menu_Category.Category_Name,
                 Menu_Type_Name = menu.Menu_Type.Type_Name,
                 Menu_Image = ImageUpload.GetStrigFromByteArray(menu.Image),
-                Status = menu.Status
+                Status = menu.Status,
+                MenuDetail=menu.Menu_Details.Select(md=>new MenuDetailVM()
+                {
+                    Id=md.Id,
+                    Quantity=md.Divison.Title +"("+md.Divison.Value+" "+ menu.Menu_Unit.Unit_Symbol +")",
+                    Rate=md.Rate,
+                    IsDefault=md.Default
+                }).ToList()
             }).ToList();
             return Json(new { data = menus });
         }
@@ -266,6 +274,14 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 }).ToList();
             return CategoryList;
         }
+
+        [HttpGet]
+        public IActionResult GetUnitDivision(Guid UnitId)
+        {
+            var units = _IMenuUnitService.GetFirstOrDefaultById(UnitId);
+            return Json(new { units.UnitDivision });
+        }
+
 
         #endregion
     }

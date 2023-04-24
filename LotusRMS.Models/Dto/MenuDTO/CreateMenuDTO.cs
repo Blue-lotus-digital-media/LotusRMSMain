@@ -22,7 +22,7 @@ namespace LotusRMS.Models.Dto.MenuDTO
     }
     public class CreateMenuDetailDTO
     {
-        public double Quantity { get; set; }
+        public Guid Quantity { get; set; }
         public double Rate { get; set; }
         public bool Default { get; set; }
     }

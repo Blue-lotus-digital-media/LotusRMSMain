@@ -10,7 +10,7 @@ namespace LotusRMS.Models.Viewmodels.Menu
     public class CreateMenuDetailVM
     {
         [Required]
-        public double Quantity { get; set; }
+        public Guid Quantity { get; set; }
 
         [Required]
         public double Rate{ get; set; }

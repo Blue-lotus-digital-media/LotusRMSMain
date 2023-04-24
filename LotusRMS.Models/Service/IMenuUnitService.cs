@@ -15,6 +15,7 @@ namespace LotusRMS.Models.Service
 
         public IEnumerable<LotusRMS_Menu_Unit> GetAll();
         public LotusRMS_Menu_Unit GetByGuid(Guid Id);
+        public LotusRMS_Menu_Unit GetFirstOrDefaultById(Guid Id);
 
     }
 }

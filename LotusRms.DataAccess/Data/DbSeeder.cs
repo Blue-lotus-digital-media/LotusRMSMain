@@ -1,6 +1,10 @@
 ﻿using LotusRMS.Models;
+using LotusRMS.Models.IRepositorys;
+using LotusRMS.Models.Viewmodels.MenuUnit;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
+using System;
 
 namespace LotusRMS.DataAccess
 {
@@ -36,5 +40,43 @@ namespace LotusRMS.DataAccess
             }
 
         }
-        }
+    public static async Task SeedMenuUnit(IServiceProvider service)
+        {
+
+            using StreamReader reader = new("./wwwroot/menuunit.json");
+            var json = reader.ReadToEnd();
+            var menuUnitJson = JsonConvert.DeserializeObject<List<MenuUnitFromJson>>(json);
+            var menuUnits = new List<LotusRMS_Menu_Unit>();
+            foreach(var item in menuUnitJson)
+            {
+                var menuUnit = new LotusRMS_Menu_Unit(unit_Name:item.Name,unit_Symbol:item.Symbol,unit_Description:item.Description )
+                {
+                    UnitDivision = new List<LotusRMS_Unit_Division>()
+                };
+                foreach(var abc in item.Division)
+                {
+                    var div = new LotusRMS_Unit_Division()
+                    {
+                        Title = abc.Title,
+                        Value = abc.Value
+                    };
+                    menuUnit.UnitDivision.Add(div);
+                }
+
+                menuUnits.Add(menuUnit);
+                }
+            using (var serviceScope = service.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
+                if (!context.LotusRMS_Menu_Units.Any())
+                {
+                    context.AddRange(menuUnits);
+                    context.SaveChanges();
+                }
+            }
+
+        } 
+    
+    
+    }
 }

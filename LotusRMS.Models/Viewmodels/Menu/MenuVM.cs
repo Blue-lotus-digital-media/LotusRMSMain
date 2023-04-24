@@ -17,6 +17,15 @@ namespace LotusRMS.Models.Viewmodels.Menu
         public string Menu_Unit_Name { get; set; }
         public string Menu_Category_Name { get; set; }
         public string Menu_Type_Name { get; set; }
+        public List<MenuDetailVM> MenuDetail { get; set; }
         public bool Status { get; set; }
+    }
+    public class MenuDetailVM
+    {
+        public Guid Id { get; set; }
+        public string Quantity { get; set; }
+        public double Rate { get; set; }
+        public bool IsDefault { get; set; }
+
     }
 }

@@ -1,0 +1,134 @@
+[
+  {
+    "name": "mililiter",
+    "symbol": "ml",
+    "description": "",
+    "division": [
+      {
+        "title": "small",
+        "value": 30
+      },
+      {
+        "title": "medium",
+        "value": 60
+      },
+      {
+        "title": "half Quarter",
+        "value": 90
+      },
+      {
+        "title": "quarter",
+        "value": 180
+      },
+      {
+        "title": "half",
+        "value": 360
+      },
+      {
+        "title": "full",
+        "value": 720
+      },
+      {
+        "title": "liter",
+        "value": 1000
+      }
+    ]
+  },
+  {
+    "name": "plate",
+    "symbol": "plt",
+    "description": "",
+    "division": [
+      {
+        "title": "half",
+        "value": 0.5
+      },
+      {
+        "title": "full",
+        "value": 1
+      }
+    ]
+  },
+  {
+    "name": "bottle",
+    "symbol": "btl",
+    "description": "",
+    "division": [
+      {
+        "title": "one",
+        "value": 1
+      }
+    ]
+  },
+  {
+    "name": "piece",
+    "symbol": "pis",
+    "description": "",
+    "division": [
+      {
+        "title": "one",
+        "value": 1
+      }
+    ]
+  },
+  {
+    "name": "glass",
+    "symbol": "gls",
+    "description": "",
+    "division": [
+      {
+        "title": "one",
+        "value": 1
+      }
+    ]
+  },
+  {
+    "name": "cup",
+    "symbol": "cup",
+    "description": "",
+    "division": [
+      {
+        "title": "one",
+        "value": 1
+      }
+    ]
+  },
+  {
+    "name": "package",
+    "symbol": "pack",
+    "description": "",
+    "division": [
+      {
+        "title": "one",
+        "value": 1
+      }
+    ]
+  },
+  {
+    "name": "kilogram",
+    "symbol": "kg",
+    "description": "",
+    "division": [
+      {
+        "title": "one",
+        "value": 1
+      },
+      {
+        "title": "half",
+        "value": 0.5
+      },
+      {
+        "title": "250g",
+        "value": 0.25
+      },
+      {
+        "title": "200g",
+        "value": 0.2
+      },
+      {
+        "title": "100g",
+        "value": 0.1
+      }
+    ]
+  }
+]

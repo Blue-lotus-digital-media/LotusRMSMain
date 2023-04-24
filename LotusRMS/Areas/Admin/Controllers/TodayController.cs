@@ -4,6 +4,11 @@ using LotusRMS.Models.Viewmodels.Today;
 using LotusRMS.Models.Viewmodels.Type;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Hosting;
+using Newtonsoft.Json.Linq;
+using System.Text.Json;
+using LotusRMS.Models.Viewmodels.MenuUnit;
+using Newtonsoft.Json;
 
 namespace LotusRMSweb.Areas.Admin.Controllers
 {
@@ -14,18 +19,21 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         private readonly ITableTypeService _ITableTypeService;
         private readonly ITableService _ITableService;
         private readonly IOrderService _IOrderService;
-
+        private Microsoft.AspNetCore.Hosting.IHostingEnvironment _env;
         public TodayController(ITableTypeService iTableTypeService,
             ITableService iTableService,
-            IOrderService iOrderService)
+            IOrderService iOrderService,
+          Microsoft.AspNetCore.Hosting.IHostingEnvironment env)
         {
             _ITableTypeService = iTableTypeService;
             _ITableService = iTableService;
             _IOrderService = iOrderService;
+            _env = env;
         }
 
         public IActionResult Index()
         {
+           
             var typeTable = new List<TodayTableVM>();
             var type = _ITableTypeService.GetAllAvailable().Select(t => new TypeVM()
             {

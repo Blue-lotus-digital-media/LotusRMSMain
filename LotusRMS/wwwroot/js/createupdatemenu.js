@@ -1,4 +1,32 @@
-﻿
+﻿function getUnitDivision(t) {
+    var unit = document.getElementById("mUnit");
+    var x = unit.value;
+    var text = unit.options[unit.selectedIndex].text;
+    
+     $.ajax({
+        type: "GET",
+         url: '/admin/menu/getunitdivision?UnitId=' + x,
+        success: function (data) {
+           
+            var quantity = document.getElementById('unitDivision_0');
+            quantity.innerHTML="";
+           
+            data.unitDivision.forEach((item) =>{
+                var option = document.createElement("option");
+                option.text = item.title + "(" + item.value + " " + text + ") ";
+                console.log(item.id);
+                option.value = item.id;
+                quantity.append(option);
+            });
+            var fieldset = document.getElementById('fieldset_0');
+
+
+
+            $(".wrappers").empty();
+            $(".wrappers").append(fieldset);
+        }
+    });
+}
 
 
 function loadData(t) {
@@ -132,30 +160,8 @@ function loadProduct() {
 $(document).ready(function () {
     $("#mCategory").attr("disabled", "true");
 
-    var max_fields = 10;
-    var wrapper = $(".wrappers");
-    var add_unit_button = $(".add_unit_button");
-
-    var x = 0;
-    $(add_unit_button).click(function (e) {
-        console.log("here");
-        e.preventDefault();
-        if (x < max_fields) {
-            x++;
-            $(wrapper).append(
-                '<div class="fieldset" id="fieldset_' + x + '">' +
-                '  <div class="fields">' +
-                '    <div class="d-flex mb-2">' +
-                '      <input class="form-control me-2" placeholder="quantity" name="MenuDetail['+x+'].Quantity" />' +
-                '      <span class="unitSection">unit</span>'+
-                '      <input type="number" class="form-control me-2" placeholder="rate" name="MenuDetail[' + x +'].Rate" />' +
-                '      <input type="radio" class="me-2 unitDefault" name="MenuDetail['+ x +'].IsDefault" />' +
-                '      <button type="button" class="remove_button btn btn-danger" data-id="' + x + '"><i class="fa-solid fa-minus"></i></button>' +
-                '    </div>' +
-                '  </div>' +
-                '</div>');
-        }
-    });
+  
+   
     $(document).on('change',' .unitDefault', function () {
         $('.unitDefault').not(this).prop('checked', false);
         $('.unitDefault').not(this).prop('value', false);
@@ -168,9 +174,58 @@ $(document).ready(function () {
         e.preventDefault();
         var id = $(this).data('id');
         $('#fieldset_' + id).remove();
-        x--;
+
+
+        var fieldset = document.getElementsByClassName("fieldset");
+        console.log(fieldset);
+        for (var i = 0; i < fieldset.length; i++) {
+            var field = fieldset[i];
+
+            field.setAttribute("id", "fieldset_" + i);
+            var div = field.children[0].children[0].children;
+
+            var quantity = div[0];
+            var rate = div[1];
+            var defaults = div[2];
+            var button = div[3];
+            quantity.setAttribute("id", "unitDivision_" + i);
+            quantity.setAttribute("name", "MenuUnit["+i+"].Quantity");
+            rate.setAttribute("name", "MenuUnit["+i+"].Rate");
+            defaults.setAttribute("name", "MenuUnit[" + i + "].IsDefault");
+            button.setAttribute("data-id", i);
+
+
+
+            console.log(field);
+        }
+
     });
 });
+function addDivision(e) {
+
+    var wrapper = $(".wrappers");
+    var x = document.getElementsByClassName("fieldset").length;
+    var max_fields = document.getElementById('unitDivision_0').length;
+    /*e.preventDefault();*/
+    if (x < max_fields) {
+       
+        $(wrapper).append(
+            '<div class="fieldset" id="fieldset_' + x + '">' +
+            '  <div class="fields">' +
+            '    <div class="d-flex mb-2">' +
+            '       <select name="MenuDetail[' + x + '].Quantity" class="unitDivision form-control" id="unitDivision_'+x+'">'+
+                                       ' </select >'+
+            '      <input type="number" class="form-control me-2" placeholder="rate" name="MenuDetail[' + x + '].Rate" />' +
+            '      <input type="radio" class="me-2 unitDefault" name="MenuDetail[' + x + '].IsDefault" />' +
+            '      <button type="button" class="remove_button btn btn-danger" data-id="' + x + '"><i class="fa-solid fa-minus"></i></button>' +
+            '    </div>' +
+            '  </div>' +
+            '</div>');
+
+        var quantity = document.getElementById('unitDivision_0');
+        document.getElementById("unitDivision_" + x).innerHTML=quantity.innerHTML;
+    }
+}
             
 
 

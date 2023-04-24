@@ -14,7 +14,10 @@ namespace LotusRMS.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
-        public double Quantity { get; set; }
+        
+        public Guid Quantity { get; set; }
+        [ForeignKey("Quantity")]
+        public virtual LotusRMS_Unit_Division Divison { get; set; }
         public double Rate { get; set; }
         public bool Default { get; set; }
         public bool Status { get; set; } = true;

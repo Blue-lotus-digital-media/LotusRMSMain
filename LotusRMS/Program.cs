@@ -154,9 +154,9 @@ app.UseEndpoints(endpoints =>
     endpoints.MapHub<OrderHub>("/orderHub");
 });
 
-
 using (var scope = app.Services.CreateScope())
 {
     await DbSeeder.SeedRolesAndSuperAdminAsync(scope.ServiceProvider);
+    await DbSeeder.SeedMenuUnit(scope.ServiceProvider);
 }
 app.Run();

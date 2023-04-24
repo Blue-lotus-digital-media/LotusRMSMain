@@ -3,6 +3,7 @@ using System;
 using LotusRMS.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LotusRMS.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230420074657_Menuunitupdated")]
+    partial class Menuunitupdated
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -472,8 +475,8 @@ namespace LotusRMS.DataAccess.Migrations
                     b.Property<Guid?>("LotusRMS_MenuId")
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("Quantity")
-                        .HasColumnType("char(36)");
+                    b.Property<double>("Quantity")
+                        .HasColumnType("double");
 
                     b.Property<double>("Rate")
                         .HasColumnType("double");
@@ -484,8 +487,6 @@ namespace LotusRMS.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("LotusRMS_MenuId");
-
-                    b.HasIndex("Quantity");
 
                     b.ToTable("LotusRMS_MenuDetail");
                 });
@@ -1300,14 +1301,6 @@ namespace LotusRMS.DataAccess.Migrations
                     b.HasOne("LotusRMS.Models.LotusRMS_Menu", null)
                         .WithMany("Menu_Details")
                         .HasForeignKey("LotusRMS_MenuId");
-
-                    b.HasOne("LotusRMS.Models.LotusRMS_Unit_Division", "Divison")
-                        .WithMany()
-                        .HasForeignKey("Quantity")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Divison");
                 });
 
             modelBuilder.Entity("LotusRMS.Models.LotusRMS_Menu_Category", b =>
