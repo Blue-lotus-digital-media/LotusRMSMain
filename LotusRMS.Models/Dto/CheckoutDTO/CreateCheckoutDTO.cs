@@ -18,7 +18,7 @@ namespace LotusRMS.Models.Dto.CheckoutDTO
         public string Customer_Contact { get; set; }
 
         public Guid Order_Id { get; set; }
-        public float Total { get; set; }
+        public double Total { get; set; }
         public DiscountTypeEnum Discount_Type { get; set; }
         public float Discount { get; set; }
         public float Paid_Amount { get; set; }

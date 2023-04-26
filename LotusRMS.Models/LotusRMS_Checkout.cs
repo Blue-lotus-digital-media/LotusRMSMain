@@ -26,7 +26,7 @@ namespace LotusRMS.Models
         [ForeignKey("Order_Id")]
         public virtual LotusRMS_Order Order { get; set; }
 
-        public float Total { get; set; }
+        public double Total { get; set; }
         public DiscountTypeEnum Discount_Type { get; set; }
         public float Discount { get; set; } 
         public float Paid_Amount { get; set; }

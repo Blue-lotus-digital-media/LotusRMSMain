@@ -63,7 +63,8 @@ namespace LotusRMSweb.Areas.Order.Controllers
             var menu = _IMenuService.GetAll().Where(x => !x.IsDelete && x.Status).Select(menu => new OrderMenu()
             {
                 Item_Name = menu.Item_Name,
-                Symbol=menu.Menu_Unit.Unit_Symbol,
+                Symbol= menu.Menu_Details.FirstOrDefault(x => x.Default).Divison.Title, //+ "( "+menu.Menu_Details.FirstOrDefault(x => x.Default).Divison.Value+" " + menu.Menu_Unit.Unit_Symbol+")",
+                Rate=menu.Menu_Details.FirstOrDefault(x=>x.Default).Rate,
                 Id = menu.Id
             }).ToList();
             ViewBag.Menu = menu;
@@ -94,6 +95,7 @@ namespace LotusRMSweb.Areas.Order.Controllers
                 TableId=TableId,
                 Item_Name = menu.Item_Name,
                 Item_Unit= menu.Menu_Unit.Unit_Symbol,
+                Rate=menu.Menu_Details.FirstOrDefault(x=>x.Default).Rate,
                 Quantity = 0
             };
             
@@ -129,14 +131,14 @@ namespace LotusRMSweb.Areas.Order.Controllers
                         {
                             Id = item.Id,
                             MenuId = item.MenuId,
-                            Item_Name = menu.Item_Name,
+                            Item_Name = menu.Item_Name + "(" + menu.Menu_Details.FirstOrDefault(x => x.Id == item.Quantity_Id).Divison.Title + ")",
                             Item_Unit=menu.Menu_Unit.Unit_Symbol,
                             Rate = item.Rate,
                             Remarks=item.Remarks,
                             Quantity = item.Quantity,
+                            Quantity_Id=item.Quantity_Id,
                             IsComplete = item.IsComplete,
-                            IsKitchenComplete = item.IsKitchenComplete,
-                            Total = item.GetTotal
+                            IsKitchenComplete = item.IsKitchenComplete
                         };
                         OrderVM.Order_Details.Add(orderDetail);
                     }
@@ -169,9 +171,10 @@ namespace LotusRMSweb.Areas.Order.Controllers
                             Rate = item.Rate,
                             Remarks = item.Remarks,
                             Quantity = item.Quantity,
+                            Quantity_Id = item.Quantity_Id,
                             IsComplete = item.IsComplete,
                             IsKitchenComplete = item.IsKitchenComplete,
-                            Total = item.GetTotal
+                            
                         };
                         OrderVM.Order_Details.Add(orderDetail);
                     }
@@ -193,7 +196,7 @@ namespace LotusRMSweb.Areas.Order.Controllers
                 orderList = JsonConvert.DeserializeObject<List<AddNewOrderVM>>(HttpContext.Session.GetString(vm.TableId.ToString()));
             }
             var menu=_IMenuService.GetAll().Where(x=>x.Id== vm.MenuId).FirstOrDefault();
-            vm.Item_Name = menu.Item_Name;
+            vm.Item_Name = menu.Item_Name +"("+menu.Menu_Details.FirstOrDefault(x=>x.Id==vm.Quantity_Id).Divison.Title+")";
             vm.Item_Unit= menu.Menu_Unit.Unit_Symbol;
             orderList.Add(vm);
 
@@ -219,6 +222,7 @@ namespace LotusRMSweb.Areas.Order.Controllers
                 {
                     Menu_Id = item.MenuId,
                     Quantity = item.Quantity,
+                    Quantity_Id=item.Quantity_Id,
                     Rate = item.Rate,
                     Remarks=item.Remarks
                 };

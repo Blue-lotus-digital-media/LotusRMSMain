@@ -11,7 +11,7 @@ namespace LotusRMS.Models.Viewmodels.Checkout
     {
         public Guid Order_Id { get; set; }
         public Guid? Customer_Id { get; set; }
-        public float Total { get; set; }
+        public double Total { get; set; }
         public string Customer_Name { get; set; }
         public string Customer_Address { get; set; }
         public string Customer_Contact { get; set; }

@@ -69,8 +69,8 @@ namespace LotusRMSweb.Areas.Kitchen.Controllers
                                 IsComplete = item.IsComplete,
                                 IsPrinted = item.IsPrinted,
                                 IsKitchenComplete = item.IsKitchenComplete,
-                                Remarks=item.Remarks,
-                                Total = item.GetTotal
+                                Remarks=item.Remarks
+                                
                             };
                             kitchenOrderVM.OrderDetail.Add(orderDetail);
                         }

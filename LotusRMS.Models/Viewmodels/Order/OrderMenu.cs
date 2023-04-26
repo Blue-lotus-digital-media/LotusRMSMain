@@ -10,7 +10,7 @@ namespace LotusRMS.Models.Viewmodels.Order
     {
         public Guid Id { get; set; }
         public  string Item_Name { get; set; }
-        public float Rate { get; set; }
+        public double Rate { get; set; }
         public string Symbol { get; set; }
     }
 }

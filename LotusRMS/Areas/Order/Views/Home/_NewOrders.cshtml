@@ -1,96 +1,6 @@
 ﻿@using LotusRMS.Models.Viewmodels.Order
 @model List<AddNewOrderVM>
-@*@if(Model.Count>0){
-    <fieldset>
-    <legend >New Order</legend>
-    <table class="table table-striped">
-    <thead>
-    <tr>
-    <th>S.N</th>
-    <th>Item Name</th>
-    <th>Quantity</th>
-    <th>Rate</th>
-    <th>Total</th>
-    <th>Action</th>
-    </tr>
-    </thead>
-    <tbody>
-    @{
-    var i = 1;
-    }
-    @foreach (var item in Model)
-    {
 
-    <tr>
-    <td>@i</td>
-    <td>@item.Item_Name</td>
-    <td>@item.Quantity</td>
-    <td>@item.Rate</td>
-    <td>@item.Total</td>
-    <td class="d-flex">
-    <form
-    asp-action="EditNewOrder"
-    asp-controller="Home"
-    asp-area="Order"
-    asp-route-tableId="@item.TableId"
-    asp-route-menuId="@item.MenuId"
-    asp-route-quantity="@item.Quantity"
-    data-ajax="true"
-    data-ajax-success="menuSelected()"
-    data-ajax-update="#AddmenuSection"
-    data-ajax-loading="#overlay">
-    <button type="submit" class="btn btn-primary"><i class="bi bi-pencil-square"></i></button>
-    </form>
-    <form
-    method="get"
-    asp-action="DeleteNewOrder"
-    asp-controller="Home"
-    asp-area="Order"
-    asp-route-tableId="@item.TableId"
-    asp-route-menuId="@item.MenuId"
-    asp-route-quantity="@item.Quantity"
-    data-ajax="true"
-    data-ajax-update="#NewOrderSection"
-    data-ajax-loading="#overlay">
-    <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i></button>
-    </form>
-    </td>
-    </tr>
-    i++;
-    }
-    </tbody>
-    <tfoot>
-    <tr>
-    <td colspan="4" class="text-align:right">
-    Total
-    </td>
-    <td>
-    @{
-    var gTotal = Model.Sum(x => x.Total);
-    }
-    @gTotal
-
-    </td>
-
-    <td>
-    <form
-    asp-action="CompleteNewOrder"
-    asp-controller="Home"
-    asp-area="Order"
-    asp-route-tableId="@Model[0].TableId"
-    data-ajax="true"
-    data-ajax-success="$('#NewOrderSection').empty()"
-    data-ajax-update="#orderSection"
-    data-ajax-loading="#overlay">
-    <button type="submit" class="btn btn-primary">Complete</button>
-    </form>
-    </td>
-    </tr>
-    </tfoot>
-    </table>
-
-    </fieldset>
-*@
 
 @if (Model.Count > 0)
 {
@@ -121,7 +31,7 @@
                             <tr class="bill-table-data">
                                 <th class="td-heading" scope="row">@i</th>
                                 <td>@item.Item_Name</td>
-                                <td>@item.Quantity @item.Item_Unit</td>
+                                <td>@item.Quantity</td>
                                 <td>@item.Rate</td>
                                 <td>@item.Total</td>
                                 <td class="action">

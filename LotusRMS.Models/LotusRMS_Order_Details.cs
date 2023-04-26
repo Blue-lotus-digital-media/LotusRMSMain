@@ -14,11 +14,12 @@ namespace LotusRMS.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        public float Quantity { get; set; }
-        public float Rate { get; set; }
+        public double Quantity { get; set; }
+        public Guid Quantity_Id { get; set; }
+        public double Rate { get; set; }
 
         public string? Remarks { get; set; }
-        public float GetTotal {
+        public double GetTotal {
             get { return  Quantity * Rate; }
         }
         public bool IsComplete { get; set; } = false;

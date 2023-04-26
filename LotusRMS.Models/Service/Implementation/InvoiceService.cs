@@ -60,7 +60,7 @@ namespace LotusRMS.Models.Service.Implementation
             if(checkout.Payment_Mode.ToString()=="Credit" && checkout.Customer_Id != Guid.Empty)
             {
                 var customer = _iCustomerService.GetFirstOrDefaultById((Guid)checkout.Customer_Id);
-                float discount = 0;
+                double discount = 0;
                 if (checkout.Discount_Type.ToString() == "Cash")
                 {
                     discount = checkout.Discount;
@@ -71,7 +71,7 @@ namespace LotusRMS.Models.Service.Implementation
                 }
                 var DueAmount = checkout.Total - checkout.Paid_Amount - discount;
                 var InvoiceAmount = checkout.Total - discount;
-                float balanceDue = 0;
+                double balanceDue = 0;
                 if (customer.DueBooks.Count()!=0)
                 {
                     balanceDue = customer.DueBooks.LastOrDefault().BalanceDue;

@@ -32,10 +32,10 @@ namespace LotusRMS.Models
         public Guid? Invoice_Id { get; set; }
         [ForeignKey("Invoice_Id")]
         public virtual LotusRMS_Invoice Invoice { get; set; }
-        public float Invoice_Amount { get; set; }
-        public float DueAmount { get; set; }
-        public float PaidAmount { get; set; }
-        public float BalanceDue { get; set; }
+        public double Invoice_Amount { get; set; }
+        public double DueAmount { get; set; }
+        public double PaidAmount { get; set; }
+        public double BalanceDue { get; set; }
 
 
     }

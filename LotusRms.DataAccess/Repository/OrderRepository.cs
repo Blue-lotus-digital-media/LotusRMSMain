@@ -71,7 +71,7 @@ namespace LotusRMS.DataAccess.Repository
             if (order != null)
             {
                 var orderDetail = order.Order_Details.FirstOrDefault(x => x.Id == OrderDetailId);
-                var orderDetail1 = order.Order_Details.FirstOrDefault(x => x.MenuId==orderDetail.MenuId && x.IsComplete);
+                var orderDetail1 = order.Order_Details.FirstOrDefault(x => x.MenuId==orderDetail.MenuId && x.IsComplete && x.Quantity_Id==orderDetail.Quantity_Id);
                 if (orderDetail1 != null)
                 {
                     var index = order.Order_Details.IndexOf(orderDetail1);

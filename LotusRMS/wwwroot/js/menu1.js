@@ -2,17 +2,17 @@
 
 $(document).ready(function () {
     loadData();
+
+  
 });
 function toggleMe(me) {
     var id = $(me).attr("data-id");
-    console.log(id);
     $.ajax({
         type: 'GET',
         url: "/admin/menu/statuschange",
         data: "id=" + id,
         success: function (data) {
-
-            console.log(data);
+            
             if (data == true) {
 
                 $(me).removeClass("fa-toggle-off").removeClass("statusToggleOff").addClass('fa-toggle-on').addClass("statusToggleOn");
@@ -145,7 +145,6 @@ function loadData() {
             data.menuDetail.forEach(index => {
                 tdSet += " <tr><td>" + index.quantity + "</td ><td>" + index.rate + "</td></tr > ";
             });
-            console.log(tdSet);
             $('td:eq(9)', row).find("table").children("tbody").append(tdSet);
 
         }

@@ -123,13 +123,14 @@ namespace LotusRMSweb.Controllers
                 {
                     Id = item.Id,
                     MenuId = item.MenuId,
-                    Item_Name = menu.Item_Name,
-                    Item_Unit= menu.Menu_Unit.Unit_Symbol,
+                    Item_Name = menu.Item_Name + "(" + menu.Menu_Details.FirstOrDefault(x => x.Id == item.Quantity_Id).Divison.Title + ")",
+
+                    Item_Unit = menu.Menu_Unit.Unit_Symbol,
                     Rate = item.Rate,
                     Quantity = item.Quantity,
                     IsComplete = item.IsComplete,
                     IsKitchenComplete = item.IsKitchenComplete,
-                    Total = item.GetTotal
+                    
                 };
                 OrderVM.Order_Details.Add(orderDetail);
 

@@ -192,14 +192,14 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
                         {
                             Id = item.Id,
                             MenuId = item.MenuId,
-                            Item_Name = menu.Item_Name,
+                            Item_Name = menu.Item_Name + "(" + menu.Menu_Details.FirstOrDefault(x => x.Id == item.Quantity_Id).Divison.Title + ")",
                             Item_Unit = menu.Menu_Unit.Unit_Symbol,
                             Rate = item.Rate,
                             Remarks = item.Remarks,
                             Quantity = item.Quantity,
+                            Quantity_Id=item.Quantity_Id,
                             IsComplete = item.IsComplete,
-                            IsKitchenComplete = item.IsKitchenComplete,
-                            Total = item.GetTotal
+                            IsKitchenComplete = item.IsKitchenComplete
                         };
                         OrderVM.Order_Details.Add(orderDetail);
                     }
@@ -228,14 +228,14 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
                         {
                             Id = item.Id,
                             MenuId = item.MenuId,
-                            Item_Name = menu.Item_Name,
+                            Item_Name = menu.Item_Name + "(" + menu.Menu_Details.FirstOrDefault(x => x.Id == item.Quantity_Id).Divison.Title + ")",
                             Item_Unit = menu.Menu_Unit.Unit_Symbol,
                             Rate = item.Rate,
                             Remarks = item.Remarks,
                             Quantity = item.Quantity,
+                            Quantity_Id=item.Quantity_Id,
                             IsComplete = item.IsComplete,
-                            IsKitchenComplete = item.IsKitchenComplete,
-                            Total = item.GetTotal
+                            IsKitchenComplete = item.IsKitchenComplete
                         };
                         OrderVM.Order_Details.Add(orderDetail);
                     }
@@ -246,7 +246,7 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
             return OrderVM;
         }
 
-        public CreateCheckoutVM CreateCheckOut(Guid Order_Id,float Total)
+        public CreateCheckoutVM CreateCheckOut(Guid Order_Id,double Total)
         {
             var checkoutVm = new CreateCheckoutVM()
             {
@@ -277,7 +277,7 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
 
             return Json(new { data = customer });
         }
-        public float GetDue(List<LotusRMS_DueBook> dueBook)
+        public double GetDue(List<LotusRMS_DueBook> dueBook)
         {
             if (dueBook.Count==0)
             {
@@ -310,14 +310,14 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
                     {
                         Id = item.Id,
                         MenuId = item.MenuId,
-                        Item_Name = menu.Item_Name,
+                        Item_Name = menu.Item_Name + "(" + menu.Menu_Details.FirstOrDefault(x => x.Id == item.Quantity_Id).Divison.Title + ")",
                         Item_Unit = menu.Menu_Unit.Unit_Symbol,
                         Rate = item.Rate,
                         Quantity = item.Quantity,
+                        Quantity_Id=item.Quantity_Id,
                         IsComplete = item.IsComplete,
                         IsPrinted = item.IsPrinted,
-                        IsKitchenComplete = item.IsKitchenComplete,
-                        Total = item.GetTotal
+                        IsKitchenComplete = item.IsKitchenComplete
                     };
                     printOrderVM.OrderDetail.Add(orderDetail);
 
@@ -332,14 +332,14 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
                     {
                         Id = item.Id,
                         MenuId = item.MenuId,
-                        Item_Name = menu.Item_Name,
+                        Item_Name = menu.Item_Name + "(" + menu.Menu_Details.FirstOrDefault(x => x.Id == item.Quantity_Id).Divison.Title + ")",
                         Item_Unit = menu.Menu_Unit.Unit_Symbol,
                         Rate = item.Rate,
                         Quantity = item.Quantity,
+                        Quantity_Id = item.Quantity_Id,
                         IsComplete = item.IsComplete,
                         IsPrinted = item.IsPrinted,
-                        IsKitchenComplete = item.IsKitchenComplete,
-                        Total = item.GetTotal
+                        IsKitchenComplete = item.IsKitchenComplete
                     };
                     printOrderVM.OrderDetail.Add(orderDetail);
 

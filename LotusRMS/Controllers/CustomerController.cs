@@ -73,7 +73,7 @@ namespace LotusRMSweb.Controllers
             {
                 return RedirectToAction(nameof(Index));
             }
-            float dueBalance = 0;
+            double dueBalance = 0;
             if (customer.DueBooks.Count() > 0)
             {
                 dueBalance = customer.DueBooks.LastOrDefault().BalanceDue;
@@ -132,7 +132,7 @@ namespace LotusRMSweb.Controllers
 
 
         }
-        public float GetDue(List<LotusRMS_DueBook> dueBook)
+        public double GetDue(List<LotusRMS_DueBook> dueBook)
         {
             if (dueBook.Count == 0)
             {

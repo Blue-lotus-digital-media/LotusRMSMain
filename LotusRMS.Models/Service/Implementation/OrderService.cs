@@ -39,8 +39,8 @@ namespace LotusRMS.Models.Service.Implementation
                 var orderDetail = new LotusRMS_Order_Details()
                 {
                     MenuId = item.Menu_Id,
-                    Quantity = item.Quantity,
-                    Rate = item.Rate,
+                    Quantity = (float)item.Quantity,
+                    Rate = (float)item.Rate,
                     Remarks=item.Remarks
                 };
                 order.Order_Details.Add(orderDetail);
@@ -106,8 +106,9 @@ namespace LotusRMS.Models.Service.Implementation
                 var orderDetail = new LotusRMS_Order_Details()
                 {
                     MenuId = item.Menu_Id,
-                    Quantity = item.Quantity,
-                    Rate = item.Rate,
+                    Quantity = (float)item.Quantity,
+                    Quantity_Id=item.Quantity_Id,
+                    Rate = (float)item.Rate,
                     Remarks = item.Remarks
                 };
                 order.Order_Details.Add(orderDetail);

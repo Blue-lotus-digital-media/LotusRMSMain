@@ -83,7 +83,7 @@ namespace LotusRMS.Models.Service.Implementation
         public LotusRMS_Menu GetFirstOrDefault(Guid Id)
         {
 
-            return _IMenuRepository.GetFirstOrDefault(filter: x => x.Id == Id, includeProperties: "Menu_Unit,Menu_Category,Menu_Type,Menu_Details");
+            return _IMenuRepository.GetFirstOrDefault(filter: x => x.Id == Id, includeProperties: "Menu_Unit,Menu_Category,Menu_Type,Menu_Details,Menu_Details.Divison");
         }
 
         public Guid Update(UpdateMenuDTO dto)

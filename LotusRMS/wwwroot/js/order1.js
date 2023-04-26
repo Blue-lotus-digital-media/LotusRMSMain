@@ -66,7 +66,7 @@ client.on("CheckoutComplete", newCall => {
 
 document.addEventListener("DOMContentLoaded", () => {
     client.start();
-   
+    
 
 });
 
@@ -99,4 +99,11 @@ function openMenu() {
     $("#menuModal").modal("toggle");
     document.getElementById("modalMenuDiv").innerHTML = menu;
 
+}
+
+function SelectQuantity(me) {
+    var rate = $(me).find(":selected").attr("Rate");
+    $("#menuRate").val(rate);
+
+    console.log(rate);
 }

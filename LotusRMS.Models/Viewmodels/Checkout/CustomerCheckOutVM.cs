@@ -13,7 +13,7 @@ namespace LotusRMS.Models.Viewmodels.Checkout
         public string Address { get; set; }
         public string Contact { get; set; }
         public string PanOrVat { get; set; }
-        public float Due { get; set; }
+        public double Due { get; set; }
 
     }
 }

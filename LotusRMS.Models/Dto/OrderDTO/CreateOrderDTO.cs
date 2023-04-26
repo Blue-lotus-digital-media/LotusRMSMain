@@ -16,8 +16,9 @@ namespace LotusRMS.Models.Dto.OrderDTO
     public class CreateOrderDetailDTO
     {
         public Guid Menu_Id { get; set; }
-        public float Quantity { get; set; }
-        public float Rate { get; set; }
+        public double Quantity { get; set; }
+        public  Guid  Quantity_Id { get; set; }
+        public double Rate { get; set; }
         public string Remarks { get; set; }
     }
 }
