@@ -277,7 +277,7 @@
                 <tr class="tabletitle total-calc">
                     <td colspan="4" class="Rate" style="text-align: right; text-transform:capitalize;">
                         <label class="myfontsize">
-                            Tender Amount :
+                            Tender Amount : 
 
                                         @{
                                             double discountAmount = 0;
@@ -299,13 +299,13 @@
 
                         </label>
                     </td>
-                    <td class="payment" style="text-align: right;"><label class="myfontsize">@discountAmount</label></td>
+                    <td class="payment" style="text-align: right;"><label class="myfontsize">@checkout.Paid_Amount</label></td>
                 </tr>
 
                 <tr class="tabletitle total-calc" style="border-bottom:1px dashed grey;">
                     <td colspan="4" class="Rate" style="text-align: right; text-transform:capitalize"><label class="myfontsize">Return Amount : </label></td>
                     <td class="payment" style="text-align: right; "><label class="myfontsize">@{
-                                            var gross = checkout.Total - discountAmount;
+                                var gross = checkout.Paid_Amount - checkout.Total + discountAmount;
                                         }@gross</label></td>
                 </tr>
 
@@ -342,7 +342,7 @@
 
                             }
                 <tr class="tabletitle total-calc" style="border-bottom:1px dashed grey;">
-                    <td colspan="5" class="Rate" style="text-align: left;"><p style="text-transform:capitalize;" class="myfontsize">Rs. @NumberToWord.MoneyToWords(gross)</p></td>
+                    <td colspan="5" class="Rate" style="text-align: left;"><p style="text-transform:capitalize;" class="myfontsize">Rs. @NumberToWord.MoneyToWords(checkout.Total)</p></td>
                 </tr>
 
             </table>
@@ -388,7 +388,7 @@
 
                 $("#Checkoutdate").html(date+" "+time);*@
                 window.print();
-
+            setTimeout("closePrintView()", 2000);
 
 
         });

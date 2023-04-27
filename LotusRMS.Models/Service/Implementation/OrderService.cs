@@ -40,6 +40,7 @@ namespace LotusRMS.Models.Service.Implementation
                 {
                     MenuId = item.Menu_Id,
                     Quantity = (float)item.Quantity,
+                    Quantity_Id=item.Quantity_Id,
                     Rate = (float)item.Rate,
                     Remarks=item.Remarks
                 };
