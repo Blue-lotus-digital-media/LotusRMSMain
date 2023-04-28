@@ -364,6 +364,29 @@ namespace LotusRMSweb.Areas.Order.Controllers
             };
             await _orderHub.Clients.All.OrderReceived(tvm);
         }
+        public async Task<IActionResult> ReleaseTable(string OrderNo)
+        {
+            
+            var tableId =_IOrderService.ReleaseTable(OrderNo);
+            var IsReserved=_ITableService.UpdateReserved(tableId);
+            var order = GetOrderVM(tableId, "");
+            ViewBag.NewOrder = GetNewOrder(tableId);
+            await SetReleaseNotification(tableId);
+            return PartialView("_Order", model: order);
+
+        }
+        public async Task SetReleaseNotification(Guid Table_Id)
+        {
+            var typeId = _ITableService.GetFirstOrDefaultById(Table_Id).Table_Type_Id;
+            var tableBooked = _ITableService.GetAllByTypeId(typeId).Count(x => x.IsReserved);
+            var tvm = new tableReturnVM()
+            {
+                Type_Id = typeId,
+                Table_Id = Table_Id,
+                BookCount = tableBooked
+            };
+            await _orderHub.Clients.All.CheckoutComplete(tvm);
+        }
 
     }
 }

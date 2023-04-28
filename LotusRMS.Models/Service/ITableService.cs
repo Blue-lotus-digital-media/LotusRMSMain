@@ -20,5 +20,6 @@ namespace LotusRMS.Models.Service
         public LotusRMS_Table GetByGuid(Guid Id);
         public LotusRMS_Table GetFirstOrDefaultById(Guid Id);
         public IEnumerable<LotusRMS_Table> GetAllByTypeId(Guid Id);
+       
     }
 }

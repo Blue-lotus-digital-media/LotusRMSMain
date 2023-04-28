@@ -29,7 +29,7 @@ namespace LotusRMS.Models.Service
         LotusRMS_Order GetFirstOrDefaultByTableId(Guid TableId);
         LotusRMS_Order GetFirstOrDefaultByOrderNo(string orderNo);
         Task<LotusRMS_Order> GetByGuidAsync(Guid Id);
-
+        Guid ReleaseTable(string OrderNo);
         Task<bool> AddOrderItem(AddOrderItemDTO dto);   
 
         

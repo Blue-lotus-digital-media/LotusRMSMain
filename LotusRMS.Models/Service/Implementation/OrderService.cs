@@ -172,5 +172,14 @@ namespace LotusRMS.Models.Service.Implementation
             }
             return orderDetail;
         }
+
+        public Guid ReleaseTable(string OrderNo)
+        {
+            var order = GetFirstOrDefaultByOrderNo(orderNo: OrderNo);
+            var tableId = order.Table_Id;
+            _IOrderRepository.Remove(order);
+            return tableId;
+
+        }
     }
 }

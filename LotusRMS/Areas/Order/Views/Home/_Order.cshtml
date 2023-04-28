@@ -49,67 +49,87 @@
             <tbody class="bill-tbody">
                 @{
                     var i = 0;
+                    if (Model.Order_No != null && Model.Order_Details.Count() == 0)
+                    {
+                        <tr class="bill-table-data">
+                            <th colspan="6" class="text-center">
+                                --- No any order yet---
+                                <form asp-action="ReleaseTable"
+                              asp-controller="Home"
+                              asp-area="Order"
+                              asp-route-OrderNo="@Model.Order_No"
+                                  data-ajax="true"
+                                  data-ajax-update="#orderSection"
+                                  data-ajax-loading="#overlay">
+                                    <button type='submit' class="btn btn-info">Release Table</button>
+                                </form>
+                             
+
+                            </th>
+                        </tr>
+                    }
                     foreach (var item in Model.Order_Details)
                     {
-                        i++;
-                        <tr class="bill-table-data">
-                            <th class="td-heading" scope="row">@i</th>
-                            <td>@item.Item_Name</td>
-                            <td>@item.Quantity </td>
-                            <td>@item.Rate</td>
-                            <td>@item.Total</td>
-                            <td class="action">
-                                @if (item.IsComplete)
-                                {
-                                    <i class="fa-solid fa-check m"></i>
-                                }
-                                else
-                                {
-                                    <form asp-action="CompleteOrderDetail"
-                              asp-controller="Home"
-                              asp-area="Order"
-                              asp-route-OrderNo="@Model.Order_No"
-                              asp-route-OrderDetailId="@item.Id"
-                                      data-ajax="true"
-                                      data-ajax-update="#orderSection"
-                                      data-ajax-loading="#overlay">
-                                        <button type='submit' class="done btn btn-primary"><i class="fa-solid fa-square-check check"></i></button>
-                                    </form>
-                                    @if (!item.IsKitchenComplete)
+                       i++;
+                            <tr class="bill-table-data">
+                                <th class="td-heading" scope="row">@i</th>
+                                <td>@item.Item_Name</td>
+                                <td>@item.Quantity </td>
+                                <td>@item.Rate</td>
+                                <td>@item.Total</td>
+                                <td class="action">
+                                    @if (item.IsComplete)
                                     {
-                                        <form asp-action="CancelOrder"
+                                        <i class="fa-solid fa-check m"></i>
+                                    }
+                                    else
+                                    {
+                                        <form asp-action="CompleteOrderDetail"
                               asp-controller="Home"
                               asp-area="Order"
                               asp-route-OrderNo="@Model.Order_No"
                               asp-route-OrderDetailId="@item.Id"
-                                          data-ajax="true"
-                                          data-ajax-confirm="Are you sure?"
-                                          data-ajax-update="#orderSection"
-                                          data-ajax-loading="#overlay">
-                                            <button type="submit" class="delete btn btn-danger"><i class="fa-solid fa-trash-can trash"></i></button>
+            data-ajax="true"
+            data-ajax-update="#orderSection"
+            data-ajax-loading="#overlay">
+                                            <button type='submit' class="done btn btn-primary"><i class="fa-solid fa-square-check check"></i></button>
                                         </form>
+                                        @if (!item.IsKitchenComplete)
+                                        {
+                                            <form asp-action="CancelOrder"
+                              asp-controller="Home"
+                              asp-area="Order"
+                              asp-route-OrderNo="@Model.Order_No"
+                              asp-route-OrderDetailId="@item.Id"
+                data-ajax="true"
+                data-ajax-confirm="Are you sure?"
+                data-ajax-update="#orderSection"
+                data-ajax-loading="#overlay">
+                                                <button type="submit" class="delete btn btn-danger"><i class="fa-solid fa-trash-can trash"></i></button>
+                                            </form>
+                                        }
+
                                     }
+                                    <div class="dropstart">
+                                        @if (item.Remarks != null)
+                                        {
+                                            <button class="eye btn btn-secondary dropstart" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-eye eye"></i></button>
 
-                                }
-                                <div class="dropstart">
-                                    @if (item.Remarks != null)
-                                    {
-                                        <button class="eye btn btn-secondary dropstart" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-eye eye"></i></button>
+                                            <div class="dropdown-menu" style="min-width:15rem;">
 
-                                        <div class="dropdown-menu" style="min-width:15rem;">
+                                                <div class="container">
+                                                    @item.Remarks
+                                                </div>
 
-                                            <div class="container">
-                                                @item.Remarks
                                             </div>
+                                        }
 
-                                        </div>
-                                    }
-
-                                </div>
+                                    </div>
 
 
-                            </td>
-                        </tr>
+                                </td>
+                            </tr>
+                       
                     }
                 }
             </tbody>
