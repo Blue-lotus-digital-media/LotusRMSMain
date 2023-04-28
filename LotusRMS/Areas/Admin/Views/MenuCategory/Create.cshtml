@@ -13,17 +13,7 @@
                 <h5 class="card-title">Add Menu Category</h5>
                 <!-- Vertical Form -->
                 <form class="row g-3" asp-action="Create" asp-controller="menucategory" asp-area="admin" asp-route-returnUrl="@ViewBag.ReturnUrl">
-                    <div class="col-md-12">
-                        <label for="cName" class="form-label">Category Name</label>
-                        <input asp-for="Category_Name" class="form-control" id="cName">
-                        <span asp-validation-for="Category_Name" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-12">
-                        <label for="dText" class="form-label">Description</label>
-                        <textarea asp-for="Category_Description" class="form-control" id="dText"> </textarea>
 
-                        <span asp-validation-for="Category_Description" class="text-danger"></span>
-                    </div>
                     <div class="col-md-12">
                         <label for="typeText" class="form-label">Type</label>
                         <div class="row">
@@ -46,6 +36,19 @@
                         </div>
                         <span asp-validation-for="Type_Id" class="text-danger"></span>
                     </div>
+                    
+                    <div class="col-md-12">
+                        <label for="cName" class="form-label">Category Name</label>
+                        <input asp-for="Category_Name" class="form-control" id="cName">
+                        <span asp-validation-for="Category_Name" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="dText" class="form-label">Description</label>
+                        <textarea asp-for="Category_Description" class="form-control" id="dText"> </textarea>
+
+                        <span asp-validation-for="Category_Description" class="text-danger"></span>
+                    </div>
+                  
 
 
                     <div class="col-md-12 text-end">
