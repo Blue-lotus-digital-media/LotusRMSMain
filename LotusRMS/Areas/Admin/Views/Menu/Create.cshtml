@@ -25,7 +25,7 @@
                     <div class="col-md-12">
                         <label for="mType" class="col-sm-12 col-form-label">Menu Type</label>
                         <div class="row">
-                            <div class="col-10">
+                            <div class="col-12">
                                 <select asp-for="Type_Id" class="form-control" onchange="loadData(this)" id="mType">
                                     <option>-- Select a menu type --</option>
                                     @foreach (var item in Model.Menu_Type_List)
@@ -34,11 +34,11 @@
                                     }
                                 </select>
                             </div>
-                            <div class="col-2">
+                           @* <div class="col-2">
                                 <a class="btn btn-primary" asp-area="admin" asp-action="create" asp-controller="MenuType" asp-route-returnUrl="~/admin/menu/create" target="_blank">
                                     <i class="bi bi-plus-lg"></i>
                                 </a>
-                            </div>
+                            </div>*@
                         </div>
 
                         <span asp-validation-for="Type_Id" class="text-denger"></span>
@@ -47,18 +47,18 @@
                     <div class="col-md-12">
                         <label for="mCategory" class="col-sm-12 col-form-label">Menu Category</label>
                         <div class="row">
-                            <div class="col-10">
+                            <div class="col-12">
 
                                 <select asp-for="Category_Id" class="form-control" id="mCategory">
                                     <option>-- Select a category --</option>
 
                                 </select>
                             </div>
-                            <div class="col-2">
-                                <a class="btn btn-primary" asp-area="admin" asp-action="create" asp-controller="menucategory" asp-route-returnUrl="~/admin/menu/create" target="_blank">
+                            @*<div class="col-2">
+                                <a class="btn btn-primary" asp-area="admin" asp-action="create" asp-controller="menucategory" asp-route-returnUrl="~/admin/menu/create" >
                                     <i class="bi bi-plus-lg"></i>
                                 </a>
-                            </div>
+                            </div>*@
                         </div>
 
                         <span asp-validation-for="Category_Id" class="text-denger"></span>
@@ -101,7 +101,7 @@
                     <div class="col-md-12">
                         <label for="mUnit" class="col-sm-12 col-form-label">Menu Unit</label>
                     <div class="row">
-                        <div class="col-10">
+                        <div class="col-12">
 
                             <select asp-for="Unit_Id" class="form-control" id="mUnit" onchange="getUnitDivision(this);">
                                 <option>-- Select a unit --</option>
@@ -111,11 +111,11 @@
                                 }
                             </select>
                         </div>
-                        <div class="col-2">
+                       @* <div class="col-2">
                             <a class="btn btn-primary" asp-area="admin" asp-action="create" asp-controller="MenuUnit" asp-route-returnUrl="~/admin/menu/create" >
                                 <i class="bi bi-plus-lg"></i>
                             </a>
-                        </div>
+                        </div>*@
                     </div>
 
                         <span asp-validation-for="Unit_Id" class="text-denger"></span>
