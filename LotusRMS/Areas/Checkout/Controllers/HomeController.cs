@@ -429,9 +429,6 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
             return RedirectToAction(nameof(Index));
         }
         #endregion
-
-
-
         public async Task SetCheckoutNotification(Guid Table_Id)
         {
             var typeId = _ITableService.GetFirstOrDefaultById(Table_Id).Table_Type_Id;

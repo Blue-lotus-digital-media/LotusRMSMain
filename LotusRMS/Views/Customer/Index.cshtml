@@ -81,8 +81,40 @@
 </div>
 </div>
 </div>
+
+<form 
+    id="payDueForm"
+    asp-route-data="abc"
+    asp-action="PayDue"
+    asp-area=""
+    asp-controller="Customer"
+    data-ajax="true"
+    data-ajax-success="showModal()"
+      data-ajax-method="GET"
+      data-ajax-update="#duePayBook">
+  </form>
+
+
+@*Galla add modal for galla getup*@
+<div class="modal fade" id="duePayModal" data-bs-backdrop="static"> 
+
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" id="duePayBook">
+           
+         
+
+        </div>
+    </div>
+
+
+</div>
+
+@*Galla add modal for galla getup*@
 @section Scripts{
-    <script src="~/js/customer2.js"></script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/js/customer1.js"></script>
 }
 
 

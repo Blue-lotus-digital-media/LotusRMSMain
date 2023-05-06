@@ -1,0 +1,67 @@
+﻿@using LotusRMS.Models.Viewmodels.DueBook;
+@using LotusRMS.Utility;
+@model PayDueVM
+
+<div class="modal-header text-center">
+    <h5 class="modal-title w-100 text-primary">Due payment book</h5>
+</div>
+<form
+    asp-action="PayDueComplete"
+    asp-controller="customer"
+    asp-area=""
+    data-ajax="true"
+    data-ajax-success="CompletePayDue()"
+>
+<div class="modal-body">
+
+    <fieldset class="p-1">
+        <div class="d-flex justify-between">
+            <div class="p-1">
+                <label for="customerName" class="fw-bold">Customer Name:</label>
+                <span class="date" id="customerName">@Model.Customer.Name</span>
+                <input asp-for="CustomerId" hidden />
+            </div> 
+            <div class="p-1">
+                <label for="date" class="fw-bold">Date:</label>
+                <span class="date" id="date">@CurrentTime.DateTimeToday()</span>
+            </div>
+</div>
+        
+    </fieldset>
+    <fieldset class="p-1">
+        <label for="user" class="fw-bold">Due Amount:</label>
+        <span class="user" id="user">@Model.DueAmount</span>
+    </fieldset>
+    <fieldset class="row d-flex align-items-center p-1 fw-bold">
+        <div class="col-5">
+            <label for="paidAmount">Paying Amount:</label>
+        </div>
+        <div class="col-7">
+            <input class="form-control" id="paidAmount" onclick="this.select();" asp-for="PaidAmount">
+            <span asp-validation-for="PaidAmount" class="text-danger"></span>
+        </div>
+    </fieldset>
+    <fieldset class="row d-flex align-items-center p-1 fw-bold">
+        <div class="col-5">
+        <label for="balanceDue" class="fw-bold">Remaining Due:</label>
+        </div>
+
+        <div class="col-7">
+        <span class="user" id="balanceDue">@Model.BalanceDue</span>
+        </div>
+    </fieldset>
+    <fieldset class="row d-flex align-items-center p-1 fw-bold">
+        <div class="col-5">
+        <label for="remarks" class="fw-bold">Remarks:</label>
+        </div>
+        <div class="col-7">
+            <textarea asp-for="Remarks" class="form-control"></textarea>
+        <span class="user" id="balanceDue">@Model.Remarks</span>
+        </div>
+    </fieldset>
+
+</div>
+<div class="modal-footer">
+    <button type="submit" class="btn btn-primary">Submit</button>
+</div>
+</form>

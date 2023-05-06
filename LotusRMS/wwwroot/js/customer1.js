@@ -12,8 +12,21 @@ client.on("OrderReceived", newCall => {
 $(document).ready(function () {
     loadData();
     client.start();
-});
 
+    $("#paidAmount").on("change", function () {
+        console.log(this.val());
+    });
+});
+function PayClickModal(me) {
+    var customerId = $(me).attr("customerId");
+    console.log(customerId);
+    $("#payDueForm").attr("action","/customer/paydue?customerId="+customerId);
+
+    $("#payDueForm").submit();
+}
+function showModal() {
+    $("#duePayModal").modal("toggle");
+}
 
 function toggleMe(me) {
     var id = $(me).attr("data-id");
@@ -91,7 +104,23 @@ function loadData() {
         ],
         searching: false,
         rowCallback: function (row, data) {
-           
+            if (data["dueAmount"] > 0) {
+                $('td:eq(4)', row).html(`
+                <div class="d-flex">
+                <label class="p-2">${data["dueAmount"]}</label>
+                <button type="button" onclick="PayClickModal(this)" customerId="${data["id"]}">Pay Now
+                </button>
+                </div>
+                `);
+            } else {
+                $('td:eq(4)', row).html(`
+                <div class="d-flex">
+                <label class="p-2">${data["dueAmount"]}</label>
+                </div>
+                `);
+            }
+
+
 
             if (data["status"] == false) {
                 $('td:eq(5)', row).html(`

@@ -6,6 +6,7 @@ using LotusRMS.Models.Dto.DueBookDTO;
 using LotusRMS.Models.Service;
 using LotusRMS.Models.Service.Implementation;
 using LotusRMS.Models.Viewmodels.Customer;
+using LotusRMS.Models.Viewmodels.DueBook;
 using LotusRMS.Models.Viewmodels.FiscalYear;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -170,6 +171,26 @@ namespace LotusRMSweb.Controllers
 
                 return Ok(customer.Status);
             }
+        }
+
+
+        [HttpGet]
+        public IActionResult PayDue(Guid customerId)
+        {
+            var customer = _customerService.GetFirstOrDefaultById(customerId);
+            var vm = new PayDueVM()
+            {
+                Customer = customer,
+                CustomerId = customerId,
+                DueAmount = GetDue(customer.DueBooks),
+                PaidAmount = 0
+            };
+            return PartialView("_PayDue",model:vm);
+        }
+        public IActionResult PayDueComplete(PayDueVM vm)
+        {
+
+            return Ok();
         }
         #endregion
     }
