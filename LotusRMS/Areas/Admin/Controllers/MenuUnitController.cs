@@ -1,5 +1,8 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using ClosedXML.Excel;
+using LotusRMS.Models;
+using LotusRMS.Models.Dto.MenuUnitDTO;
+using LotusRMS.Models.Dto.MenuUnitDTO.MenuDivisionDTO;
 using LotusRMS.Models.Dto.UnitDto;
 using LotusRMS.Models.Service;
 using LotusRMS.Models.Viewmodels.Unit;
@@ -43,11 +46,31 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             if (!ModelState.IsValid)
             {
                 ViewBag.ReturnUrl = returnUrl;
+                _notyf.Error("Some field cannot be empty!!!", 5);
+                return View(MenuUnitVM);
+            }
+            if (MenuUnitVM.Unit_Division.Count() == 0)
+            {
+                ViewBag.ReturnUrl = returnUrl;
                 return View(MenuUnitVM);
             }
 
             var MenuUnitCreateDto =
-                new UnitCreateDto(MenuUnitVM.Unit_Name, MenuUnitVM.Unit_Symbol, MenuUnitVM.Unit_Description);
+                new CreateMenuUnitDTO()
+                {
+                    UnitName = MenuUnitVM.Unit_Name,
+                    UnitSymbol = MenuUnitVM.Unit_Symbol,
+                    UnitDescription = MenuUnitVM.Unit_Description,
+                    Unit_Division = new List<CreateMenuUnitDivisionDTO>()
+                };
+            foreach (var item in MenuUnitVM.Unit_Division)
+            {
+                MenuUnitCreateDto.Unit_Division.Add(new CreateMenuUnitDivisionDTO()
+                {
+                    Title = item.Title,
+                    Value = item.Value
+                });
+            }
             var id = _MenuUnitService.Create(MenuUnitCreateDto);
 
             _notyf.Success("Menu Unit created successfully...", 5);
@@ -62,7 +85,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var unit = _MenuUnitService.GetByGuid((Guid)Id);
+            var unit = _MenuUnitService.GetFirstOrDefaultById((Guid)Id);
             if (unit == null)
             {
                 _notyf.Error("No data found !", 5);

@@ -36,7 +36,7 @@
 
                             <div class="row mb-2">
                                 <div class="col-12 my-auto">
-                                    <label >Unit Detail</label>
+                                    <label >Unit Detail (respect to unit)</label>
 
                                 </div>
                             </div>
@@ -48,10 +48,9 @@
                             <div class="fieldset" id="fieldset_0">
                                 <div class="fields">
                                     <div class="d-flex mb-2">
-                                        <select name="MenuDetail[0].Quantity" class="unitDivision form-control" id="unitDivision_0">
-                                        </select>
-                                        <input type="number" class="form-control me-2" placeholder="rate" name="MenuDetail[0].Rate" />
-                                        <input type="radio" class="me-2 unitDefault" name="MenuDetail[0].IsDefault" checked value="true" />
+                                        <input name="Unit_Division[0].Title" class="unitDivision form-control" id="unitDivision_0" placeholder="Title eg. Full">
+                                        
+                                        <input type="number" class="form-control me-2" placeholder="Value eg. 1" name="Unit_Division[0].Value" />
                                         <button type="button" class="add_unit_button btn btn-primary" onclick="addDivision()"> <i class="fa-solid fa-plus"></i></button>
 
                                     </div>
@@ -77,3 +76,11 @@
 
     </div>
 </div>
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/js/CreateUpdateMenuUnit.js">
+
+    </script>
+}

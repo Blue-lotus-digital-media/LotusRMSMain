@@ -21,6 +21,42 @@
                 <input asp-for="Unit_Description" class="form-control" placeholder="Write short discription of unit.."/>
                 <span asp-validation-for="Unit_Description" class="text-danger"></span>
             </div>
+            <table class="table table-striped mb-0">
+                <div class="col-md-12 ">
+
+                    <div class="row mb-2">
+                        <div class="col-12 my-auto">
+                            <label>Unit Detail (respect to unit)</label>
+
+                        </div>
+                    </div>
+
+
+
+                </div>
+                <div class="wrappers mt-1">
+                    @foreach (var (item,i)  in Model.Unit_Division.Select((value,i)=>(value,i))){   
+                        <div class="fieldset" id="fieldset_@i">
+                        <div class="fields">
+                            <div class="d-flex mb-2">
+                                <input name="Unit_Division[@i].Title" class="unitDivision form-control" id="unitDivision_@i" placeholder="Title eg. Full">
+
+                                <input type="number" class="form-control me-2" placeholder="Value eg. 1" name="Unit_Division[@i].Value" />
+                                <button type="button" class="add_unit_button btn btn-primary" onclick="addDivision()"> <i class="fa-solid fa-plus"></i></button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                    }
+                </div>
+
+
+
+
+            </table>
+
             <div class="col-md-12 text-end">
              
                 <button type="submit" class="btn btn-primary mx-2">Update</button>

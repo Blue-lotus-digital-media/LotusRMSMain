@@ -8,6 +8,7 @@ using LotusRMS.Models.Service.Implementation;
 using LotusRMS.Models.Viewmodels.Customer;
 using LotusRMS.Models.Viewmodels.DueBook;
 using LotusRMS.Models.Viewmodels.FiscalYear;
+using LotusRMS.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -189,6 +190,28 @@ namespace LotusRMSweb.Controllers
         }
         public IActionResult PayDueComplete(PayDueVM vm)
         {
+            var customer= _customerService.GetFirstOrDefaultById(vm.CustomerId);
+            
+            var dueAmount = GetDue(customer.DueBooks);
+
+            var dueBook = new CreateDueBookDTO()
+            {
+                DueDate=CurrentTime.DateTimeToday(),
+                PaidAmount=vm.PaidAmount,
+                DueAmount=dueAmount-vm.PaidAmount,
+
+            };
+            var customerDTO = new UpdateCustomerDTO()
+            {
+                Id = customer.Id,
+                Name = customer.Name,
+                Address = customer.Address,
+                Contact = customer.Contact,
+                PanOrVat = customer.PanOrVat,
+                DueBook = dueBook
+
+            };
+            _customerService.Update(customerDTO);
 
             return Ok();
         }

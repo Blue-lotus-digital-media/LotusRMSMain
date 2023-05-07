@@ -1,4 +1,5 @@
-﻿using LotusRMS.Models.Dto.UnitDto;
+﻿using LotusRMS.Models.Dto.MenuUnitDTO;
+using LotusRMS.Models.Dto.UnitDto;
 using LotusRMS.Models.IRepositorys;
 using System;
 using System.Collections.Generic;
@@ -18,10 +19,19 @@ namespace LotusRMS.Models.Service.Implementation
             _menuUnitRepository = menuUnitRepository;
         }
 
-        public async Task<Guid> Create(UnitCreateDto dto)
+        public async Task<Guid> Create(CreateMenuUnitDTO dto)
         {
            // using var tx = new TransactionScope();
             var unit = new LotusRMS_Menu_Unit(dto.UnitName, dto.UnitSymbol, dto.UnitDescription);
+            unit.UnitDivision = new List<LotusRMS_Unit_Division>();
+            foreach(var item in dto.Unit_Division)
+            {
+                unit.UnitDivision.Add(new LotusRMS_Unit_Division()
+                {
+                    Title = item.Title,
+                    Value = item.Value
+                });
+            }
             _menuUnitRepository.Add(unit);
             _menuUnitRepository.Save();
            // tx.Complete();

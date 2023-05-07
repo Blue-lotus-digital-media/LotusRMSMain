@@ -1,4 +1,5 @@
-﻿using LotusRMS.Models.Dto.UnitDto;
+﻿using LotusRMS.Models.Dto.MenuUnitDTO;
+using LotusRMS.Models.Dto.UnitDto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace LotusRMS.Models.Service
 {
     public interface IMenuUnitService
     {
-        Task<Guid> Create(UnitCreateDto dto);
+        Task<Guid> Create(CreateMenuUnitDTO dto);
         Guid Update(UnitUpdateDto dto);
         Guid UpdateStatus(Guid Id);
 

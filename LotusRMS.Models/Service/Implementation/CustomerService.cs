@@ -68,15 +68,19 @@ namespace LotusRMS.Models.Service.Implementation
 
         public void Update(UpdateCustomerDTO dto)
         {
-            var customer = new LotusRMS_Customer()
-            {
-                Id = dto.Id,
-                Name = dto.Name,
-                Address = dto.Address,
-                Contact = dto.Contact,
-                PanOrVat = dto.PanOrVat
+            var customer = _customerRepository.GetFirstOrDefault(x => x.Id == dto.Id);
+            customer.Update(name: dto.Name, address: dto.Address, contact: dto.Contact);
+            customer.PanOrVat = dto.PanOrVat;
 
-            };
+            if (dto.DueBook != null)
+            {
+                var dueBook = new LotusRMS_DueBook()
+                {
+                    PaidAmount = dto.DueBook.PaidAmount,
+
+                };
+            }
+
             _customerRepository.Update(customer);
         }
 
