@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LotusRMS.Models.Viewmodels.Unit
+namespace LotusRMS.Models.Viewmodels.MenuUnit
 {
-    public class UpdateUnitVM:CreateUnitVM
+    public class UpdateMenuUnitDivisionVM:CreateMenuUnitDivisionVM
     {
         public Guid Id { get; set; }
-        
     }
 }

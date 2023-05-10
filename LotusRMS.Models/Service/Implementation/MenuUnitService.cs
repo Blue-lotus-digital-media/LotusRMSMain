@@ -40,7 +40,7 @@ namespace LotusRMS.Models.Service.Implementation
 
         }
 
-        public Guid Update(UnitUpdateDto dto)
+        public Guid Update(UpdateMenuUnitDTO dto)
         {
          //   using var tx = new TransactionScope();
             var unit = _menuUnitRepository.GetByGuid(dto.Id) ?? throw new Exception();

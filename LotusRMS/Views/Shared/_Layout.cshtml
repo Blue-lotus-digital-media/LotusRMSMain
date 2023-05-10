@@ -123,13 +123,23 @@
         </a>
       </li> 
       }*@
-      @if(User.IsInRole("Admin")|| User.IsInRole("Cashier")|| User.IsInRole("Waiter")){
+      @if(User.IsInRole("Admin")) {
       <li class="nav-item">
         <a class="nav-link collapsed"  asp-area="Admin" asp-controller="Menu" asp-action="index">
           <i class="ri-menu-5-fill"></i><span>Menu</span> 
         </a>        
       </li><!-- End Icons Nav -->
-      }
+                    }
+                    else if (User.IsInRole("Cashier") || User.IsInRole("Waiter"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link collapsed" asp-area="" asp-controller="Menu" asp-action="index">
+                                <i class="ri-menu-5-fill"></i><span>Menu</span>
+                            </a>
+                        </li>
+
+                        <!-- End Icons Nav -->
+                    }
       @if(User.IsInRole("Admin")|| User.IsInRole("Cashier")|| User.IsInRole("Waiter")){
       <li class="nav-item">
         <a class="nav-link collapsed" asp-area="Admin" asp-controller="Today" asp-action="index"  >
@@ -210,7 +220,7 @@
         }
          @if (User.IsInRole("Admin") || User.IsInRole("Cashier")){
       <li class="nav-item">
-        <a class="nav-link collapsed" asp-action="Index" asp-controller="Galla" >
+        <a class="nav-link collapsed" asp-action="Index" asp-controller="Galla" asp-area="" >
           <i class="bi bi-currency-exchange"></i>
           <span>Galla</span>
         </a>

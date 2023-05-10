@@ -1,24 +1,20 @@
-﻿using LotusRMS.Models.Dto.MenuUnitDTO.MenuDivisionDTO;
+﻿using LotusRMS.Models.Dto.MenuUnitDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LotusRMS.Models.Dto.MenuUnitDTO
+namespace LotusRMS.Models.Viewmodels.MenuUnit
 {
-    public class UpdateMenuUnitDTO:CreateMenuUnitDTO
+    public class UpdateMenuUnitVM:CreateMenuUnitVM
     {
         public Guid Id { get; set; }
         public ICollection<UpdateMenuUnitDivisionDTO> Unit_Division { get; set; }
-        public UpdateMenuUnitDTO()
+
+        public UpdateMenuUnitVM()
         {
             Unit_Division = new List<UpdateMenuUnitDivisionDTO>();
         }
-    }
-    public class UpdateMenuUnitDivisionDTO:CreateMenuUnitDivisionDTO
-    {
-        public Guid Id { get; set; }
-
     }
 }

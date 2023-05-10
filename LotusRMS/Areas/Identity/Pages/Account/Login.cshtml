@@ -78,14 +78,19 @@
 
                     <div class="col-12">
                       <label for="yourPassword" class="form-label">Password</label>
-                      <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" />
-                      <div asp-validation-for="Input.Password" class="invalid-feedback"></div>
+                                           
+                       <div class="input-group has-validation">
+                                                <input asp-for="Input.Password" class="form-control" id="password" autocomplete="current-password" aria-required="true" required>
+
+                                                <span class="input-group-text" id="inputGroupPrepend"><i class="bi bi-eye-slash" id="togglePassword"></i></span>
+                                                <div class="invalid-feedback" asp-validation-for="Input.Password"></div>
+                      </div>
                     </div>
 
                     <div class="col-12">
                       <div class="form-check">
-                        
-                        <label class="form-check-label" for="rememberMe"><input class="form-check-input" asp-for="Input.RememberMe" value="true">Remember me</label>
+
+                                                <label class="form-check-label" for="rememberMe"><input class="form-check-input" asp-for="Input.RememberMe" value="true" id="rememberMe">Remember me</label>
                       </div>
                     </div>
                     <div class="col-12">
@@ -128,7 +133,24 @@
   <script src="~/assets/js/main.js"></script>
 
 </body>
+<script>
+    const togglePassword = document.querySelector("#inputGroupPrepend");
+    const eyeicon = document.querySelector("#togglePassword");
 
+    const password = document.querySelector("#password");
+
+    togglePassword.addEventListener("click", function () {
+        console.log("checked");
+        // toggle the type attribute
+        const type = password.getAttribute("type") === "password" ? "text" : "password";
+        password.setAttribute("type", type);
+
+        // toggle the icon
+        eyeicon.classList.toggle("bi-eye");
+    });
+
+    
+</script>
 </html>
 
 
@@ -136,3 +158,5 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
+    
+

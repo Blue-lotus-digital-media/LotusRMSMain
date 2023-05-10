@@ -16,6 +16,7 @@ namespace LotusRMS.Models.Service
         Guid UpdateStatus(Guid Id);
         Task<Guid> UpdateStatusAsync(Guid Id);
         IEnumerable<LotusRMS_Menu> GetAll();
+        IEnumerable<LotusRMS_Menu> GetAllAvailable();
         Task<IEnumerable<LotusRMS_Menu>> GetAllAsync();
         LotusRMS_Menu GetByGuid(Guid Id);
         Task<LotusRMS_Menu> GetByGuidAsync(Guid Id);
