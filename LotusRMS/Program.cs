@@ -19,8 +19,14 @@ using AspNetCoreHero.ToastNotification.Extensions;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using NLog.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
+builder.Logging.AddEventSourceLogger();
+builder.Logging.AddNLog();
+
 
 // Add services to the container.
 

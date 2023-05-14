@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.WebUtilities;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Text;
+using LotusRMS.Models.Viewmodels;
+using AspNetCoreHero.ToastNotification.Abstractions;
 
 namespace LotusRMSweb.Controllers
 {
@@ -18,29 +20,35 @@ namespace LotusRMSweb.Controllers
         private readonly IUserStore<RMSUser> _userStore;
         private readonly IUserEmailStore<RMSUser> _emailStore;
         private readonly IEmailSender _emailSender;
-
+        private readonly ILogger<AccountController> _logger;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly INotyfService _notyf;
+
         public string ReturnUrl { get; set; }
         public AccountController(UserManager<RMSUser> userManager,
             SignInManager<RMSUser> signInManager,
             IUserStore<RMSUser> userStore,
             IEmailSender emailSender,
-            RoleManager<IdentityRole> roleManager)
+            ILogger<AccountController> logger,
+            RoleManager<IdentityRole> roleManager,
+            INotyfService notyf)
         {
 
             _userManager = userManager;
             _signInManager = signInManager;
             _userStore = userStore;
-            _emailStore = GetEmailStore(); 
+            _emailStore = GetEmailStore();
             _emailSender = emailSender;
+            _logger = logger;
             _roleManager = roleManager;
+            _notyf = notyf;
         }
 
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Login(string? returnUrl = null)
         {
-           
+
             returnUrl ??= Url.Content("~/");
             UserLoginDto model = new UserLoginDto();
             model.ReturnUrl = returnUrl;
@@ -73,6 +81,7 @@ namespace LotusRMSweb.Controllers
                 if (result.Succeeded)
                 {
                     await _userManager.AddClaimAsync(user, new Claim("UserRole", "Admin"));
+                    _notyf.Success("User logged in successfully",5);
                     return LocalRedirect(model.ReturnUrl);
                 }
                 else if (result.IsLockedOut)
@@ -106,9 +115,9 @@ namespace LotusRMSweb.Controllers
                 var userCheck = await _userManager.FindByEmailAsync(request.Email);
                 if (userCheck == null)
                 {
-                    var user = new RMSUser(firstName:request.FirstName,middleName:request.MiddleName, lastName:request.LastName, contact:request.Contact)
+                    var user = new RMSUser(firstName: request.FirstName, middleName: request.MiddleName, lastName: request.LastName, contact: request.Contact)
                     {
-     
+
                         EmailConfirmed = true,
                         PhoneNumberConfirmed = true,
                     };
@@ -167,6 +176,112 @@ namespace LotusRMSweb.Controllers
 
         }
 
+        [HttpGet]
+        [Authorize]
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword(ChangePasswordVM model)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            }
+            var changePasswordResult = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+            if (!changePasswordResult.Succeeded)
+            {
+                foreach (var error in changePasswordResult.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+                return View(model);
+            }
+
+            await _signInManager.RefreshSignInAsync(user);
+            _logger.LogInformation("User changed their password successfully.");
+
+            await _signInManager.SignOutAsync();
+            _notyf.Success("Password changed successfully", 5);
+            return RedirectToAction("Login","Account");
+        }
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ForgetPassword()
+        {
+            return View();
+        }
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> ForgetPassword(ForgetPasswordVM model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user != null && await _userManager.IsEmailConfirmedAsync(user)) {
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var passwordResetLink = Url.Action("ResetPassword", "Account", new { email = model.Email, token = token }, Request.Scheme);
+                _logger.Log(LogLevel.Warning, passwordResetLink);
+
+                return View("ForgetPasswordConfirmation");
+
+            }
+
+            return View("ForgetPasswordConfirmation");
+        }
+        public IActionResult ForgetPasswordConfirmation()
+        {
+            return View();
+        }
+        [HttpGet]
+
+        [AllowAnonymous]
+        public IActionResult ResetPassword(string email, string token)
+        {
+            if(email==null || token == null)
+            {
+                ModelState.AddModelError("", "Invalid password reset token");
+                return RedirectToAction("error");
+            }
+            var vm=new ResetPasswordVM() { Email=email, Token = token };
+            return View(vm);
+        }
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> ResetPassword(ResetPasswordVM model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user != null)
+            {
+                var result = await _userManager.ResetPasswordAsync(user, model.Token, model.Password);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("ResetPasswordConfirmation");
+                }
+                foreach(var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+
+                }
+                return View(model);
+            }
+            return RedirectToAction("ResetPasswordConfirmation");
+
+        }
+
+        public IActionResult ResetPasswordConfirmation()
+        {
+            return View();
+        }
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();

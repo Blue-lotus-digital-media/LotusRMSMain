@@ -102,6 +102,9 @@
                                     </form>
 
                                 </div>
+                                <div class="card-footer">
+                                    <a asp-action="forgetpassword" asp-area="" asp-controller="account" >Forget password ?</a>
+                                </div>
                             </div>
 
                             @Html.ValidationSummary()
@@ -150,6 +153,9 @@
 
 
 </script>
+
+
+@await Component.InvokeAsync("Notyf")
 </html>
 
 
