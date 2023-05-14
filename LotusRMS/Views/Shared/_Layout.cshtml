@@ -96,6 +96,20 @@
         </a>
       </li><!-- End Dashboard Nav -->
       }
+
+                    @if (User.IsInRole("Waiter"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="Waiter" asp-action="Index" asp-controller="Home">
+                                <i class="bi bi-grid"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <!-- End Dashboard Nav -->
+                    }
+
+
+
       @if(User.IsInRole("Admin")|| User.IsInRole("Waiter") || User.IsInRole("Cashier")){
       <li class="nav-item">
         <a class="nav-link collapsed" asp-action="Index" asp-controller="Home" asp-area="Order">
@@ -103,6 +117,11 @@
         </a>        
       </li><!-- End Components Nav -->
       }
+
+
+
+
+
       @if(User.IsInRole("Admin") || User.IsInRole("Cashier")){
       <li class="nav-item">
         <a class="nav-link collapsed" asp-area="checkout" asp-controller="home" asp-action="index" >
