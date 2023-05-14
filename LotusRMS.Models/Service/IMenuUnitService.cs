@@ -11,7 +11,7 @@ namespace LotusRMS.Models.Service
     public interface IMenuUnitService
     {
         Task<Guid> Create(CreateMenuUnitDTO dto);
-        Guid Update(UnitUpdateDto dto);
+        Guid Update(UpdateMenuUnitDTO dto);
         Guid UpdateStatus(Guid Id);
 
         public IEnumerable<LotusRMS_Menu_Unit> GetAll();

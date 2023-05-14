@@ -1,5 +1,5 @@
-﻿@using LotusRMS.Models.Viewmodels.Unit
-@model UpdateUnitVM
+﻿@using LotusRMS.Models.Viewmodels.MenuUnit
+@model UpdateMenuUnitVM
 
 
 <div class="row">
@@ -8,7 +8,7 @@
             <input asp-for="Id" hidden/>
             <div class="form-group">
                 <label >Unit Name</label>
-                <input asp-for="Unit_Name" class="form-control" pplaceholder="eg. Kilogram"/>
+                <input asp-for="Unit_Name" class="form-control" placeholder="eg. Kilogram"/>
                 <span asp-validation-for="Unit_Name" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -39,10 +39,11 @@
                         <div class="fieldset" id="fieldset_@i">
                         <div class="fields">
                             <div class="d-flex mb-2">
-                                <input name="Unit_Division[@i].Title" class="unitDivision form-control" id="unitDivision_@i" placeholder="Title eg. Full">
+                                <input name="Unit_Division[@i].Title" class="unitDivision form-control" id="unitDivision_@i" placeholder="Title eg. Full" value="@item.Title">
 
-                                <input type="number" class="form-control me-2" placeholder="Value eg. 1" name="Unit_Division[@i].Value" />
+                                <input type="number" class="form-control me-2" placeholder="Value eg. 1" name="Unit_Division[@i].Value" value="@item.Value"/>
                                 <button type="button" class="add_unit_button btn btn-primary" onclick="addDivision()"> <i class="fa-solid fa-plus"></i></button>
+                                    <input name="Unit_Division[@i].Id" class="form-control" id="unitDivisionId_@i"  value="@item.Id" hidden>
 
                             </div>
 
@@ -65,3 +66,11 @@
 
     </div>
 </div>
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/js/CreateUpdateMenuUnit.js">
+
+    </script>
+}

@@ -5,6 +5,7 @@ using LotusRMS.Models.Dto.MenuUnitDTO;
 using LotusRMS.Models.Dto.MenuUnitDTO.MenuDivisionDTO;
 using LotusRMS.Models.Dto.UnitDto;
 using LotusRMS.Models.Service;
+using LotusRMS.Models.Viewmodels.MenuUnit;
 using LotusRMS.Models.Viewmodels.Unit;
 using LotusRMS.Utility;
 using Microsoft.AspNetCore.Authorization;
@@ -92,32 +93,53 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var vm = new UpdateUnitVM()
+            var vm = new UpdateMenuUnitVM()
             {
+                Id=unit.Id,
                 Unit_Name = unit.Unit_Name,
                 Unit_Description = unit.Unit_Description,
                 Unit_Symbol = unit.Unit_Symbol
             };
-
+            if (unit.UnitDivision != null | unit.UnitDivision.Count()>0)
+            {
+                foreach (var item in unit.UnitDivision)
+                {
+                    vm.Unit_Division.Add(new UpdateMenuUnitDivisionDTO()
+                    {
+                        Id = item.Id,
+                        Title = item.Title,
+                        Value = item.Value
+                    });
+                }
+            }
             return View(vm);
         }
 
         [HttpPost]
-        public IActionResult Update(UpdateUnitVM vm)
+        public IActionResult Update(UpdateMenuUnitVM vm)
         {
             if (!ModelState.IsValid)
             {
                 return View(vm);
             }
 
-            var dto = new UnitUpdateDto(
-                unitName: vm.Unit_Name,
-                unitSymbol: vm.Unit_Symbol,
-                unitDescription: vm.Unit_Description
-            )
+            var dto = new UpdateMenuUnitDTO()
             {
-                Id = vm.Id
+                Id = vm.Id,
+                UnitName=vm.Unit_Name,
+                UnitDescription=vm.Unit_Description,
+                UnitSymbol=vm.Unit_Symbol,
+
             };
+            foreach(var item in vm.Unit_Division)
+            {
+                dto.Unit_Division.Add(new UpdateMenuUnitDivisionDTO()
+                {
+                    Id = item.Id,
+                    Title = item.Title,
+                    Value = item.Value
+                });
+            }
             _MenuUnitService.Update(dto);
 
             _notyf.Success("Menu Unit updated successfully...", 5);

@@ -63,6 +63,9 @@ namespace LotusRMS.Models.Service.Implementation
         public IEnumerable<LotusRMS_Menu> GetAll()
         {
             return _IMenuRepository.GetAll(includeProperties: "Menu_Unit,Menu_Category,Menu_Type,Menu_Details,Menu_Details.Divison");
+        } public IEnumerable<LotusRMS_Menu> GetAllAvailable()
+        {
+            return _IMenuRepository.GetAll(filter:x=>!x.IsDelete, includeProperties: "Menu_Unit,Menu_Category,Menu_Type,Menu_Details,Menu_Details.Divison");
         }
 
         public async Task<IEnumerable<LotusRMS_Menu>> GetAllAsync()

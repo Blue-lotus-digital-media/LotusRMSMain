@@ -15,9 +15,14 @@
             var title = div[0];
             var value = div[1];
             var button = div[2];
+            var id = div[3];
             title.setAttribute("name", "Unit_Division[" + i + "].Title");
             value.setAttribute("name", "Unit_Division[" + i + "].Value");
             button.setAttribute("data-id", i);
+            if (id != undefined) {
+
+                id.setAttribute("name", "Unit_Division[" + i + "].Id");
+            }
         }
 
     });
