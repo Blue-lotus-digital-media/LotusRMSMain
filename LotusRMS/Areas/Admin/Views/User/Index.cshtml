@@ -7,7 +7,8 @@
 @{
 }
 
-<a class="btn btn-info" asp-area="Identity" asp-page="/account/register" asp-route-returnurl="/admin/user">Create User</a>
+@*<a class="btn btn-info" asp-area="Identity" asp-page="/account/register" asp-route-returnurl="/admin/user">Create User</a>*@
+<a class="btn btn-info" asp-area="" asp-controller="account"asp-action="register" asp-route-returnurl="/admin/user">Create User</a>
 <table class="table table-striped">
     <thead>
         <tr>

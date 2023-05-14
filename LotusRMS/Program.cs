@@ -34,16 +34,13 @@ builder.Services.AddIdentity<RMSUser, IdentityRole>()
             .AddDefaultUI()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
-builder.Services.AddAuthentication().AddCookie(options =>
+builder.Services.AddAuthentication();
+builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.Cookie.Expiration = TimeSpan.FromMinutes(20);
-    options.LoginPath = "/Account/Login";
-    options.LogoutPath = "/Account/Logout";
-    options.AccessDeniedPath = "/Account/AccessDenied";
-    options.SlidingExpiration = true;
-    options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
-}
-    );
+    options.LoginPath = $"/account/login";
+    options.LogoutPath = $"/account/logout";
+    options.AccessDeniedPath = $"/account/accessDenied";
+});
 /*builder.Services.PostConfigure<CookieAuthenticationOptions>(IdentityConstants.ApplicationScheme,
 options =>
 {
