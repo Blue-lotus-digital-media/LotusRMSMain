@@ -58,44 +58,51 @@
         </div>
 
 
-    
-  <!-- ======= Header ======= -->
-  <header id="header" class="header fixed-top d-flex align-items-center">
 
-    <div class="d-flex align-items-center justify-content-between">
-      <a href="index.html" class="logo d-flex align-items-center">
-        <img src="~/assets/img/logo.png" alt="">
-        <span class="d-none d-lg-block">Blue Lotus</span>
-      </a>
-      <i class="bi bi-list toggle-sidebar-btn"></i>
-    </div><!-- End Logo -->
+        <!-- ======= Header ======= -->
+        <header id="header" class="header fixed-top d-flex align-items-center">
 
-    <nav class="header-nav ms-auto">
-     <partial name="_LoginPartial" />
-    </nav><!-- End Icons Navigation -->
+            <div class="d-flex align-items-center justify-content-between">
+                <a href="index.html" class="logo d-flex align-items-center">
+                    <img src="~/assets/img/logo.png" alt="">
+                    <span class="d-none d-lg-block">Blue Lotus</span>
+                </a>
+                <i class="bi bi-list toggle-sidebar-btn"></i>
+            </div><!-- End Logo -->
 
-  </header><!-- End Header -->
-  @if (User.Identity.IsAuthenticated){
-  <!-- ======= Sidebar ======= -->
-    <aside id="sidebar" class="sidebar">
+            <nav class="header-nav ms-auto">
+                <partial name="_LoginPartial" />
+            </nav><!-- End Icons Navigation -->
 
-    <ul class="sidebar-nav" id="sidebar-nav">
-        @if(User.IsInRole("Admin")){
-      <li class="nav-item">
-        <a class="nav-link " asp-area= "Admin" asp-action="Index"  asp-controller="Home">
-          <i class="bi bi-grid"></i>
-          <span>Dashboard</span>
-        </a>
-      </li><!-- End Dashboard Nav -->
-      }
-        @if(User.IsInRole("SuperAdmin")){
-      <li class="nav-item">
-        <a class="nav-link " asp-area= "SuperAdmin" asp-action="Index"  asp-controller="Home">
-          <i class="bi bi-grid"></i>
-          <span>Dashboard</span>
-        </a>
-      </li><!-- End Dashboard Nav -->
-      }
+        </header><!-- End Header -->
+        @if (User.Identity.IsAuthenticated)
+        {
+            <!-- ======= Sidebar ======= -->
+            <aside id="sidebar" class="sidebar">
+
+                <ul class="sidebar-nav" id="sidebar-nav">
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link " asp-area="Admin" asp-action="Index" asp-controller="Home">
+                                <i class="bi bi-grid"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+
+                        <!-- End Dashboard Nav -->
+                    }
+                    @if (User.IsInRole("SuperAdmin"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link " asp-area="SuperAdmin" asp-action="Index" asp-controller="Home">
+                                <i class="bi bi-grid"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+
+                        <!-- End Dashboard Nav -->
+                    }
 
                     @if (User.IsInRole("Waiter"))
                     {
@@ -110,45 +117,57 @@
 
 
 
-      @if(User.IsInRole("Admin")|| User.IsInRole("Waiter") || User.IsInRole("Cashier")){
-      <li class="nav-item">
-        <a class="nav-link collapsed" asp-action="Index" asp-controller="Home" asp-area="Order">
-          <i class="bi bi-pencil-square"></i><span>Order</span> 
-        </a>        
-      </li><!-- End Components Nav -->
-      }
+                    @if (User.IsInRole("Admin") || User.IsInRole("Waiter") || User.IsInRole("Cashier"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link collapsed" asp-action="Index" asp-controller="Home" asp-area="Order">
+                                <i class="bi bi-pencil-square"></i><span>Order</span>
+                            </a>
+                        </li>
+
+                        <!-- End Components Nav -->
+                    }
 
 
 
 
 
-      @if(User.IsInRole("Admin") || User.IsInRole("Cashier")){
-      <li class="nav-item">
-        <a class="nav-link collapsed" asp-area="checkout" asp-controller="home" asp-action="index" >
-          <i class="bi bi-truck"></i><span>Check Out</span> 
-        </a>
-      </li><!-- End Forms Nav -->
-      }
-      @if(User.IsInRole("Admin")|| User.IsInRole("Cashier")){
-      <li class="nav-item">
-        <a class="nav-link collapsed" asp-area="Admin" asp-controller="Table" asp-action="index">
-          <i class="bi bi-table"></i><span>Tables</span> 
-        </a>
-      </li><!-- End Tables Nav -->
-      }
-     @* @if(User.IsInRole("Admin")|| User.IsInRole("Waiter") || User.IsInRole("Cashier")){
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
-          <i class="ri-home-line"></i><span>Room</span> 
-        </a>
-      </li> 
-      }*@
-      @if(User.IsInRole("Admin")) {
-      <li class="nav-item">
-        <a class="nav-link collapsed"  asp-area="Admin" asp-controller="Menu" asp-action="index">
-          <i class="ri-menu-5-fill"></i><span>Menu</span> 
-        </a>        
-      </li><!-- End Icons Nav -->
+                    @if (User.IsInRole("Admin") || User.IsInRole("Cashier"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link collapsed" asp-area="checkout" asp-controller="home" asp-action="index">
+                                <i class="bi bi-truck"></i><span>Check Out</span>
+                            </a>
+                        </li>
+
+                        <!-- End Forms Nav -->
+                    }
+                    @if (User.IsInRole("Admin") || User.IsInRole("Cashier"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link collapsed" asp-area="Admin" asp-controller="Table" asp-action="index">
+                                <i class="bi bi-table"></i><span>Tables</span>
+                            </a>
+                        </li>
+
+                        <!-- End Tables Nav -->
+                    }
+                    @* @if(User.IsInRole("Admin")|| User.IsInRole("Waiter") || User.IsInRole("Cashier")){
+                <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
+                <i class="ri-home-line"></i><span>Room</span>
+                </a>
+                </li>
+                }*@
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link collapsed" asp-area="Admin" asp-controller="Menu" asp-action="index">
+                                <i class="ri-menu-5-fill"></i><span>Menu</span>
+                            </a>
+                        </li>
+
+                        <!-- End Icons Nav -->
                     }
                     else if (User.IsInRole("Cashier") || User.IsInRole("Waiter"))
                     {
@@ -162,104 +181,127 @@
                         <!-- End Icons Nav -->
                     }
 
-      @if(User.IsInRole("Admin")|| User.IsInRole("Cashier")|| User.IsInRole("Waiter")){
-      <li class="nav-item">
-        <a class="nav-link collapsed" asp-area="Admin" asp-controller="Today" asp-action="index"  >
-          <i class="ri-text-spacing"></i><span>Today</span> 
-        </a>        
-      </li>
-      }
-      @if(!User.IsInRole("Waiter")){
-      <li class="nav-heading">Others </li>
-      }
-                @if (User.IsInRole("Admin"))
-                {
-                    <li class="nav-item">
-                        <a class="nav-link collapsed" asp-area="Admin" asp-controller="Product" asp-action="Index" >
-          <i class="bi bi-file-earmark-ppt"></i>
-          <span>Product</span>
-        </a>
-      </li><!-- End Contact Page Nav --> 
-      }
-    
-                @if (User.IsInRole("Admin") || User.IsInRole("Cashier"))
-                {
-                    <li class="nav-item">
-                        <a class="nav-link collapsed" asp-action="index" asp-controller="purchase" asp-area="admin">
-          <i class="bi bi-cash"></i>
-          <span>Purchase</span>
-        </a>
-      </li><!-- End Register Page Nav -->
-      }
-       @if (User.IsInRole("Admin")){
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#report-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-box-arrow-in-right"></i><span>Report</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-        <ul id="report-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-          <li>
-            <a asp-action="index" asp-controller="purchaseReport" asp-area="admin">
-              <i class="bi bi-circle"></i><span>Purchase</span>
-            </a>
-          </li>
-          <li>
-             <a asp-action="index" asp-controller="salesReport" asp-area="admin">
-              <i class="bi bi-circle"></i><span>Sales</span>
-            </a>
-          </li>
-          <li>
-            <a href="icons-boxicons.html">
-              <i class="bi bi-circle"></i><span>Stock</span>
-            </a>
-          </li>
-        </ul>
-      </li>
-      }
-                @if (User.IsInRole("Admin") || User.IsInRole("Cashier"))
-                {
-                    <li class="nav-item">
-                        <a class="nav-link collapsed" asp-controller="Customer" asp-action="Index" asp-area="">
-          <i class="bi bi-person"></i>
-          <span>Customer</span>
-        </a>
-      </li><!-- End Profile Page Nav -->
-      }
-       @if (User.IsInRole("Admin") || User.IsInRole("Cashier")){
-     <li class="nav-item">
-        <a class="nav-link collapsed" asp-controller="Supplier" asp-action="Index" asp-area="">
-          <i class="bi bi-person"></i>
-          <span>Suppliers </span>
-        </a>
-      </li><!-- End F.A.Q Page Nav -->
-       }
-        @if (User.IsInRole("Admin") || User.IsInRole("Cashier")){
-      <li class="nav-item">
-        <a class="nav-link collapsed"  asp-area="Admin" asp-controller="Assets" asp-action="Index">
-          <i class="bi bi-handbag"></i>
-          <span>Assets</span>
-        </a>
-      </li><!-- End Error 404 Page Nav -->
-        }
-         @if (User.IsInRole("Admin") || User.IsInRole("Cashier")){
-      <li class="nav-item">
-        <a class="nav-link collapsed" asp-action="Index" asp-controller="Galla" asp-area="" >
-          <i class="bi bi-currency-exchange"></i>
-          <span>Galla</span>
-        </a>
-      </li><!-- End Blank Page Nav -->
-         }
-                @if (User.IsInRole("Admin"))
-                {
-                    <li class="nav-item">
-                        <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-gear"></i><span>Setting</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-        <ul id="icons-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-          <li>
-            <a asp-area="Admin" asp-controller="User" asp-action="index" >
-              <i class="bi bi-circle"></i><span>User</span>
-            </a>
-          </li>
+                    @if (User.IsInRole("Admin") || User.IsInRole("Cashier") || User.IsInRole("Waiter"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link collapsed" asp-area="Admin" asp-controller="Today" asp-action="index">
+                                <i class="ri-text-spacing"></i><span>Today</span>
+                            </a>
+                        </li>
+                    }
+                    @if (!User.IsInRole("Waiter"))
+                    {
+                        <li class="nav-heading">Others </li>
+                    }
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link collapsed" asp-area="Admin" asp-controller="Product" asp-action="Index">
+                                <i class="bi bi-file-earmark-ppt"></i>
+                                <span>Product</span>
+                            </a>
+                        </li>
+
+                        <!-- End Contact Page Nav -->
+                    }
+
+                    @if (User.IsInRole("Admin") || User.IsInRole("Cashier"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link collapsed" asp-action="index" asp-controller="purchase" asp-area="admin">
+                                <i class="bi bi-cash"></i>
+                                <span>Purchase</span>
+                            </a>
+                        </li>
+
+                        <!-- End Register Page Nav -->
+                    }
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link collapsed" data-bs-target="#report-nav" data-bs-toggle="collapse" href="#">
+                                <i class="bi bi-box-arrow-in-right"></i><span>Report</span><i class="bi bi-chevron-down ms-auto"></i>
+                            </a>
+                            <ul id="report-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                                <li>
+                                    <a asp-action="index" asp-controller="purchaseReport" asp-area="admin">
+                                        <i class="bi bi-circle"></i><span>Purchase</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a asp-action="index" asp-controller="invoiceReport" asp-area="admin">
+                                        <i class="bi bi-circle"></i><span>Invoice</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a asp-action="index" asp-controller="salesReport" asp-area="admin">
+                                        <i class="bi bi-circle"></i><span>Sales</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="icons-boxicons.html">
+                                        <i class="bi bi-circle"></i><span>Stock</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    }
+                    @if (User.IsInRole("Admin") || User.IsInRole("Cashier"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link collapsed" asp-controller="Customer" asp-action="Index" asp-area="">
+                                <i class="bi bi-person"></i>
+                                <span>Customer</span>
+                            </a>
+                        </li>
+
+                        <!-- End Profile Page Nav -->
+                    }
+                    @if (User.IsInRole("Admin") || User.IsInRole("Cashier"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link collapsed" asp-controller="Supplier" asp-action="Index" asp-area="">
+                                <i class="bi bi-person"></i>
+                                <span>Suppliers </span>
+                            </a>
+                        </li>
+
+                        <!-- End F.A.Q Page Nav -->
+                    }
+                    @if (User.IsInRole("Admin") || User.IsInRole("Cashier"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link collapsed" asp-area="Admin" asp-controller="Assets" asp-action="Index">
+                                <i class="bi bi-handbag"></i>
+                                <span>Assets</span>
+                            </a>
+                        </li>
+
+                        <!-- End Error 404 Page Nav -->
+                    }
+                    @if (User.IsInRole("Admin") || User.IsInRole("Cashier"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link collapsed" asp-action="Index" asp-controller="Galla" asp-area="">
+                                <i class="bi bi-currency-exchange"></i>
+                                <span>Galla</span>
+                            </a>
+                        </li>
+
+                        <!-- End Blank Page Nav -->
+                    }
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
+                                <i class="bi bi-gear"></i><span>Setting</span><i class="bi bi-chevron-down ms-auto"></i>
+                            </a>
+                            <ul id="icons-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                                <li>
+                                    <a asp-area="Admin" asp-controller="User" asp-action="index">
+                                        <i class="bi bi-circle"></i><span>User</span>
+                                    </a>
+                                </li>
                                 <li>
                                     <a asp-area="admin" asp-action="index" asp-controller="menucategory" asp-route-returnUrl="">
                                         <i class="bi bi-circle"></i><span>Menu Setting</span>
