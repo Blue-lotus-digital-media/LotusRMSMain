@@ -18,18 +18,27 @@ namespace LotusRMSweb.Controllers
         private readonly ICustomerService _iCustomerService;
         private readonly IMenuService _iMenuService;
         private readonly IGallaService _gallaService;
+        private readonly IOrderService _orderService;
+        private readonly IFiscalYearService _iFiscalYearService;
+        private readonly IBillSettingService _iBillSettingService;
 
         public InvoiceController(IInvoiceService invoiceService,
-            ICompanyService iCompanyService, 
-            ICustomerService iCustomerService, 
-            IMenuService iMenuService, 
-            IGallaService gallaService)
+            ICompanyService iCompanyService,
+            ICustomerService iCustomerService,
+            IMenuService iMenuService,
+            IGallaService gallaService,
+            IOrderService orderService,
+            IFiscalYearService iFiscalYearService,
+            IBillSettingService iBillSettingService)
         {
             _invoiceService = invoiceService;
             _iCompanyService = iCompanyService;
             _iCustomerService = iCustomerService;
             _iMenuService = iMenuService;
             _gallaService = gallaService;
+            _orderService = orderService;
+            _iFiscalYearService = iFiscalYearService;
+            _iBillSettingService = iBillSettingService;
         }
 
         public IActionResult InvoicePrint(Guid Id, string? returnUrl = null)
@@ -137,5 +146,21 @@ namespace LotusRMSweb.Controllers
             }
             return OrderVM;
         }
+        public IActionResult EstimateBillPrint(Guid Order_Id)
+        {
+            var fiscalyear = _iFiscalYearService.GetActiveYear();
+            var billSetting = _iBillSettingService.GetActive();
+            var order = _orderService.GetFirstOrDefaultByOrderId(Order_Id);
+            var estimateVM = new EstimateInvoiceVM()
+            {
+                OrderId = order.Id,
+                Order = GetOrderVM(order),
+                FiscalYear = fiscalyear,
+                BillSetting=billSetting
+            };
+            ViewBag.Company = _iCompanyService.GetCompany();
+            return View(estimateVM);
+        }
+
     }
 }

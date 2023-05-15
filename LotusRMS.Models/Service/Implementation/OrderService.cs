@@ -88,6 +88,12 @@ namespace LotusRMS.Models.Service.Implementation
         {
             var orders = _IOrderRepository.GetFirstOrDefault(filter: x=>x.Order_No==orderNo ,includeProperties: "Order_Details,User,Table");
             return orders;
+        } 
+
+        public LotusRMS_Order GetFirstOrDefaultByOrderId(Guid orderId)
+        {
+            var orders = _IOrderRepository.GetFirstOrDefault(filter: x=>x.Id==orderId ,includeProperties: "Order_Details,User,Table");
+            return orders;
         }
 
         public Guid Update(UpdateOrderDTO dto)

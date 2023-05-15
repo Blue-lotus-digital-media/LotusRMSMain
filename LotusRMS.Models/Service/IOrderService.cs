@@ -28,6 +28,7 @@ namespace LotusRMS.Models.Service
         LotusRMS_Order GetByGuid(Guid Id);
         LotusRMS_Order GetFirstOrDefaultByTableId(Guid TableId);
         LotusRMS_Order GetFirstOrDefaultByOrderNo(string orderNo);
+        LotusRMS_Order GetFirstOrDefaultByOrderId(Guid orderId);
         Task<LotusRMS_Order> GetByGuidAsync(Guid Id);
         Guid ReleaseTable(string OrderNo);
         Task<bool> AddOrderItem(AddOrderItemDTO dto);   

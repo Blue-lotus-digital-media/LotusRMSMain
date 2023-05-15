@@ -167,6 +167,7 @@
                     <a class="Switch btn btn-success" data-bs-toggle="modal"
                        data-bs-target="#tableSwitchModal" onclick="$('#SwitchTableForm').submit();">Switch Table</a>
                     <a class="btn" style="color:white ; background-color:#229966" onclick="$('#ReturnOrderForm').submit();">Return Order</a>
+                    <a class="btn btn-info" asp-route-Order_Id="@Model.Order_Id"  asp-action="EstimateBillPrint" asp-controller="Invoice" asp-area="" target="_blank">Estimate</a>
                 }
                 </td>
             </tr>

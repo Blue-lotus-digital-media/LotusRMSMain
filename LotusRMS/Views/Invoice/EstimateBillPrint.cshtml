@@ -1,0 +1,328 @@
+﻿@using LotusRMS.Models.Viewmodels.Company;
+@using LotusRMS.Models.Viewmodels.Invoice;
+@using LotusRMS.Utility;
+@using Microsoft.AspNetCore.Identity;
+@model EstimateInvoiceVM
+
+@inject UserManager<RMSUser> UserManager
+
+@{
+    Layout = null;
+    ViewData["Title"] = "Estimate Invoice";
+
+    var billSetting = Model.BillSetting;
+    var order = Model.Order;
+    UpdateCompanyVM company = ViewBag.Company;
+
+}
+<meta charset="UTF-8">
+<style>
+
+
+    #invoice-POS, th {
+        font-size: 0.7rem !important;
+        font-weight: 400 !important;
+        font-style: normal !important;
+        text-transform: uppercase !important;
+        font-family: "Courier New", Courier, monospace !important;
+    }
+
+
+
+    .date, .bill {
+        font-family: "Courier New", Courier, monospace !important;
+        font-weight: normal !important;
+        font-size: 0.7rem !important;
+    }
+
+
+    p {
+        margin-bottom: 0 !important;
+        margin-top: 0 !important;
+    }
+
+    .pan {
+        margin-bottom: 0.5rem !important;
+    }
+
+
+    #invoice-POS {
+        box-shadow: 0 0 1in -0.25in rgba(0, 0, 0, 0.5);
+        padding: 2mm;
+        margin: 0 auto;
+        width: 100mm;
+        background: #FFF;
+    }
+
+    @@media print {
+        .page-break {
+            display: block;
+            page-break-before: always;
+        }
+
+        #invoice-POS {
+            margin: 0;
+            width: 100%;
+            box-shadow: unset;
+            padding: 0;
+        }
+    }
+
+    #invoice-POS ::selection {
+        background: #f31544;
+        color: #FFF;
+    }
+
+    #invoice-POS ::-moz-selection {
+        background: #f31544;
+        color: #FFF;
+    }
+
+    #invoice-POS p {
+        color: #000;
+        line-height: 1.2em;
+    }
+
+    #invoice-POS #top .logo {
+        height: 60px;
+        width: 60px;
+        background: url(http://michaeltruong.ca/images/logo1.png) no-repeat;
+        background-size: 60px 60px;
+    }
+
+    #invoice-POS .clientlogo {
+        float: left;
+        height: 60px;
+        width: 60px;
+        background: url(http://michaeltruong.ca/images/client.jpg) no-repeat;
+        background-size: 60px 60px;
+        border-radius: 50px;
+    }
+
+    #invoice-POS .info {
+        display: block;
+        margin-left: 0;
+        line-height: 0;
+    }
+
+    #invoice-POS .title {
+        float: right;
+    }
+
+        #invoice-POS .title p {
+            text-align: right;
+        }
+
+    #invoice-POS table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    #invoice-POS .tabletitle {
+        font-size: .7rem;
+        background: #EEE;
+    }
+
+    #invoice-POS .service {
+        border-bottom: 1px solid #EEE;
+    }
+
+    #invoice-POS .item {
+        width: 24mm;
+    }
+
+    #invoice-POS .itemtext {
+        font-size: .7rem;
+    }
+
+    #invoice-POS #legalcopy {
+        margin-top: 5mm;
+    }
+
+    .total-calc {
+        height: 20px;
+        line-height: 0;
+    }
+
+        .total-calc .Rate {
+            padding-right: 5px;
+        }
+
+    td, th {
+        font-size: 0.8rem !important;
+    }
+
+
+    #legalcopy {
+        margin-top: 0.5rem !important;
+    }
+
+    #table {
+        border: none !important;
+    }
+
+    .myfontsize {
+        font-size: 0.7rem;
+    }
+
+</style>
+
+<script>
+
+
+    function Popup(data) {
+        var myWindow = window.open('', 'Receipt', 'height=400,width=600');
+        myWindow.document.write('<html><head><title>Receipt</title>');
+        /*optional stylesheet*/ //myWindow.document.write('<link rel="stylesheet" href="main.css" type="text/css" />');
+        myWindow.document.write('<style type="text/css"> *, html {margin:2px;padding:0;} </style>');
+        myWindow.document.write('</head><body>');
+        myWindow.document.write(data);
+        myWindow.document.write('<\/body><\/html>');
+        myWindow.document.close(); // necessary for IE >= 10
+
+        myWindow.onload = function () { // necessary if the div contain images
+
+            myWindow.focus(); // necessary for IE >= 10
+            myWindow.print();
+            myWindow.close();
+        };
+    }
+</script>
+<div id="invoice-POS">
+    <center id="top">
+        <div class="info">
+            <p>@billSetting.BillTitle</p>
+            <p>@billSetting.BillAddress</p>
+            @if (billSetting.IsPhone)
+            {
+                <p>
+                    @company.Contact
+                </p>
+            }
+            @if (billSetting.IsPanOrVat)
+            {
+                <p class="pan">PAN: @company.PanOrVat</p>
+            }
+            <table style="border: none; ">
+                <tr style="border-bottom: 1px dashed grey;">
+                    <th class="bill" style="border: none;  text-align: left;"><label style="font-size:0.7rem"> </label></th>
+                    <th class="date" style="text-align: right; border: none;">Date:<label style="font-size:0.7rem" @* id="Checkoutdate"*@> @CurrentTime.DateTimeToday()</label> </th>
+                </tr>
+            </table>
+        </div><!--End Info-->
+    </center><!--End InvoiceTop-->
+
+    <div id="mid" style="line-height: 0;border-bottom: 1px dashed grey;">
+        <div class="info">
+
+
+
+            <p>
+                Order No: <span style="text-transform:capitalize;"> @order.Order_No </span><br />
+                @*Address: @checkout.Customer_Address<br />
+                Phone: @checkout.Customer_Contact<br />*@
+                Table : @order.Table_Name <br />
+            </p>
+
+        </div>
+    </div><!--End Invoice Mid-->
+
+
+    <div id="bot">
+
+        <div id="table">
+            <table>
+                <tr class="tabletitle" style="border-bottom: 1px dashed grey;">
+                    <th class="sn"><p>Sn</p></th>
+                    <th class="item" style="text-align:left;"><p class="">Item</p></th>
+                    <th class="Hours"><p>Qty</p></th>
+                    <th class="Rate" style="text-align:right;"><p>Rate</p></th>
+                    <th class="Amount" style="text-align:right;"><p>Amount</p></th>
+                </tr>
+
+                @{
+                    int i = 0;
+                }
+                @foreach (var item in order.Order_Details)
+                {
+                    i++;
+                    <tr class="service">
+                        <td class="tableitem" style="text-align: center;" width="8%"><p class="itemtext">@i</p></td>
+
+                        <td class="tableitem" style="text-align: left;" width="47%"><p class="itemtext">@item.Item_Name </p></td>
+
+                        <td class="tableitem" style="text-align: center;" width="10%"><p class="itemtext">@item.Quantity </p></td>
+                        <td class="tableitem" style="text-align: right;" width="14%"><p class="itemtext">@item.Rate</p></td>
+                        <td class="tableitem" style="text-align: right;"><p class="itemtext">@item.Total</p></td>
+
+                    </tr>
+
+                }
+
+                <tr class="tabletitle total-calc" style="border-top:1px dashed grey; border-bottom:1px dashed grey;">
+                    <td colspan="4" class="Rate" style="text-align: right; text-transform:capitalize;border-top:1px dashed grey;    ">
+
+                        <label class="myfontsize" style="">Gross Amount : </label>
+                    </td>
+                    <td class="payment" style="text-align: right;">
+                        <label class="myfontsize">
+                            @{
+                                var total = order.Order_Details.Sum(x => x.Total);
+                            }
+
+                            @total
+                        </label>
+                    </td>
+
+                </tr>
+
+
+           
+                <tr class="tabletitle total-calc" style="border-bottom:1px dashed grey;">
+                    <td colspan="5" class="Rate" style="text-align: left;"><p style="text-transform:capitalize;" class="myfontsize">Rs. @NumberToWord.MoneyToWords(total)</p></td>
+                </tr>
+
+            </table>
+
+           
+
+            <div id="legalcopy" style="margin-top:0">
+                <span>
+                    Served by: @{
+
+                        var servedBy = order.OrderBy;
+                    
+                    } @servedBy  
+                </span>
+            </div>
+
+            <div id="printTime">
+                <span>
+                    Print Date and Time: @CurrentTime.DateTimeNow() 
+
+
+                </span>
+            </div>
+
+        </div><!--End InvoiceBot-->
+    </div><!--End Invoice-->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+        @* var dt = new Date();
+                var date = (dt.getMonth()+1) + "/" + dt.getDate() + "/" +dt.getFullYear();
+                var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+
+                $("#Checkoutdate").html(date+" "+time);*@
+                window.print();
+            setTimeout("closePrintView()", 2000);
+
+
+        });
+        function closePrintView() {
+
+            window.close();
+            window.location.href = "@ViewBag.ReturnUrl";
+        }
+    </script>

@@ -19,6 +19,8 @@ using LotusRMS.Models.Viewmodels.Type;
 using AspNetCoreHero.ToastNotification.Abstractions;
 using LotusRMS.Models.Viewmodels.Galla;
 using System.Security.Claims;
+using LotusRMS.Models.Viewmodels.Invoice;
+using LotusRMS.Models.Service.Implementation;
 
 namespace LotusRMSweb.Areas.Checkout.Controllers
 {
@@ -34,6 +36,7 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
         private readonly IOrderService _IOrderService;
         private readonly ICheckoutService _ICheckoutService;
         private readonly IBillSettingService _IBillSettingService;
+        private readonly IFiscalYearService _IFiscalYearService;
         private readonly ICustomerService _ICustomerService;
         private readonly INotyfService _notyf;
         private readonly IGallaService _gallaService;
@@ -50,7 +53,8 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
             IHubContext<OrderHub, IOrderHub> orderHub
 ,
             INotyfService notyf,
-            IGallaService gallaService)
+            IGallaService gallaService,
+            IFiscalYearService iFiscalYearService)
         {
             _IOrderService = iOrderService;
             _ITableTypeService = TableTypeService;
@@ -63,6 +67,7 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
             _orderHub = orderHub;
             _notyf = notyf;
             _gallaService = gallaService;
+            _IFiscalYearService = iFiscalYearService;
         }
         public IActionResult Index(Guid? TypeId,Guid? TableId)
         {
@@ -389,6 +394,8 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
             ViewBag.Checkout = CreateCheckOut(order.Id, order.Order_Details.Sum(x => x.Total));
             return PartialView("_Order", model: order);
         }
+
+      
 
         public IActionResult GetSwitchTableView(Guid TableId)
         {
