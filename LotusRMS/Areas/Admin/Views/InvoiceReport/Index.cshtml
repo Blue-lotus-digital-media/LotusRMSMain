@@ -31,21 +31,44 @@
 
 <div class="row">
     <div class="col-12">
-        <div class="card">
+        <div class="card" style="width:100%">
             <div class="card-body mt-3">
 
-                <div class="d-flex justify-content-between px-10 mb-1">
+                <div class="d-flex justify-content-between  ">
                     <div>
                        
                     </div>
                     <div class="title">Invoice Report</div>
-                    <div class="exportBtns">
+               
+                   <div class="exportBtns">
                         <form enctype="multipart/form-data" asp-area="Admin" asp-controller="InvoiceReport" asp-action="ExportToExcel">
                             <input class="btn btn-primary" type="submit" value="Excel" />
 
                         </form>
 
                     </div>
+                </div>
+
+                <div class="searchDiv row p-2 d-flex">
+                    <div class="col-md-3">
+                        <div class="input-group mb-2">
+                            <span class="input-group-text">From </span>
+                        </div>
+                        <input type="date" id="startDate" class="form-control" />
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group mb-2">
+                            <span class="input-group-text">To </span>
+                        </div>
+                        <input type="date" id="endDate" class="form-control" />
+                    </div>
+                    <div class="col-md-4 align-self-end mt-2">
+                        <div class="input-group">
+                            <button type="button" class="btn btn-info w-50  fw-bold" onclick="GetPurchase()">Search</button>
+                        </div>
+
+                    </div>
+
                 </div>
 
                 <div class="p-4 border rounded">
@@ -81,7 +104,7 @@
                                     Action
                                 </th>
                                 <th>
-                                    <a asp-area="admin" asp-action="downloadallqr" asp-controller="table" onclick="Event.preventDefault(); ">Download Table QR</a>
+                                    <a asp-area="admin" asp-action="downloadallqr" asp-controller="invoice" onclick="Event.preventDefault(); ">Download Table QR</a>
                                 </th>
 
                             </tr>
