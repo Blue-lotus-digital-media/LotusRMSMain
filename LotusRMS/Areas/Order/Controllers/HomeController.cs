@@ -302,15 +302,19 @@ namespace LotusRMSweb.Areas.Order.Controllers
 
             HttpContext.Session.SetString(tableId.ToString(), JsonConvert.SerializeObject(orderList));
 
-            var menu = _IMenuService.GetByGuid(menuId);
+            var menu = _IMenuService.GetFirstOrDefault(menuId);
 
             var vm = new AddNewOrderVM()
             {
                 MenuId = menuId,
+                Menu= menu,
                 TableId = tableId,
                 Item_Name = menu.Item_Name,
-                Quantity = quantity,
-                Remarks= remarks
+                Item_Unit = menu.Menu_Unit.Unit_Symbol,
+                Rate = order.Rate,
+                Quantity = order.Quantity,
+                Quantity_Id=order.Quantity_Id,
+
 
 
             };
