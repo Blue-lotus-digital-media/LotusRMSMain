@@ -121,7 +121,7 @@ namespace LotusRMSweb.Controllers
                 TableId = order.Table_Id,
                 Table_Name = order.Table.Table_Name,
                 OrderBy = order.User.FirstName + " " + order.User.MiddleName + " " + order.User.LastName,
-                Date = order.DateTime,
+                Date = order.DateTime.ToString(),
                 Order_No = order.Order_No,
                 Order_Details = new List<OrderDetailVm>()
             };

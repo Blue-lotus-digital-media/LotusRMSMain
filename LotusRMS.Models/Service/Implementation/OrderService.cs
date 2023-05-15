@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.WebPages;
 
 namespace LotusRMS.Models.Service.Implementation
 {
@@ -31,7 +32,7 @@ namespace LotusRMS.Models.Service.Implementation
                 Table_Id=dto.Table_Id,
                 OrderBy=dto.UserId,
                 Order_No=RandomStringGenerator.RandomString(6),
-                DateTime=CurrentTime.DateTimeNow().ToString(),
+                DateTime=CurrentTime.DateTimeNow(),
                 Order_Details = new List<LotusRMS_Order_Details>()
             };
             foreach(var item in dto.OrderDetails)
@@ -56,9 +57,17 @@ namespace LotusRMS.Models.Service.Implementation
             throw new NotImplementedException();
         }
 
+
+
+
         public IEnumerable<LotusRMS_Order> GetAll()
         {
             var orders = _IOrderRepository.GetAll(x => x.IsCheckout);
+            return orders;
+        }
+        public IEnumerable<LotusRMS_Order> GetAllByDateRange(DateTime StartDate,DateTime EndDate)
+        {
+            var orders = _IOrderRepository.GetAll(x => x.DateTime >= StartDate && x.DateTime <= EndDate);
             return orders;
         }
 

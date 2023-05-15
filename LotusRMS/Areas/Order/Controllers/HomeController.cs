@@ -120,7 +120,7 @@ namespace LotusRMSweb.Areas.Order.Controllers
                         Id = order.Id,
                         TableId = order.Table_Id,
                         Table_Name=order.Table.Table_Name,
-                        Date = order.DateTime,
+                        Date = order.DateTime.ToString(),
                         Order_No = order.Order_No,
                         Order_Details = new List<OrderDetailVm>()
                     };
@@ -154,7 +154,7 @@ namespace LotusRMSweb.Areas.Order.Controllers
                         TableId = order.Table_Id,
 
                         Table_Name = order.Table.Table_Name,
-                        Date = order.DateTime,
+                        Date = order.DateTime.ToString(),
                         Order_No = order.Order_No,
                         Order_Details = new List<OrderDetailVm>()
                     };

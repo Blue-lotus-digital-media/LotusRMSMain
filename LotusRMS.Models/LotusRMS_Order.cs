@@ -21,7 +21,7 @@ namespace LotusRMS.Models
         public virtual LotusRMS_Table Table{get;set;}
 
         [Display(Name = "Date")]
-        public string DateTime { get; set; }
+        public DateTime DateTime { get; set; }
 
         public string OrderBy { get; set; }
         [ForeignKey("OrderBy")]
