@@ -13,7 +13,7 @@ namespace LotusRMS.Models.Viewmodels.Checkout
         public Guid Id { get; set; }
         public Guid Order_Id { get; set; }
         public OrderVm  Order{ get; set; }
-        public string DateTime { get; set; }
+        public DateTime DateTime { get; set; }
         public Guid? Customer_Id { get; set; }
         public double Total { get; set; }
         public string Customer_Name { get; set; }

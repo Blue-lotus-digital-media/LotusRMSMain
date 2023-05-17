@@ -15,6 +15,7 @@ namespace LotusRMS.Models.Service
         Guid UpdateStatus(Guid Id);
 
         public IEnumerable<LotusRMS_Checkout> GetAll();
+        public IEnumerable<LotusRMS_Checkout> GetAllByDateRange(DateTime startDate,DateTime endDate);
         public LotusRMS_Checkout GetByGuid(Guid Id);
 
         Guid SetInvoice(Guid Id);

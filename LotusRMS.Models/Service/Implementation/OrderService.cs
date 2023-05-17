@@ -65,6 +65,11 @@ namespace LotusRMS.Models.Service.Implementation
             var orders = _IOrderRepository.GetAll(x => x.IsCheckout);
             return orders;
         }
+        public IEnumerable<LotusRMS_Order> GetAllActiveOrder()
+        {
+            return _IOrderRepository.GetAll(x => !x.IsCheckout, includeProperties: "Order_Details,Order_Details.Menu,User,Table");
+           
+        }
         public IEnumerable<LotusRMS_Order> GetAllByDateRange(DateTime StartDate,DateTime EndDate)
         {
             var orders = _IOrderRepository.GetAll(x => x.DateTime >= StartDate && x.DateTime <= EndDate, includeProperties: "Order_Details,Order_Details.Menu,User,Table");

@@ -32,7 +32,7 @@ namespace LotusRMS.Models
         public float Paid_Amount { get; set; }
         public PaymentModeEnum Payment_Mode { get; set; }
         [Display(Name="Date")]
-        public string DateTime { get; set; }
+        public DateTime DateTime { get; set; }
 
         public string Invoice_No { get; set; }
 

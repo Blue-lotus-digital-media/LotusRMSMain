@@ -3,7 +3,6 @@
 function GetTableBooked(me) {
     var type = $(me).attr("type");
     var text = $(me).text();
-    console.log(text);
 
     $.ajax({
         type: 'GET',
@@ -20,16 +19,52 @@ function GetTableBooked(me) {
             alert(errorThrown);
         }
     });
-}function GetTop5Item() {
+}
+function GetTop5Item() {
     
-    console.log("5");
     $.ajax({
         type: 'GET',
         url: "/Admin/Home/GetTop5Item",
         
         success: function (data) {
-            console.log(data);
             loadChart(data);
+
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            alert(errorThrown);
+        }
+    });
+}
+function GetTransection(me) {
+    
+    var type = $(me).attr("type");
+    var text = $(me).text();
+
+    $.ajax({
+        type: 'GET',
+        url: "/Admin/Home/GetTransection",
+        data: "type=" + type,
+        success: function (data) {
+            var span = document.querySelector("#TransectionDataType");
+            span.innerHTML = text;
+            var h6 = document.querySelector("#TransectionData");
+            h6.innerHTML = data.data;
+
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            alert(errorThrown);
+        }
+    });
+}
+function GetStandingOrder() {
+    
+   
+
+    $.ajax({
+        type: 'GET',
+        url: "/Admin/Home/GetStandingOrder",
+        success: function (data) {
+            console.log(data);
 
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -89,45 +124,10 @@ function loadChart(data){
 }
 document.addEventListener("DOMContentLoaded", () => {
     $("#tableBookedFirst").click();
+    $("#transectionFirst").click();
     GetTop5Item();
+    GetStandingOrder();
 
 
 
-    echarts.init(document.querySelector("#verticalBarChart")).setOption({
-        title: {
-            text: 'Top sale Items'
-        },
-        tooltip: {
-            trigger: 'axis',
-            axisPointer: {
-                type: 'shadow'
-            }
-        },
-        legend: {},
-        grid: {
-            left: '3%',
-            right: '4%',
-            bottom: '3%',
-            containLabel: true
-        },
-        xAxis: {
-            type: 'value',
-            boundaryGap: [0, 0.01]
-        },
-        yAxis: {
-            type: 'category',
-            data: ['Brazil', 'Indonesia', 'USA', 'India', 'China', 'World']
-        },
-        series: [{
-            name: 'Today',
-            type: 'bar',
-            data: [18203, 23489, 29034, 104970, 131744, 630230]
-        },
-        {
-            name: 'Yesterday',
-            type: 'bar',
-            data: [19325, 23438, 31000, 121594, 134141, 681807]
-        }
-        ]
-    });
 });

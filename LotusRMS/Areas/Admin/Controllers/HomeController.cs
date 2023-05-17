@@ -12,10 +12,13 @@ namespace LotusRMSweb.Areas.Admin.Controllers
     public class HomeController : Controller
     {
         private readonly IOrderService _iOrderService;
+        private readonly ICheckoutService _iCheckoutService;
 
-        public HomeController(IOrderService iOrderService)
+        public HomeController(IOrderService iOrderService, 
+            ICheckoutService iCheckoutService)
         {
             _iOrderService = iOrderService;
+            _iCheckoutService = iCheckoutService;
         }
         public IActionResult Index()
         {
@@ -46,7 +49,36 @@ namespace LotusRMSweb.Areas.Admin.Controllers
 
             return Json(new {data=tableBookedCount.Count()});
         }
-       
+       public IActionResult GetStandingOrder()
+        {
+            var active = _iOrderService.GetAllActiveOrder();
+       /*     var data = GetItemDetail(active).AsEnumerable().Select(x=>x.MenuId).GroupBy(x => new { x.MenuId, x.Quantity_Id,x.Quantity,x.Item_Name}).Select(sd=> new
+            {
+                Item_Name=sd.,
+
+            });*/
+            return Json(new { data = "" });
+        }
+        public IActionResult GetTransection(ReportType type){
+            var today = CurrentTime.DateTimeToday();
+            var startDate = Convert.ToDateTime(today);
+            var endDate = CurrentTime.DateTimeNow();
+            if (type == ReportType.Week)
+            {
+                startDate = startDate.AddDays(-7);
+            }
+            else if (type == ReportType.Month)
+            {
+                startDate = startDate.AddDays(-startDate.Day + 1);
+            }
+            else if (type == ReportType.Year)
+            {
+                startDate = startDate.AddMonths(-startDate.Month + 1).AddDays(-startDate.Day + 1);
+            }
+            var totalTransection = _iCheckoutService.GetAllByDateRange(startDate, endDate).Sum(x=>x.Total);
+            
+            return Json(new { data = totalTransection });
+        }
         public IActionResult GetTop5Item()
         {
             var todayStart = Convert.ToDateTime(CurrentTime.DateTimeToday());
@@ -58,11 +90,6 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             var yeaterdayOrder = _iOrderService.GetAllByDateRange(yesterdayStart, yesterdayEnd);
              var todayOrder = _iOrderService.GetAllByDateRange(todayStart, todayEnd);
 
-            
-
-
-           
-           
             var yesterdayData = GetItemDetail(yeaterdayOrder).GroupBy(x => x.Item_Name).Select(grouped => new
             {
                 key = grouped.Key,

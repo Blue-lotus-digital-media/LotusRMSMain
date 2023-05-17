@@ -36,7 +36,7 @@ namespace LotusRMS.Models.Service.Implementation
                 Total = dto.Total,
                 Discount_Type = dto.Discount_Type,
                 Discount = dto.Discount,
-                DateTime = CurrentTime.DateTimeNow().ToString(),
+                DateTime = CurrentTime.DateTimeNow(),
                 Payment_Mode = dto.Payment_Mode,
                 Paid_Amount=dto.Paid_Amount,
                 Invoice_No = GetInvoiceNo()
@@ -90,6 +90,11 @@ namespace LotusRMS.Models.Service.Implementation
         public Guid SetInvoice(Guid Id)
         {
             throw new NotImplementedException();
+        }
+
+        public IEnumerable<LotusRMS_Checkout> GetAllByDateRange(DateTime startDate, DateTime endDate)
+        {
+            return _CheckoutRepository.GetAll(x => x.DateTime >= startDate && x.DateTime <= endDate, includeProperties: "Order,Order.Order_Details,Order.Order_Details.Menu,Order.User,Order.Table");
         }
     }
 }

@@ -24,6 +24,7 @@ namespace LotusRMS.Models.Service
         Task<Guid> PrintKotAsync(Guid OrderId, List<LotusRMS_Order_Details> orderDetails);
         /*Task<LotusRMS_Order> GetUnPrintedDetail(string OrderNo);*/
         IEnumerable<LotusRMS_Order> GetAll();
+        IEnumerable<LotusRMS_Order> GetAllActiveOrder();
         IEnumerable<LotusRMS_Order> GetAllByDateRange(DateTime startDate,DateTime EndDate);
         Task<IEnumerable<LotusRMS_Order>> GetAllAsync();
         LotusRMS_Order GetByGuid(Guid Id);
