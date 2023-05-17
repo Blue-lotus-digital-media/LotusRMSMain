@@ -67,7 +67,7 @@ namespace LotusRMS.Models.Service.Implementation
         }
         public IEnumerable<LotusRMS_Order> GetAllByDateRange(DateTime StartDate,DateTime EndDate)
         {
-            var orders = _IOrderRepository.GetAll(x => x.DateTime >= StartDate && x.DateTime <= EndDate);
+            var orders = _IOrderRepository.GetAll(x => x.DateTime >= StartDate && x.DateTime <= EndDate, includeProperties: "Order_Details,Order_Details.Menu,User,Table");
             return orders;
         }
 
