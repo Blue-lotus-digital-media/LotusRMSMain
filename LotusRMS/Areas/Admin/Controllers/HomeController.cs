@@ -1,5 +1,6 @@
 ﻿using LotusRMS.Models;
 using LotusRMS.Models.Service;
+using LotusRMS.Models.Service.Implementation;
 using LotusRMS.Models.Viewmodels.Order;
 using LotusRMS.Utility;
 using LotusRMS.Utility.Enum;
@@ -13,12 +14,17 @@ namespace LotusRMSweb.Areas.Admin.Controllers
     {
         private readonly IOrderService _iOrderService;
         private readonly ICheckoutService _iCheckoutService;
-
-        public HomeController(IOrderService iOrderService, 
-            ICheckoutService iCheckoutService)
+        private readonly IMenuService _iMenuService;
+        private readonly ICustomerService _iCustomerService;
+        public HomeController(IOrderService iOrderService,
+            ICheckoutService iCheckoutService,
+            IMenuService iMenuService,
+            ICustomerService iCustomerService)
         {
             _iOrderService = iOrderService;
             _iCheckoutService = iCheckoutService;
+            _iMenuService = iMenuService;
+            _iCustomerService = iCustomerService;
         }
         public IActionResult Index()
         {
@@ -30,6 +36,30 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             return View();
         }
         #region APICalls
+        public IActionResult GetCustomerDue()
+        {
+            var customer = _iCustomerService.GetAllAvailable();
+            var count = 0;
+            var due = 0.0;
+            if (customer != null)
+            {
+                count = customer.Count();
+                if (count > 0)
+                {
+                    foreach(var cus in customer)
+                    {
+                        if (cus.DueBooks.Count() > 0)
+                        {
+                            due += cus.DueBooks.LastOrDefault().BalanceDue;
+                        }
+
+                    }
+                   
+                }
+            }
+            return Json(new { count = count, due = due });
+        
+        }
         public IActionResult GetTableBooked(ReportType type)
         {
             var today = CurrentTime.DateTimeToday();
@@ -52,12 +82,9 @@ namespace LotusRMSweb.Areas.Admin.Controllers
        public IActionResult GetStandingOrder()
         {
             var active = _iOrderService.GetAllActiveOrder();
-       /*     var data = GetItemDetail(active).AsEnumerable().Select(x=>x.MenuId).GroupBy(x => new { x.MenuId, x.Quantity_Id,x.Quantity,x.Item_Name}).Select(sd=> new
-            {
-                Item_Name=sd.,
-
-            });*/
-            return Json(new { data = "" });
+            var data = GetItemDetail(active).Where(x=>!x.IsComplete).GroupBy(f=>new { f.MenuId ,f.Quantity_Id,f.Item_Name}).
+                Select(group=> new { fee=group.Key,total=group.Sum(f=>f.Quantity)});
+            return Json(new { data = data });
         }
         public IActionResult GetTransection(ReportType type){
             var today = CurrentTime.DateTimeToday();
@@ -149,14 +176,16 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             if (order != null)
             {
                 var od = order.Select(x => x.Order_Details);
-                foreach(var o in od)
+                foreach (var o in od)
                 {
+                   
                     var dd = o.Select(y => new OrderDetailVm()
                     {
                         MenuId=y.MenuId,
                         Quantity=y.Quantity,
-                        Item_Name=y.Menu.Item_Name,
-                        Quantity_Id=y.Quantity_Id
+                        Item_Name=y.Menu.Item_Name + "(" + y.Menu.Menu_Details.FirstOrDefault(x => x.Id == y.Quantity_Id).Divison.Title + ")",
+                        Quantity_Id=y.Quantity_Id,
+                        IsComplete=y.IsComplete
 
                     }).ToList();
                     ordervm.AddRange(dd);

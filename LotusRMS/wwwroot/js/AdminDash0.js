@@ -35,6 +35,21 @@ function GetTop5Item() {
         }
     });
 }
+function GetDue() {
+    $.ajax({
+        type: 'GET',
+        url: "/Admin/Home/GetCustomerDue",
+        success: function (data) {
+            var h6 = document.querySelector("#CustomerDueData");
+            h6.innerHTML = data.due;
+            var customerCount = document.querySelector("#CustomerCountData");
+            customerCount.innerHTML = data.count;
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            alert(errorThrown);
+        }
+    });
+}
 function GetTransection(me) {
     
     var type = $(me).attr("type");
@@ -57,15 +72,14 @@ function GetTransection(me) {
     });
 }
 function GetStandingOrder() {
-    
-   
-
-    $.ajax({
+     $.ajax({
         type: 'GET',
         url: "/Admin/Home/GetStandingOrder",
         success: function (data) {
-            console.log(data);
-
+            data.data.forEach((item, index) => {
+                var a = index + 1;
+                $("#standingOrders").children("tbody").append("<tr><td>" + a + "</td><td>" + item.fee.item_Name + "</td><td>" + item.total + "</td></tr> ");
+                });  
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
             alert(errorThrown);
@@ -125,9 +139,7 @@ function loadChart(data){
 document.addEventListener("DOMContentLoaded", () => {
     $("#tableBookedFirst").click();
     $("#transectionFirst").click();
+    GetDue();
     GetTop5Item();
     GetStandingOrder();
-
-
-
 });

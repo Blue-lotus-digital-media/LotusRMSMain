@@ -15,9 +15,6 @@ namespace LotusRMS.Models.Service.Implementation
         {
             _IMenuRepository = iMenuRepository;
         }
-
-
-
         public Guid Create(CreateMenuDTO dto)
         {
             var  menu= new LotusRMS_Menu();
@@ -40,14 +37,10 @@ namespace LotusRMS.Models.Service.Implementation
                 };
                 menu.Menu_Details.Add(detail);
             }
-
-
-
             if (dto.Image != null)
             {
                 menu.Image = dto.Image;
             }
-
             _IMenuRepository.Add(menu);
             _IMenuRepository.Save();
             return menu.Id;
