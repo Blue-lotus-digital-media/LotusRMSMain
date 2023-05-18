@@ -164,9 +164,9 @@
                     @*<a asp-action="GoToRoom" asp-route-TableId="@Model.Table_No" class="btn btn-info">Go To Room</a>*@
                       @if (Model.Order_Id != Guid.Empty)
                 {
-                    <a class="Switch btn btn-success" data-bs-toggle="modal"
+                        <a class="Switch btn" style="background-color:#26cf00; color:white;"  data-bs-toggle="modal"
                        data-bs-target="#tableSwitchModal" onclick="$('#SwitchTableForm').submit();">Switch Table</a>
-                    <a class="btn" style="color:white ; background-color:#229966" onclick="$('#ReturnOrderForm').submit();">Return Order</a>
+                        <a class="btn" style="color:white ; background-color:#26cf00" onclick="$('#ReturnOrderForm').submit();">Return Order</a>
                     <a class="btn btn-info" asp-route-Order_Id="@Model.Order_Id"  asp-action="EstimateBillPrint" asp-controller="Invoice" asp-area="" target="_blank">Estimate</a>
                 }
                 </td>
@@ -185,14 +185,14 @@
                 @if (Model.Order_Id == Guid.Empty)
                 {
 
-                    <button type="button" class="btn btn-success" onclick="validateCheckout()" id="checkoutSubmitBtn" disabled>
+                    <button type="button" class="btn" style="background-color:#26cf00; color:white;" onclick="validateCheckout()" id="checkoutSubmitBtn" disabled>
                         Checkout <i class="fa fa-shopping-cart"></i>
                     </button>
                 }
                 else
                 {
 
-                    <button type="button" class="btn btn-success" onclick="validateCheckout()" id="checkoutSubmitBtn">
+                    <button type="button" class="btn" style="background-color:#26cf00; color:white;" onclick="validateCheckout()" id="checkoutSubmitBtn">
                         Checkout <i class="fa fa-shopping-cart"></i>
                     </button>
 
