@@ -212,9 +212,9 @@ button {
     border-radius: 3px;
     text-transform: capitalize;
 }
-.tableSelected{
-    color:white;
-    background:#322285 !important;
+.tableSelected {
+    color: white;
+    background: #26cf00 !important;
 }
 
 .bi-search {
