@@ -57,7 +57,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                    
                 }
             }
-            return Json(new { count = count, due = due });
+            return Json(new { count = count, due = Math.Round(due,2) });
         
         }
         public IActionResult GetTableBooked(ReportType type)

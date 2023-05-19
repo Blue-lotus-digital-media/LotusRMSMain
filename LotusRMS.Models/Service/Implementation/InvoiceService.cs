@@ -112,7 +112,11 @@ namespace LotusRMS.Models.Service.Implementation
 
         public IEnumerable<LotusRMS_Invoice> GetAll()
         {
-            return _invoiceRepository.GetAll(includeProperties: "Checkout,FiscalYear,BillSetting,Order");
+            return _invoiceRepository.GetAll(includeProperties: "Checkout,Checkout.Order,FiscalYear,BillSetting");
+        }
+        public IEnumerable<LotusRMS_Invoice> GetAllByDateRange(DateTime StartDate,DateTime EndDate)
+        {
+            return _invoiceRepository.GetAll(filter:x=>x.Checkout.DateTime>=StartDate && x.Checkout.DateTime<=EndDate, includeProperties: "Checkout,Checkout.Order,FiscalYear,BillSetting");
         }
 
         public LotusRMS_Invoice GetByGuid(Guid Id)

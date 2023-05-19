@@ -126,8 +126,8 @@ namespace LotusRMSweb.Controllers
                 Address = cus.Address,
                 Contact = cus.Contact,
                 PanOrVat = cus.PanOrVat,
-                DueAmount = GetDue(cus.DueBooks),
-                Status=cus.Status
+                DueAmount = Math.Round(GetDue(cus.DueBooks), 2),
+                Status =cus.Status
             });
             return Json(new { data = customer });
 
@@ -183,7 +183,7 @@ namespace LotusRMSweb.Controllers
             {
                 Customer = customer,
                 CustomerId = customerId,
-                DueAmount = GetDue(customer.DueBooks),
+                DueAmount = Math.Round(GetDue(customer.DueBooks),2),
                 PaidAmount = 0
             };
             return PartialView("_PayDue",model:vm);

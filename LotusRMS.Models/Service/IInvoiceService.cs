@@ -13,7 +13,9 @@ namespace LotusRMS.Models.Service
         Guid Create(Guid Id);
         void PrintCopy(Guid Id);
         IEnumerable<LotusRMS_Invoice> GetAll();
-        LotusRMS_Invoice GetByGuid(Guid Id);
+        IEnumerable<LotusRMS_Invoice> GetAllByDateRange(DateTime StartDate, DateTime EndDate);
+        
+            LotusRMS_Invoice GetByGuid(Guid Id);
         LotusRMS_Invoice GetFirstOrDefault(Guid Id);
 
 

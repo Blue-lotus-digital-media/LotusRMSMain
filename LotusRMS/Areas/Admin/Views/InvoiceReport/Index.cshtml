@@ -1,4 +1,6 @@
-﻿@*
+﻿@using LotusRMS.Models.Viewmodels.Report;
+@model DateSelector
+@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
@@ -50,21 +52,22 @@
                 </div>
 
                 <div class="searchDiv row p-2 d-flex">
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <div class="input-group mb-2">
                             <span class="input-group-text">From </span>
+                       
+                        <input type="text" id="startDate" class="form-control"/>
                         </div>
-                        <input type="date" id="startDate" class="form-control" />
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <div class="input-group mb-2">
                             <span class="input-group-text">To </span>
-                        </div>
-                        <input type="date" id="endDate" class="form-control" />
+                        <input type="text" id="endDate" class="form-control" />
+                    </div>
                     </div>
                     <div class="col-md-4 align-self-end mt-2">
                         <div class="input-group">
-                            <button type="button" class="btn btn-info w-50  fw-bold" onclick="GetPurchase()">Search</button>
+                            <button type="button" class="btn btn-info w-50  fw-bold" onclick="GetInvoice()">Search</button>
                         </div>
 
                     </div>
@@ -76,17 +79,15 @@
                         <thead class="thead-dark">
                             <tr class="table-info">
                                 <th>
-                                    Date
+                                   Invoice Date
                                 </th>
                                 <th>
-                                    Invoice Date
+                                    Invoice No.
                                 </th>
                                 <th>
-                                    Client
+                                   Customer Name
                                 </th>
-                                <th>
-                                    Bill No.
-                                </th>
+                              
                                 <th>
                                     Bill Total
                                 </th>
@@ -95,17 +96,19 @@
                                     Discount
                                 </th>
                                 <th>
+                                    Discount Type
+                                </th>
+                                <th>
                                     Paid Amount
                                 </th>
                                 <th>
-                                    Total Item
+                                    Payment Mode
                                 </th>
+                              
                                 <th>
                                     Action
                                 </th>
-                                <th>
-                                    <a asp-area="admin" asp-action="downloadallqr" asp-controller="invoice" onclick="Event.preventDefault(); ">Download Table QR</a>
-                                </th>
+                                
 
                             </tr>
 
@@ -119,5 +122,5 @@
 </div>
 
 @section Scripts{
-   
+    <script src="~/js/invoicereport.js"></script>
 }
