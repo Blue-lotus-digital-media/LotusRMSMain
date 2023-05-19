@@ -1,4 +1,5 @@
 ﻿@using LotusRMS.Models.Viewmodels.Report;
+@using LotusRMS.Utility;
 @model DateSelector
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -43,10 +44,13 @@
                     <div class="title">Invoice Report</div>
                
                    <div class="exportBtns">
-                        <form enctype="multipart/form-data" asp-area="Admin" asp-controller="InvoiceReport" asp-action="ExportToExcel">
-                            <input class="btn btn-primary" type="submit" value="Excel" />
+                        <form enctype="multipart/form-data" asp-area="Admin" asp-controller="ProductUnit" asp-action="ExportToExcel"  id="ExportExcelForm">
+                          
+                            
+                            <input class="btn btn-primary" type="button" value="Excel" id="ExportToExcel" />
 
                         </form>
+
 
                     </div>
                 </div>

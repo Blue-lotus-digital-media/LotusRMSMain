@@ -1,6 +1,21 @@
 ﻿
 document.addEventListener("DOMContentLoaded", () => {
+    $("#ExportToExcel").click(function () {
+        var startDate = $("#startDate").val();
+        var startDateAD = NepaliFunctions.BS2AD(startDate);
+        var endDate = $("#endDate").val();
 
+        var endDateAD = NepaliFunctions.BS2AD(endDate);
+        if (startDate == "" || endDate == "") {
+            alert("Please Select start date and end date first");
+            return false;
+        }
+        var form = $("#ExportExcelForm");
+        var action = "/admin/invoicereport/exporttoexcel?startdate=" + startDateAD + "&endDate=" + endDateAD;
+        form.attr("action", action);
+        form.submit();
+
+    });
 
 });
 
