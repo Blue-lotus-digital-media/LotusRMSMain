@@ -82,10 +82,10 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
             {
                 var date = Convert.ToDateTime(CurrentTime.DateTimeToday()).AddDays(-1).ToString();
                 var userId= User.FindFirst(ClaimTypes.NameIdentifier).Value;
-                var yesterday = _gallaService.GetGallaByDate(date,userId);
-                if (yesterday != null)
+                var lastGalla = _gallaService.GetLastGalla(userId);
+                if (lastGalla != null)
                 {
-                    createGallaVM.Opening_Balance = yesterday.Closing_Balance;
+                    createGallaVM.Opening_Balance = lastGalla.Closing_Balance;
                 }
                 ViewBag.Galla = 0;
             }

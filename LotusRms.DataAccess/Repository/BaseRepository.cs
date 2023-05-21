@@ -1,4 +1,5 @@
 ﻿using LotusRMS.Models.IRepositorys;
+using LotusRMS.Models.Viewmodels.Order;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -75,7 +76,23 @@ namespace LotusRMS.DataAccess.Repository
             }
             return query.FirstOrDefault();
         }
-
+        public T GetLastOrDefault(Expression<Func<T, bool>> filter = null,
+            Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, string includeProperties = null)
+        {
+            IQueryable<T> query = dbSet;
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+            if (includeProperties != null)
+            {
+                foreach (var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
+            return orderBy(query).LastOrDefault();
+        }
         public void Remove(int id)
         {
             T entity = dbSet.Find(id);

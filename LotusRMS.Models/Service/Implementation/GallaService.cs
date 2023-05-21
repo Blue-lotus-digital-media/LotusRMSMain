@@ -65,6 +65,13 @@ namespace LotusRMS.Models.Service.Implementation
             var galla = _gallaRepository.GetGallaByDate(date,UserId);
             return galla;
         }
+        public LotusRMS_Galla GetLastGalla(string UserId)
+        {
+
+            //var UserId = httpAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var galla = _gallaRepository.GetLastGalla(UserId);
+            return galla;
+        }
 
         public LotusRMS_Galla GetTodayGalla()
         {

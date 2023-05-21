@@ -1,4 +1,5 @@
-﻿@*
+﻿@using LotusRMS.Utility.Enum;
+@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
@@ -7,14 +8,13 @@
 <style>
     .grids {
         display:grid;
-        grid-template-columns:repeat(3,1fr) 5rem; 
+        grid-template-columns:repeat(4,1fr) 5rem; 
         align-items:center;
         justify-content:center;
     }
 
     .form-input {
-        background-color: #d3d3d3;
-        border:none;
+        border:2px solid black;
         padding:0.5rem;
         border-radius:0.5rem;   
         -webkit-transition: 0.1s;
@@ -59,20 +59,20 @@
 <div class="row">
     <div class="col-12">
         <div class="card">  
-            <div class="card-body mt-3">
+            <div class="card-body mt-2">
                
                     <h5 class="card-title text-center fs-2">Sales Report</h5>
                   
                 </div>
-                <div class="row px-5 grids mb-3">
+                <div class="row px-3 grids mb-3">
                 <fieldset class="d-flex flex-column">
                     <label for="start-date" class="form-label label-class">Start Date</label>
-                    <input type="date" id="start-date" class="form-input w-75">
+                    <input type="text" id="startDate" class="form-input w-75">
                 </fieldset>
 
                 <fieldset class="d-flex flex-column">
                     <label for="end-date" class="form-label label-class">End Date</label>
-                    <input type="date" id="end-date" class="form-input w-75" >
+                    <input type="text" id="endDate" class="form-input w-75" >
                 </fieldset>
 
 
@@ -80,29 +80,34 @@
                 <fieldset class="d-flex flex-column">
                     <label for="report-type" class="form-label label-class ">Report Type</label>
                     <div class="nav-item dropdown w-100">
-                        <button class="dropdown-toggle btn btn-secondary btn-class w-100" data-bs-toggle="dropdown">Select Report Type</button>
+                      
+                        <select id="reporttype" class="form-input" onchange="reportTypeChanged(this);" >
+                            <option value="@SalesReportType.ReportType.item">@SalesReportType.ReportType.item.GetDisplayName()</option>
+                            <option value="@SalesReportType.ReportType.table">@SalesReportType.ReportType.table.GetDisplayName()</option>
+                            <option value="@SalesReportType.ReportType.customer">@SalesReportType.ReportType.customer.GetDisplayName()</option>
+                            <option value="@SalesReportType.ReportType.user">@SalesReportType.ReportType.user.GetDisplayName()</option>
+                        </select>
 
-                        <ul class="dropdown-menu  drop-class w-100">
-                            <li>
-                                <input class="dropdown-item mx-auto bg-white mb-1 input-search" placeholder="Search" style="width:85%">
-                            </li>
-                            <li>
-                                <a href="#" class="dropdown-item fw-bold">Bill Wise</a>
-                            </li>
-                            <li>
-                                <a href="#" class="dropdown-item fw-bold">Item Wise</a>
-                            </li>
-                            <li>
-                                <button class="dropdown-item fw-bold">Table Wise</button>
-                            </li>
-                        </ul>
+
+                    </div>
+                </fieldset>
+                <fieldset class="d-flex flex-column" id="selectDiv">
+                    <label for="report-type" class="form-label label-class ">Select Item</label>
+                    <div class="nav-item dropdown w-100">
+
+                        <select id="selectItem" class="form-input w-100">
+                            <option value="0">All</option>
+
+                        </select>
+
+
                     </div>
                 </fieldset>
               
 
                 <fieldset class="d-flex flex-column">
                     <label></label>
-                    <button class="btn btn-secondary btns-class"><i class="fas fa-search"></i></button>
+                    <button class="btn btn-secondary btns-class" onclick="GetReport()"><i class="fas fa-search"></i></button>
                 </fieldset>
             
               
@@ -159,3 +164,6 @@
             </div>
         </div>
     </div>
+    @section Scripts{
+        <script src="~/js/SalesReport2.js"></script>
+    }

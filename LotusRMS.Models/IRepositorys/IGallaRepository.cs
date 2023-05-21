@@ -11,6 +11,7 @@ namespace LotusRMS.Models.IRepositorys
         void AddNewDetail(LotusRMS_Galla obj);
         LotusRMS_Galla GetGallaToday(string UserId);
         LotusRMS_Galla GetGallaByDate(string Date,string UserId);
+        LotusRMS_Galla GetLastGalla(string UserId);
         LotusRMS_Galla GetGallaByGuid(Guid Id);
         
     }

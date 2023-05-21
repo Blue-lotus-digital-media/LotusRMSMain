@@ -25,6 +25,11 @@ namespace LotusRMS.Models.IRepositorys
             Expression<Func<T, bool>> filter = null,
             string includeProperties = null
             );
+        T GetLastOrDefault(
+            Expression<Func<T, bool>> filter = null,
+            Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
+            string includeProperties = null
+            );
         Task<T> GetFirstOrDefaultAsync(
            Expression<Func<T, bool>> filter = null,
            string includeProperties = null
