@@ -12,5 +12,10 @@ namespace LotusRMS.Models.Dto.GallaDTO
         public Guid Galla_Id { get; set; }
         public double Closing_Balance { get; set; }
         public CreateGallaDetailVM GallaDetail { get; set; }
+        public AddGallaDetailDTO()
+        {
+            GallaDetail = new CreateGallaDetailVM();
+
+        }
     }
 }

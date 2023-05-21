@@ -10,6 +10,8 @@ namespace LotusRMS.Models.Viewmodels.Galla
     {
         public Guid Detail_Id { get; set; }
         public DateTime Time { get; set; }
+        public string? TimeST { get{ return Time.ToString(); }
+    }
         public string Title { get; set; }
         public double Withdrawl { get; set; }
         public double Deposit { get; set; }
