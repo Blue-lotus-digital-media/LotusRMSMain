@@ -12,14 +12,42 @@ client.on("OrderReceived", newCall => {
 $(document).ready(function () {
     loadData();
     client.start();
-
-    $("#paidAmount").on("change", function () {
-        console.log(this.val());
-    });
+    
 });
+
+function balanceDue(me) {
+    var dueAmount = $("#dueAmount").val();
+    var paidAmount = $(me).val();
+
+    if (paidAmount == "") {
+        $(me).val(0);
+        $(me).select();
+    }
+    var balance = dueAmount - paidAmount;
+    $("#balanceDue")[0].innerHTML = balance;
+    if (balance < 0) {
+        $("button[type='submit']").attr("disabled", true);
+    } else {
+
+        $("button[type='submit']").attr("disabled", false);
+    }
+
+}
+function CompletePayDue(me) {
+    showModal();
+    var customerId = $(me).attr("customerId");
+    var balanceDue = $(me).find("span#balanceDue")[0].innerHTML;
+
+    var btn = $("button[customerId='" + customerId + "']");
+    var label = btn.siblings("label");
+    label[0].innerHTML=balanceDue;
+    if (balanceDue == 0) {
+        btn.attr("hidden", true);
+    }
+
+}
 function PayClickModal(me) {
     var customerId = $(me).attr("customerId");
-    console.log(customerId);
     $("#payDueForm").attr("action","/customer/paydue?customerId="+customerId);
 
     $("#payDueForm").submit();
@@ -30,6 +58,11 @@ function showModal() {
 
 function toggleMe(me) {
     var id = $(me).attr("data-id");
+    var btn = $("button[customerId='" + id + "']");
+    if (btn.length > 0) {
+        alert("Cannot change status if customer has due...");
+        return false;
+    }
     $.ajax({
         type: 'GET',
         url: "/customer/StatusChange",

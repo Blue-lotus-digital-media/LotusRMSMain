@@ -13,5 +13,6 @@ namespace LotusRMS.Models.Dto.DueBookDTO
         public Guid Invoice_Id { get; set; }
         public double DueAmount { get; set; }
         public double PaidAmount { get; set; }
+        public double BalanceDue { get; set; }
     }
 }

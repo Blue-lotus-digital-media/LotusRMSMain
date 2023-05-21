@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace LotusRMS.DataAccess.Repository
 {
+
     public class CustomerRepository : BaseRepository<LotusRMS_Customer>, ICustomerRepository
     {
         private readonly ApplicationDbContext _dal;
@@ -22,21 +23,17 @@ namespace LotusRMS.DataAccess.Repository
             var customer = GetFirstOrDefault(filter: x => x.Id == obj.Id, includeProperties: "DueBooks");
             customer.Update(name: obj.Name,address:obj.Address,contact:obj.Contact);
             customer.PanOrVat = obj.PanOrVat;
-            if (obj.DueBooks != null)
-            {
-                if (obj.DueBooks.Count() > 0)
-                {
+            Save();
+        }
 
-                    foreach (var due in obj.DueBooks)
-                    {
-                        customer.DueBooks.Add(due);
-                    }
-                }
+        public void UpdateDue(LotusRMS_Customer obj)
+        {
+            var customer = GetFirstOrDefault(filter: x => x.Id == obj.Id, includeProperties: "DueBooks");
+           foreach(var due in obj.DueBooks)
+            {
+                customer.DueBooks.Add(due);
             }
             Save();
-
-
-            
         }
 
         public void UpdateStatus(Guid id)

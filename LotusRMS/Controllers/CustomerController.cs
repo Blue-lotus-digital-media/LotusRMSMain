@@ -191,28 +191,23 @@ namespace LotusRMSweb.Controllers
         public IActionResult PayDueComplete(PayDueVM vm)
         {
             var customer= _customerService.GetFirstOrDefaultById(vm.CustomerId);
-            
             var dueAmount = GetDue(customer.DueBooks);
-
             var dueBook = new CreateDueBookDTO()
             {
                 DueDate=CurrentTime.DateTimeToday(),
                 PaidAmount=vm.PaidAmount,
                 DueAmount=dueAmount-vm.PaidAmount,
+                BalanceDue=vm.BalanceDue
 
             };
             var customerDTO = new UpdateCustomerDTO()
             {
                 Id = customer.Id,
-                Name = customer.Name,
-                Address = customer.Address,
-                Contact = customer.Contact,
-                PanOrVat = customer.PanOrVat,
-                DueBook = dueBook
+               DueBook = dueBook
 
             };
-            _customerService.Update(customerDTO);
-
+            _customerService.UpdateDue(customerDTO);
+            _notyf.Success("Due paid successfully...", 5);
             return Ok();
         }
         #endregion

@@ -68,20 +68,34 @@ namespace LotusRMS.Models.Service.Implementation
 
         public void Update(UpdateCustomerDTO dto)
         {
-            var customer = _customerRepository.GetFirstOrDefault(x => x.Id == dto.Id);
-            customer.Update(name: dto.Name, address: dto.Address, contact: dto.Contact);
-            customer.PanOrVat = dto.PanOrVat;
-
-            if (dto.DueBook != null)
+            var customer = new LotusRMS_Customer()
             {
-                var dueBook = new LotusRMS_DueBook()
-                {
-                    PaidAmount = dto.DueBook.PaidAmount,
-
-                };
-            }
-
+                Id=dto.Id,
+                PanOrVat = dto.PanOrVat
+        };
+            customer.Update(name: dto.Name, address: dto.Address, contact: dto.Contact);
             _customerRepository.Update(customer);
+        }
+
+        public void UpdateDue(UpdateCustomerDTO dto)
+        {
+            var customer = new LotusRMS_Customer()
+            {
+                Id = dto.Id,
+                DueBooks=new List<LotusRMS_DueBook>()
+                {
+                    new LotusRMS_DueBook()
+                    {
+                        DueDate=CurrentTime.DateTimeToday(),
+                        PaidAmount=dto.DueBook.PaidAmount,
+                        Invoice_Amount=0,
+                        DueAmount=0,
+                        BalanceDue=dto.DueBook.BalanceDue
+                    }
+                }
+                
+            };
+            _customerRepository.UpdateDue(customer);
         }
 
         public void UpdateStatus(Guid Id)

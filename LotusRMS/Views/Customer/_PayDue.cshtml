@@ -4,13 +4,15 @@
 
 <div class="modal-header text-center">
     <h5 class="modal-title w-100 text-primary">Due payment book</h5>
+    <button class="btn-close" data-bs-dismiss="modal"></button>
 </div>
 <form
     asp-action="PayDueComplete"
     asp-controller="customer"
     asp-area=""
+    customerId="@Model.CustomerId"
     data-ajax="true"
-    data-ajax-success="CompletePayDue()"
+    data-ajax-success="CompletePayDue(this)"
 >
 <div class="modal-body">
 
@@ -28,16 +30,21 @@
 </div>
         
     </fieldset>
-    <fieldset class="p-1">
+        <fieldset class="row d-flex align-items-center p-1 fw-bold">
+            <div class="col-5">
         <label for="user" class="fw-bold">Due Amount:</label>
-        <span class="user" id="user">@Model.DueAmount</span>
+        </div>
+            <div class="col-7">
+
+            <input class="form-control-plaintext "readonly id="dueAmount" onclick="this.select();"  asp-for="DueAmount">
+            </div>
     </fieldset>
     <fieldset class="row d-flex align-items-center p-1 fw-bold">
         <div class="col-5">
             <label for="paidAmount">Paying Amount:</label>
         </div>
         <div class="col-7">
-            <input class="form-control" id="paidAmount" onclick="this.select();" asp-for="PaidAmount">
+            <input class="form-control" type="number" id="paidAmount" onkeyup="balanceDue(this);" onclick="this.select();" asp-for="PaidAmount">
             <span asp-validation-for="PaidAmount" class="text-danger"></span>
         </div>
     </fieldset>
@@ -56,7 +63,7 @@
         </div>
         <div class="col-7">
             <textarea asp-for="Remarks" class="form-control"></textarea>
-        <span class="user" id="balanceDue">@Model.Remarks</span>
+        <span class="user" id="remarks">@Model.Remarks</span>
         </div>
     </fieldset>
 
@@ -65,3 +72,7 @@
     <button type="submit" class="btn btn-primary">Submit</button>
 </div>
 </form>
+<script>
+
+ 
+</script>

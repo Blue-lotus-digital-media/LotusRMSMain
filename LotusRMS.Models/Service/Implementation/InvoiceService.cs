@@ -80,10 +80,7 @@ namespace LotusRMS.Models.Service.Implementation
                 var cus=new LotusRMS_Customer()
                 {
                     Id=customer.Id,
-                    Name=customer.Name,
-                    Address=customer.Address,
-                    Contact=customer.Contact,
-                    PanOrVat=customer.PanOrVat,
+                  
               DueBooks=  new List<LotusRMS_DueBook>()
 
                 {new LotusRMS_DueBook(){
@@ -96,7 +93,7 @@ namespace LotusRMS.Models.Service.Implementation
                 } }
 
                 };
-                _iCustomerRepository.Update(cus);
+                _iCustomerRepository.UpdateDue(cus);
 
 
             }

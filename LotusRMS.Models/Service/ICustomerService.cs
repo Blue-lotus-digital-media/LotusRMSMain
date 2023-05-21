@@ -12,6 +12,7 @@ namespace LotusRMS.Models.Service
     {
         Guid Create(CreateCustomerDTO dto);
         void Update(UpdateCustomerDTO dto);
+        void UpdateDue(UpdateCustomerDTO dto);
         IEnumerable<LotusRMS_Customer> GetAll(); 
         LotusRMS_Customer GetByGuid(Guid id); 
         LotusRMS_Customer GetFirstOrDefaultById(Guid id); 
