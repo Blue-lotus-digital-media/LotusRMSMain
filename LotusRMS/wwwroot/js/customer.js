@@ -135,7 +135,7 @@ function loadData() {
             }
 
         ],
-        searching: false,
+        searching: true,
         rowCallback: function (row, data) {
             if (data["dueAmount"] > 0) {
                 $('td:eq(4)', row).html(`

@@ -28,6 +28,7 @@ namespace LotusRMSweb
             services.AddScoped<ISupplierService,SupplierService >();
             services.AddScoped<IPurchaseService,PurchaseService >();
             services.AddScoped<IGallaService,GallaService >();
+            services.AddScoped<IEmailSender, EmailSender>();
             //services.AddScoped<, >();
         }
         }

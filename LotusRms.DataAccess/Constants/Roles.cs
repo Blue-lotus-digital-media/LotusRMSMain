@@ -7,6 +7,7 @@
         Cashier,
         Waiter,
         Kitchen,
-        User
+        User,
+        Bar
     }
 }

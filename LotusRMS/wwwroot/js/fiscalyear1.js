@@ -71,7 +71,7 @@ function loadData() {
             }
 
         ],
-        searching: false,
+        searching: true,
         rowCallback: function (row, data) {
             $('td:eq(1)', row).html(` BS : ${data['startDateBS']} <br>  AD : ${data['startDateAD']}`);
             $('td:eq(2)', row).html(` BS : ${data['endDateBS']} <br>  AD : ${data['endDateAD']}`);

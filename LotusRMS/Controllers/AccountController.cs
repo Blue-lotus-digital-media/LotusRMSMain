@@ -2,7 +2,6 @@
 using LotusRMS.Models.Dto.UserDTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Security.Claims;
@@ -10,6 +9,10 @@ using System.Text.Encodings.Web;
 using System.Text;
 using LotusRMS.Models.Viewmodels;
 using AspNetCoreHero.ToastNotification.Abstractions;
+using LotusRMS.Models.Viewmodels.User;
+using DocumentFormat.OpenXml.Spreadsheet;
+using LotusRMS.Utility;
+using LotusRMS.Models.Service;
 
 namespace LotusRMSweb.Controllers
 {
@@ -71,6 +74,8 @@ namespace LotusRMSweb.Controllers
                 }
                 if (await _userManager.CheckPasswordAsync(user, model.Password) == false)
                 {
+                 /*   var message = new Message(new string[] { model.Email }, "Test email", "This is the content from our email.");
+                   await _emailSender.SendEmailAsync(message);*/
                     ModelState.AddModelError("message", "Invalid credentials");
                     return View(model);
 
@@ -141,8 +146,8 @@ namespace LotusRMSweb.Controllers
                             values: new { area = "Identity", userId = userId, code = code, returnUrl = request.ReturnUrl },
                             protocol: Request.Scheme);
 
-                        await _emailSender.SendEmailAsync(request.Email, "Confirm your email",
-                            $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                        await _emailSender.SendEmailAsync(new Message(new string[] { request.Email }, "Confirm your email" ,
+                            $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.",null));
 
                         if (_userManager.Options.SignIn.RequireConfirmedAccount)
                         {
@@ -227,6 +232,9 @@ namespace LotusRMSweb.Controllers
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var passwordResetLink = Url.Action("ResetPassword", "Account", new { email = model.Email, token = token }, Request.Scheme);
                 _logger.Log(LogLevel.Warning, passwordResetLink);
+                var message = new Message(new string[] { model.Email }, "Forget password reset",
+                    $"Reset the password by <a href='{HtmlEncoder.Default.Encode(passwordResetLink)}'> clicking here</a>.", null);
+                await _emailSender.SendEmailAsync(message);
 
                 return View("ForgetPasswordConfirmation");
 
@@ -296,6 +304,42 @@ namespace LotusRMSweb.Controllers
             return (IUserEmailStore<RMSUser>)_userStore;
         }
 
+        public async Task<IActionResult> MyProfile()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var firstName = user.FirstName;
+            var middleName = user.MiddleName;
+            var contact = user.Contact;
+            var lastName = user.LastName;
+            var profilePicture = user.ProfilePicture;
+            
+            var model = new MyProfileVM()
+            {
+                Contact = contact,
+                MiddleName = middleName,
+                FirstName = firstName,
+                LastName = lastName,
+                ProfilePicture = profilePicture
+            };
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> MyProfile(UserRegistrationDto dto)
+        {
+            var user = await _userManager.GetUserAsync(User);
 
-    }
+            if (Request.Form.Files.Count > 0)
+            {
+                IFormFile file = Request.Form.Files.FirstOrDefault();
+                using (var dataStream = new MemoryStream())
+                {
+                    await file.CopyToAsync(dataStream);
+                    user.ProfilePicture = dataStream.ToArray();
+                }
+                await _userManager.UpdateAsync(user);
+            }
+            _notyf.Success("Profile Changed Successfully",5);
+            return View(dto);
+        }
+        }
 }

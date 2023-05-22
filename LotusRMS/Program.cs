@@ -20,6 +20,10 @@ using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using NLog.Extensions.Logging;
+using MySqlConnector;
+using LotusRMS.Models.EmailConfig;
+using LotusRMS.Models.Service.Implementation;
+using Microsoft.AspNetCore.Http.Features;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.AddConsole();
@@ -29,8 +33,10 @@ builder.Logging.AddNLog();
 
 
 // Add services to the container.
+var connectionStringBuilder = new MySqlConnectionStringBuilder(builder.Configuration["App:DefaultConnectionString"]);
+connectionStringBuilder.Password = ""; //builder.Configuration["App:DefaultConnectionString"];
 
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"), new MySqlServerVersion(new Version(8, 0, 11)), options => options.EnableRetryOnFailure()));
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(connectionStringBuilder.ConnectionString, new MySqlServerVersion(new Version(8, 0, 11)), options => options.EnableRetryOnFailure()));
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 /*
@@ -47,26 +53,22 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LogoutPath = $"/account/logout";
     options.AccessDeniedPath = $"/account/accessDenied";
 });
-/*builder.Services.PostConfigure<CookieAuthenticationOptions>(IdentityConstants.ApplicationScheme,
-options =>
-{
-
-    options.Cookie.Expiration = TimeSpan.FromMinutes(20);
-    options.LoginPath = "/Account/Login";
-    options.LogoutPath = "/Account/Logout";
-    options.AccessDeniedPath = "/Account/AccessDenied";
-    options.SlidingExpiration = true;
-    options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
-
-});*/
 
 builder.Services.AddScoped<IUserClaimsPrincipalFactory<RMSUser>,
             ApplicationUserClaimsPrincipalFactory
             >();
-
+var emailConfig = builder.Configuration
+        .GetSection("EmailConfiguration")
+        .Get<EmailConfiguration>();
+builder.Services.AddSingleton(emailConfig);
 builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
+builder.Services.Configure<FormOptions>(o => {
+    o.ValueLengthLimit = int.MaxValue;
+    o.MultipartBodyLengthLimit = int.MaxValue;
+    o.MemoryBufferThreshold = int.MaxValue;
+});
 
 builder.Services.AddSignalR(cfg=>cfg.EnableDetailedErrors=true);
 builder.Services.AddAuthorization(options =>

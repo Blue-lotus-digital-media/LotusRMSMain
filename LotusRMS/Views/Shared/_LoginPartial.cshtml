@@ -20,7 +20,12 @@
             <li class="nav-item dropdown pe-3">
 
                 <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                    <img src="~/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
+                       @if (UserManager.GetUserAsync(User).Result.ProfilePicture != null)
+                        {
+                    <img style="width:40px;height:40px; object-fit:cover; border-radius:30px" src="data:image/*;base64,@(Convert.ToBase64String(UserManager.GetUserAsync(User).Result.ProfilePicture))">
+                        }
+                   
+                   
                     <span class="d-none d-md-block dropdown-toggle ps-2">@UserManager.GetUserAsync(User).Result.FirstName</span>
                 </a><!-- End Profile Iamge Icon -->
 
@@ -35,7 +40,7 @@
 
 
                     <li>
-                        <a class="dropdown-item d-flex align-items-center" asp-area="" asp-controller="Account" asp-action="changepassword">
+                        <a class="dropdown-item d-flex align-items-center" asp-area="" asp-controller="Account" asp-action="MyProfile">
                             <i class="bi bi-gear"></i>
                             <span>Account Settings</span>
                         </a>

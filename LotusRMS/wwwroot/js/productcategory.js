@@ -80,7 +80,7 @@ function loadData() {
             }
 
         ],
-        searching: false,
+        searching: true,
         rowCallback: function (row, data) {
             if (data["status"] == false) {
                 $('td:eq(3)', row).html(`

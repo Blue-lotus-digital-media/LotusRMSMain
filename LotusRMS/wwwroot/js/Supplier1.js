@@ -77,7 +77,7 @@ function loadData() {
             }
 
         ],
-        searching: false,
+        searching: true,
         rowCallback: function (row, data) {
 
 

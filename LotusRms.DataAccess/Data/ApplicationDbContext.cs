@@ -38,7 +38,35 @@ namespace LotusRMS.DataAccess
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
+          /*  modelBuilder.HasDefaultSchema("Identity");
+            modelBuilder.Entity<IdentityUser>(entity =>
+            {
+                entity.ToTable(name: "User");
+            });
+            modelBuilder.Entity<IdentityRole>(entity =>
+            {
+                entity.ToTable(name: "Role");
+            });
+            modelBuilder.Entity<IdentityUserRole<string>>(entity =>
+            {
+                entity.ToTable("UserRoles");
+            });
+            modelBuilder.Entity<IdentityUserClaim<string>>(entity =>
+            {
+                entity.ToTable("UserClaims");
+            });
+            modelBuilder.Entity<IdentityUserLogin<string>>(entity =>
+            {
+                entity.ToTable("UserLogins");
+            });
+            modelBuilder.Entity<IdentityRoleClaim<string>>(entity =>
+            {
+                entity.ToTable("RoleClaims");
+            });
+            modelBuilder.Entity<IdentityUserToken<string>>(entity =>
+            {
+                entity.ToTable("UserTokens");
+            });*/
             // add your own configuration here
             modelBuilder.Entity<RMSUser>(entity => entity.Property(m => m.NormalizedEmail).HasMaxLength(100));
             modelBuilder.Entity<RMSUser>(entity => entity.Property(m => m.Id).HasMaxLength(100));

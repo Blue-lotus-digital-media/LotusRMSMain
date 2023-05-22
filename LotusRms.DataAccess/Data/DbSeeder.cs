@@ -37,6 +37,12 @@ namespace LotusRMS.DataAccess
             {
                 await userManager.CreateAsync(user,"Lotus@123");
                 await userManager.AddToRoleAsync(user, Constants.Roles.SuperAdmin.ToString());
+                await userManager.AddToRoleAsync(user, Constants.Roles.Admin.ToString());
+                await userManager.AddToRoleAsync(user, Constants.Roles.Cashier.ToString());
+                await userManager.AddToRoleAsync(user, Constants.Roles.Waiter.ToString());
+                await userManager.AddToRoleAsync(user, Constants.Roles.User.ToString());
+                await userManager.AddToRoleAsync(user, Constants.Roles.Kitchen.ToString());
+                await userManager.AddToRoleAsync(user, Constants.Roles.Bar.ToString());
             }
 
         }

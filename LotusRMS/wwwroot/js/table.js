@@ -101,7 +101,7 @@ function loadData() {
             }
 
         ],
-        searching: false,
+        searching: true,
         rowCallback: function (row, data) {
             if (data["status"] == false) {
                 $('td:eq(5)', row).html(`

@@ -12,6 +12,7 @@ namespace LotusRMS.Models
         public string? MiddleName { get; private set; }
         public string LastName { get; private set; }
         public string Contact { get; private set; }
+        public byte[] ProfilePicture { get; set; }
         public RMSUser() { }
         public RMSUser(string firstName, string middleName, string lastName, string contact)
         {

@@ -21,6 +21,7 @@ namespace LotusRMS.Models.Dto.UserDTO
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
         [Required]
+        [Phone]
         [Display(Name = "Contact")]
         public string Contact { get; set; }
 
@@ -51,6 +52,9 @@ namespace LotusRMS.Models.Dto.UserDTO
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [Display(Name = "Profile Picture")]
+        public byte[]? ProfilePicture { get; set; }
 
         public string? ReturnUrl { get; set; }
     }
