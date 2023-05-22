@@ -25,7 +25,7 @@ namespace LotusRMS.Models.Service.Implementation
         private MimeMessage CreateEmailMessage(Message message)
         {
             var emailMessage = new MimeMessage();
-            emailMessage.From.Add(new MailboxAddress("Name", _emailConfig.From));
+            emailMessage.From.Add(new MailboxAddress("Lotus RMS", _emailConfig.From));
             emailMessage.To.AddRange(message.To);
             emailMessage.Subject = message.Subject;
             var bodyBuilder = new BodyBuilder { HtmlBody = string.Format("{0}", message.Content) };
