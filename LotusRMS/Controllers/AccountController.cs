@@ -13,6 +13,7 @@ using LotusRMS.Models.Viewmodels.User;
 using DocumentFormat.OpenXml.Spreadsheet;
 using LotusRMS.Utility;
 using LotusRMS.Models.Service;
+using DocumentFormat.OpenXml.EMMA;
 
 namespace LotusRMSweb.Controllers
 {
@@ -68,7 +69,7 @@ namespace LotusRMSweb.Controllers
                 var user = await _userManager.FindByEmailAsync(model.Email);
                 if (user != null && !user.EmailConfirmed)
                 {
-                    ModelState.AddModelError("message", "Email not confirmed yet");
+                    ModelState.AddModelError("message", "Email not confirmed yet. Check your email or ask admin to resend it.");
                     return View(model);
 
                 }
@@ -101,7 +102,63 @@ namespace LotusRMSweb.Controllers
             }
             return View(model);
         }
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            var vm = new ResetPasswordVM()
+            {
+                Email = user.Email,
+                Token = token
+            };
+            return View(vm);
+        }
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public async Task<IActionResult> ConfirmEmail(ResetPasswordVM vm)
+        {
+            if (vm.Email == null || vm.Token == null)
+            {
+                return RedirectToPage("/Index");
+            }
 
+            var user = await _userManager.FindByEmailAsync(vm.Email);
+            if (user == null)
+            {
+                return NotFound($"Unable to load user with Emial '{vm.Email}'.");
+            }
+
+            var code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(vm.Token));
+            var result = await _userManager.ConfirmEmailAsync(user, code);
+            if (result.Succeeded)
+            {
+                
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var passwordSet = await _userManager.ResetPasswordAsync(user,token, vm.Password);
+                if (passwordSet.Succeeded)
+                {
+                    ViewBag.StatusMessage = "Thank you for confirming your email.";
+                    return RedirectToAction(nameof(ConfirmedEmail));
+                }
+                else
+                {
+                    user.EmailConfirmed = false;
+                    await _userManager.UpdateAsync(user);
+                    ViewBag.ErrorMessage = "Error While setting password.";
+                }
+                    
+                }
+            else
+            {
+                ViewBag.ErrorMessage = "Error confirming your email.";
+            }
+            return View(vm);
+        }
+        public IActionResult ConfirmedEmail()
+        {
+            return View(ViewBag.StatusMessage);
+        }
 
         [HttpGet]
         public IActionResult Register(string returnUrl)
@@ -128,7 +185,7 @@ namespace LotusRMSweb.Controllers
                     };
                     await _userStore.SetUserNameAsync(user, request.Email, CancellationToken.None);
                     await _emailStore.SetEmailAsync(user, request.Email, CancellationToken.None);
-                    var result = await _userManager.CreateAsync(user, request.Password);
+                    var result = await _userManager.CreateAsync(user);
                     var role = _roleManager.FindByIdAsync(request.UserRole).Result;
 
 
@@ -140,12 +197,7 @@ namespace LotusRMSweb.Controllers
                         var userId = await _userManager.GetUserIdAsync(user);
                         var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                        var callbackUrl = Url.Page(
-                            "/Account/ConfirmEmail",
-                            pageHandler: null,
-                            values: new { area = "Identity", userId = userId, code = code, returnUrl = request.ReturnUrl },
-                            protocol: Request.Scheme);
-
+                        var callbackUrl = Url.Action("ConfirmEmail", "Account", new { area = "", userId = user.Id, token = code }, Request.Scheme);
                         await _emailSender.SendEmailAsync(new Message(new string[] { request.Email }, "Confirm your email" ,
                             $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.",null));
 
@@ -244,6 +296,7 @@ namespace LotusRMSweb.Controllers
         }
         public IActionResult ForgetPasswordConfirmation()
         {
+           
             return View();
         }
         [HttpGet]
@@ -273,6 +326,10 @@ namespace LotusRMSweb.Controllers
                 var result = await _userManager.ResetPasswordAsync(user, model.Token, model.Password);
                 if (result.Succeeded)
                 {
+                    var message = new Message(new string[] { model.Email }, "Forget password reset",
+                   $"Welcome back. Your password has been reset. Now you can login to the app. <a href='{HtmlEncoder.Default.Encode(Url.Action(action: "Login", controller: "Account", values: "", protocol: Request.Scheme))}'> login</a>", null);
+                    await _emailSender.SendEmailAsync(message);
+
                     return RedirectToAction("ResetPasswordConfirmation");
                 }
                 foreach(var error in result.Errors)

@@ -65,6 +65,17 @@ namespace LotusRMS.Models.Service.Implementation
             var galla = _gallaRepository.GetGallaByDate(date,UserId);
             return galla;
         }
+
+        public async Task<double> GetGallaAmountAsync()
+        {
+            var galla = GetTodayGalla();
+            if (galla != null)
+            {
+                return galla.Closing_Balance;
+            }
+            return 0.0;
+        }
+
         public LotusRMS_Galla GetLastGalla(string UserId)
         {
 

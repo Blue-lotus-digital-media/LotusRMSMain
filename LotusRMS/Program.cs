@@ -49,9 +49,21 @@ builder.Services.AddIdentity<RMSUser, IdentityRole>()
 builder.Services.AddAuthentication();
 builder.Services.ConfigureApplicationCookie(options =>
 {
+    
     options.LoginPath = $"/account/login";
     options.LogoutPath = $"/account/logout";
     options.AccessDeniedPath = $"/account/accessDenied";
+});
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequiredLength = 8;
+    options.Password.RequiredUniqueChars = 1;
+    options.User.RequireUniqueEmail = true;
+    options.SignIn.RequireConfirmedEmail = true;
 });
 
 builder.Services.AddScoped<IUserClaimsPrincipalFactory<RMSUser>,

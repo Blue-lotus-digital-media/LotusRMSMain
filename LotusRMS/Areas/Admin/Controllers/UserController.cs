@@ -1,11 +1,16 @@
-﻿using LotusRMS.Models;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using LotusRMS.Models;
 using LotusRMS.Models.Service;
 using LotusRMS.Models.Viewmodels.Roles;
 using LotusRMS.Models.Viewmodels.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Encodings.Web;
+using System.Text;
+using LotusRMS.Utility;
 
 namespace LotusRMSweb.Areas.Admin.Controllers
 {
@@ -16,12 +21,14 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         private readonly UserManager<RMSUser> _userManager;
         private readonly IUserService _iUserService;
         private readonly RoleManager<IdentityRole> _roleManager;
-    public UserController(UserManager<RMSUser> userManager, IUserService iUserService,
-            RoleManager<IdentityRole> roleManager)
+        private readonly IEmailSender _emailSender;
+        public UserController(UserManager<RMSUser> userManager, IUserService iUserService,
+                RoleManager<IdentityRole> roleManager, IEmailSender emailSender)
         {
             _userManager = userManager;
             _iUserService = iUserService;
             _roleManager = roleManager;
+            _emailSender = emailSender;
         }
 
         public async Task<IActionResult> Index()
@@ -55,6 +62,22 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             return new List<string>(await _userManager.GetRolesAsync(user));
         }
 
+        public async Task<IActionResult> InviteAgain(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            user.EmailConfirmed = false;
+            user.PasswordHash = "";
+            await _userManager.UpdateAsync(user);
+
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+            var callbackUrl = Url.Action("ConfirmEmail", "Account", new {area="", userId = user.Id, token = code }, Request.Scheme);
+             await _emailSender.SendEmailAsync(new Message(new string[] { user.Email }, "Confirm your email",
+                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.", null));
+
+
+            return View();
+        }
 
 
         public async Task<IActionResult> ManageRole(string userId)

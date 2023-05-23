@@ -15,6 +15,7 @@ namespace LotusRMS.Models.Service
         LotusRMS_Galla GetTodayGalla();
         LotusRMS_Galla GetGallaByDate(string date,string UserId);
         LotusRMS_Galla GetLastGalla(string UserId);
+        Task<double> GetGallaAmountAsync(); 
 
 
     }

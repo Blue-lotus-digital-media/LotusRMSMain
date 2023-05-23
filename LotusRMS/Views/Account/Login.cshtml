@@ -106,9 +106,8 @@
                                     <a asp-action="forgetpassword" asp-area="" asp-controller="account" >Forget password ?</a>
                                 </div>
                             </div>
-
-                            @Html.ValidationSummary()
-
+                            @Html.ValidationSummary(false,"",new { @class = "text-danger" } )
+                           
                         </div>
                     </div>
                 </div>

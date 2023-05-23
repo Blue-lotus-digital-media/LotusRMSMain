@@ -15,5 +15,6 @@ namespace LotusRMS.Utility
             return new string(Enumerable.Repeat(chars, length)
                 .Select(s => s[RandomNumberGenerator.GetInt32(s.Length)]).ToArray());
         }
+       
     }
 }
