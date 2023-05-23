@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Text.Encodings.Web;
 using System.Text;
 using LotusRMS.Utility;
+using AspNetCoreHero.ToastNotification.Abstractions;
 
 namespace LotusRMSweb.Areas.Admin.Controllers
 {
@@ -22,13 +23,15 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         private readonly IUserService _iUserService;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IEmailSender _emailSender;
+        private readonly INotyfService _notyf;
         public UserController(UserManager<RMSUser> userManager, IUserService iUserService,
-                RoleManager<IdentityRole> roleManager, IEmailSender emailSender)
+                RoleManager<IdentityRole> roleManager, IEmailSender emailSender, INotyfService notyf)
         {
             _userManager = userManager;
             _iUserService = iUserService;
             _roleManager = roleManager;
             _emailSender = emailSender;
+            _notyf = notyf;
         }
 
         public async Task<IActionResult> Index()
@@ -74,9 +77,9 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             var callbackUrl = Url.Action("ConfirmEmail", "Account", new {area="", userId = user.Id, token = code }, Request.Scheme);
              await _emailSender.SendEmailAsync(new Message(new string[] { user.Email }, "Confirm your email",
                 $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.", null));
+            _notyf.Success("An email with invite link was send to user email",5);
 
-
-            return View();
+            return RedirectToAction(nameof(Index));
         }
 
 
