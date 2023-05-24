@@ -14,6 +14,11 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using LotusRMS.Utility;
 using LotusRMS.Models.Service;
 using DocumentFormat.OpenXml.EMMA;
+using LotusRMSweb.Areas.Identity.Pages.Account.Manage;
+using LotusRMS.Models.Viewmodels.Login;
+using Org.BouncyCastle.Crypto;
+using AutoMapper;
+using static Dapper.SqlMapper;
 
 namespace LotusRMSweb.Controllers
 {
@@ -27,6 +32,7 @@ namespace LotusRMSweb.Controllers
         private readonly ILogger<AccountController> _logger;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly INotyfService _notyf;
+        private readonly IMapper _mapper;
 
         public string ReturnUrl { get; set; }
         public AccountController(UserManager<RMSUser> userManager,
@@ -35,7 +41,8 @@ namespace LotusRMSweb.Controllers
             IEmailSender emailSender,
             ILogger<AccountController> logger,
             RoleManager<IdentityRole> roleManager,
-            INotyfService notyf)
+            INotyfService notyf,
+            IMapper mapper)
         {
 
             _userManager = userManager;
@@ -46,16 +53,20 @@ namespace LotusRMSweb.Controllers
             _logger = logger;
             _roleManager = roleManager;
             _notyf = notyf;
+            _mapper = mapper;
         }
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Login(string? returnUrl = null)
+        public async Task<IActionResult> Login(string? returnUrl = null)
         {
 
             returnUrl ??= Url.Content("~/");
-            UserLoginDto model = new UserLoginDto();
-            model.ReturnUrl = returnUrl;
+            UserLoginDto model = new UserLoginDto()
+            {
+                ReturnUrl = returnUrl,
+                ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
+            };
             return View(model);
         }
 
@@ -64,6 +75,7 @@ namespace LotusRMSweb.Controllers
         public async Task<IActionResult> Login(UserLoginDto model)
         {
             model.ReturnUrl ??= Url.Content("~/");
+            model.ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByEmailAsync(model.Email);
@@ -75,8 +87,8 @@ namespace LotusRMSweb.Controllers
                 }
                 if (await _userManager.CheckPasswordAsync(user, model.Password) == false)
                 {
-                 /*   var message = new Message(new string[] { model.Email }, "Test email", "This is the content from our email.");
-                   await _emailSender.SendEmailAsync(message);*/
+                    /*   var message = new Message(new string[] { model.Email }, "Test email", "This is the content from our email.");
+                      await _emailSender.SendEmailAsync(message);*/
                     ModelState.AddModelError("message", "Invalid credentials");
                     return View(model);
 
@@ -87,7 +99,7 @@ namespace LotusRMSweb.Controllers
                 if (result.Succeeded)
                 {
                     await _userManager.AddClaimAsync(user, new Claim("UserRole", "Admin"));
-                    _notyf.Success("User logged in successfully",5);
+                    _notyf.Success("User logged in successfully", 5);
                     return LocalRedirect(model.ReturnUrl);
                 }
                 else if (result.IsLockedOut)
@@ -133,9 +145,9 @@ namespace LotusRMSweb.Controllers
             var result = await _userManager.ConfirmEmailAsync(user, code);
             if (result.Succeeded)
             {
-                
+
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                var passwordSet = await _userManager.ResetPasswordAsync(user,token, vm.Password);
+                var passwordSet = await _userManager.ResetPasswordAsync(user, token, vm.Password);
                 if (passwordSet.Succeeded)
                 {
                     ViewBag.StatusMessage = "Thank you for confirming your email.";
@@ -147,8 +159,8 @@ namespace LotusRMSweb.Controllers
                     await _userManager.UpdateAsync(user);
                     ViewBag.ErrorMessage = "Error While setting password.";
                 }
-                    
-                }
+
+            }
             else
             {
                 ViewBag.ErrorMessage = "Error confirming your email.";
@@ -198,8 +210,8 @@ namespace LotusRMSweb.Controllers
                         var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                         var callbackUrl = Url.Action("ConfirmEmail", "Account", new { area = "", userId = user.Id, token = code }, Request.Scheme);
-                        await _emailSender.SendEmailAsync(new Message(new string[] { request.Email }, "Confirm your email" ,
-                            $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.",null));
+                        await _emailSender.SendEmailAsync(new Message(new string[] { request.Email }, "Confirm your email",
+                            $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.", null));
 
                         if (_userManager.Options.SignIn.RequireConfirmedAccount)
                         {
@@ -263,7 +275,7 @@ namespace LotusRMSweb.Controllers
 
             await _signInManager.SignOutAsync();
             _notyf.Success("Password changed successfully", 5);
-            return RedirectToAction("Login","Account");
+            return RedirectToAction("Login", "Account");
         }
         [HttpGet]
         [AllowAnonymous]
@@ -280,7 +292,8 @@ namespace LotusRMSweb.Controllers
                 return View(model);
             }
             var user = await _userManager.FindByEmailAsync(model.Email);
-            if (user != null && await _userManager.IsEmailConfirmedAsync(user)) {
+            if (user != null && await _userManager.IsEmailConfirmedAsync(user))
+            {
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var passwordResetLink = Url.Action("ResetPassword", "Account", new { email = model.Email, token = token }, Request.Scheme);
                 _logger.Log(LogLevel.Warning, passwordResetLink);
@@ -296,7 +309,7 @@ namespace LotusRMSweb.Controllers
         }
         public IActionResult ForgetPasswordConfirmation()
         {
-           
+
             return View();
         }
         [HttpGet]
@@ -304,12 +317,12 @@ namespace LotusRMSweb.Controllers
         [AllowAnonymous]
         public IActionResult ResetPassword(string email, string token)
         {
-            if(email==null || token == null)
+            if (email == null || token == null)
             {
                 ModelState.AddModelError("", "Invalid password reset token");
                 return RedirectToAction("error");
             }
-            var vm=new ResetPasswordVM() { Email=email, Token = token };
+            var vm = new ResetPasswordVM() { Email = email, Token = token };
             return View(vm);
         }
         [HttpPost]
@@ -332,7 +345,7 @@ namespace LotusRMSweb.Controllers
 
                     return RedirectToAction("ResetPasswordConfirmation");
                 }
-                foreach(var error in result.Errors)
+                foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError("", error.Description);
 
@@ -369,7 +382,7 @@ namespace LotusRMSweb.Controllers
             var contact = user.Contact;
             var lastName = user.LastName;
             var profilePicture = user.ProfilePicture;
-            
+
             var model = new MyProfileVM()
             {
                 Contact = contact,
@@ -395,8 +408,81 @@ namespace LotusRMSweb.Controllers
                 }
                 await _userManager.UpdateAsync(user);
             }
-            _notyf.Success("Profile Changed Successfully",5);
+            _notyf.Success("Profile Changed Successfully", 5);
             return View(dto);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ExternalLogin(string provider, string returnUrl = null)
+        {
+            var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "Account", new { returnUrl });
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            return new ChallengeResult(provider,properties);
         }
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null,string remoteError = null)
+        {
+            returnUrl = returnUrl ?? Url.Content("~/");
+            UserLoginDto model = new UserLoginDto()
+            {
+                ReturnUrl = returnUrl,
+                ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
+            };
+            if (remoteError != null){
+                ModelState.AddModelError(string.Empty, $"Error from external provider :{remoteError} ");
+                return View(nameof(Login),model);
+            };
+
+            
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            
+            if (info == null)
+            {
+                ModelState.AddModelError(string.Empty, $"Error loading external login information. ");
+
+                return View(nameof(Login), model);
+            }
+            
+            var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+            if (signInResult.Succeeded)
+            {
+                return LocalRedirect(returnUrl);
+            }
+            else
+            {
+                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+                if (email != null)
+                {
+                    var user = await _userManager.FindByEmailAsync(email);
+                    if (user == null)
+                    {
+                        user = new RMSUser()
+                        {
+                            UserName = email,
+                            Email = email
+                        };
+                       
+                        string FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName) ?? info.Principal.FindFirstValue(ClaimTypes.Name);
+                        string LastName = info.Principal.FindFirstValue(ClaimTypes.Surname);
+
+                        user.Update(FirstName, "", LastName, "0000000000");
+                        await _userManager.CreateAsync(user);
+                        await _userManager.AddToRoleAsync(user, "User");
+                    }
+                    await _userManager.AddLoginAsync(user, info);
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    return LocalRedirect(returnUrl);
+                }
+                ViewBag.ErrorTitle=$"Email claim not received from: { info.LoginProvider}";
+                ViewBag.ErrorMessage=$"Please contact on support.";
+                return View("Error");
+
+            }
+
+   
+        }
+        
+    }
 }

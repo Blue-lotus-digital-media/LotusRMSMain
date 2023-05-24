@@ -1,11 +1,9 @@
-
 using LotusRMS.DataAccess;
 using LotusRMS.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using LotusRMSweb.Areas.Identity.Data;
 using LotusRMS.DataAccess.Repository;
 using LotusRMS.Models.IRepositorys;
 using LotusRMSweb;
@@ -24,8 +22,10 @@ using MySqlConnector;
 using LotusRMS.Models.EmailConfig;
 using LotusRMS.Models.Service.Implementation;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
+var connectionString = builder.Configuration.GetConnectionString("ApplicationDbContextConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDbContextConnection' not found.");
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
 builder.Logging.AddEventSourceLogger();
@@ -38,6 +38,9 @@ connectionStringBuilder.Password = ""; //builder.Configuration["App:DefaultConne
 
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(connectionStringBuilder.ConnectionString, new MySqlServerVersion(new Version(8, 0, 11)), options => options.EnableRetryOnFailure()));
 
+/*builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<ApplicationDbContext>();*/
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 /*
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -46,7 +49,13 @@ builder.Services.AddIdentity<RMSUser, IdentityRole>()
             .AddDefaultUI()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
-builder.Services.AddAuthentication();
+builder.Services.AddAuthentication()
+    .AddGoogle(options =>
+    {
+        options.ClientId = builder.Configuration["App:GoogleClientId"];
+        options.ClientSecret = builder.Configuration["App:GoogleClientSecrets"];
+       // options.SignInScheme = IdentityConstants.ExternalScheme;
+    });
 builder.Services.ConfigureApplicationCookie(options =>
 {
     
@@ -66,9 +75,9 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.SignIn.RequireConfirmedEmail = true;
 });
 
-builder.Services.AddScoped<IUserClaimsPrincipalFactory<RMSUser>,
+/*builder.Services.AddScoped<IUserClaimsPrincipalFactory<RMSUser>,
             ApplicationUserClaimsPrincipalFactory
-            >();
+            >();*/
 var emailConfig = builder.Configuration
         .GetSection("EmailConfiguration")
         .Get<EmailConfiguration>();
@@ -97,7 +106,6 @@ builder.Services.AddAuthorization(options =>
 builder.Services.UseConfMgmtCore();
 builder.Services.UseConfMgmtData();
 builder.Services.AddLazyResolution();
-
 var context = new CustomAssemblyLoadContext();
 context.LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox.dll"));
 
@@ -108,7 +116,7 @@ builder.Services.AddSession(options => {
     options.IdleTimeout = TimeSpan.FromMinutes(60);//You can set Time   
 });
 builder.Services.AddNotyf(config => { config.DurationInSeconds = 10; config.IsDismissable = true; config.Position = NotyfPosition.BottomRight; });
-
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();
 
