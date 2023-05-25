@@ -7,7 +7,7 @@ using System.Diagnostics;
 
 namespace LotusRMSweb.Controllers
 {
-    [Authorize]
+    
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -36,6 +36,9 @@ namespace LotusRMSweb.Controllers
             }else if (User.IsInRole("Cashier"))
             {
                 return RedirectToAction("Index", "Home", new { area = "Checkout" });
+            }else if (User.IsInRole("Bar"))
+            {
+                return RedirectToAction("Index", "Home", new { area = "Bar" });
             }
 
             return View();

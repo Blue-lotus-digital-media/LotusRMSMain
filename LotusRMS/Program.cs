@@ -167,6 +167,11 @@ app.UseEndpoints(endpoints =>
         name: "Kitchen",
         areaName: "Kitchen",
         pattern: "Kitchen/{controller=Home}/{action=Index}/{id?}");
+    endpoints.MapAreaControllerRoute(
+
+        name: "Menu",
+        areaName: "Menu",
+        pattern: "Menu/{controller=Home}/{action=Index}/{id?}");
     endpoints.MapControllerRoute(
                    name: "areas",
 
