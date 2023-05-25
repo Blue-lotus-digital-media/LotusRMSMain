@@ -2,6 +2,7 @@
 
 namespace LotusRMSweb.Areas.Menu.Controllers
 {
+    [Area("Menu")]
     public class HomeController : Controller
     {
         public IActionResult Index()
