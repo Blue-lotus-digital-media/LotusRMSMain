@@ -23,9 +23,10 @@ using LotusRMS.Models.EmailConfig;
 using LotusRMS.Models.Service.Implementation;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("ApplicationDbContextConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDbContextConnection' not found.");
+//var connectionString = builder.Configuration.GetConnectionString("ApplicationDbContextConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDbContextConnection' not found.");
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
 builder.Logging.AddEventSourceLogger();
@@ -54,7 +55,9 @@ builder.Services.AddAuthentication()
     {
         options.ClientId = builder.Configuration["App:GoogleClientId"];
         options.ClientSecret = builder.Configuration["App:GoogleClientSecrets"];
-       // options.SignInScheme = IdentityConstants.ExternalScheme;
+        // options.SignInScheme = IdentityConstants.ExternalScheme;
+        // Map the external picture claim to the internally used image claim
+        options.ClaimActions.MapJsonKey("image", "picture");
     });
 builder.Services.ConfigureApplicationCookie(options =>
 {
