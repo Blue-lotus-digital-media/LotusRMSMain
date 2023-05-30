@@ -52,7 +52,6 @@
     <Folder Include="Areas\Kitchen\Models\" />
     <Folder Include="Areas\Menu\Data\" />
     <Folder Include="Areas\Menu\Models\" />
-    <Folder Include="Areas\Menu\Views\" />
     <Folder Include="Areas\Order\Data\" />
     <Folder Include="Areas\Order\Models\" />
     <Folder Include="Areas\SuperAdmin\Data\" />

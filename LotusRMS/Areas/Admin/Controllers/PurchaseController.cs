@@ -91,7 +91,8 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 Product_Name = pro.Product_Name,
                 Product_Category = pro.Product_Category.Category_Name,
                 Product_Type = pro.Product_Type.Type_Name,
-                Product_Unit = pro.Product_Unit.Unit_Symbol
+                Product_Unit = pro.Product_Unit.Unit_Symbol,
+                Product_Unit_Id=pro.Product_Unit_Id
             });
 
             return Json(new { data = product });

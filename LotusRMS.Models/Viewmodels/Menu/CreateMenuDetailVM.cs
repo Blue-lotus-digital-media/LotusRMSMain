@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LotusRMS.Utility;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -16,5 +17,10 @@ namespace LotusRMS.Models.Viewmodels.Menu
         public double Rate{ get; set; }
         public bool IsDefault { get; set; }
 
+
+    }
+    public class UpdateMenuDetailVM : CreateMenuDetailVM
+    {
+        public Guid Id { get; set; }
     }
 }

@@ -34,7 +34,7 @@ namespace LotusRMSweb.Controllers
         private readonly INotyfService _notyf;
         private readonly IMapper _mapper;
 
-        public string ReturnUrl { get; set; }
+        
         public AccountController(UserManager<RMSUser> userManager,
             SignInManager<RMSUser> signInManager,
             IUserStore<RMSUser> userStore,
@@ -173,6 +173,7 @@ namespace LotusRMSweb.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles ="Admin,SuperAdmin")]
         public IActionResult Register(string returnUrl)
         {
             ViewData["roles"] = _roleManager.Roles.Where(x => x.NormalizedName != "SuperAdmin").ToList();
@@ -182,6 +183,7 @@ namespace LotusRMSweb.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<IActionResult> Register(UserRegistrationDto request)
         {
             if (ModelState.IsValid)
@@ -355,11 +357,12 @@ namespace LotusRMSweb.Controllers
             return RedirectToAction("ResetPasswordConfirmation");
 
         }
-
+        [AllowAnonymous]
         public IActionResult ResetPasswordConfirmation()
         {
             return View();
         }
+        [Authorize]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
@@ -374,6 +377,7 @@ namespace LotusRMSweb.Controllers
             return (IUserEmailStore<RMSUser>)_userStore;
         }
 
+        [Authorize]
         public async Task<IActionResult> MyProfile()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -394,6 +398,7 @@ namespace LotusRMSweb.Controllers
             return View(model);
         }
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> MyProfile(UserRegistrationDto dto)
         {
             var user = await _userManager.GetUserAsync(User);
@@ -447,7 +452,8 @@ namespace LotusRMSweb.Controllers
             
             var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
             if (signInResult.Succeeded)
-            {
+            { 
+
                 return LocalRedirect(returnUrl);
             }
             else
@@ -473,8 +479,14 @@ namespace LotusRMSweb.Controllers
                     }
                     await _userManager.AddLoginAsync(user, info);
                     await _signInManager.SignInAsync(user, isPersistent: false);
+                    // Let’s add the image to the User Claims 
+                    if (info.Principal.HasClaim(c => c.Type == "image"))
+                    {
+                        await _userManager.AddClaimAsync(user, info.Principal.FindFirst("image"));
+                    }
                     return LocalRedirect(returnUrl);
                 }
+                
                 ViewBag.ErrorTitle=$"Email claim not received from: { info.LoginProvider}";
                 ViewBag.ErrorMessage=$"Please contact on support.";
                 return View("Error");

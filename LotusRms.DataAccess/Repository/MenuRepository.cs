@@ -1,5 +1,6 @@
 ﻿using LotusRMS.Models;
 using LotusRMS.Models.IRepositorys;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,22 +19,9 @@ namespace LotusRMS.DataAccess.Repository
 
         public void Update(LotusRMS_Menu lMenu)
         {
-            var menu = GetFirstOrDefault(x => x.Id == lMenu.Id,includeProperties: "Menu_Details");
-            if (menu != null)
-            {
-                menu.Update(
-                    item_name: lMenu.Item_Name,
-                    unit_Id: lMenu.Unit_Id,
-                    type_Id: lMenu.Type_Id,
-                    category_Id: lMenu.Category_Id,
-                    orderTo: lMenu.OrderTo
-                );
-                if (lMenu.Image != null)
-                {
-                    menu.Image = lMenu.Image;
-                }
-                Save();
-            }
+            _dal.Entry(lMenu).State = EntityState.Modified;
+            Save();
+            
         }
 
         public void UpdateStatus(Guid Id)

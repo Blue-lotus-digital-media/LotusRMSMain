@@ -18,6 +18,7 @@ namespace LotusRMS.Models.Dto.MenuDTO
         public string OrderTo { get; set; }
         public Byte[] Image { get; set; }
         public ICollection<CreateMenuDetailDTO> Menu_Details { get; set; }
+        public ICollection<CreateMenuIncredianDTO> Menu_Incredians { get; set; }
 
     }
     public class CreateMenuDetailDTO
@@ -25,5 +26,10 @@ namespace LotusRMS.Models.Dto.MenuDTO
         public Guid Quantity { get; set; }
         public double Rate { get; set; }
         public bool Default { get; set; }
+    }
+    public class CreateMenuIncredianDTO{
+        public Guid Product_Id { get; set; }
+        public double Quantity { get; set; }
+        public Guid Unit_Id{ get; set; }
     }
 }

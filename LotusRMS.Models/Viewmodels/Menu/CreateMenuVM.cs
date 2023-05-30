@@ -11,7 +11,7 @@ namespace LotusRMS.Models.Viewmodels.Menu
     public class CreateMenuVM
     {
         public string Item_name { get; set; }
-
+        
         public Guid Unit_Id { get; set; }
         public Guid Type_Id { get; set; }
         public Guid Category_Id { get; set; }
@@ -27,5 +27,11 @@ namespace LotusRMS.Models.Viewmodels.Menu
         public List<SelectListItem>? Menu_Category_List { get; set; }
 
         public List<SelectListItem>? Menu_Type_List { get; set; }
+
+        public List<MenuIncredianVM> Menu_Incredian { get; set; } = new List<MenuIncredianVM>();
+
+        public ICollection<SelectListItem>? UnitDivision { get; set; }
+      
+
     }
 }

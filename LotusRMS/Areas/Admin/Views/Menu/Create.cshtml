@@ -5,15 +5,16 @@
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
-<div class="row">
+<form class="row g-3 bordered" asp-action="Create" asp-controller="menu" asp-area="admin" enctype="multipart/form-data">
+
+    <div class="row">
     <div class="col-md-6">
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Create menu</h5>
 
                 <!-- Multi Columns Form -->
-                <form class="row g-3 bordered" asp-action="Create" asp-controller="menu" asp-area="admin" enctype="multipart/form-data">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                   <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                     <div class="col-md-12">
                         <label for="mName" class="form-label">Menu Name</label>
@@ -134,21 +135,60 @@
 
                         </div>
                         <div class="wrappers mt-1">
-                            <div class="fieldset" id="fieldset_0">
-                                <div class="fields">
-                                    <div class="d-flex mb-2">
-                                        <select name="MenuDetail[0].Quantity" class="unitDivision form-control" id="unitDivision_0">
-                                        </select>
-                                        <input type="number" class="form-control me-2" placeholder="rate" name="MenuDetail[0].Rate" />
-                                        <input type="radio" class="me-2 unitDefault" name="MenuDetail[0].IsDefault" checked value="true"/>
-                                        <button type="button" class="add_unit_button btn btn-primary" onclick="addDivision()"> <i class="fa-solid fa-plus"></i></button>
-                                                                           
+                            @if (Model.MenuDetail.Count>0)
+                            {
+                                foreach (var item in Model.MenuDetail.Select((value, i) => new { i, value }))
+                                {
+
+
+                                    <div class="fieldset" id="fieldset_0">
+                                        <div class="fields">
+                                            <div class="d-flex mb-2">
+                                                <select name="MenuDetail[@item.i].Quantity" class="unitDivision form-control" id="unitDivision_@item.i">
+                                                    @foreach(var at in Model.UnitDivision ){
+                                                        if (item.value.Quantity.ToString() == at.Value)
+                                                        {
+                                                            <option value="@at.Value" selected>@at.Text</option>
+                                                        }else{
+                                                            <option value="@at.Value">@at.Text</option>
+                                                        }
+                                                    }
+                                                </select>
+                                                <input type="number" class="form-control me-2" placeholder="rate" name="MenuDetail[@item.i].Rate" value="@item.value.Rate" />
+                                                <input type="radio" class="me-2 unitDefault" name="MenuDetail[@item.i].IsDefault" checked value="@item.value.IsDefault" />
+                                                @if (item.i == 0)
+                                                {
+                                                    <button type="button" class="add_unit_button btn btn-primary" onclick="addDivision()"> <i class="fa-solid fa-plus"></i></button>
+                                                }else{
+                                                   @* <button type="button" class="add_unit_button btn btn-primary" onclick="addDivision()"> <i class="fa-solid fa-plus"></i></button>*@
+                                                }
+
+                                            </div>
+
+                                        </div>
+
                                     </div>
-                                    
+                                }
+                            }
+                            else
+                            {
+                                <div class="fieldset" id="fieldset_0">
+                                    <div class="fields">
+                                        <div class="d-flex mb-2">
+                                            <select name="MenuDetail[0].Quantity" class="unitDivision form-control" id="unitDivision_0">
+                                            </select>
+                                            <input type="number" class="form-control me-2" placeholder="rate" name="MenuDetail[0].Rate" />
+                                            <input type="radio" class="me-2 unitDefault" name="MenuDetail[0].IsDefault" checked value="true" />
+                                            <button type="button" class="add_unit_button btn btn-primary" onclick="addDivision()"> <i class="fa-solid fa-plus"></i></button>
+
+                                        </div>
+
+                                    </div>
+
                                 </div>
-                               
-                            </div>
-                           
+                            
+                            }
+
                         </div>
                         
                        
@@ -184,7 +224,7 @@
                     </div>
 
 
-                </form><!-- End Multi Columns Form -->
+                <!-- End Multi Columns Form -->
 
             </div>
         </div>
@@ -192,7 +232,7 @@
 
 
     @*Ingredients *@
-    @*  <div class="col-md-6">
+      <div class="col-md-6">
     <div class="card">
     <div class="card-body">
     <div class="card-heading  d-flex justify-content-between align-items-center">
@@ -212,7 +252,38 @@
     </tr>
     </thead>
     <tBody>
-    @*<span asp-validation-for="ProductList" class="text-danger"></span>
+                            @if (Model.Menu_Incredian != null)
+                            {
+                                foreach (var item in Model.Menu_Incredian.Select((value, i) => new { i, value }))
+                                {
+                                    <tr>
+                                        <td>
+
+                                            @*<input name="Menu_Incredian[@item.i].Id" hidden value="@item.value.Id">*@
+                                            <input type='text' class='form-control-plaintext' name='Menu_Incredian[@item.i].Product_Name' readonly value='@item.value.Product_Name'>
+                                            <input type='text' name='Menu_Incredian[@item.i].Product_Id' hidden readonly value='@item.value.Product_Id'>
+                                        </td>
+                                        <td>
+                                            <input type='text' class='form-control-plaintext' name='Menu_Incredian[@item.i].Product_Unit_Id' readonly value='@item.value.Product_Unit_Id' hidden>
+                                            <input type='text' class='form-control-plaintext' name='Menu_Incredian[@item.i].Product_Unit' readonly value='@item.value.Product_Unit'>
+                                        </td>
+                                        <td>
+                                            <input type='text' class='form-control-plaintext' name='Menu_Incredian[@item.i].Quantity' readonly value='@item.value.Quantity'>
+                                        </td>
+                                        <td>
+                                            <button type='button' class='btn btn-danger' onclick='RemoveProduct(@item.i)'><i class='bi bi-trash'></i></button>
+                                        </td>
+
+
+                                   
+
+                                    </tr>
+                                }
+
+                            }
+
+
+                        <span asp-validation-for="Menu_Incredian" class="text-danger"></span>
     </tBody>
 
     </table>
@@ -221,24 +292,26 @@
     </div>
 
     </div>
-    <form asp-action="chooseProduct"
-    id="ChooseProductForm"
-    asp-controller="purchase"
-    asp-area="admin"
-    data-ajax="true"
-    data-ajax-success="productLoader()"
-    data-ajax-update="#selectionDiv"
-    data-ajax-loading="#overlay">
-    <button type="submit" hidden></button>
-
-    </form>
-    </div>*@
+    
+    </div>
 
 
 
 
 
 </div>
+</form>
+<form asp-action="chooseProduct"
+      id="ChooseProductForm"
+      asp-controller="purchase"
+      asp-area="admin"
+      data-ajax="true"
+      data-ajax-success="productLoader()"
+      data-ajax-update="#selectionDiv"
+      data-ajax-loading="#overlay">
+    <button type="submit" hidden></button>
+
+</form>
 <div class="modal fade" id="selectionModal" tabindex="-1">
     <div class="modal-dialog modal-xl">
         <div class="modal-content" id="selectionDiv">
@@ -259,7 +332,7 @@
                 <div class="row mb-3">
                     <div class="col-md-5">Quantity</div>
                     <div class="col-md-7">
-                        <input type="number" class="form-control" id="pQuantity" min="1" value="1" onkeyUp="CalculatePTotal();">
+                        <input type="number" class="form-control" id="pQuantity" min="1" value="1">
                     </div>
                     @* <div class="col-md-2">
                     <input type="text" class="form-control-plaintext productUnit"  id="pUnit">
@@ -268,14 +341,16 @@
                 <div class="row mb-1">
                     <div class="col-md-5 unit-class">Unit</div>
                     <div class="col-md-7">
+                        <input type="text" class="form-control" id="pUnitId" readonly hidden>
+                        <input type="text" class="form-control" id="pUnit" readonly  >
 
-                        <select class="form-control" id="pUnit">
+                      @*  <select class="form-control" id="pUnit">
 
                             @foreach (var item in Model.Menu_Unit_List)
                             {
                                 <option value="@item.Value">@item.Text</option>
                             }
-                        </select>
+                        </select>*@
                     </div>
 
 
@@ -303,7 +378,7 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    <script src="~/js/createupdatemenu.js">
+    <script src="~/js/createupdatemenu1.js">
        
     </script>
 }

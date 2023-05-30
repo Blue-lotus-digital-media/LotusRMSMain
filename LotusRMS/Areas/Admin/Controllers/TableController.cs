@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using QRCoder;
 using System.Drawing;
 using AspNetCoreHero.ToastNotification.Abstractions;
+using DocumentFormat.OpenXml.EMMA;
 
 namespace LotusRMSweb.Areas.Admin.Controllers
 {
@@ -24,14 +25,19 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         public readonly ITableTypeService _ITableTypeService;
 
         private readonly INotyfService _notyf;
+        private readonly ICompanyService _ICompanyService;
 
-        public TableController(ITableService iTableService, ITableTypeService iTableTypeService, IConverter converter,
-            INotyfService notyf)
+        public TableController(ITableService iTableService, 
+            ITableTypeService iTableTypeService, 
+            IConverter converter,
+            INotyfService notyf, 
+            ICompanyService iCompanyService)
         {
             _ITableService = iTableService;
             _ITableTypeService = iTableTypeService;
             _converter = converter;
             _notyf = notyf;
+            _ICompanyService = iCompanyService;
         }
 
         public IActionResult Index()
@@ -154,19 +160,20 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 return BadRequest("Table not found");
             }
 
-            var stringImage = GetQR(Id);
+            var stringImages = GetQR(Id);
+            var companyName = _ICompanyService.GetCompany().CompanyName;
 
 
-            return Ok(new { hotelName = "abc", tableName = table.Table_Name, stringImage = stringImage });
+            return Ok(new { hotelName = companyName, tableName = table.Table_Name, stringImage = stringImages });
         }
 
         public string GetQR(Guid Id)
         {
             QRCodeGenerator qrGenerator = new QRCodeGenerator();
-            var qrText = HttpContext.Request.Host.Value.ToString();
-            qrText = "https://" + qrText + "/qrTable/?TableNo=" + Id;
+            var callbackUrl = Url.Action("Index", "Home", new { area = "menu", TableNo = Id }, Request.Scheme);
 
-            QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrText, QRCodeGenerator.ECCLevel.Q);
+
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode(callbackUrl, QRCodeGenerator.ECCLevel.Q);
             BitmapByteQRCode qrCode = new BitmapByteQRCode(qrCodeData);
             byte[] qrCodeAsBitmapByteArr = qrCode.GetGraphic(20); //, "#000ff0", "#0ff000"); for color
             var stringImage = ImageUpload.GetStrigFromByteArray(qrCodeAsBitmapByteArr);
@@ -239,6 +246,8 @@ namespace LotusRMSweb.Areas.Admin.Controllers
 
         public IActionResult DownloadAllQr()
         {
+            var companyName = _ICompanyService.GetCompany().CompanyName;
+
             var tables = _ITableService.GetAll().Where(x => x.Status && !x.IsDelete).Select(tbl => new QrTableVM()
             {
                 Table_Name = tbl.Table_Name,
@@ -250,7 +259,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 Orientation = Orientation.Portrait,
                 PaperSize = PaperKind.A4,
                 Margins = new MarginSettings { Top = 10 },
-                DocumentTitle = "PDF Report",
+                DocumentTitle = "QRCodeTable",
             };
             var objectSettings = new ObjectSettings
             {
@@ -262,7 +271,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                     UserStyleSheet = Path.Combine(Directory.GetCurrentDirectory(), "assets", "styles.css")
                 },
                 HeaderSettings = { FontName = "Arial", FontSize = 9, Right = "Page [page] of [toPage]", Line = true },
-                FooterSettings = { FontName = "Arial", FontSize = 9, Line = true, Center = "Report Footer" }
+                FooterSettings = { FontName = "Arial", FontSize = 9, Line = true, Center = companyName +": QR Code "}
             };
             var pdf = new HtmlToPdfDocument()
             {

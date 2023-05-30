@@ -33,6 +33,7 @@ namespace LotusRMS.Models
         public string OrderTo { get; private set; }
         public bool Status { get; set; } = true;
         public bool IsDelete { get; set; } = false;
+        public ICollection<LotusRMS_MenuIncredians> Menu_Incredians { get; set; } = new List<LotusRMS_MenuIncredians>();
         public void Update(string item_name,Guid unit_Id,Guid type_Id,Guid category_Id,string orderTo)
         {
             Item_Name = item_name;

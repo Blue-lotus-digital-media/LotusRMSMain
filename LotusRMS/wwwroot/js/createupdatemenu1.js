@@ -59,6 +59,7 @@ function loadData(t) {
 
 function chooseProduct() {
     $("#ChooseProductForm").submit();
+
 }
 function productLoader() {
     $("#selectionModal").modal("toggle");
@@ -68,11 +69,18 @@ function productLoader() {
 function selectProduct(me, id) {
     var $tr = $(me).closest("tr");
     var itemName = $tr.children("td").eq(0).text();
-    var itemUnit = $tr.children("td").eq(1).text();
 
-    $("#selectionModal").modal("toggle");
+    var itemUnitDiv = $tr.children("td").eq(1).children("div");
+    var itemUnit = itemUnitDiv.text().trim();
+    console.log(itemUnit);
+    var itemUnitId = itemUnitDiv.attr("data-unitId");
+
+     $("#selectionModal").modal("toggle");
     $("#pItemName").text(itemName);
+    $("#pUnitId").val(itemUnitId);
+    $("#pUnit").val(itemUnit);
     $("#pId").val(id);
+
 
 
     $("#productPurchaseModal").modal("toggle");
@@ -80,13 +88,30 @@ function selectProduct(me, id) {
 }
 function RemoveProduct(index) {
     var table = document.getElementById("productList");
-    var total = table.tBodies[0].rows[index].cells[4].childNodes[0].value;
-    console.log(total);
-    var gTotal = document.getElementById("GTotal");
-    var sum = parseFloat(gTotal.innerHTML) - parseFloat(total);
-    console.log(sum);
+
     table.tBodies[0].deleteRow(index);
-    gTotal.innerHTML = sum;
+    
+    var rowLength = table.tBodies[0].rows.length;
+    for (i = 0; i < rowLength; i++) {
+        var row = table.tBodies[0].rows[i];
+
+        var cell0 = row.cells[0];
+        var cell1 = row.cells[1];
+        var cell2 = row.cells[2];
+        var cell3 = row.cells[3];
+
+        cell0.childNodes[0].setAttribute("name", "Menu_Incredian[" + i + "].Product_Name");
+        cell0.childNodes[1].setAttribute("name", "Menu_Incredian[" + i + "].Id");
+        cell1.childNodes[0].setAttribute("name", "Menu_Incredian[" + i + "].Product_Unit_Id");
+        cell1.childNodes[1].setAttribute("name", "Menu_Incredian[" + i + "].Product_Unit");
+        cell2.childNodes[0].setAttribute("name", "Menu_Incredian[" + i + "].Quantity");
+        cell3.childNodes[0].setAttribute("onclick", "RemoveProduct(" + i + ")");
+
+      
+
+    }
+
+    
 }
 function addProduct() {
     var id = $("#pId").val();
@@ -95,6 +120,7 @@ function addProduct() {
     var qty = $("#pQuantity").val();
 
     var unit = $("#pUnit").val();
+    var unitId = $("#pUnitId").val();
     var table = document.getElementById("productList");
     var i = table.tBodies[0].rows.length;
     var row = table.tBodies[0].insertRow(i);
@@ -104,16 +130,13 @@ function addProduct() {
     var cell4 = row.insertCell(3);
 
 
-    cell1.innerHTML = "<input type='text' class='form-control-plaintext' name='ProductList[" + i + "].Product_Name' readonly value='" + itemName + "'><input type='text' name='ProductList[" + i + "].Product_Id' hidden readonly value ='" + id + "'>";
-    cell2.innerHTML = "<input type='text' class='form-control-plaintext' name='ProductList[" + i + "].Product_Unit' readonly value='" + unit + "'>";
-    cell3.innerHTML = "<input type='text' class='form-control-plaintext' name='ProductList[" + i + "].Product_Quantity' readonly value='" + qty + "'>";
+    cell1.innerHTML = "<input type='text' class='form-control-plaintext' name='Menu_Incredian[" + i + "].Product_Name' readonly value='" + itemName + "'><input type='text' name='Menu_Incredian[" + i + "].Product_Id' hidden readonly value ='" + id + "'>";
+    cell2.innerHTML = "<input type='text' class='form-control-plaintext' name='Menu_Incredian[" + i + "].Product_Unit_Id' readonly value='" + unitId + "' hidden><input type='text' class='form-control-plaintext' name='Menu_Incredian[" + i + "].Product_Unit' readonly value='" + unit + "'>";
+    cell3.innerHTML = "<input type='text' class='form-control-plaintext' name='Menu_Incredian[" + i + "].Quantity' readonly value='" + qty + "'>";
 
 
     cell4.innerHTML = "<button type='button' class='btn btn-danger' onclick='RemoveProduct(" + i + ")'><i class='bi bi-trash'></i></button>";
-    var gTotal = document.getElementById("GTotal");
-    var sum = parseFloat(gTotal.innerHTML) + parseFloat(total);
-    console.log(sum);
-    gTotal.innerHTML = sum;
+ 
 
 
     $("#productPurchaseModal").modal("toggle");
@@ -149,8 +172,18 @@ function loadProduct() {
                 }
             }
 
+
         ],
-        searching: true,
+        searching: false,
+        rowCallback: function (row, data) {
+            $('td:eq(1)', row).html(`
+            <div class="text-center" data-unitId='${data['product_Unit_Id']}'>
+
+            ${data['product_Unit']}
+            </div>
+            `);
+
+        }
 
     });
 }
@@ -177,7 +210,7 @@ $(document).ready(function () {
 
 
         var fieldset = document.getElementsByClassName("fieldset");
-        console.log(fieldset);
+        
         for (var i = 0; i < fieldset.length; i++) {
             var field = fieldset[i];
 

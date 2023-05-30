@@ -85,7 +85,11 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                     Value = type.Id.ToString()
                 }).ToList();
 
-
+                vm.UnitDivision = _IMenuUnitService.GetFirstOrDefaultById(vm.Unit_Id).UnitDivision.Select(unitt => new SelectListItem()
+                {
+                    Text = unitt.Title + "(" + unitt.Value + " ) ",
+                    Value = unitt.Id.ToString()
+                }).ToList();
                 return View(vm);
             }
 
@@ -96,7 +100,8 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 Unit_Id = vm.Unit_Id,
                 Category_Id = vm.Category_Id,
                 Type_Id = vm.Type_Id,
-                Menu_Details=new List<CreateMenuDetailDTO>()
+                Menu_Details=new List<CreateMenuDetailDTO>(),
+                Menu_Incredians = new List<CreateMenuIncredianDTO>()
 
             };
             foreach(var item in vm.MenuDetail)
@@ -108,6 +113,17 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                     Default = item.IsDefault
                 };
                 dto.Menu_Details.Add(detail);
+            }
+            foreach(var item in vm.Menu_Incredian)
+            {
+                var incredian = new CreateMenuIncredianDTO()
+                {
+                    Quantity = item.Quantity,
+                    Product_Id = item.Product_Id,
+                    Unit_Id = item.Product_Unit_Id
+                };
+                dto.Menu_Incredians.Add(incredian);
+
             }
             if (vm.Menu_Image != null)
             {
@@ -130,7 +146,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var menu = _IMenuService.GetByGuid(Id);
+            var menu = _IMenuService.GetFirstOrDefault(Id);
             if (menu == null)
             {
                 _notyf.Information("no such data...");
@@ -145,6 +161,20 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 Type_Id = menu.Type_Id,
                 Category_Id = menu.Category_Id,
                 OrderTo = menu.OrderTo,
+                MenuDetail=menu.Menu_Details.Select(x=> new UpdateMenuDetailVM() {
+                Id=x.Id,
+                Quantity=x.Quantity,
+                IsDefault=x.Default,
+                Rate=x.Rate
+                }).ToList(),
+                Menu_Incredian=menu.Menu_Incredians.Select(x=>new UpdateMenuIncredianVM() { 
+                Id=x.Id,
+                Product_Id=x.Product_Id,
+                Product_Name=x.Product.Product_Name,
+                Product_Unit_Id=x.Unit_Id,
+                Product_Unit=x.Unit.Unit_Symbol,
+                Quantity=x.Quantity
+                }).ToList(),
 
                 Menu_Type_List = _IMenuTypeService.GetAll().Where(x => x.Status).Select(type => new SelectListItem()
                 {
@@ -161,8 +191,13 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 {
                     Text = type.Unit_Symbol,
                     Value = type.Id.ToString()
+                }).ToList(),
+                UnitDivision = _IMenuUnitService.GetFirstOrDefaultById(menu.Unit_Id).UnitDivision.Select(unitt => new SelectListItem()
+                {
+                    Text = unitt.Title + "(" + unitt.Value + " ) ",
+                    Value = unitt.Id.ToString()
                 }).ToList()
-            };
+        };
             return View(updateMenuVM);
         }
 
@@ -187,6 +222,11 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                     Text = type.Unit_Symbol,
                     Value = type.Id.ToString()
                 }).ToList();
+                vm.UnitDivision = _IMenuUnitService.GetFirstOrDefaultById(vm.Unit_Id).UnitDivision.Select(unitt => new SelectListItem()
+                {
+                    Text = unitt.Title + "(" + unitt.Value + " ) ",
+                    Value = unitt.Id.ToString()
+                }).ToList();
                 return View(vm);
             }
 
@@ -199,6 +239,29 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 Category_Id = vm.Category_Id,
                 Type_Id = vm.Type_Id,
             };
+            foreach (var item in vm.MenuDetail)
+            {
+                var detail = new UpdateMenuDetailDTO()
+                {
+                    Id=item.Id,
+                    Quantity = item.Quantity,
+                    Rate = item.Rate,
+                    Default = item.IsDefault
+                };
+                dto.Menu_Details.Add(detail);
+            }
+            foreach (var item in vm.Menu_Incredian)
+            {
+                var incredian = new UpdateMenuIncredianDTO()
+                {
+                    Id = item.Id,
+                    Quantity = item.Quantity,
+                    Product_Id = item.Product_Id,
+                    Unit_Id = item.Product_Unit_Id
+                };
+                dto.Menu_Incredians.Add(incredian);
+
+            }
             if (vm.Menu_Image != null)
             {
                 dto.Image = ImageUpload.GetByteArrayFromImage(vm.Menu_Image);

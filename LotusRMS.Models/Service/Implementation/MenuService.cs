@@ -30,12 +30,22 @@ namespace LotusRMS.Models.Service.Implementation
             {
                 var detail = new LotusRMS_MenuDetail()
                 {
-
                     Quantity=item.Quantity,
                     Rate=item.Rate,
                     Default=item.Default
                 };
                 menu.Menu_Details.Add(detail);
+            }
+            foreach(var item in dto.Menu_Incredians)
+            {
+                var incredian = new LotusRMS_MenuIncredians()
+                {
+                    Product_Id = item.Product_Id,
+                    Quantity = item.Quantity,
+                    Unit_Id = item.Unit_Id
+
+                };
+                menu.Menu_Incredians.Add(incredian);
             }
             if (dto.Image != null)
             {
@@ -55,10 +65,10 @@ namespace LotusRMS.Models.Service.Implementation
 
         public IEnumerable<LotusRMS_Menu> GetAll()
         {
-            return _IMenuRepository.GetAll(includeProperties: "Menu_Unit,Menu_Category,Menu_Type,Menu_Details,Menu_Details.Divison");
+            return _IMenuRepository.GetAll(includeProperties: "Menu_Unit,Menu_Category,Menu_Type,Menu_Details,Menu_Details.Divison,Menu_Incredians,Menu_Incredians.Product,Menu_Incredians.Unit");
         } public IEnumerable<LotusRMS_Menu> GetAllAvailable()
         {
-            return _IMenuRepository.GetAll(filter:x=>!x.IsDelete, includeProperties: "Menu_Unit,Menu_Category,Menu_Type,Menu_Details,Menu_Details.Divison");
+            return _IMenuRepository.GetAll(filter:x=>!x.IsDelete, includeProperties: "Menu_Unit,Menu_Category,Menu_Type,Menu_Details,Menu_Details.Divison,Menu_Incredians,Menu_Incredians.Product,Menu_Incredians.Unit");
         }
 
         public async Task<IEnumerable<LotusRMS_Menu>> GetAllAsync()
@@ -79,13 +89,13 @@ namespace LotusRMS.Models.Service.Implementation
         public LotusRMS_Menu GetFirstOrDefault(Guid Id)
         {
 
-            return _IMenuRepository.GetFirstOrDefault(filter: x => x.Id == Id, includeProperties: "Menu_Unit,Menu_Category,Menu_Type,Menu_Details,Menu_Details.Divison");
+            return _IMenuRepository.GetFirstOrDefault(filter: x => x.Id == Id, includeProperties: "Menu_Unit,Menu_Category,Menu_Type,Menu_Details,Menu_Details.Divison,Menu_Incredians,Menu_Incredians.Product,Menu_Incredians.Unit");
         }
 
         public Guid Update(UpdateMenuDTO dto)
         {
             //using var tx = new TransactionScope();
-            var  menu= _IMenuRepository.GetByGuid(dto.Id) ?? throw new Exception();
+            var menu = new LotusRMS_Menu();
             menu.Update(
                   item_name: dto.Item_name,
                 unit_Id: dto.Unit_Id,
@@ -93,13 +103,37 @@ namespace LotusRMS.Models.Service.Implementation
                 category_Id: dto.Category_Id,
                 orderTo: dto.OrderTo
                 );
+            menu.Menu_Details = new List<LotusRMS_MenuDetail>();
+            foreach (var item in dto.UpdateMenuDetail)
+            {
+                var detail = new LotusRMS_MenuDetail()
+                {
+                    Id=item.Id,
+                    Quantity = item.Quantity,
+                    Rate = item.Rate,
+                    Default = item.Default
+                };
+                menu.Menu_Details.Add(detail);
+            }
+            foreach (var item in dto.UpdateMenuIncredian)
+            {
+                var incredian = new LotusRMS_MenuIncredians()
+                {
+                   Id=item.Id,
+                    Product_Id = item.Product_Id,
+                    Quantity = item.Quantity,
+                    Unit_Id = item.Unit_Id
+
+                };
+                menu.Menu_Incredians.Add(incredian);
+            }
             if (dto.Image != null)
             {
                 menu.Image = dto.Image;
             }
 
+
             _IMenuRepository.Update(menu);
-            _IMenuRepository.Save();
             //todo logic
 
             // tx.Complete();
