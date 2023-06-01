@@ -19,6 +19,10 @@ namespace LotusRMS.Models.Viewmodels.Menu
     public class UpdateMenuIncredianVM:MenuIncredianVM
     {
         public Guid Id { get; set; }
+        public bool IsDelete
+        {
+            get; set;
+        }
 
     }
 }

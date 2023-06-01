@@ -17,8 +17,8 @@ namespace LotusRMS.Models.Dto.MenuDTO
         public Guid Category_Id { get; set; }
         public string OrderTo { get; set; }
         public Byte[] Image { get; set; }
-        public ICollection<CreateMenuDetailDTO> Menu_Details { get; set; }
-        public ICollection<CreateMenuIncredianDTO> Menu_Incredians { get; set; }
+        public ICollection<CreateMenuDetailDTO> Menu_Details { get; set; } = new List<CreateMenuDetailDTO>();
+        public ICollection<CreateMenuIncredianDTO> Menu_Incredians { get; set; } = new List<CreateMenuIncredianDTO>();
 
     }
     public class CreateMenuDetailDTO

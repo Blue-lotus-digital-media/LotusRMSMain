@@ -60,11 +60,7 @@
                                     }
                                 </select>
                             </div>
-                            @*<div class="col-2">
-                            <a class="btn btn-primary" asp-area="admin" asp-action="create" asp-controller="menucategory" asp-route-returnUrl="~/admin/menu/create" >
-                            <i class="bi bi-plus-lg"></i>
-                            </a>
-                            </div>*@
+                          
                         </div>
 
                         <span asp-validation-for="Category_Id" class="text-denger"></span>
@@ -72,38 +68,7 @@
                     </div>
 
 
-                    @*      <div class="col-md-12">
-                    <label for="mUnit" class="col-sm-12 col-form-label">Menu Unit</label>
-                    <div class="row">
-                    <div class="col-10">
-
-                    <select asp-for="Unit_Id" class="form-control" id="mUnit">
-                    <option>-- Select a unit --</option>
-                    @foreach (var item in Model.Menu_Unit_List)
-                    {
-                    <option value="@item.Value">@item.Text</option>
-                    }
-                    </select>
-                    </div>
-                    <div class="col-2">
-                    <a class="btn btn-primary" asp-area="admin" asp-action="create" asp-controller="MenuUnit" asp-route-returnUrl="~/admin/menu/create">
-                    <i class="bi bi-plus-lg"></i>
-                    </a>
-                    </div>
-                    </div>
-
-                    <span asp-validation-for="Unit_Id" class="text-denger"></span>
-                    </div>
-                    <div class="col-md-12">
-                    <label for="Uquantity" class="form-label">Unit Quantity </label>
-                    <input asp-for="Unit_Quantity" class="form-control" id="Uquantity" onclick="this.select();">
-                    </div>
-                    <div class="col-md-12">
-                    <label for="rate" class="form-label">Unit Rate</label>
-                    <input asp-for="Rate" class="form-control" id="rate" onclick="this.select();">
-                    <span asp-validation-for="Rate" class="text-denger"></span>
-                    </div>
-                    *@
+                 
                     <div class="col-md-12">
                         <label for="mUnit" class="col-sm-12 col-form-label">Menu Unit</label>
                         <div class="row">
@@ -117,11 +82,7 @@
                                     }
                                 </select>
                             </div>
-                            @* <div class="col-2">
-                            <a class="btn btn-primary" asp-area="admin" asp-action="create" asp-controller="MenuUnit" asp-route-returnUrl="~/admin/menu/create" >
-                            <i class="bi bi-plus-lg"></i>
-                            </a>
-                            </div>*@
+                         
                         </div>
 
                         <span asp-validation-for="Unit_Id" class="text-denger"></span>
@@ -164,14 +125,16 @@
                                                     }
                                                 </select>
                                                 <input type="number" class="form-control me-2" placeholder="rate" name="MenuDetail[@item.i].Rate" value="@item.value.Rate" />
-                                                <input type="radio" class="me-2 unitDefault" name="MenuDetail[@item.i].IsDefault" checked value="@item.value.IsDefault" />
+                                                <input type="radio" class="me-2 unitDefault" name="MenuDetail[@item.i].IsDefault" value="@item.value.IsDefault" checked="@item.value.IsDefault" title="Is active divison?"/>
+                                                <input type="radio" class="me-2 unitDelete" name="MenuDetail[@item.i].IsDelete" value="@item.value.IsDelete" checked="@item.value.IsDelete" title="Want to delete ?"/>
+
                                                 @if (item.i == 0)
                                                 {
                                                     <button type="button" class="add_unit_button btn btn-primary" onclick="addDivision()"> <i class="fa-solid fa-plus"></i></button>
                                                 }
                                                 else
                                                 {
-                                                    @* <button type="button" class="add_unit_button btn btn-primary" onclick="addDivision()"> <i class="fa-solid fa-plus"></i></button>*@
+                                                    <button type="button" class="delete_unit_button btn btn-danger" > <i class="fa fa-trash-o"></i></button>
                                                 }
 
                                             </div>
@@ -387,7 +350,7 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    <script src="~/js/createupdatemenu1.js">
+    <script src="~/js/createupdatemenu2.js">
 
     </script>
 }

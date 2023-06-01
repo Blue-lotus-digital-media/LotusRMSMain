@@ -165,7 +165,9 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 Id=x.Id,
                 Quantity=x.Quantity,
                 IsDefault=x.Default,
-                Rate=x.Rate
+                Rate=x.Rate,
+                IsDelete=x.IsDelete
+                
                 }).ToList(),
                 Menu_Incredian=menu.Menu_Incredians.Select(x=>new UpdateMenuIncredianVM() { 
                 Id=x.Id,
@@ -173,7 +175,8 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 Product_Name=x.Product.Product_Name,
                 Product_Unit_Id=x.Unit_Id,
                 Product_Unit=x.Unit.Unit_Symbol,
-                Quantity=x.Quantity
+                Quantity=x.Quantity,
+                IsDelete=x.IsDelete
                 }).ToList(),
 
                 Menu_Type_List = _IMenuTypeService.GetAll().Where(x => x.Status).Select(type => new SelectListItem()
@@ -248,7 +251,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                     Rate = item.Rate,
                     Default = item.IsDefault
                 };
-                dto.Menu_Details.Add(detail);
+                dto.UpdateMenuDetail.Add(detail);
             }
             foreach (var item in vm.Menu_Incredian)
             {
@@ -259,7 +262,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                     Product_Id = item.Product_Id,
                     Unit_Id = item.Product_Unit_Id
                 };
-                dto.Menu_Incredians.Add(incredian);
+                dto.UpdateMenuIncredian.Add(incredian);
 
             }
             if (vm.Menu_Image != null)

@@ -19,9 +19,8 @@ namespace LotusRMS.DataAccess.Repository
 
         public void Update(LotusRMS_Menu lMenu)
         {
-            _dal.Entry(lMenu).State = EntityState.Modified;
+
             Save();
-            
         }
 
         public void UpdateStatus(Guid Id)

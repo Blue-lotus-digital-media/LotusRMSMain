@@ -95,7 +95,8 @@ namespace LotusRMS.Models.Service.Implementation
         public Guid Update(UpdateMenuDTO dto)
         {
             //using var tx = new TransactionScope();
-            var menu = new LotusRMS_Menu();
+            var menu = _IMenuRepository.GetFirstOrDefault(x => x.Id == dto.Id, includeProperties: "Menu_Details,Menu_Incredians");
+
             menu.Update(
                   item_name: dto.Item_name,
                 unit_Id: dto.Unit_Id,
@@ -103,29 +104,58 @@ namespace LotusRMS.Models.Service.Implementation
                 category_Id: dto.Category_Id,
                 orderTo: dto.OrderTo
                 );
-            menu.Menu_Details = new List<LotusRMS_MenuDetail>();
             foreach (var item in dto.UpdateMenuDetail)
             {
-                var detail = new LotusRMS_MenuDetail()
+                if (item.Id != Guid.Empty)
                 {
-                    Id=item.Id,
-                    Quantity = item.Quantity,
-                    Rate = item.Rate,
-                    Default = item.Default
-                };
-                menu.Menu_Details.Add(detail);
+                    var menuDetail = menu.Menu_Details.Where(x => x.Id == item.Id).FirstOrDefault();
+                    menuDetail.Id = item.Id;
+                    menuDetail.Default = item.Default;
+                        menuDetail.Quantity = item.Quantity;
+                    menuDetail.Rate = item.Rate;
+                  
+
+                }
+                else
+                {
+                    var detail = new LotusRMS_MenuDetail()
+                    {
+
+                        Quantity = item.Quantity,
+                        Rate = item.Rate,
+                        Default = item.Default
+                    };
+
+                    menu.Menu_Details.Add(detail);
+                }
             }
             foreach (var item in dto.UpdateMenuIncredian)
             {
-                var incredian = new LotusRMS_MenuIncredians()
+                if (item.Id != Guid.Empty)
                 {
-                   Id=item.Id,
-                    Product_Id = item.Product_Id,
-                    Quantity = item.Quantity,
-                    Unit_Id = item.Unit_Id
+                    var incredianMenu=menu.Menu_Incredians.Where(x => x.Id == item.Id).FirstOrDefault();
+                    incredianMenu.Id = item.Id;
+                    incredianMenu.Quantity = item.Quantity;
+                    incredianMenu.Unit_Id = item.Unit_Id;
+                    incredianMenu.Product_Id = item.Product_Id;
+                }
+                else
+                {
+                    var incredian = new LotusRMS_MenuIncredians()
+                    {
+                        Product_Id = item.Product_Id,
+                        Quantity = item.Quantity,
+                        Unit_Id = item.Unit_Id
 
-                };
-                menu.Menu_Incredians.Add(incredian);
+                    };
+                    menu.Menu_Incredians.Add(incredian);
+                }
+                
+              /*  if (item.Id != Guid.Empty)
+                {
+                    incredian.Id = item.Id;
+                }
+                menu.Menu_Incredians.Add(incredian);*/
             }
             if (dto.Image != null)
             {

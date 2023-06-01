@@ -191,7 +191,7 @@ function loadProduct() {
 
 
 $(document).ready(function () {
-    $("#mCategory").attr("disabled", "true");
+   /* $("#mCategory").attr("disabled", "true");*/
 
   
    
@@ -234,8 +234,8 @@ $(document).ready(function () {
 
     });
 });
-function addDivision(e) {
-
+function addDivision() {
+    console.log("division clicked");
     var wrapper = $(".wrappers");
     var x = document.getElementsByClassName("fieldset").length;
     var max_fields = document.getElementById('unitDivision_0').length;
@@ -259,6 +259,51 @@ function addDivision(e) {
         document.getElementById("unitDivision_" + x).innerHTML=quantity.innerHTML;
     }
 }
-            
+$(document).on('click', '.delete_unit_button', function (e) {
+    e.preventDefault();
+    var parent = $(this).closest(".fields");
+    var deleteRadio = parent.children().children(".unitDelete");
+    var value = deleteRadio.is(':checked');
+    var select = parent.children().children(".unitDivision");
+    var unit = parent.children().children(".unitDefault");
+    var rate = parent.children().children("input[type='number']");
+    var unitDefault = parent.children().children(".unitDefault");
+
+
+    if (value) {
+        deleteRadio.val(false);
+        deleteRadio.prop('checked', false);
+
+        $(select).removeAttr("style");
+        unit.removeAttr("readonly");
+        rate.removeAttr("readonly");
+
+        $(this).children("i").removeClass("fas").removeClass("fa-trash-restore").addClass("fa").addClass("fa-trash-o");
+
+        $(this).attr("title", "Delete division.");
+        $(this).removeClass("btn-info").addClass("btn-danger");
+
+    } else {
+        deleteRadio.val(true);
+        deleteRadio.prop('checked', true);
+        $(select).attr("style", "pointer-events: none;");
+        unit.attr("readonly", "readonly");
+        rate.attr("readonly", "readonly");
+        $(this).children("i").removeClass("fa").removeClass("fa-trash-o").addClass("fas").addClass("fa-trash-restore");
+        $(this).attr("title", "Un delete division.");
+
+        $(this).removeClass("btn-danger").addClass("btn-info");
+        if (unitDefault.is(':checked')) {
+            $(".unitDefault")[0].prop("checked", true);
+        }
+}
+
+});
+
+
+function deleteDivision(me) {
+    var parent = $(me).parent();
+    console.log("deleted");
+}     
 
 

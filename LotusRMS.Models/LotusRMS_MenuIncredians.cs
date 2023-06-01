@@ -21,6 +21,7 @@ namespace LotusRMS.Models
         public Guid Unit_Id { get; set; }
         [ForeignKey(nameof(Unit_Id))]
         public LotusRMS_Unit? Unit { get; set; }
+        public bool IsDelete { get; set; }
 
 
     }

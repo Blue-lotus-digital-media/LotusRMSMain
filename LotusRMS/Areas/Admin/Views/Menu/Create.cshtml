@@ -50,7 +50,7 @@
                         <div class="row">
                             <div class="col-12">
 
-                                <select asp-for="Category_Id" class="form-control" id="mCategory">
+                                <select asp-for="Category_Id" class="form-control" id="mCategory" disabled>
                                     <option>-- Select a category --</option>
 
                                 </select>
@@ -66,39 +66,6 @@
 
                     </div>
 
-
-                    @*      <div class="col-md-12">
-                    <label for="mUnit" class="col-sm-12 col-form-label">Menu Unit</label>
-                    <div class="row">
-                    <div class="col-10">
-
-                    <select asp-for="Unit_Id" class="form-control" id="mUnit">
-                    <option>-- Select a unit --</option>
-                    @foreach (var item in Model.Menu_Unit_List)
-                    {
-                    <option value="@item.Value">@item.Text</option>
-                    }
-                    </select>
-                    </div>
-                    <div class="col-2">
-                    <a class="btn btn-primary" asp-area="admin" asp-action="create" asp-controller="MenuUnit" asp-route-returnUrl="~/admin/menu/create">
-                    <i class="bi bi-plus-lg"></i>
-                    </a>
-                    </div>
-                    </div>
-
-                    <span asp-validation-for="Unit_Id" class="text-denger"></span>
-                    </div>
-                    <div class="col-md-12">
-                    <label for="Uquantity" class="form-label">Unit Quantity </label>
-                    <input asp-for="Unit_Quantity" class="form-control" id="Uquantity" onclick="this.select();">
-                    </div>
-                    <div class="col-md-12">
-                    <label for="rate" class="form-label">Unit Rate</label>
-                    <input asp-for="Rate" class="form-control" id="rate" onclick="this.select();">
-                    <span asp-validation-for="Rate" class="text-denger"></span>
-                    </div>
-                    *@
                     <div class="col-md-12">
                         <label for="mUnit" class="col-sm-12 col-form-label">Menu Unit</label>
                     <div class="row">
@@ -112,11 +79,7 @@
                                 }
                             </select>
                         </div>
-                       @* <div class="col-2">
-                            <a class="btn btn-primary" asp-area="admin" asp-action="create" asp-controller="MenuUnit" asp-route-returnUrl="~/admin/menu/create" >
-                                <i class="bi bi-plus-lg"></i>
-                            </a>
-                        </div>*@
+                    
                     </div>
 
                         <span asp-validation-for="Unit_Id" class="text-denger"></span>
@@ -378,7 +341,7 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    <script src="~/js/createupdatemenu1.js">
+    <script src="~/js/createupdatemenu2.js">
        
     </script>
 }

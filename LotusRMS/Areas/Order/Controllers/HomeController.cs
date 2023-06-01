@@ -60,12 +60,12 @@ namespace LotusRMSweb.Areas.Order.Controllers
                     tableType.Add(tvm);
                 }
             }
-            var menu = _IMenuService.GetAll().Where(x => !x.IsDelete && x.Status).Select(menu => new OrderMenu()
+            var menu = _IMenuService.GetAllAvailable().Where(x => !x.IsDelete && x.Status).Select(nmenu => new OrderMenu()
             {
-                Item_Name = menu.Item_Name,
-                Symbol= menu.Menu_Details.FirstOrDefault(x => x.Default).Divison.Title, //+ "( "+menu.Menu_Details.FirstOrDefault(x => x.Default).Divison.Value+" " + menu.Menu_Unit.Unit_Symbol+")",
-                Rate=menu.Menu_Details.FirstOrDefault(x=>x.Default).Rate,
-                Id = menu.Id
+                Item_Name = nmenu.Item_Name,
+                Symbol= nmenu.Menu_Details.FirstOrDefault(x => x.Default).Divison.Title, //+ "( "+menu.Menu_Details.FirstOrDefault(x => x.Default).Divison.Value+" " + menu.Menu_Unit.Unit_Symbol+")",
+                Rate=nmenu.Menu_Details.FirstOrDefault(x=>x.Default).Rate,
+                Id = nmenu.Id
             }).ToList();
             ViewBag.Menu = menu;
             ViewBag.TableId = TableId;

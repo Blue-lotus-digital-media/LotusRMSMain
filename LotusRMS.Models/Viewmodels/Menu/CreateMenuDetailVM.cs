@@ -22,5 +22,9 @@ namespace LotusRMS.Models.Viewmodels.Menu
     public class UpdateMenuDetailVM : CreateMenuDetailVM
     {
         public Guid Id { get; set; }
+        public bool IsDelete
+        {
+            get; set;
+        }
     }
 }
