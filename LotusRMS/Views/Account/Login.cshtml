@@ -33,6 +33,7 @@
     <link href="~/assets/vendor/quill/quill.bubble.css" rel="stylesheet">
     <link href="~/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
     <link href="~/assets/vendor/simple-datatables/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <!-- Template Main CSS File -->
     <link href="~/assets/css/style.css" rel="stylesheet">
@@ -104,43 +105,51 @@
                                 </div>
                                 <div class="card-footer">
                                     <a asp-action="forgetpassword" asp-area="" asp-controller="account" >Forget password ?</a>
+                                    <section>
+                                        @{
+                                            if ((Model.ExternalLogins?.Count ?? 0) == 0)
+                                            {
+                                                <div>
+                                                    <p>
+                                                        There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">
+                                                            article
+                                                            about setting up this ASP.NET application to support logging in via external services
+                                                        </a>.
+                                                    </p>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <form id="external-account" asp-area="" asp-action="ExternalLogin" asp-controller="Account" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                                                    <div>
+                                                        <p>
+                                                            @foreach (var provider in Model.ExternalLogins!)
+                                                            {
+                                                                <button type="submit" class="btn border border-dark px-5 py-2  text-center w-100 mt-5" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">
+                                                                    <i class="fa-brands  fa-google me-2" style="background: -webkit-linear-gradient(#EA4335, #FBBC05,#34A853,#4285F4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;"></i>Sign in with @provider.DisplayName
+                                                                </button>
+                                                            }
+                                                        </p>
+                                                    </div>
+                                                </form>
+                                            }
+                                        }
+                                    </section>
                                 </div>
                             </div>
                             @Html.ValidationSummary(false,"",new { @class = "text-danger" } )
+                       
                            
                         </div>
+                 
                     </div>
+                    
                 </div>
-
+               
             </section>
-            <section>
-                @{
-                    if ((Model.ExternalLogins?.Count ?? 0) == 0)
-                    {
-                        <div>
-                            <p>
-                                There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">
-                                    article
-                                    about setting up this ASP.NET application to support logging in via external services
-                                </a>.
-                            </p>
-                        </div>
-                    }
-                    else
-                    {
-                        <form id="external-account" asp-area="" asp-action="ExternalLogin" asp-controller="Account" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
-                            <div>
-                                <p>
-                                    @foreach (var provider in Model.ExternalLogins!)
-                                    {
-                                        <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
-                                    }
-                                </p>
-                            </div>
-                        </form>
-                    }
-                }
-</section>
+         
 
         </div>
 
