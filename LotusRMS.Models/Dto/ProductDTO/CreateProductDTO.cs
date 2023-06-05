@@ -11,10 +11,10 @@ namespace LotusRMS.Models.Dto.ProductDTO
         public string Product_Name { get; set; }
         public string Product_Description { get; set; }
         public Guid Product_Unit_Id { get; set; }
-        public float Unit_Quantity { get; set; }
+        public double Unit_Quantity { get; set; }
         public Guid Product_Category_Id { get; set; }   
         public Guid Product_Type_Id { get; set; }
-        public CreateProductDTO(string product_Name, string product_Description, Guid product_Unit_Id, Guid product_Category_Id, float unit_Quantity,Guid product_Type_Id)
+        public CreateProductDTO(string product_Name, string product_Description, Guid product_Unit_Id, Guid product_Category_Id, double unit_Quantity,Guid product_Type_Id)
         {
             Product_Name = product_Name;
             Product_Description = product_Description;

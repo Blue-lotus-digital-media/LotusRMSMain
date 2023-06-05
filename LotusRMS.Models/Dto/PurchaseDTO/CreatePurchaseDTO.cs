@@ -16,14 +16,14 @@ namespace LotusRMS.Models.Dto.PurchaseDTO
         public string Bill_No { get; set; }
         public string Purchase_Date { get; set; }
         
-        public float Bill_Amount { get; set; }
+        public double Bill_Amount { get; set; }
         public PaymentModeEnum Payment_Mode { get; set; }
         public DiscountTypeEnum Discount_Type { get; set; }
-        public float Discount { get; set; }
-        public float Paid_Amount { get; set; }
-        public float Due_Amount { get; set; }
-        
-        public List<CreatePurchaseDetailDTO> PurchaseDetails { get; set; }
+        public double Discount { get; set; }
+        public double Paid_Amount { get; set; }
+        public double? Due_Amount { get; set; }
+
+        public List<CreatePurchaseDetailDTO> PurchaseDetails { get; set; } = new List<CreatePurchaseDetailDTO>();
 
     }
 }

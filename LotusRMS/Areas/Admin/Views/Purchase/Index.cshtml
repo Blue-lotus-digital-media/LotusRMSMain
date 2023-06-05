@@ -1,8 +1,9 @@
-﻿
+﻿@using LotusRMS.Models.Viewmodels.Purchase;
+@model CreatePurchaseVm
 
 <div class="container" >
     <div class="row" >
-       <partial name="_Purchases" />
+       <partial name="_Purchases" model="@Model"/>
             <div id="purchaseDetail">
                 
             </div>

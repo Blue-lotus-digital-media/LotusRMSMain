@@ -12,9 +12,9 @@ namespace LotusRMS.Models.Viewmodels.Purchase
         public Guid Id { get; set; }
         public string Date { get; set; }
         public string Purchase_Date { get; set; }
-        public float Bill_Amount { get; set; }
-        public float Paid_Amount { get; set; }
-        public float Discount { get; set; }
+        public double Bill_Amount { get; set; }
+        public double Paid_Amount { get; set; }
+        public double Discount { get; set; }
         public  string Discount_Type { get; set; }
         public  string Payment_Mode { get; set; }
         public int DetailCount { get; set; }

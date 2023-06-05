@@ -28,6 +28,10 @@ namespace LotusRMS.DataAccess.Repository
         public T GetByGuid(Guid id)
         {
             return dbSet.Find(id);
+        } 
+        public async Task<T> GetByGuidAsync(Guid id)
+        {
+            return await dbSet.FindAsync(id);
         }
         public T Get(int id)
         {
@@ -58,6 +62,10 @@ namespace LotusRMS.DataAccess.Repository
         public void Save()
         {
             _dal.SaveChanges();
+        }
+        public async Task SaveAsync()
+        {
+            await _dal.SaveChangesAsync();
         }
 
         public T GetFirstOrDefault(Expression<Func<T, bool>> filter = null, string includeProperties = null)

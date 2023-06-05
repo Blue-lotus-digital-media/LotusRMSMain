@@ -21,12 +21,12 @@ namespace LotusRMS.Models
         [ForeignKey("Supplier_Id")]
         public virtual LotusRMS_Supplier Supplier { get; set; }
         public string? Bill_No { get; set; }
-        public float Bill_Amount { get; set; }
+        public double Bill_Amount { get; set; }
         public DiscountTypeEnum Discount_Type { get; set; }
-        public float Discount { get; set; }
+        public double Discount { get; set; }
         public PaymentModeEnum Payment_Mode { get; set; }
-        public float Paid_Amount { get; set; }
-        public float Due { get; set; }
+        public double Paid_Amount { get; set; }
+        public double? Due { get; set; }
         public List<LotusRMS_PurchaseDetail> PurchaseDetails { get; set; }
         }
     public class LotusRMS_PurchaseDetail
@@ -38,9 +38,9 @@ namespace LotusRMS.Models
         public Guid Product_Id { get; set; }
         [ForeignKey("Product_Id")]
         public virtual LotusRMS_Product Product { get; set; }
-        public float Quantity { get; set; }
-        public float Rate { get; set; }
-        public float Total
+        public double Quantity { get; set; }
+        public double Rate { get; set; }
+        public double Total
         {
             get { return Quantity * Rate; }
         }

@@ -10,7 +10,7 @@ namespace LotusRMS.Models.Service
 {
     public interface IPurchaseService
     {
-        Guid Create(CreatePurchaseDTO dto);
+        Task<Guid> CreateAsync(CreatePurchaseDTO dto);
         Guid Update(UpdatePurchaseDTO dto);
         Guid UpdateStatus(Guid Id);
 

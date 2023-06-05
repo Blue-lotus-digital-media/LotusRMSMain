@@ -1,9 +1,11 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using LotusRMS.DataAccess.Constants;
 using LotusRMS.Models;
+using LotusRMS.Models.Dto.InventoryDTO;
 using LotusRMS.Models.Dto.ProductDTO;
 using LotusRMS.Models.IRepositorys;
 using LotusRMS.Models.Service;
+using LotusRMS.Models.Viewmodels.Inventory;
 using LotusRMS.Models.Viewmodels.product;
 using LotusRMS.Utility;
 using Microsoft.AspNetCore.Authorization;
@@ -21,16 +23,19 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         private readonly IUnitService _IUnitService;
         private readonly ITypeService _ITypeService;
         private readonly INotyfService _notyf;
+        private readonly IInventoryService _iInventoryService;
 
 
         public ProductController(IProductService iProductService, ICategoryService iCategoryService,
-            IUnitService iUnitService, ITypeService iTypeService,INotyfService notyf)
+            IUnitService iUnitService, ITypeService iTypeService, INotyfService notyf, 
+            IInventoryService iInventoryService)
         {
             _IProductService = iProductService;
             _ICategoryService = iCategoryService;
             _IUnitService = iUnitService;
             _ITypeService = iTypeService;
             _notyf = notyf;
+            _iInventoryService = iInventoryService;
         }
 
         public IActionResult Index()
@@ -38,11 +43,85 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             return View();
         }
 
-        public IActionResult Upcreate(Guid? Id)
+        public IActionResult Create()
         {
             var CategoryList = _ICategoryService.GetAll();
             var UnitList = _IUnitService.GetAll();
-            var ProductVMs = new ProductVM()
+            var createProductVMs = new CreateProductVM()
+            {
+                TypeList = _ITypeService.GetAll().Where(x => x.Status).Select(type => new SelectListItem()
+                {
+                    Text = type.Type_Name,
+                    Value = type.Id.ToString()
+                }),
+
+
+                UnitList = _IUnitService.GetAll().Where(x => x.Status).Select(i => new SelectListItem()
+                {
+                    Text = i.Unit_Name,
+                    Value = i.Id.ToString()
+                })
+            };
+            return View(createProductVMs);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Create(CreateProductVM productVMs)
+        {
+            if (ModelState.IsValid)
+            {
+
+                var dto = new CreateProductDTO(
+                    product_Name: productVMs.Product_Name,
+                    product_Description: productVMs.Product_Description,
+                    product_Unit_Id: productVMs.Product_Unit_Id,
+                    product_Category_Id: productVMs.Product_Category_Id,
+                    unit_Quantity: productVMs.Unit_Quantity,
+                    product_Type_Id: productVMs.Product_Type_Id
+                );
+
+
+                var id=_IProductService.Create(dto);
+                var invDto = new CreateInventoryDTO()
+                {
+                    ProductId = id,
+                    StockQuantity = productVMs.Inventory.StockQuantity,
+                    ReorderLevel = productVMs.Inventory.ReorderLevel
+                };
+                await _iInventoryService.CreateAsync(invDto);
+                _notyf.Success("Product created successfully", 5);
+
+
+
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+
+                productVMs.TypeList = _ITypeService.GetAll().Where(x => x.Status).Select(type => new SelectListItem()
+                {
+                    Text = type.Type_Name,
+                    Value = type.Id.ToString()
+                });
+                productVMs.CategoryList = GetCategory(productVMs.Product_Type_Id);
+
+                productVMs.UnitList = _IUnitService.GetAll().Select(i => new SelectListItem()
+                {
+                    Text = i.Unit_Name,
+                    Value = i.Id.ToString()
+                });
+
+                return View(productVMs);
+            }
+            
+        }
+        public async Task<IActionResult> Update(Guid? Id)
+        {
+            if (Id == Guid.Empty || Id == null) {
+                return BadRequest();
+            }
+            var CategoryList = _ICategoryService.GetAll();
+            var UnitList = _IUnitService.GetAll();
+            var updateProductVMs = new UpdateProductVM()
             {
                 TypeList = _ITypeService.GetAll().Where(x => x.Status).Select(type => new SelectListItem()
                 {
@@ -59,50 +138,41 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             };
 
 
-            if (Id == Guid.Empty || Id == null)
+                       var p = _IProductService.GetByGuid((Guid)Id) ?? throw new Exception();
+            updateProductVMs.Id = p.Id;
+            updateProductVMs.Product_Name = p.Product_Name;
+            updateProductVMs.Product_Description = p.Product_Description;
+            updateProductVMs.Product_Category_Id = p.Product_Category_Id;
+            updateProductVMs.CategoryList = GetCategory(p.Product_Type_Id);
+            updateProductVMs.Product_Unit_Id = p.Product_Unit_Id;
+            updateProductVMs.Product_Type_Id = p.Product_Type_Id;
+            updateProductVMs.Unit_Quantity = (double)p.Unit_Quantity;
+
+            updateProductVMs.Inventory = await GetInventory(p.Id);
+            return View(updateProductVMs);
+            
+        }
+        public async Task<UpdateInventory> GetInventory(Guid ProductId)
+        {
+            var inventory =await _iInventoryService.GetInventoryByProductIdAsync(ProductId);
+            var inv = new UpdateInventory();
+            if (inventory != null)
             {
-                return View(ProductVMs);
+                inv.Id = inventory.Id;
+                inv.Product_Id = inventory.Product_Id;
+                inv.StockQuantity = inventory.StockQuantity;
+                inv.ReorderLevel = inventory.ReorderLevel;
+                inv.IsPurchased = inventory.IsPurchased;
             }
-            else
-            {
-                var p = _IProductService.GetByGuid((Guid)Id) ?? throw new Exception();
-
-
-                ProductVMs.Id = p.Id;
-                ProductVMs.Product_Name = p.Product_Name;
-                ProductVMs.Product_Description = p.Product_Description;
-                ProductVMs.Product_Category_Id = p.Product_Category_Id;
-                ProductVMs.Product_Unit_Id = p.Product_Unit_Id;
-                ProductVMs.Product_Type_Id = p.Product_Type_Id;
-                ProductVMs.Unit_Quantity = (float)p.Unit_Quantity;
-
-
-                return View(ProductVMs);
-            }
+            return inv;
         }
 
         [HttpPost]
-        public IActionResult UpCreate(ProductVM productVMs)
+        public async Task<IActionResult> Update(UpdateProductVM productVMs)
         {
             if (ModelState.IsValid)
             {
-                if (productVMs.Id == Guid.Empty)
-                {
-                    var dto = new CreateProductDTO(
-                        product_Name: productVMs.Product_Name,
-                        product_Description: productVMs.Product_Description,
-                        product_Unit_Id: productVMs.Product_Unit_Id,
-                        product_Category_Id: productVMs.Product_Category_Id,
-                        unit_Quantity: productVMs.Unit_Quantity,
-                        product_Type_Id: productVMs.Product_Type_Id
-                    );
-
-
-                    _IProductService.Create(dto);
-                    _notyf.Success("Product created successfully", 5);
-                }
-                else
-                {
+              
                     var products = _IProductService.GetByGuid(productVMs.Id) ?? throw new Exception();
                     if (products == null)
                     {
@@ -119,22 +189,41 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                     {
                         Id = productVMs.Id
                     };
-                    _IProductService.Update(dto);
-                    _notyf.Success("Product updated successfully", 5);
+               await _IProductService.Update(dto);
+                if (productVMs.Inventory.Id == Guid.Empty)
+                {
+                    var createInv = new CreateInventoryDTO()
+                    {
+                        ProductId = productVMs.Id,
+                        StockQuantity = productVMs.Inventory.StockQuantity,
+                        ReorderLevel = productVMs.Inventory.ReorderLevel
+                    };
+                    await _iInventoryService.CreateAsync(createInv);
                 }
-
-                return RedirectToAction(nameof(Index));
+                else
+                {
+                    var updateInv = new UpdateInventoryDTO()
+                    {
+                        Id = productVMs.Inventory.Id,
+                        ProductId = productVMs.Id,
+                        StockQuantity = productVMs.Inventory.StockQuantity,
+                        ReorderLevel = productVMs.Inventory.ReorderLevel
+                    };
+                    await _iInventoryService.UpdateAsync(updateInv);
+                }
+               _notyf.Success("Product updated successfully", 5);
+               return RedirectToAction(nameof(Index));
             }
             else
             {
-                var ProductVMs = new ProductVM()
+                var ProductVMs = new UpdateProductVM()
                 {
                     TypeList = _ITypeService.GetAll().Where(x => x.Status).Select(type => new SelectListItem()
                     {
                         Text = type.Type_Name,
                         Value = type.Id.ToString()
                     }),
-
+                    CategoryList = GetCategory(productVMs.Product_Type_Id),
 
                     UnitList = _IUnitService.GetAll().Select(i => new SelectListItem()
                     {

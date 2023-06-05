@@ -13,11 +13,14 @@ namespace LotusRMS.Models.Service.Implementation
     {
         public ICheckoutRepository _CheckoutRepository;
         public IInvoiceService _invoiceService;
-        public CheckoutService(ICheckoutRepository checkoutRepository, 
-            IInvoiceService invoiceService )
+        private readonly IInventoryService _iInventoryService;
+        public CheckoutService(ICheckoutRepository checkoutRepository,
+            IInvoiceService invoiceService,
+            IInventoryService iInventoryService)
         {
             _CheckoutRepository = checkoutRepository;
             _invoiceService = invoiceService;
+            _iInventoryService = iInventoryService;
         }
         public async Task<Guid> Create(CreateCheckoutDTO dto)
         {

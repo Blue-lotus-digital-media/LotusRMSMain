@@ -11,6 +11,7 @@ namespace LotusRMS.Models.IRepositorys
     {
         T Get(int id);
         T GetByGuid(Guid id);
+        Task<T> GetByGuidAsync(Guid id);
         IEnumerable<T> GetAll(
             Expression<Func<T, bool>> filter = null,
             Func<IQueryable<T>,IOrderedQueryable<T>> orderBy=null,
@@ -40,6 +41,7 @@ namespace LotusRMS.Models.IRepositorys
         void Remove(T entity);
 
         void Save();
+        Task SaveAsync();
 
     }
 }

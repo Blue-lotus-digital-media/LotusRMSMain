@@ -1,0 +1,159 @@
+﻿@using LotusRMS.Models.Viewmodels.product
+@model CreateProductVM
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+
+    var title = "Create";
+
+}
+
+@*<style>
+    .accordion-button[aria-expanded="false"] {
+        background-color: #808080;
+        color:red;
+    }
+
+    .accordion-button[aria-expanded="true"] {
+        background-color:#0d6efd;
+    }
+
+
+</style>*@
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">@title Product</h5>
+
+                <!-- Multi Columns Form -->
+                <form class="row g-3 bordered" asp-action="Create" asp-controller="Product" asp-area="admin">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="col-md-11">
+                        <label for="pName" class="form-label">Product Name</label>
+                        <input asp-for="Product_Name" class="form-control" id="pName" placeholder="Product Name">
+
+                        <span asp-validation-for="Product_Name" class="text-denger"></span>
+                    </div>
+
+                    <div class="col-md-12">
+                        <label for="pType" class="col-sm-12 col-form-label">Product Type</label>
+                        <div class="row">
+                            <div class="col-10">
+                                <select asp-for="Product_Type_Id" class="form-control" id="pType" onchange="loadData(this)">
+                                    <option>--Select a product type--</option>
+                                    @foreach (var item in Model.TypeList)
+                                    {
+                                        <option value="@item.Value">@item.Text</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-2">
+                                <a class="btn btn-primary" asp-area="admin" asp-action="create" asp-controller="producttype" asp-route-returnUrl="~/admin/product/create">
+                                    <i class="bi bi-plus-lg"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <span asp-validation-for="Product_Type_Id" class="text-denger"></span>
+
+                    </div>
+                    <div class="col-md-12">
+                        <label for="pCategory" class="col-sm-12 col-form-label">Product Category</label>
+                        <div class="row">
+                            <div class="col-10">
+
+                                <select asp-for="Product_Category_Id" class="form-control" id="pCategory">
+                                    <option>--Select a category--</option>
+                                    @if (Model.CategoryList != null)
+                                    {
+                                        foreach (var item in Model.UnitList)
+                                        {
+                                            <option value="@item.Value">@item.Text</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-2">
+                                <a class="btn btn-primary" asp-area="admin" asp-action="create" asp-controller="productcategory" asp-route-returnUrl="~/admin/product/create">
+                                    <i class="bi bi-plus-lg"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <span asp-validation-for="Product_Category_Id" class="text-denger"></span>
+
+                    </div>
+
+
+                    <div class="col-md-12">
+                        <label for="pUnit" class="col-sm-12 col-form-label">Product Unit</label>
+                        <div class="row">
+                            <div class="col-10">
+
+                                <select asp-for="Product_Unit_Id" class="form-control" id="pUnit">
+                                    <option>--Select a unit--</option>
+                                    @foreach (var item in Model.UnitList)
+                                    {
+                                        <option value="@item.Value">@item.Text</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-2">
+                                <a class="btn btn-primary" asp-area="admin" asp-action="create" asp-controller="ProductUnit" asp-route-returnUrl="~/admin/product/create">
+                                    <i class="bi bi-plus-lg"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <span asp-validation-for="Product_Unit_Id" class="text-denger"></span>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="Quantity" class="form-label">Unit Quantity </label>
+                        <input asp-for="Unit_Quantity" class="form-control" id="Quantity" onClick="this.select();">
+                    </div>
+                    <div class="col-md-12">
+                        <label for="pDescription" class="form-label">Product Description</label>
+                        <textarea asp-for="Product_Description" class="form-control" id="pDescription"> </textarea>
+                        <span asp-validation-for="Product_Description" class="text-denger"></span>
+                    </div>
+
+                    <div class="col-md-12">
+                        <fieldset>
+                            <legend>Stock Management</legend>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="Qty" class="form-label">Quantity</label>
+                                    <input type="number" class="form-control" id="Qty" asp-for="Inventory.StockQuantity">
+                                    <span asp-validation-for="Inventory.StockQuantity" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="unit" class="form-label">Unit</label>
+                                    <input type="number" class="form-control" id="unit" asp-for="Inventory.ReorderLevel">
+                                    <span asp-validation-for="Inventory.ReorderLevel" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
+
+                    <div class="col-md-12 text-end">
+                        <button type="reset" class="btn btn-danger me-3">Clear</button>
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </div>
+
+                </form><!-- End Multi Columns Form -->
+
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script src="~/js/createupdateproduct.js"></script>
+}
+
+

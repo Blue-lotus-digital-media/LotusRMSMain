@@ -21,6 +21,7 @@ using LotusRMS.Models.Viewmodels.Galla;
 using System.Security.Claims;
 using LotusRMS.Models.Viewmodels.Invoice;
 using LotusRMS.Models.Service.Implementation;
+using LotusRMS.Models.Dto.InventoryDTO;
 
 namespace LotusRMSweb.Areas.Checkout.Controllers
 {
@@ -40,6 +41,7 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
         private readonly ICustomerService _ICustomerService;
         private readonly INotyfService _notyf;
         private readonly IGallaService _gallaService;
+        private readonly IInventoryService _iInventoryService;
 
         private readonly IHubContext<OrderHub, IOrderHub> _orderHub;
         public HomeController(IOrderService iOrderService,
@@ -54,7 +56,8 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
 ,
             INotyfService notyf,
             IGallaService gallaService,
-            IFiscalYearService iFiscalYearService)
+            IFiscalYearService iFiscalYearService,
+            IInventoryService iInventoryService)
         {
             _IOrderService = iOrderService;
             _ITableTypeService = TableTypeService;
@@ -68,6 +71,7 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
             _notyf = notyf;
             _gallaService = gallaService;
             _IFiscalYearService = iFiscalYearService;
+            _iInventoryService = iInventoryService;
         }
         public IActionResult Index(Guid? TypeId,Guid? TableId)
         {
@@ -158,11 +162,40 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
 
             };
             var id=_ICheckoutService.Create(dto);
-            var order = _IOrderService.GetByGuid(vm.Order_Id);
+            var order = _IOrderService.GetFirstOrDefaultByOrderId(vm.Order_Id);
             _ITableService.UpdateReserved(order.Table_Id);
 
 
             await SetCheckoutNotification(order.Table_Id);
+            foreach(var orderDetails in order.Order_Details)
+            {
+                foreach(var menuIncredian in orderDetails.Menu.Menu_Incredians)
+                {
+                    var inv = await _iInventoryService.GetInventoryByProductIdAsync(menuIncredian.Product_Id);
+                    if(inv!=null)
+                    {
+                        var quantity = orderDetails.Quantity;
+                        var menuQuantity = orderDetails.Menu.Menu_Details.Where(x => x.Id == orderDetails.Quantity_Id).FirstOrDefault().Divison.Value;
+
+                        var stockQuantity = inv.StockQuantity-(quantity*menuQuantity);
+
+
+                        var UpdateInventoryOnSale = new UpdateInventoryDTO()
+                        {
+                            Id = inv.Id,
+                            StockQuantity = stockQuantity
+
+                        };
+                        await _iInventoryService.UpdateOnSaleAsync(UpdateInventoryOnSale);
+                    }
+
+
+                }
+
+
+            }
+
+
             return RedirectToAction("InvoicePrint", "Invoice", new {area="",Id = id.Result,returnUrl="/checkout" });
 
         }

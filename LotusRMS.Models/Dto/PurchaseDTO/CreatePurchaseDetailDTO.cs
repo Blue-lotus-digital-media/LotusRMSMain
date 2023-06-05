@@ -9,9 +9,9 @@ namespace LotusRMS.Models.Dto.PurchaseDTO
     public class CreatePurchaseDetailDTO
     {
         public Guid Product_Id { get; set; }
-        public float Product_Quantity { get; set; }
-        public float Product_Rate { get; set; }
-        public float Total
+        public double Product_Quantity { get; set; }
+        public double Product_Rate { get; set; }
+        public double Total
         {
             get { return Product_Quantity * Product_Rate; }
 

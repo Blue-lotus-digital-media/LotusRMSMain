@@ -2,6 +2,7 @@
 using LotusRMS.Utility.Enum;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
@@ -14,14 +15,18 @@ namespace LotusRMS.Models.Viewmodels.Purchase
         public Guid? SupplierId { get; set; }
         public string? BillNo { get; set; }
         public string DateAD { get; set; }
+        [Required(ErrorMessage ="Date is not selected")]
+        [DisplayName("Date")]
         public string DateBS { get; set; }
-        public float? BillTotal { get; set; }
+        public double BillTotal { get; set; }
         public PaymentModeEnum Payment_Mode { get; set; }
         public DiscountTypeEnum Discount_Type { get; set; }
-        public float Discount { get; set; }
-        public float Paid_Amount { get; set; }
-        public float? Due_Amount { get; set; }
-        [Required, MinLength(1, ErrorMessage = "At least one item required in Product List")]
+        public double Discount { get; set; }
+        public double Paid_Amount { get; set; }
+        public double? Due_Amount { get; set; }
+        
+        [Required(ErrorMessage = "Product list must contain 1 product")]
+        [DisplayName("Product List")]
         public List<CreatePurchaseDetailVM> ProductList { get; set; }
 
 

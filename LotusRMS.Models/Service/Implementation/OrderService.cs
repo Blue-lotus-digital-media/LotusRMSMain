@@ -100,13 +100,13 @@ namespace LotusRMS.Models.Service.Implementation
 
         public LotusRMS_Order GetFirstOrDefaultByOrderNo(string orderNo)
         {
-            var orders = _IOrderRepository.GetFirstOrDefault(filter: x=>x.Order_No==orderNo ,includeProperties: "Order_Details,User,Table");
+            var orders = _IOrderRepository.GetFirstOrDefault(filter: x=>x.Order_No==orderNo ,includeProperties: "Order_Details,Order_Details.Menu,Order_Details.Menu.Menu_Details,Order_Details.Menu.Menu_Details.Divison,Order_Details.Menu.Menu_Incredians,User,Table");
             return orders;
         } 
 
         public LotusRMS_Order GetFirstOrDefaultByOrderId(Guid orderId)
         {
-            var orders = _IOrderRepository.GetFirstOrDefault(filter: x=>x.Id==orderId ,includeProperties: "Order_Details,User,Table");
+            var orders = _IOrderRepository.GetFirstOrDefault(filter: x=>x.Id==orderId ,includeProperties: "Order_Details,Order_Details.Menu,Order_Details.Menu.Menu_Details,Order_Details.Menu.Menu_Details.Divison,Order_Details.Menu.Menu_Incredians,User,Table");
             return orders;
         }
 

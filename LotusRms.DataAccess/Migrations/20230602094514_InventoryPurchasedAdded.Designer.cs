@@ -3,6 +3,7 @@ using System;
 using LotusRMS.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LotusRMS.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230602094514_InventoryPurchasedAdded")]
+    partial class InventoryPurchasedAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -825,8 +828,8 @@ namespace LotusRMS.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<double>("Bill_Amount")
-                        .HasColumnType("double");
+                    b.Property<float>("Bill_Amount")
+                        .HasColumnType("float");
 
                     b.Property<string>("Bill_No")
                         .HasColumnType("longtext");
@@ -834,17 +837,17 @@ namespace LotusRMS.DataAccess.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<double>("Discount")
-                        .HasColumnType("double");
+                    b.Property<float>("Discount")
+                        .HasColumnType("float");
 
                     b.Property<int>("Discount_Type")
                         .HasColumnType("int");
 
-                    b.Property<double?>("Due")
-                        .HasColumnType("double");
+                    b.Property<float>("Due")
+                        .HasColumnType("float");
 
-                    b.Property<double>("Paid_Amount")
-                        .HasColumnType("double");
+                    b.Property<float>("Paid_Amount")
+                        .HasColumnType("float");
 
                     b.Property<int>("Payment_Mode")
                         .HasColumnType("int");
@@ -874,11 +877,11 @@ namespace LotusRMS.DataAccess.Migrations
                     b.Property<Guid>("Product_Id")
                         .HasColumnType("char(36)");
 
-                    b.Property<double>("Quantity")
-                        .HasColumnType("double");
+                    b.Property<float>("Quantity")
+                        .HasColumnType("float");
 
-                    b.Property<double>("Rate")
-                        .HasColumnType("double");
+                    b.Property<float>("Rate")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 

@@ -1,4 +1,5 @@
-﻿using Irony.Parsing;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using Irony.Parsing;
 using LotusRMS.Models;
 using LotusRMS.Models.Dto.PurchaseDTO;
 using LotusRMS.Models.Service;
@@ -18,18 +19,20 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         private readonly IProductService _iProductService;
         private readonly ISupplierService _iSupplierService;
         private readonly IPurchaseService _iPurchaseService;
+        private readonly INotyfService _notyf;
 
         public PurchaseController(IProductService iProductService, ISupplierService iSupplierService,
-            IPurchaseService iPurchaseService)
+            IPurchaseService iPurchaseService, INotyfService notyf)
         {
             _iProductService = iProductService;
             _iSupplierService = iSupplierService;
             _iPurchaseService = iPurchaseService;
+            _notyf = notyf;
         }
 
         public IActionResult Index()
         {
-            return View();
+            return View(new CreatePurchaseVm());
         }
 
         public IActionResult ChooseSupplier()
@@ -41,28 +44,28 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         {
             return PartialView("_ProductView");
         }
-
-        public IActionResult Purchase(CreatePurchaseVm vm)
+        [HttpPost]
+        public async Task<IActionResult> Index(CreatePurchaseVm vm)
         {
             if (!ModelState.IsValid)
             {
                 string messages = string.Join("; ", ModelState.Values
                     .SelectMany(x => x.Errors)
                     .Select(x => x.ErrorMessage));
-                throw new Exception("Please correct the following errors: " + Environment.NewLine + messages);
+                return View(vm);
             }
 
             var purchase = new CreatePurchaseDTO()
             {
                 Purchase_Date = vm.DateAD,
-                Bill_Amount = (float)vm.BillTotal,
+                Bill_Amount = vm.BillTotal,
                 Bill_No = vm.BillNo,
                 Discount = vm.Discount,
                 Discount_Type = vm.Discount_Type,
                 Paid_Amount = vm.Paid_Amount,
                 Payment_Mode = vm.Payment_Mode,
                 Supplier_Id = (Guid)vm.SupplierId,
-                PurchaseDetails = new List<CreatePurchaseDetailDTO>()
+                Due_Amount= vm.Due_Amount
             };
             foreach (var item in vm.ProductList)
             {
@@ -75,9 +78,9 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 purchase.PurchaseDetails.Add(pd);
             }
 
-            var id = _iPurchaseService.Create(purchase);
+            var id = await _iPurchaseService.CreateAsync(purchase);
 
-
+            _notyf.Success("Purchase completed", 5);
             return RedirectToAction(nameof(Index));
         }
 

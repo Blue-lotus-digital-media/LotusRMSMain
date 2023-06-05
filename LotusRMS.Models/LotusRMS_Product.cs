@@ -20,7 +20,7 @@ namespace LotusRMS.Models
         [ForeignKey(nameof(Product_Unit_Id))]
         public virtual LotusRMS_Unit Product_Unit { get; set; }
 
-        public float? Unit_Quantity { get; set; } 
+        public double? Unit_Quantity { get; set; } 
         public Guid Product_Category_Id { get; private set; }
         [ForeignKey(nameof(Product_Category_Id))]
         public virtual LotusRMS_Product_Category Product_Category { get; set; }
@@ -33,10 +33,12 @@ namespace LotusRMS.Models
         public bool Status { get; set; } = true;
         public bool IsDelete { get; private set; } = false;
 
+        public LotusRMS_Inventory Inventory { get; set; } = new LotusRMS_Inventory();
 
 
 
-        public LotusRMS_Product(string product_Name,string product_Description,Guid product_Unit_Id, float? unit_Quantity,Guid product_Category_Id,Guid product_Type_Id)
+
+        public LotusRMS_Product(string product_Name,string product_Description,Guid product_Unit_Id, double? unit_Quantity,Guid product_Category_Id,Guid product_Type_Id)
         {
             Product_Name = product_Name;
             Product_Description = product_Description;
@@ -44,7 +46,7 @@ namespace LotusRMS.Models
             Unit_Quantity = unit_Quantity;
             Product_Category_Id = product_Category_Id;
             Product_Type_Id = product_Type_Id;
-        }    public void Update(string product_Name,string product_Description,Guid product_Unit_Id, float? unit_Quantity, Guid product_Category_Id, Guid product_Type_Id)
+        }    public void Update(string product_Name,string product_Description,Guid product_Unit_Id, double? unit_Quantity, Guid product_Category_Id, Guid product_Type_Id)
         {
 
             Product_Name = product_Name;

@@ -71,7 +71,7 @@ function loadData() {
                 data: "id",
                 render: function (data) {
                     return `<div class="text-center">
-                              <a href="/Admin/Product/UpCreate/${data}" class="btn btn-success text-white" style="cursor:pointer">
+                              <a href="/Admin/Product/Update/${data}" class="btn btn-success text-white" style="cursor:pointer">
                                 <i class="fa-regular fa-pen-to-square"></i>   
                               </a>
                               <a href="/Admin/Product/Delete/${data}" class="btn btn-danger text-white" style="cursor:pointer">

@@ -1,4 +1,5 @@
-﻿using LotusRMS.Models.Dto.PurchaseDTO;
+﻿using LotusRMS.Models.Dto.InventoryDTO;
+using LotusRMS.Models.Dto.PurchaseDTO;
 using LotusRMS.Models.IRepositorys;
 using LotusRMS.Utility;
 using System;
@@ -12,13 +13,14 @@ namespace LotusRMS.Models.Service.Implementation
     public class PurchaseService : IPurchaseService
     {
         private readonly IPurchaseRepository _purchaseRepository;
-
-        public PurchaseService(IPurchaseRepository purchaseRepository)
+        private readonly IInventoryService _iInventoryService;
+        public PurchaseService(IPurchaseRepository purchaseRepository, IInventoryService iInventoryService)
         {
             _purchaseRepository = purchaseRepository;
+            _iInventoryService = iInventoryService;
         }
 
-        public Guid Create(CreatePurchaseDTO dto)
+        public async Task<Guid> CreateAsync(CreatePurchaseDTO dto)
         {
             var purchase = new LotusRMS_Purchase()
             {
@@ -48,8 +50,35 @@ namespace LotusRMS.Models.Service.Implementation
             _purchaseRepository.Add(purchase);
             _purchaseRepository.Save();
 
+            foreach(var item in purchase.PurchaseDetails)
+            {
+                var inventory = await _iInventoryService.GetInventoryByProductIdAsync(item.Product_Id);
+                if (inventory != null)
+                {
+                    var quantity = inventory.StockQuantity + item.Quantity;
+                    var invDto = new UpdateInventoryDTO()
+                    {
+                        Id = inventory.Id,
+                        StockQuantity = quantity,
+                    };
+                    await _iInventoryService.UpdateOnPurchaseAsync(invDto);
+                }
+                else {
+                    var inv = new CreateInventoryDTO()
+                    {
+                        ProductId = item.Product_Id,
+                        StockQuantity = item.Quantity,
+                        ReorderLevel = 0
+
+                    };
+                    await _iInventoryService.CreateAsync(inv);
+                
+                }
+            }
+
             return purchase.Id;
         }
+        
 
         public IEnumerable<LotusRMS_Purchase> GetAll()
         {

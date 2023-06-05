@@ -43,7 +43,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             return Json(new { data = purchase });
         }
 
-        private float CheckDiscount(string type, float discount)
+        private double CheckDiscount(string type, double discount)
         {
             if (type == "Cash")
             {

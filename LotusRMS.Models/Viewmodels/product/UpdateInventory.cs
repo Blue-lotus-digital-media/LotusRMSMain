@@ -6,10 +6,13 @@ using System.Threading.Tasks;
 
 namespace LotusRMS.Models.Viewmodels.product
 {
-    public class UpdateProductVM:CreateProductVM
+    public class UpdateInventory:CreateInventory
     {
         public Guid Id { get; set; }
+        public Guid Product_Id { get; set; }
 
-        public UpdateInventory Inventory { get; set; } = new UpdateInventory();
+        public bool IsPurchased { get; set; }
+
+
     }
 }
