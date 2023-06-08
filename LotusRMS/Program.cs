@@ -24,6 +24,9 @@ using LotusRMS.Models.Service.Implementation;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.Extensions.Logging.Console;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 //var connectionString = builder.Configuration.GetConnectionString("ApplicationDbContextConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDbContextConnection' not found.");
@@ -32,10 +35,14 @@ builder.Logging.AddDebug();
 builder.Logging.AddEventSourceLogger();
 builder.Logging.AddNLog();
 
+var logger = LoggerFactory.Create(config => { config.AddConsole(); }).CreateLogger("Program");
+logger.LogInformation("Logger created");
+logger.LogInformation(builder.Configuration.GetValue<string>("App:DefaultConnectionString"));
 
 // Add services to the container.
-var connectionStringBuilder = new MySqlConnectionStringBuilder(builder.Configuration["App:DefaultConnectionString"]);
-connectionStringBuilder.Password = ""; //builder.Configuration["App:DefaultConnectionString"];
+var connectionStringBuilder = new MySqlConnectionStringBuilder(builder.Configuration.GetValue<string>("App:DefaultConnectionString"));
+
+//connectionStringBuilder.Password = builder.Configuration.GetValue<string>("App:ServerPassword"); 
 
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(connectionStringBuilder.ConnectionString, new MySqlServerVersion(new Version(8, 0, 11)), options => options.EnableRetryOnFailure()));
 
@@ -48,8 +55,8 @@ builder.Services.AddIdentity<RMSUser, IdentityRole>()
 builder.Services.AddAuthentication()
     .AddGoogle(options =>
     {
-        options.ClientId = builder.Configuration["App:GoogleClientId"];
-        options.ClientSecret = builder.Configuration["App:GoogleClientSecrets"];
+        options.ClientId = builder.Configuration.GetValue<string>("App:GoogleClientId");
+        options.ClientSecret = builder.Configuration.GetValue<string>("App:GoogleClientSecrets");
         // options.SignInScheme = IdentityConstants.ExternalScheme;
         // Map the external picture claim to the internally used image claim
         options.ClaimActions.MapJsonKey("image", "picture");
@@ -76,9 +83,15 @@ builder.Services.Configure<IdentityOptions>(options =>
 /*builder.Services.AddScoped<IUserClaimsPrincipalFactory<RMSUser>,
             ApplicationUserClaimsPrincipalFactory
             >();*/
-var emailConfig = builder.Configuration
-        .GetSection("EmailConfiguration")
-        .Get<EmailConfiguration>();
+var emailConfig = new EmailConfiguration()
+{
+    From = builder.Configuration.GetValue<string>("EmailConfiguration:From"),
+    Password = builder.Configuration.GetValue<string>("EmailConfiguration:Password"),
+    Port = builder.Configuration.GetValue<int>("EmailConfiguration:Port"),
+    SmtpServer = builder.Configuration.GetValue<string>("EmailConfiguration:SmtpServer"),
+    UserName = builder.Configuration.GetValue<string>("EmailConfiguration:UserName"),
+};
+
 builder.Services.AddSingleton(emailConfig);
 builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -117,7 +130,6 @@ builder.Services.AddNotyf(config => { config.DurationInSeconds = 10; config.IsDi
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

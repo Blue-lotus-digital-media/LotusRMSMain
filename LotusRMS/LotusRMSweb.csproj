@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\MenuUnit.json" />
+    <Content Remove="wwwroot\files\menuunit.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -78,7 +78,7 @@
 </ItemGroup>
 
 <ItemGroup>
-  <None Include="wwwroot\MenuUnit.json" />
+  <None Include="wwwroot\files\menuunit.json" />
 </ItemGroup>
 
 <ItemGroup>

@@ -72,5 +72,11 @@ namespace LotusRMS.Models.Service.Implementation
 
             await _iInventoryRepository.UpdateAsync(inv);
         }
+
+        public async Task<List<LotusRMS_Inventory>> GetAllInventoryAsync()
+        {
+            var inv = await _iInventoryRepository.GetAllAsync(includeProperties: "Product,Product.Product_Unit,Product.Product_Category,Product.Product_Type");
+            return inv.ToList();
+        }
     }
 }

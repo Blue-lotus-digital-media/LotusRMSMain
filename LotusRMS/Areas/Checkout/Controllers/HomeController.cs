@@ -176,8 +176,8 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
                     {
                         var quantity = orderDetails.Quantity;
                         var menuQuantity = orderDetails.Menu.Menu_Details.Where(x => x.Id == orderDetails.Quantity_Id).FirstOrDefault().Divison.Value;
-
-                        var stockQuantity = inv.StockQuantity-(quantity*menuQuantity);
+                        var incredianQuantity = menuIncredian.Quantity;
+                        var stockQuantity = inv.StockQuantity-(quantity*menuQuantity * incredianQuantity);
 
 
                         var UpdateInventoryOnSale = new UpdateInventoryDTO()
@@ -188,7 +188,6 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
                         };
                         await _iInventoryService.UpdateOnSaleAsync(UpdateInventoryOnSale);
                     }
-
 
                 }
 

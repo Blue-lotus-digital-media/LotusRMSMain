@@ -216,22 +216,20 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             }
             else
             {
-                var ProductVMs = new UpdateProductVM()
+                productVMs.TypeList = _ITypeService.GetAll().Where(x => x.Status).Select(type => new SelectListItem()
                 {
-                    TypeList = _ITypeService.GetAll().Where(x => x.Status).Select(type => new SelectListItem()
-                    {
-                        Text = type.Type_Name,
-                        Value = type.Id.ToString()
-                    }),
-                    CategoryList = GetCategory(productVMs.Product_Type_Id),
+                    Text = type.Type_Name,
+                    Value = type.Id.ToString()
+                });
+                productVMs.CategoryList = GetCategory(productVMs.Product_Type_Id);
 
-                    UnitList = _IUnitService.GetAll().Select(i => new SelectListItem()
-                    {
-                        Text = i.Unit_Name,
-                        Value = i.Id.ToString()
-                    }),
-                };
-                return View(ProductVMs);
+                productVMs.UnitList = _IUnitService.GetAll().Select(i => new SelectListItem()
+                {
+                    Text = i.Unit_Name,
+                    Value = i.Id.ToString()
+                });
+                
+                return View(productVMs);
             }
         }
 

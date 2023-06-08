@@ -50,7 +50,7 @@ namespace LotusRMSweb.Controllers
                 Date = galla.Date,
                 Opening_Balance = galla.Opening_Balance,
                 Closing_Balance = galla.Closing_Balance,
-                Galla_Details = new List<GallaDetailVM>() };
+                 };
 
             if (galla.Galla_Details != null)
             {

@@ -9,6 +9,7 @@ namespace LotusRMS.Models.Service
 {
     public interface IInventoryService
     {
+        Task<List<LotusRMS_Inventory>> GetAllInventoryAsync();
         Task UpdateAsync(UpdateInventoryDTO dto);
         Task UpdateOnPurchaseAsync(UpdateInventoryDTO dto);
         Task UpdateOnSaleAsync(UpdateInventoryDTO dto);

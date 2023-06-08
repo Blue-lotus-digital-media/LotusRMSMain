@@ -21,6 +21,7 @@ namespace LotusRMS.DataAccess
             await roleManager.CreateAsync(new IdentityRole(Constants.Roles.Waiter.ToString()));
             await roleManager.CreateAsync(new IdentityRole(Constants.Roles.Kitchen.ToString()));
             await roleManager.CreateAsync(new IdentityRole(Constants.Roles.User.ToString()));
+            await roleManager.CreateAsync(new IdentityRole(Constants.Roles.Bar.ToString()));
 
             //seed superadmin
             var user = new RMSUser()
@@ -46,41 +47,42 @@ namespace LotusRMS.DataAccess
             }
 
         }
-    public static async Task SeedMenuUnit(IServiceProvider service)
+        public static async Task SeedMenuUnit(IServiceProvider service)
         {
-
-            using StreamReader reader = new("./wwwroot/menuunit.json");
-            var json = reader.ReadToEnd();
-            var menuUnitJson = JsonConvert.DeserializeObject<List<MenuUnitFromJson>>(json);
-            var menuUnits = new List<LotusRMS_Menu_Unit>();
-            foreach(var item in menuUnitJson)
+            using (StreamReader reader = new StreamReader(@"wwwroot/files/menuunit.json"))
             {
-                var menuUnit = new LotusRMS_Menu_Unit(unit_Name:item.Name,unit_Symbol:item.Symbol,unit_Description:item.Description )
+                var json = reader.ReadToEnd();
+                var menuUnitJson = JsonConvert.DeserializeObject<List<MenuUnitFromJson>>(json);
+                var menuUnits = new List<LotusRMS_Menu_Unit>();
+                foreach (var item in menuUnitJson)
                 {
-                    UnitDivision = new List<LotusRMS_Unit_Division>()
-                };
-                foreach(var abc in item.Division)
-                {
-                    var div = new LotusRMS_Unit_Division()
+
+                    var menuUnit = new LotusRMS_Menu_Unit(unit_Name: item.Name, unit_Symbol: item.Symbol, unit_Description: item.Description)
                     {
-                        Title = abc.Title,
-                        Value = abc.Value
+                        UnitDivision = new List<LotusRMS_Unit_Division>()
                     };
-                    menuUnit.UnitDivision.Add(div);
-                }
+                    foreach (var abc in item.Division)
+                    {
+                        var div = new LotusRMS_Unit_Division()
+                        {
+                            Title = abc.Title,
+                            Value = abc.Value
+                        };
+                        menuUnit.UnitDivision.Add(div);
+                    }
 
-                menuUnits.Add(menuUnit);
+                    menuUnits.Add(menuUnit);
                 }
-            using (var serviceScope = service.GetRequiredService<IServiceScopeFactory>().CreateScope())
-            {
-                var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
-                if (!context.LotusRMS_Menu_Units.Any())
+                using (var serviceScope = service.GetRequiredService<IServiceScopeFactory>().CreateScope())
                 {
-                    context.AddRange(menuUnits);
-                    context.SaveChanges();
+                    var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
+                    if (!context.LotusRMS_Menu_Units.Any())
+                    {
+                        context.AddRange(menuUnits);
+                        context.SaveChanges();
+                    }
                 }
             }
-
         } 
     
     
