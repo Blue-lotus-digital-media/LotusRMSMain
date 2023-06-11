@@ -4,11 +4,13 @@ using LotusRMS.Models.Dto.CategoryDTO;
 using LotusRMS.Models.Service;
 using LotusRMS.Models.Viewmodels.Category;
 using LotusRMS.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LotusRMSweb.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin,Cashier,Superadmin")]
     public class MenuCategoryController : Controller
     {
         private readonly IMenuCategoryService _IMenuCategoryService;

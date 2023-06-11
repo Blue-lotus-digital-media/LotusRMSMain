@@ -1,9 +1,21 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+<link rel="stylesheet" href="~/css/qrCodeStyles.css" />
 
+<script src="https://rawgit.com/sitepoint-editors/jsqrcode/master/src/qr_packed.js"></script>
 <div class="text-center">
- 
-
     <a asp-area="menu" asp-action="index" asp-controller="Home" class="btn btn-primary">Go to menu order</a>
+    
+    <div class="card">
+    
+    <button id="btn-scan-qr" class="btn btn-info">Scan table qr to order now</button>
+
+    <canvas hidden="" id="qr-canvas"></canvas>
+    <div id="qr-result" hidden="">
+        <b>Data:</b> <span id="outputData"></span>
+    </div>
+    </div>
 </div>
+
+<script src="~/js/qrCodeReader.js"></script>

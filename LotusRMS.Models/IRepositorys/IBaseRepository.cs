@@ -42,6 +42,7 @@ namespace LotusRMS.Models.IRepositorys
 
         void Save();
         Task SaveAsync();
+        Task<bool> HasAnyAsync(Expression<Func<T, bool>> filter = null);
 
     }
 }

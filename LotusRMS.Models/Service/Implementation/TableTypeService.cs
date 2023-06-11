@@ -93,6 +93,16 @@ namespace LotusRMS.Models.Service.Implementation
             throw new NotImplementedException();
         }
 
-       
+        public async Task<bool> IsExist(string type_Name)
+        {
+            var type = await _ITableTypeRepository.GetFirstOrDefaultAsync(filter: x => x.Type_Name == type_Name);
+            if (type != null)
+            {
+                return true;
+            }
+            return false;
+
+
+        }
     }
 }

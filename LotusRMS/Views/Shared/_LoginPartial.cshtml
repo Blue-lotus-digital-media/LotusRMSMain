@@ -13,23 +13,16 @@
                     <i class="bi bi-search"></i>
                 </a>
             </li><!-- End Search Icon-->
-
-
-
-
-
             <li class="nav-item dropdown pe-3">
-
                 <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                       @if (UserManager.GetUserAsync(User).Result.ProfilePicture != null)
-                        {
-                    <img style="width:40px;height:40px; object-fit:cover; border-radius:30px" src="data:image/*;base64,@(Convert.ToBase64String(UserManager.GetUserAsync(User).Result.ProfilePicture))">
-                        }else if(User.FindFirst("image")?.Value != null)
-                        {
+                    @if (UserManager.GetUserAsync(User).Result.ProfilePicture != null)
+                    {
+                        <img style="width:40px;height:40px; object-fit:cover; border-radius:30px" src="data:image/*;base64,@(Convert.ToBase64String(UserManager.GetUserAsync(User).Result.ProfilePicture))">
+                    }
+                    else if (User.FindFirst("image")?.Value != null)
+                    {
                         <img style="width:40px;height:40px; object-fit:cover; border-radius:30px" src="@User.FindFirst("image")?.Value">
-                        }
-                   
-                   
+                    }
                     <span class="d-none d-md-block dropdown-toggle ps-2">@UserManager.GetUserAsync(User).Result.FirstName</span>
                 </a><!-- End Profile Iamge Icon -->
 
@@ -58,17 +51,21 @@
                     @if (User.IsInRole("Admin") || User.IsInRole("Cashier"))
                     {
                         <li>
-                            <a   class="dropdown-item d-flex align-items-center" asp-area="" asp-controller="galla" asp-action="index">
+                            <a class="dropdown-item d-flex align-items-center" asp-area="" asp-controller="galla" asp-action="index">
                                 <i class="fa-solid fa-sack-dollar"></i>
                                 <div>
                                     <label style="cursor:pointer">My Galla </label>
-                                    <label style="cursor:pointer">(<span class="text-danger">Rs.@{
+                                    <label style="cursor:pointer">
+                                        (<span class="text-danger">
+                                            Rs.@{
                                                 @inject IGallaService gallaService;
-                                                var gallaAmount =await gallaService.GetGallaAmountAsync();} 
-                                                @gallaAmount
+                                                var gallaAmount = await gallaService.GetGallaAmountAsync();
+                                            }
+                                            @gallaAmount
                                         </span>
-                                                                    )</label>
-                                                            </div>
+                                        )
+                                    </label>
+                                </div>
 
                             </a>
                         </li>
@@ -105,12 +102,14 @@
 
         </ul>
 
-    
+
     }
     else
     {
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="account" asp-action="login">Login</a>
+        <ul class="d-flex align-items-center">
+        <li class="nav-item mx-2 px-6">
+            <a class="nav-link text-dark align-items-center" asp-area="" asp-controller="account" asp-action="login">Login</a>
         </li>
+        </ul>
     }
 </ul>

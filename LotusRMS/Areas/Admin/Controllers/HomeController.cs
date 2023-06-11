@@ -4,12 +4,14 @@ using LotusRMS.Models.Service.Implementation;
 using LotusRMS.Models.Viewmodels.Order;
 using LotusRMS.Utility;
 using LotusRMS.Utility.Enum;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static LotusRMS.Utility.Enum.Enums;
 
 namespace LotusRMSweb.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles ="Admin")]
     public class HomeController : Controller
     {
         private readonly IOrderService _iOrderService;

@@ -155,5 +155,15 @@ namespace LotusRMS.DataAccess.Repository
 
             return await query.FirstOrDefaultAsync();
         }
+
+        public async Task<bool> HasAnyAsync(Expression<Func<T, bool>> filter = null)
+        {
+            IQueryable<T> query = dbSet;
+            if (filter != null)
+            {
+                return await query.AnyAsync(filter);
+            }
+            return await query.AnyAsync();
+        }
     }
 }

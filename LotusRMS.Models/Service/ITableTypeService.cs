@@ -13,6 +13,8 @@ namespace LotusRMS.Models.Service
         Guid Create(CreateTypeDTO dto);
         Guid Update(UpdateTypeDTO dto);
         Task<Guid> UpdateAsync(UpdateTypeDTO dto);
+
+        Task<bool> IsExist(string type_Name);
         Guid UpdateStatus(Guid Id);
         Task<Guid> UpdateStatusAsync(Guid Id);
         LotusRMS_Table_Type GetFirstOrDefaultById(Guid typeId);

@@ -36,24 +36,33 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(CreateTypeVM type, string? returnUrl = null)
+        public async Task<IActionResult> Create(CreateTypeVM type, string? returnUrl = null)
         {
             if (!ModelState.IsValid)
             {
                 return View(type);
             }
 
-            var dto = new CreateTypeDTO(type_Name: type.Type_Name, type_Description: type.Type_Description);
+            if (!(await  _ITableTypeService.IsExist(type.Type_Name)))
+            {
+
+                var dto = new CreateTypeDTO(type_Name: type.Type_Name, type_Description: type.Type_Description);
 
 
-            _ITableTypeService.Create(dto);
+                _ITableTypeService.Create(dto);
 
-            _notyf.Success("Table Type created successfully !", 5);
+                _notyf.Success("Table Type created successfully !", 5);
 
 
-            returnUrl ??= nameof(Index);
+                returnUrl ??= nameof(Index);
 
-            return Redirect(returnUrl);
+                return Redirect(returnUrl);
+            }
+            else
+            {
+                _notyf.Warning("Table Type with name "+ type.Type_Name + " already exist. Please try new Name!", 5);
+                return View(type);
+            }
         }
 
         public IActionResult Update(Guid? Id)
@@ -77,23 +86,27 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(UpdateTypeVM type)
+        public async Task<IActionResult> Update(UpdateTypeVM type)
         {
             if (!ModelState.IsValid)
             {
                 return View(type);
             }
-
-            var dto = new UpdateTypeDTO(type_Name: type.Type_Name, type_Description: type.Type_Description)
+            if (!(await _ITableTypeService.IsExist(type.Type_Name)))
             {
-                Id = type.Id
-            };
-
-
-            _ITableTypeService.Update(dto);
-            _notyf.Success("Table Type updated successfully !", 5);
-
-            return RedirectToAction(nameof(Index));
+                var dto = new UpdateTypeDTO(type_Name: type.Type_Name, type_Description: type.Type_Description)
+                {
+                    Id = type.Id
+                };
+                _ITableTypeService.Update(dto);
+                _notyf.Success("Table Type updated successfully !", 5);
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                _notyf.Warning("Table Type with name " + type.Type_Name + " already exist. Please try new Name!", 5);
+                return View(type);
+            }
         }
 
         [HttpPost]

@@ -78,5 +78,9 @@ namespace LotusRMS.Models.Service.Implementation
             return state;
         }
 
+        public async Task<bool> IsExist(string name)
+        {
+            return await _ITableRepository.HasAnyAsync(x => x.Table_Name == name);
+        }
     }
 }
