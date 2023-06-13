@@ -6,10 +6,38 @@
     .title{
         font-size:2rem;
     }
+
+    .statusToggle {
+        font-size: 1.8rem;
+        vertical-align: -0.4em;
+    }
+
+    .statusToggleOn {
+        color: #0b5ed7;
+    }
+
+    .statusToggleOff {
+        color: #808080;
+    }
+
+    .title {
+        font-size: 2rem;
+    }
+
+    tbody tr {
+        vertical-align: middle;
+    }
 </style>
 
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body mt-3">
+
 <div class="d-flex justify-content-between px-10 mb-1">
+    <div>
     <a asp-area="admin" asp-action="create" asp-controller="MenuUnit" class="btn btn-primary">Create</a>
+    </div>
     <div class="title">Menu Unit list</div>
     <div class="exportBtns">
         <form enctype="multipart/form-data" asp-area="Admin" asp-controller="MenuUnit" asp-action="ExportToExcel">
@@ -46,6 +74,15 @@
     </table>
 </div>
 
+
+</div>
+
+        </div>
+
+        </div>
+
+        </div>
+
 @section Scripts{
-    <script src="~/js/menuunit.js"></script>
+    <script src="~/js/menuunits.js"></script>
 }

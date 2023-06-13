@@ -1,5 +1,6 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using ClosedXML.Excel;
+using DinkToPdf;
 using LotusRMS.Models.Dto.CategoryDTO;
 using LotusRMS.Models.Service;
 using LotusRMS.Models.Viewmodels.Category;
@@ -186,7 +187,14 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             else
             {
                 _IMenuCategoryService.UpdateStatus(Id);
-
+                if (category.Status == true)
+                {
+                    _notyf.Success("Status Activated successfully..", 2);
+                }
+                else
+                {
+                    _notyf.Warning("Status Deactivated...", 2);
+                }
                 return Ok(category.Status);
             }
         }
