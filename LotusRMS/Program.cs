@@ -60,6 +60,7 @@ builder.Services.AddAuthentication()
         // options.SignInScheme = IdentityConstants.ExternalScheme;
         // Map the external picture claim to the internally used image claim
         options.ClaimActions.MapJsonKey("image", "picture");
+        options.AccessDeniedPath = $"/account/accessDenied";
     });
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -67,6 +68,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LoginPath = $"/account/login";
     options.LogoutPath = $"/account/logout";
     options.AccessDeniedPath = $"/account/accessDenied";
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
 });
 builder.Services.Configure<IdentityOptions>(options =>
 {
@@ -124,7 +126,7 @@ builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new 
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options => {
-    options.IdleTimeout = TimeSpan.FromMinutes(60);//You can set Time   
+    options.IdleTimeout = TimeSpan.FromMinutes(120);//You can set Time   
 });
 builder.Services.AddNotyf(config => { config.DurationInSeconds = 10; config.IsDismissable = true; config.Position = NotyfPosition.BottomRight; });
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -149,6 +151,7 @@ app.UseSession();
 app.UseCookiePolicy(new CookiePolicyOptions()
 {
     MinimumSameSitePolicy = SameSiteMode.Lax
+   
 });
 app.UseNotyf();
 app.UseAuthentication();

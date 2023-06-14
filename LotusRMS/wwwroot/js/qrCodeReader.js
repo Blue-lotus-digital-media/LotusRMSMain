@@ -10,14 +10,26 @@ const btnScanQR = document.getElementById("btn-scan-qr");
 
 let scanning = false;
 
+const isValidUrl = urlString => {
+    try {
+        return Boolean(new URL(urlString));
+    }
+    catch (e) {
+        return false;
+    }
+}
+
 qrcodes.callback = res => {
-  if (res) {
+    if (res) {
+        if (isValidUrl(res)) {
+            console.log("Given qr dont have valid url");
+        }
     outputData.innerText = res;
     scanning = false;
 
     video.srcObject.getTracks().forEach(track => {
         track.stop();
-        video.stream.removeTrack(track);
+        //video.stream.removeTrack(track);
     });
 
     qrResult.hidden = false;
@@ -57,3 +69,4 @@ function scan() {
     setTimeout(scan, 300);
   }
 }
+
