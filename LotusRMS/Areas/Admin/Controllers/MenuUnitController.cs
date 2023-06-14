@@ -195,6 +195,14 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             else
             {
                 var id = _MenuUnitService.UpdateStatus(Id);
+                if (MenuUnit.Status == true)
+                {
+                    _notyf.Success("Status Activated successfully..", 2);
+                }
+                else
+                {
+                    _notyf.Warning("Status Deactivated...", 2);
+                }
 
                 return Ok(MenuUnit.Status);
             }
