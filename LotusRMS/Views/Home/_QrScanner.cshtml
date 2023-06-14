@@ -1,0 +1,30 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = null;
+}
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<link rel="stylesheet" href="~/css/qrCodeStyles1.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+<script src="https://rawgit.com/sitepoint-editors/jsqrcode/master/src/qr_packed.js"></script>
+<div class="cameraWrapper">
+    <a id="btn-scan-qr">
+        Scan a QR to Order Now
+        <img src="https://dab1nmslvvntp.cloudfront.net/wp-content/uploads/2017/07/1499401426qr_icon.svg" height="20" width="20">
+    </a>
+
+    <canvas hidden="" id="qr-canvas"></canvas>
+    <form action="#" id="imageForm" hidden>
+        <input type="file" hidden>
+        <img src="#" alt="qr-code">
+        <div class="content">
+            <i class="fas fa-cloud-upload"></i>
+        </div>
+    </form>
+   </div>
+<script src="~/js/qrcodescanner.js"></script>

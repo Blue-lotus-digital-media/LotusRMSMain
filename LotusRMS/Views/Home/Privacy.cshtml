@@ -1,6 +1,27 @@
 ﻿@{
     ViewData["Title"] = "Privacy Policy";
 }
+
+<style>
+    .scanner{
+        height:300px;
+        width:300px;
+        text-align:center;
+    }
+</style>
+
+
 <h1>@ViewData["Title"]</h1>
 
 <p>Use this page to detail your site's privacy policy.</p>
+
+<div class="row">
+    <div class="col-md-8">
+
+    </div>
+    <div class="col-md-4">
+        <div class="scanner">
+<partial name="_QrScanner" />
+</div>
+    </div>
+</div>

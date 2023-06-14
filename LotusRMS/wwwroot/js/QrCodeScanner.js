@@ -1,12 +1,96 @@
-﻿
-const searchBtn = document.querySelector("#btn-scan-qr");
+﻿let qrCode = window.qrcode;
+
+const video = document.createElement("video");
+const imageForm = document.querySelector("#imageForm");
+const fileInp = imageForm.querySelector("input");
+const canvasElement = document.getElementById("qr-canvas");
+const canvas = canvasElement.getContext("2d");
 
 
-searchBtn.addEventListener("click", () => {
-    console.log("avv");
-    html5QrcodeScanner.render(onScanSuccess);
+const btnScanQR = document.getElementById("btn-scan-qr");
+let scanning = false;
+
+btnScanQR.addEventListener("click", function () {
+    navigator.mediaDevices
+        .getUserMedia({ video: { facingMode: "environment" } })
+        .then(function (stream) {
+            scanning = true;
+            btnScanQR.hidden = true;
+            canvasElement.hidden = false;
+            imageForm.hidden = false;
+            video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
+            video.srcObject = stream;
+            video.play();
+            tick();
+            scan();
+        });
+    function tick() {
+        canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+        scanning && requestAnimationFrame(tick);
+    }
+    function scan() {
+        try {
+            qrCode.decode();
+        } catch (e) {
+            setTimeout(scan, 300);
+        }
+    }
+    qrCode.callback = res => {
+        if (res) {
+            RedirectToAction(res);
+            scanning = false;
+            video.srcObject.getTracks().forEach(track => {
+                track.stop();
+            });
+
+            canvasElement.hidden = true;
+            btnScanQR.hidden = false;
+            imageForm.hidden = true;
+        }
+    };
+
 });
 
+imageForm.addEventListener("click", () => fileInp.click());
+
+fileInp.addEventListener("change", async e => {
+    let file = e.target.files[0];
+    if (!file) return;
+    let formData = new FormData();
+    formData.append('file', file);
+    fetchRequest(file, formData);
+});
+function fetchRequest(file, formData) {
+    fetch("https://api.qrserver.com/v1/read-qr-code/", {
+        method: 'POST', body: formData
+    }).then(res => res.json()).then(result => {
+        result = result[0].symbol[0].data;
+        if (!result) return;
+        RedirectToAction(result);
+    }).catch(() => {
+        console.log("Couldn't scan QR Code catch");
+    });
+}
+function RedirectToAction(url) {
+    if (isValidUrl(url)) {
+        if (isMyDomain(url)) {
+            window.location(url);
+        } else { alert("Not a valid Qr for system.") }
+    } else {
+        alert("Not a valid Qr for system.");
+    }
+}
+function isMyDomain(url) {
+    let qrDomain = (new URL(url));
+    let myDomain = window.location;
+    console.log("main domain = " + myDomain.hostname);
+    console.log("client domain = " + qrDomain.hostname);
+    if (qrDomain == myDomain) {
+        return true;
+    } else {
+        return false;
+    }
+}
 const isValidUrl = urlString => {
     try {
         return Boolean(new URL(urlString));
@@ -15,23 +99,3 @@ const isValidUrl = urlString => {
         return false;
     }
 }
-function onScanSuccess(decodedText, decodedResult) {
-    // Handle on success condition with the decoded text or result.
-    console.log(`Scan result: ${decodedText}`, decodedResult);
-  
-
-    // ...
-    html5QrcodeScanner.clear();
-    // ^ this will stop the scanner (video feed) and clear the scan area.
-   
-    if (isValidUrl(decodedText)) {
-        window.location=decodedText;
-    }
-}
-function onScanError(errorMessage) {
-    // handle on error condition, with error message
-}
-
-var html5QrcodeScanner = new Html5QrcodeScanner(
-    "reader", { fps: 10, qrbox: 500 });
-//html5QrcodeScanner.render(onScanSuccess)
