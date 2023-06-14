@@ -15,7 +15,7 @@
                 <form class="row g-3" asp-action="Update" asp-controller="menucategory" asp-area="admin">
                     <input aasp-for="Id" hidden/>
                     <div class="col-12">
-                        <label for="cName" class="form-label">Catgory Name</label>
+                        <label for="cName" class="form-label">Category Name</label>
                         <input asp-for="Category_Name" class="form-control" id="cName">
                         <span asp-validation-for="Category_Name" class="text-danger"></span>
                     </div>
@@ -26,7 +26,7 @@
                         <span asp-validation-for="Category_Description" class="text-danger"></span>
                     </div>
                     <div class="col-12">
-                        <lable for="typeText" class="form-label">Type</lable>
+                        <label for="typeText" class="form-label">Type</label>
                         <select asp-for="Type_Id" class="form-control" id="typeText">
                             <option>Select a type</option>
                             @foreach (var item in Model.TypeList)
