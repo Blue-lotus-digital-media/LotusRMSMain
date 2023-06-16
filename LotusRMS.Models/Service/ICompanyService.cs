@@ -14,6 +14,9 @@ namespace LotusRMS.Models.Service
         Guid Create(CreateCompanyDTO dto);
         Task<Guid> Update(UpdateCompanyDTO dto);
 
+        Task UpdateIp(string Ip);
+        Task<string> GetIp();
+
         
 
 

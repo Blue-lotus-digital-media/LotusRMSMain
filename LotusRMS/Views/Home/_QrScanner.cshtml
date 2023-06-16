@@ -13,18 +13,14 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 <script src="https://rawgit.com/sitepoint-editors/jsqrcode/master/src/qr_packed.js"></script>
 <div class="cameraWrapper">
-    <a id="btn-scan-qr">
-        Scan a QR to Order Now
-        <img src="https://dab1nmslvvntp.cloudfront.net/wp-content/uploads/2017/07/1499401426qr_icon.svg" height="20" width="20">
-    </a>
+    <button type="button" id="btn-scan-qr" class="btn btn-secondary btn-lg scan-btn fw-bold">Scan Here</button>
 
     <canvas hidden="" id="qr-canvas"></canvas>
     <form action="#" id="imageForm" hidden>
         <input type="file" hidden>
-        <img src="#" alt="qr-code">
         <div class="content">
-            <i class="fas fa-cloud-upload"></i>
+            <i class="fas fa-cloud-upload text-primary"></i>
         </div>
     </form>
    </div>
-<script src="~/js/qrcodescanner.js"></script>
+<script src="~/js/qrcodescanner1.js"></script>

@@ -35,7 +35,7 @@ namespace LotusRMS.Models
         public string ContractDate { get; private set; }
         public string ServiceStartDate { get; private set; }
         public string ValidTill { get; private set; }
-
+        public string IpV4Address { get; set; }
 
         public LotusRMS_Company(string companyName,
                                 string country,

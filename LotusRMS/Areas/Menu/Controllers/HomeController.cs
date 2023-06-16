@@ -12,18 +12,30 @@ namespace LotusRMSweb.Areas.Menu.Controllers
     public class HomeController : Controller
     {
         private readonly ITableService _iTableService;
+        private readonly ICompanyService _iCompanyService;
 
         private readonly IMenuService _iMenuService;
-        public HomeController(ITableService iTableService, 
-            IMenuService iMenuService)
+        public HomeController(ITableService iTableService,
+            IMenuService iMenuService,
+            ICompanyService iCompanyService)
         {
             _iTableService = iTableService;
             _iMenuService = iMenuService;
+            _iCompanyService = iCompanyService;
         }
 
         [HttpGet]
-        public IActionResult Index(Guid TableNo)
+        public async Task<IActionResult> Index(Guid TableNo)
         {
+            var connecton = HttpContext.Connection;
+            var remoteIp = HttpContext.Connection.RemoteIpAddress?.ToString();
+            var systemIp = await _iCompanyService.GetIp();
+           if (systemIp != remoteIp)
+            {
+                return BadRequest();
+            }
+            ViewBag.IpSet = "remote Ip =" + remoteIp + " , system Ip= " + systemIp;
+
             var customer = new List<string>();
             if (HttpContext.Session.GetString("customerInfo") != null)
             {

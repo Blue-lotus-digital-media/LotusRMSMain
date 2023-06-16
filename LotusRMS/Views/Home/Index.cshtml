@@ -1,28 +1,26 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-<link rel="stylesheet" href="~/css/qrCodeStyles.css" />
+<style>
+    .toggle-sidebar-btn{
+        display:none;
+    }
 
-@*
-<script src="https://rawgit.com/sitepoint-editors/jsqrcode/master/src/qr_packed.js"></script>
-<div class="text-center">
-    <a asp-area="menu" asp-action="index" asp-controller="Home" class="btn btn-primary">Go to menu order</a>
-    
-    <div class="card">
-    
-    <button id="btn-scan-qr" class="btn btn-info">Scan table qr to order now</button>
+    .sidebar{
+        display:none;
+    }
+</style>
 
-    <canvas hidden="" id="qr-canvas"></canvas>
-    <div id="qr-result" hidden="">
-        <b>Data:</b> <span id="outputData"></span>
-    </div>
+
+
+<div class="container d-flex justify-content-center align-items-center hero-container">
+    <div class="hero-section">
+        <h1 class="text-capitalize h1-title text-primary">One App <br> is Enough for a Restaurant</h1>
+        <p class="p-details mt-5 mb-3">
+            ✨Efficiently manage restaurant with Blue Lotus✨All features in one platform✨
+        </p>
+        <div class="scan-button mt-5" width="300px" height="300px">
+            <partial name="_QrScanner" />
+        </div>
     </div>
 </div>
-
-<script src="~/js/qrCodeReader.js"></script>*@
-<script src="~/js/html5-qrcode.min.js"></script>
-<div id="reader" width="500"></div>
-
-<button id="btn-scan-qr" class="btn btn-info">Scan table qr to order now</button>
-
-<script src="~/js/QrCodeScanner.js"></script>

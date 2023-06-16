@@ -495,6 +495,10 @@ namespace LotusRMSweb.Controllers
 
    
         }
-        
+       
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
     }
 }

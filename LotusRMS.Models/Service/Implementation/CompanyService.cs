@@ -1,10 +1,12 @@
 ﻿using LotusRMS.Models.Dto.CompanyDTO;
 using LotusRMS.Models.IRepositorys;
 using LotusRMS.Models.Viewmodels.Company;
+using Org.BouncyCastle.Utilities.Net;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Metrics;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 using static QRCoder.PayloadGenerator.SwissQrCode;
@@ -25,7 +27,6 @@ namespace LotusRMS.Models.Service.Implementation
             var company = _companyRepository.GetFirstOrDefault(includeProperties: "ContactPersons");
             var upcVM = new UpdateCompanyVM()
             {
-
                 ContactPerson = new List<UpdateContactPersonVM>()
             };
             if (company != null)
@@ -46,7 +47,6 @@ namespace LotusRMS.Models.Service.Implementation
                     CompanyRegistrationNumber = company.CompanyRegistrationNumber,
                     ContractDate = company.ContractDate,
                     ServiceStartDate = company.ServiceStartDate,
-
                     ValidTill = company.ValidTill,
                     ContactPerson = new List<UpdateContactPersonVM>()
                 };
@@ -60,19 +60,15 @@ namespace LotusRMS.Models.Service.Implementation
                         ContactNumber = item.ContactNumber,
                     };
                     upcVM.ContactPerson.Add(ucp);
-
                 }
             }
-
-
             return upcVM;
         }
 
         public Guid Create(CreateCompanyDTO obj)
         {
             var Company = new LotusRMS_Company(
-
-                companyName: obj.CompanyName,
+            companyName: obj.CompanyName,
             country: obj.Country,
             province: obj.Province,
             city: obj.City,
@@ -85,11 +81,11 @@ namespace LotusRMS.Models.Service.Implementation
              companyRegistrationNumber: obj.CompanyRegistrationNumber,
             contractDate: obj.ContractDate,
             serviceStartDate: obj.ServiceStartDate,
-            registrationNo:obj.RegistrationNo
-
+            registrationNo: obj.RegistrationNo
             )
             {
-                ContactPersons=new List<ContactPerson>()
+                ContactPersons = new List<ContactPerson>(),
+                IpV4Address="127.0.0.1"
             };
             foreach(var item in obj.ContactPersons)
             {
@@ -126,6 +122,16 @@ namespace LotusRMS.Models.Service.Implementation
             return company.Id;
         }
 
-     
+        public async Task UpdateIp(string Ip)
+        {
+            var company =await _companyRepository.GetFirstOrDefaultAsync();
+            company.IpV4Address = Ip;
+            _companyRepository.Update(company);
+        }
+        public async Task<string> GetIp()
+        {
+            var company = await _companyRepository.GetFirstOrDefaultAsync();
+            return company!=null? company.IpV4Address:"127.0.0.1";
+        }
     }
 }

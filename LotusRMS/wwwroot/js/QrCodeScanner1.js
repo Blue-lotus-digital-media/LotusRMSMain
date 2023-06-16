@@ -67,17 +67,19 @@ function fetchRequest(file, formData) {
         result = result[0].symbol[0].data;
         if (!result) return;
         RedirectToAction(result);
-    }).catch(() => {
+    }).catch((err) => {
+        console.log(err);
         console.log("Couldn't scan QR Code catch");
     });
 }
 function RedirectToAction(url) {
     if (isValidUrl(url)) {
         if (isMyDomain(url)) {
-            window.location(url);
-        } else { alert("Not a valid Qr for system.") }
+            console.log(url);
+            window.location.href=url;
+        } else { alert("Not a valid Qr for system 1.") }
     } else {
-        alert("Not a valid Qr for system.");
+        alert("Not a valid Qr for system 2.");
     }
 }
 function isMyDomain(url) {
@@ -85,9 +87,11 @@ function isMyDomain(url) {
     let myDomain = window.location;
     console.log("main domain = " + myDomain.hostname);
     console.log("client domain = " + qrDomain.hostname);
-    if (qrDomain == myDomain) {
+    if (qrDomain.hostname.localeCompare(myDomain.hostname) == 0) {
+        console.log("true");
         return true;
     } else {
+        console.log("false");
         return false;
     }
 }
