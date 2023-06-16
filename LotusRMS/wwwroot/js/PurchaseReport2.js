@@ -90,8 +90,8 @@ function GetPurchase() {
             {data: "id",
                 render: function (data) {
                     return `<div class="text-center">
-                              <a href="/Admin/purchaseReport/Viewdetail/${data}" class="btn btn-success text-white" style="cursor:pointer">
-                                <i class="bi bi-pencil-square"></i>    
+                              <a href="/Admin/purchaseReport/Viewdetail/${data}"  style="cursor:pointer">
+                                  <button class="eye btn btn-secondary dropstart"><i class="fa-solid fa-eye eye"></i></button>   
                               </a>
                             </div>`;
                 }
