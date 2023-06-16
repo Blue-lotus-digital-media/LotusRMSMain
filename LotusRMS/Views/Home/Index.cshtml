@@ -9,18 +9,70 @@
     .sidebar{
         display:none;
     }
+
+    .main {
+      
+        margin-left:0 !important;
+        background: url('https://images.pexels.com/photos/1310848/pexels-photo-1310848.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+   
+    }
+
+    .hero-container {
+        min-height:80vh;
+       
+       
+    }
+
+
+    .h1-title {
+        font-size: 4rem;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 8rem !important;
+        background-color: #007bff;
+        display: inline;
+        color: white !important;
+    }
+
+    .p-details {
+        text-align: center;
+        font-size: 1.6rem;
+        width: 80% !important;
+        margin-inline: auto;
+        font-weight: 400;
+        color: white;
+        background-color: orangered;
+    }
+
+    .scan-btn {
+        font-size: 2.2rem;
+      
+    }
+
+  
+
+    .footer {
+        margin-left: 0 !important;
+    }
+
+
+
 </style>
 
 
 
-<div class="container d-flex justify-content-center align-items-center hero-container">
+<div class="container d-flex flex-column justify-content-center align-items-center hero-container text-center">
     <div class="hero-section">
         <h1 class="text-capitalize h1-title text-primary">One App <br> is Enough for a Restaurant</h1>
         <p class="p-details mt-5 mb-3">
             ✨Efficiently manage restaurant with Blue Lotus✨All features in one platform✨
         </p>
-        <div class="scan-button mt-5" width="300px" height="300px">
-            <partial name="_QrScanner" />
-        </div>
+       
+    </div> 
+    <div class="scan-button mt-5" style="width:30rem; height:30rem;">
+        <partial name="_QrScanner" />
     </div>
 </div>
