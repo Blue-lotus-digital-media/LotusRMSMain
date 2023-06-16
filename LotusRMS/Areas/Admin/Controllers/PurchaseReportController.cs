@@ -21,6 +21,12 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             return View();
         }
 
+
+        public IActionResult Viewdetail()
+        {
+            return View();
+        }
+
         #region Api Calls
 
         [HttpGet]
