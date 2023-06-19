@@ -41,7 +41,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             return ShortName;
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var company = _iCompanyService.GetCompany();
             if (company.CompanyName == null)
@@ -50,7 +50,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var fiscalyear = _iFiscalYearService.GetActiveYear();
+            var fiscalyear = await _iFiscalYearService.GetActiveYearAsync();
             if (fiscalyear == null)
             {
                 _notyf.Error("Fiscal year not added yet pleas add fiscal year first... ", 5);

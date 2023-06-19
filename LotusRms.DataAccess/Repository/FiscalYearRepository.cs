@@ -16,16 +16,16 @@ namespace LotusRMS.DataAccess.Repository
             _dal = dal;
         }
 
-        public void Update(LotusRMS_FiscalYear obj)
+        public  async Task UpdateAsync(LotusRMS_FiscalYear obj)
         {
-            var fiscalYear = GetByGuid(obj.Id);
+            var fiscalYear =await GetByGuidAsync(obj.Id);
             fiscalYear.StartDateAD = obj.StartDateAD;
             fiscalYear.StartDateBS = obj.StartDateBS;
             fiscalYear.EndDateAD = obj.EndDateAD;
             fiscalYear.EndDateBS = obj.EndDateBS;
 
 
-            var activeYear = GetFirstOrDefault(x => x.IsActive);
+            var activeYear = await GetFirstOrDefaultAsync(x => x.IsActive);
             if (activeYear.Id != obj.Id && obj.IsActive)
             {
                 activeYear.IsActive = false;
@@ -34,19 +34,19 @@ namespace LotusRMS.DataAccess.Repository
             Save();
         }
 
-        public void UpdateActive(Guid Id)
+        public async Task UpdateActiveAsync(Guid Id)
         {
-            var activeYear = GetFirstOrDefault(x => x.IsActive);
+            var activeYear = await GetFirstOrDefaultAsync(x => x.IsActive).ConfigureAwait(false);
             if (activeYear != null)
             {
                 activeYear.IsActive = false;
             }
-            var currentYear = GetByGuid(Id);
+            var currentYear = await GetByGuidAsync(Id).ConfigureAwait(false);
             currentYear.IsActive = true;
-            Save();
+            await SaveAsync();
         }
 
-        public void UpdateStatus(Guid Id)
+        public async Task UpdateStatusAsync(Guid Id)
         {
             throw new NotImplementedException();
         }

@@ -146,9 +146,9 @@ namespace LotusRMSweb.Controllers
             }
             return OrderVM;
         }
-        public IActionResult EstimateBillPrint(Guid Order_Id)
+        public async Task<IActionResult> EstimateBillPrint(Guid Order_Id)
         {
-            var fiscalyear = _iFiscalYearService.GetActiveYear();
+            var fiscalyear =await _iFiscalYearService.GetActiveYearAsync();
             var billSetting = _iBillSettingService.GetActive();
             var order = _orderService.GetFirstOrDefaultByOrderId(Order_Id);
             var estimateVM = new EstimateInvoiceVM()

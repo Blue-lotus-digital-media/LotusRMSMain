@@ -36,6 +36,7 @@ namespace LotusRMS.Models.IRepositorys
            string includeProperties = null
            );
         void Add(T entity);
+        Task AddAsync(T entity);
         void Remove(int id);
         void RemoveRange(IEnumerable<T> entity);
         void Remove(T entity);

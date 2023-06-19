@@ -10,13 +10,15 @@ namespace LotusRMS.Models.Service
 {
     public interface IMenuUnitService
     {
-        Task<Guid> Create(CreateMenuUnitDTO dto);
-        Guid Update(UpdateMenuUnitDTO dto);
-        Guid UpdateStatus(Guid Id);
+        Task<Guid> CreateAsync(CreateMenuUnitDTO dto);
+        Task<Guid> UpdateAsync(UpdateMenuUnitDTO dto);
+        Task<Guid> UpdateStatusAsync(Guid Id);
 
-        public IEnumerable<LotusRMS_Menu_Unit> GetAll();
-        public LotusRMS_Menu_Unit GetByGuid(Guid Id);
-        public LotusRMS_Menu_Unit GetFirstOrDefaultById(Guid Id);
+        Task<IEnumerable<LotusRMS_Menu_Unit>> GetAllAsync();
+        Task<LotusRMS_Menu_Unit> GetByGuidAsync(Guid Id);
+        Task<LotusRMS_Menu_Unit> GetFirstOrDefaultByIdAsync(Guid Id);
+
+        Task<bool> IsDuplicateAsync(string Name, Guid? Id);
 
     }
 }

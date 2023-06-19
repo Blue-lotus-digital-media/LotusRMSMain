@@ -46,14 +46,14 @@ namespace LotusRMS.Models.Service.Implementation
             };
          
 
-            _CheckoutRepository.Add(checkout);
+           await _CheckoutRepository.AddAsync(checkout);
 
             _CheckoutRepository.UpdateOrder(checkout.Order_Id);
 
 
             
 
-            var invoiceId = _invoiceService.Create(checkout.Id);
+            var invoiceId =await _invoiceService.CreateAsync(checkout.Id);
 
 
 

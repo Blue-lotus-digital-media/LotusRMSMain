@@ -29,14 +29,14 @@ namespace LotusRMS.Models.Service.Implementation
             _iCustomerRepository = iCustomerRepository;
         }
 
-        public Guid Create(Guid id)
+        public async Task<Guid> CreateAsync(Guid id)
         {
             var bill = _billSettingService.GetActive();
 
             var billString = bill.BillPrefix;
            
             
-            var fiscalyear = _iFiscalYearService.GetActiveYear();
+            var fiscalyear = await _iFiscalYearService.GetActiveYearAsync();
             if (bill.IsFiscalYear)
             {
                 billString = billString + "" + fiscalyear.Name;
@@ -53,8 +53,8 @@ namespace LotusRMS.Models.Service.Implementation
                 Checkout_Id=id,
 
             };
-            _invoiceRepository.Add(model);
-            _invoiceRepository.Save();
+            await _invoiceRepository.AddAsync(model);
+            await _invoiceRepository.SaveAsync();
 
             var checkout = _iCheckOutService.Value.GetByGuid(id);
             if(checkout.Payment_Mode.ToString()=="Credit" && checkout.Customer_Id != Guid.Empty)

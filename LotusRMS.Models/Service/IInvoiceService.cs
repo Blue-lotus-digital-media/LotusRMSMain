@@ -10,7 +10,7 @@ namespace LotusRMS.Models.Service
 {
     public interface IInvoiceService
     {
-        Guid Create(Guid Id);
+        Task<Guid> CreateAsync(Guid Id);
         void PrintCopy(Guid Id);
         IEnumerable<LotusRMS_Invoice> GetAll();
         IEnumerable<LotusRMS_Invoice> GetAllByDateRange(DateTime StartDate, DateTime EndDate);

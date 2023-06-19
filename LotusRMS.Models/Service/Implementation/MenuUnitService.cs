@@ -19,7 +19,7 @@ namespace LotusRMS.Models.Service.Implementation
             _menuUnitRepository = menuUnitRepository;
         }
 
-        public async Task<Guid> Create(CreateMenuUnitDTO dto)
+        public async Task<Guid> CreateAsync(CreateMenuUnitDTO dto)
         {
            // using var tx = new TransactionScope();
             var unit = new LotusRMS_Menu_Unit(dto.UnitName, dto.UnitSymbol, dto.UnitDescription);
@@ -32,51 +32,69 @@ namespace LotusRMS.Models.Service.Implementation
                     Value = item.Value
                 });
             }
-            _menuUnitRepository.Add(unit);
-            _menuUnitRepository.Save();
+          await _menuUnitRepository.AddAsync(unit).ConfigureAwait(false);
+            await _menuUnitRepository.SaveAsync().ConfigureAwait(false);
            // tx.Complete();
             return unit.Id;
 
 
         }
 
-        public Guid Update(UpdateMenuUnitDTO dto)
+        public async Task<Guid> UpdateAsync(UpdateMenuUnitDTO dto)
         {
          //   using var tx = new TransactionScope();
-            var unit = _menuUnitRepository.GetByGuid(dto.Id) ?? throw new Exception();
+            var unit = await _menuUnitRepository.GetByGuidAsync(dto.Id).ConfigureAwait(false) ?? throw new Exception();
 
             unit.Update(unit_Name: dto.UnitName, unit_Symbol: dto.UnitSymbol, unit_Description: dto.UnitDescription);
 
-            _menuUnitRepository.Update(unit);
-            _menuUnitRepository.Save();
+            await _menuUnitRepository.UpdateAsync(unit).ConfigureAwait(false);
+            await _menuUnitRepository.SaveAsync().ConfigureAwait(false);
             //todo logic
 
            // tx.Complete();
             return unit.Id;
         }
 
-        public IEnumerable<LotusRMS_Menu_Unit> GetAll()
+        public async Task<IEnumerable<LotusRMS_Menu_Unit>> GetAllAsync()
         {
-            return _menuUnitRepository.GetAll();
+            return await _menuUnitRepository.GetAllAsync().ConfigureAwait(false);
         } 
-        public LotusRMS_Menu_Unit GetByGuid(Guid Id)
+        public async Task<LotusRMS_Menu_Unit> GetByGuidAsync(Guid Id)
         {
-            return _menuUnitRepository.GetByGuid(Id);
+            return await _menuUnitRepository.GetByGuidAsync(Id);
         }
 
-        public Guid UpdateStatus(Guid Id)
+        public async Task<Guid> UpdateStatusAsync(Guid Id)
         {
 
-            _menuUnitRepository.UpdateStatus(Id);
-            _menuUnitRepository.Save();
+            await _menuUnitRepository.UpdateStatusAsync(Id).ConfigureAwait(false);
+            await _menuUnitRepository.SaveAsync().ConfigureAwait(false);
             return Id;
 
         }
 
-        public LotusRMS_Menu_Unit GetFirstOrDefaultById(Guid Id)
+        public async Task<LotusRMS_Menu_Unit> GetFirstOrDefaultByIdAsync(Guid Id)
         {
-            var unit = _menuUnitRepository.GetFirstOrDefault(x => x.Id == Id, includeProperties: "UnitDivision");
+            var unit = await _menuUnitRepository.GetFirstOrDefaultAsync(x => x.Id == Id, includeProperties: "UnitDivision").ConfigureAwait(false);
             return unit;
+        }
+
+        public async Task<bool> IsDuplicateAsync(string Name, Guid? Id)
+        {
+            var menuUnit = await _menuUnitRepository.GetFirstOrDefaultAsync(x => x.Unit_Name == Name);
+
+            if (menuUnit == null)
+            {
+                return false;
+            }
+            else
+            {
+                if (Id != Guid.Empty && menuUnit.Id == Id)
+                {
+                    return false;
+                }
+                return true;
+            }
         }
     }
 }

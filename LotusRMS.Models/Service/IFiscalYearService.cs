@@ -9,17 +9,19 @@ namespace LotusRMS.Models.Service
 {
     public interface IFiscalYearService
     {
-        Task<Guid> Create(CreateFiscalYearDTO dto);
-        Guid Update(UpdateFiscalYearDTO dto);
-        Guid UpdateStatus(Guid Id);
+        Task<Guid> CreateAsync(CreateFiscalYearDTO dto);
+       Task<Guid> UpdateAsync(UpdateFiscalYearDTO dto);
+        Task<Guid> UpdateStatusAsync(Guid Id);
 
-        public IEnumerable<LotusRMS_FiscalYear> GetAll();
-        public IEnumerable<LotusRMS_FiscalYear> GetAllAvailable();
-        public LotusRMS_FiscalYear GetByGuid(Guid Id);
-        public LotusRMS_FiscalYear GetActiveYear();
+        Task<IEnumerable<LotusRMS_FiscalYear>> GetAllAsync();
+        Task<IEnumerable<LotusRMS_FiscalYear>> GetAllAvailableAsync();
+        Task<LotusRMS_FiscalYear> GetByGuidAsync(Guid Id);
+        Task<LotusRMS_FiscalYear> GetActiveYearAsync();
 
-        Guid UpdateActive(Guid Id);
-        bool CheckActive(Guid Id);
+        Task<Guid> UpdateActiveAsync(Guid Id);
+        Task<bool> CheckActiveAsync(Guid Id);
+
+      Task<bool> IsDuplicateAsync(string FiscalYear,Guid? Id);
 
     }
 }

@@ -18,30 +18,30 @@ namespace LotusRMS.DataAccess.Repository
             _dal = dal;
         }
 
-        public async Task<LotusRMS_Menu_Unit> GetByUnitName(string name)
+        public async Task<LotusRMS_Menu_Unit> GetByUnitNameAsync(string name)
         {
-            var unit =await GetFirstOrDefaultAsync(filter: x => x.Unit_Name == name, includeProperties: "UnitDivision");
+            var unit =await GetFirstOrDefaultAsync(filter: x => x.Unit_Name == name, includeProperties: "UnitDivision").ConfigureAwait(false);
             return unit;
         }
 
-        public void Update(LotusRMS_Menu_Unit lUnit)
+        public async Task UpdateAsync(LotusRMS_Menu_Unit lUnit)
         {
-            var unit =GetFirstOrDefault(s => s.Id ==  lUnit.Id,includeProperties: "UnitDivision");
+            var unit =await GetFirstOrDefaultAsync(s => s.Id ==  lUnit.Id,includeProperties: "UnitDivision").ConfigureAwait(false);
             if (unit != null)
             {
                 unit.Update(lUnit.Unit_Name, lUnit.Unit_Symbol, lUnit.Unit_Description);
 
-                Save();
+                await SaveAsync().ConfigureAwait(false);
             }
         }
-        public void UpdateStatus(Guid Id)
+        public async Task UpdateStatusAsync(Guid Id)
         {
-            var unit = _dal.LotusRMS_Menu_Units.FirstOrDefault(s => s.Id == Id);
+            var unit = await GetByGuidAsync(Id).ConfigureAwait(false);
             if (unit != null)
             {
                 unit.Status = !unit.Status;
 
-                Save();
+                await SaveAsync().ConfigureAwait(false);
             }
         }
     }

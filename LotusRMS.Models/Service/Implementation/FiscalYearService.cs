@@ -1,10 +1,13 @@
 ﻿using LotusRMS.Models.Dto.FiscalYearDTO;
 using LotusRMS.Models.IRepositorys;
+
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LotusRMS.Models.Helper;
 
 namespace LotusRMS.Models.Service.Implementation
 {
@@ -17,9 +20,9 @@ namespace LotusRMS.Models.Service.Implementation
             _fiscalYearRepository = fiscalYearRepository;
         }
 
-        public bool CheckActive(Guid Id)
+        public async Task<bool> CheckActiveAsync(Guid Id)
         {
-            var year = _fiscalYearRepository.GetByGuid(Id);
+            var year = await _fiscalYearRepository.GetByGuidAsync(Id);
             if (year.IsActive)
             {
                 return true;
@@ -30,56 +33,61 @@ namespace LotusRMS.Models.Service.Implementation
             }
         }
 
-        public Task<Guid> Create(CreateFiscalYearDTO dto)
+        public async Task<Guid> CreateAsync(CreateFiscalYearDTO dto)
         {
-            var FY = new LotusRMS_FiscalYear()
-            {
-                Name = dto.Name,
-                StartDateAD = dto.StartDateAD.ToString(),
-                EndDateAD = dto.EndDateAD.ToString(),
-                StartDateBS=dto.StartDateBS,
-                EndDateBS=dto.EndDateBS,
-                IsActive = dto.IsActive
-            };
-           _fiscalYearRepository.Add(FY);
+           
+                var FY = new LotusRMS_FiscalYear()
+                    {
+                        Name = dto.Name,
+                        StartDateAD = dto.StartDateAD.ToString(),
+                        EndDateAD = dto.EndDateAD.ToString(),
+                        StartDateBS = dto.StartDateBS,
+                        EndDateBS = dto.EndDateBS,
+                        IsActive = dto.IsActive
+                    };
+                    await _fiscalYearRepository.AddAsync(FY);
 
-            if (dto.IsActive)
-            {
-                var years = _fiscalYearRepository.GetFirstOrDefault(x => x.IsActive && x.Id!=FY.Id);
-                if (years != null)
-                {
-                    years.IsActive = false;
-                }
+                    if (dto.IsActive)
+                    {
+                        var years = await _fiscalYearRepository.GetFirstOrDefaultAsync(x => x.IsActive && x.Id != FY.Id);
+                        if (years != null)
+                        {
+                            years.IsActive = false;
+                        }
 
-            }
-            _fiscalYearRepository.Save();
-            return Task.FromResult(FY.Id);
+                    }
+                   await _fiscalYearRepository.SaveAsync();
+                    
 
+                    return FY.Id;
+                
 
+            
 
         }
 
-        public IEnumerable<LotusRMS_FiscalYear> GetAll()
+        public async Task<IEnumerable<LotusRMS_FiscalYear>> GetAllAsync()
         {
-            return _fiscalYearRepository.GetAll();
+            return await _fiscalYearRepository.GetAllAsync();
         }
 
-        public IEnumerable<LotusRMS_FiscalYear> GetAllAvailable()
+        public async Task<IEnumerable<LotusRMS_FiscalYear>> GetAllAvailableAsync()
         {
-            return _fiscalYearRepository.GetAll(x => !x.IsDelete);
+            return await _fiscalYearRepository.GetAllAsync(x => !x.IsDelete);
         }
 
-        public LotusRMS_FiscalYear GetByGuid(Guid Id)
+        public async Task<LotusRMS_FiscalYear> GetByGuidAsync(Guid Id)
         {
-            return _fiscalYearRepository.GetFirstOrDefault(x => x.Id == Id);
+            return await _fiscalYearRepository.GetFirstOrDefaultAsync(x => x.Id == Id);
         }
-        public LotusRMS_FiscalYear GetActiveYear()
+        public async Task<LotusRMS_FiscalYear> GetActiveYearAsync()
         {
-            return _fiscalYearRepository.GetFirstOrDefault(x => x.IsActive);
+            return await _fiscalYearRepository.GetFirstOrDefaultAsync(x => x.IsActive);
         }
 
-        public Guid Update(UpdateFiscalYearDTO dto)
+        public async Task<Guid> UpdateAsync(UpdateFiscalYearDTO dto)
         {
+            
             var fiscalYear = new LotusRMS_FiscalYear();
             fiscalYear.Id = dto.Id;
             fiscalYear.StartDateAD = dto.StartDateAD;
@@ -87,25 +95,49 @@ namespace LotusRMS.Models.Service.Implementation
             fiscalYear.EndDateAD = dto.EndDateAD;
             fiscalYear.EndDateBS = dto.EndDateBS;
             fiscalYear.IsActive = dto.IsActive;
-
-             
-           _fiscalYearRepository.Update(fiscalYear);
+           await _fiscalYearRepository.UpdateAsync(fiscalYear);
+                   
             return dto.Id;
-            
-            
+             
+
         }
 
-        public Guid UpdateActive(Guid Id)
+        public async Task<Guid> UpdateActiveAsync(Guid Id)
         {
-            _fiscalYearRepository.UpdateActive(Id);
+           
+                await _fiscalYearRepository.UpdateActiveAsync(Id).ConfigureAwait(false);
+                    return Id;
+              
+          
 
-            return Id;
            
         }
 
-        public Guid UpdateStatus(Guid Id)
+        public async Task<Guid> UpdateStatusAsync(Guid Id)
         {
             throw new NotImplementedException();
         }
+
+        public async Task<bool> IsDuplicateAsync(string FiscalYear, Guid? Id)
+        {
+            var fiscalyear = await _fiscalYearRepository.GetFirstOrDefaultAsync(x => x.Name == FiscalYear && !x.IsDelete).ConfigureAwait(false);
+            if(fiscalyear == null)
+            {
+                return false;
+            }
+            else
+            {
+                if (Id != Guid.Empty && fiscalyear.Id==Id)
+                {
+                    return false;
+                }
+                return true;
+            }
+        }
+
+       /* Task<bool> IFiscalYearService.IsDuplicate(string FiscalYear)
+        {
+            throw new NotImplementedException();
+        }*/
     }
 }

@@ -1,4 +1,5 @@
-﻿using LotusRMS.Models.Dto.FiscalYearDTO;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using LotusRMS.Models.Dto.FiscalYearDTO;
 using LotusRMS.Models.Service;
 using LotusRMS.Models.Viewmodels.FiscalYear;
 using Microsoft.AspNetCore.Authorization;
@@ -11,10 +12,12 @@ namespace LotusRMSweb.Areas.Admin.Controllers
     public class FiscalYearController : Controller
     {
         private readonly IFiscalYearService _fiscalyearService;
+        private readonly INotyfService _notyf;
 
-        public FiscalYearController(IFiscalYearService fiscalyearService)
+        public FiscalYearController(IFiscalYearService fiscalyearService, INotyfService notyf)
         {
             _fiscalyearService = fiscalyearService;
+            _notyf = notyf;
         }
 
         public IActionResult Index()
@@ -28,12 +31,20 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(CreateFiscalYearVM vm)
+        public async Task<IActionResult> Create(CreateFiscalYearVM vm)
         {
             if (!ModelState.IsValid)
             {
+                ;
+                _notyf.Error("One or More validation error!!!", 5);
                 return View(vm);
             }
+            if(await IsDuplicate(vm.Name).ConfigureAwait(false))
+            {
+                _notyf.Error("Duplicate entry of name", 5);
+                return View(vm);
+            }
+
 
             var dto = new CreateFiscalYearDTO()
             {
@@ -45,19 +56,20 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 EndDateBS = vm.EndDateBS,
                 IsActive = vm.IsActive
             };
-            var id = _fiscalyearService.Create(dto);
+            
 
+            var id = await _fiscalyearService.CreateAsync(dto).ConfigureAwait(false);
+            _notyf.Success("Fiscal year created successfully", 5);
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult Update(Guid Id)
+        public async Task<IActionResult> Update(Guid Id)
         {
             if (Id == Guid.Empty)
             {
                 return RedirectToAction(nameof(Index));
             }
-
-            var fiscalyear = _fiscalyearService.GetByGuid(Id);
+            var fiscalyear =await _fiscalyearService.GetByGuidAsync(Id).ConfigureAwait(false);
             if (fiscalyear == null)
             {
                 return RedirectToAction(nameof(Index));
@@ -77,16 +89,23 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(UpdateFiscalYearVM vm)
+        public async Task<IActionResult> Update(UpdateFiscalYearVM vm)
         {
             if (!ModelState.IsValid)
             {
+                _notyf.Error("One or More validation error", 5);
+                return View(vm);
+            }
+            if (await IsDuplicate(vm.Name, vm.Id).ConfigureAwait(false))
+            {
+                _notyf.Error("Duplicate Entry for name", 5);
                 return View(vm);
             }
 
-            var activeYear = _fiscalyearService.GetActiveYear();
+            var activeYear = await _fiscalyearService.GetActiveYearAsync();
             if (activeYear.Id == vm.Id && !vm.IsActive)
             {
+                _notyf.Error("Must have one activefiscal year !!!", 5);
                 return View(vm);
             }
 
@@ -100,18 +119,21 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 EndDateBS = vm.EndDateBS,
                 IsActive = vm.IsActive
             };
-            var id = _fiscalyearService.Update(dto);
-
+            var id =await _fiscalyearService.UpdateAsync(dto).ConfigureAwait(false);
+            _notyf.Success("Fiscal year updated successfully", 5);
             return RedirectToAction(nameof(Index));
         }
-
+        private async Task<bool> IsDuplicate(string Name,Guid Id=new Guid())
+        {
+            return (await _fiscalyearService.IsDuplicateAsync(Name,Id).ConfigureAwait(false));
+        }
 
         #region API
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var fiscalyears = _fiscalyearService.GetAllAvailable().Select(fy => new FiscalYearVM()
+            var fiscalyears = (await _fiscalyearService.GetAllAvailableAsync().ConfigureAwait(false)).Select(fy => new FiscalYearVM()
             {
                 Id = fy.Id,
                 Name = fy.Name,
@@ -127,16 +149,17 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public IActionResult ActiveChange(Guid id)
+        public async Task<IActionResult> ActiveChange(Guid id)
         {
-            var activeYear = _fiscalyearService.GetActiveYear();
+            var activeYear = await _fiscalyearService.GetActiveYearAsync().ConfigureAwait(false);
             if (activeYear.Id == id)
             {
+                _notyf.Error("Active fiscal year cant be changed!!!", 5);
                 return Ok(false);
             }
 
-            var rid = _fiscalyearService.UpdateActive(id);
-
+            var rid =await _fiscalyearService.UpdateActiveAsync(id).ConfigureAwait(false);
+            _notyf.Success("Active fiscal year changed successfully", 5);
             return Ok(true);
         }
 

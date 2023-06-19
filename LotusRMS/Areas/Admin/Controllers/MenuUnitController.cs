@@ -5,6 +5,7 @@ using LotusRMS.Models.Dto.MenuUnitDTO;
 using LotusRMS.Models.Dto.MenuUnitDTO.MenuDivisionDTO;
 using LotusRMS.Models.Dto.UnitDto;
 using LotusRMS.Models.Service;
+using LotusRMS.Models.Service.Implementation;
 using LotusRMS.Models.Viewmodels.MenuUnit;
 using LotusRMS.Models.Viewmodels.Unit;
 using LotusRMS.Utility;
@@ -42,7 +43,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(CreateUnitVM MenuUnitVM, string? returnUrl = null)
+        public async Task<IActionResult> Create(CreateUnitVM MenuUnitVM, string? returnUrl = null)
         {
             if (!ModelState.IsValid)
             {
@@ -50,6 +51,13 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 _notyf.Error("Some field cannot be empty!!!", 5);
                 return View(MenuUnitVM);
             }
+            if (await IsDuplicate(MenuUnitVM.Unit_Name).ConfigureAwait(false))
+            {
+                ViewBag.ReturnUrl = returnUrl;
+                _notyf.Error("Duplicate entry for name "+MenuUnitVM.Unit_Name+" !!!", 5);
+                return View(MenuUnitVM);
+            }
+
             if (MenuUnitVM.Unit_Division.Count() == 0)
             {
                 ViewBag.ReturnUrl = returnUrl;
@@ -72,13 +80,13 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                     Value = item.Value
                 });
             }
-            var id = _MenuUnitService.Create(MenuUnitCreateDto);
+            var id =await _MenuUnitService.CreateAsync(MenuUnitCreateDto).ConfigureAwait(false);
 
             _notyf.Success("Menu Unit created successfully...", 5);
             return Redirect(returnUrl);
         }
 
-        public IActionResult Update(Guid? Id)
+        public async Task<IActionResult> Update(Guid? Id)
         {
             if (Id == Guid.Empty)
             {
@@ -86,7 +94,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var unit = _MenuUnitService.GetFirstOrDefaultById((Guid)Id);
+            var unit = await _MenuUnitService.GetFirstOrDefaultByIdAsync((Guid)Id).ConfigureAwait(false);
             if (unit == null)
             {
                 _notyf.Error("No data found !", 5);
@@ -116,13 +124,18 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(UpdateMenuUnitVM vm)
+        public async Task<IActionResult> Update(UpdateMenuUnitVM vm)
         {
             if (!ModelState.IsValid)
             {
                 return View(vm);
             }
-
+            if (await IsDuplicate(vm.Unit_Name,vm.Id).ConfigureAwait(false))
+            {
+             
+                _notyf.Error("Duplicate entry for name " + vm.Unit_Name + " !!!", 5);
+                return View(vm);
+            }
             var dto = new UpdateMenuUnitDTO()
             {
                 Id = vm.Id,
@@ -140,7 +153,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                     Value = item.Value
                 });
             }
-            _MenuUnitService.Update(dto);
+            await _MenuUnitService.UpdateAsync(dto).ConfigureAwait(false);
 
             _notyf.Success("Menu Unit updated successfully...", 5);
             return RedirectToAction(nameof(Index));
@@ -149,9 +162,9 @@ namespace LotusRMSweb.Areas.Admin.Controllers
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public IActionResult ExportToExcel()
+        public async Task<IActionResult> ExportToExcel()
         {
-            var arraylist = _MenuUnitService.GetAll();
+            var arraylist = await _MenuUnitService.GetAllAsync().ConfigureAwait(false);
 
 
             using (XLWorkbook xl = new XLWorkbook())
@@ -168,12 +181,17 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             }
         }
 
+        private async Task<bool> IsDuplicate(string Name, Guid Id = new Guid())
+        {
+            return (await _MenuUnitService.IsDuplicateAsync(Name, Id).ConfigureAwait(false));
+        }
+
         #region API CALLS
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var MenuUnits = _MenuUnitService.GetAll().Select(x => new UnitVM()
+            var MenuUnits = (await _MenuUnitService.GetAllAsync().ConfigureAwait(false)).Select(x => new UnitVM()
             {
                 Id = x.Id,
                 Unit_Name = x.Unit_Name,
@@ -185,16 +203,16 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public IActionResult StatusChange(Guid Id)
+        public async Task<IActionResult> StatusChange(Guid Id)
         {
-            var MenuUnit = _MenuUnitService.GetByGuid(Id);
+            var MenuUnit = await _MenuUnitService.GetByGuidAsync(Id).ConfigureAwait(false);
             if (MenuUnit == null)
             {
                 return BadRequest();
             }
             else
             {
-                var id = _MenuUnitService.UpdateStatus(Id);
+                var id = await _MenuUnitService.UpdateStatusAsync(Id).ConfigureAwait(false);
                 if (MenuUnit.Status == true)
                 {
                     _notyf.Success("Status Activated successfully..", 2);

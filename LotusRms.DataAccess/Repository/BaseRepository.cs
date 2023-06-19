@@ -24,6 +24,11 @@ namespace LotusRMS.DataAccess.Repository
         {
             dbSet.Add(entity);
             Save();
+        }  
+        public async Task AddAsync(T entity)
+        {
+            await dbSet.AddAsync(entity).ConfigureAwait(false);
+            await SaveAsync().ConfigureAwait(false);
         }
         public T GetByGuid(Guid id)
         {
@@ -65,7 +70,7 @@ namespace LotusRMS.DataAccess.Repository
         }
         public async Task SaveAsync()
         {
-            await _dal.SaveChangesAsync();
+            await _dal.SaveChangesAsync().ConfigureAwait(false);
         }
 
         public T GetFirstOrDefault(Expression<Func<T, bool>> filter = null, string includeProperties = null)
@@ -134,7 +139,7 @@ namespace LotusRMS.DataAccess.Repository
             }
             if (orderBy != null)
             {
-                return await orderBy(query).ToListAsync();
+                return await orderBy(query).ToListAsync().ConfigureAwait(false);
             }
             return await query.ToListAsync();
         }
@@ -153,7 +158,7 @@ namespace LotusRMS.DataAccess.Repository
                 }
             }
 
-            return await query.FirstOrDefaultAsync();
+            return await query.FirstOrDefaultAsync().ConfigureAwait(false);
         }
 
         public async Task<bool> HasAnyAsync(Expression<Func<T, bool>> filter = null)
@@ -161,9 +166,9 @@ namespace LotusRMS.DataAccess.Repository
             IQueryable<T> query = dbSet;
             if (filter != null)
             {
-                return await query.AnyAsync(filter);
+                return await query.AnyAsync(filter).ConfigureAwait(false);
             }
-            return await query.AnyAsync();
+            return await query.AnyAsync().ConfigureAwait(false);
         }
     }
 }
