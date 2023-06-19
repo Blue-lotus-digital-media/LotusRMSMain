@@ -39,7 +39,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             return View();
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var createMenuVM = new CreateMenuVM()
             {
@@ -48,7 +48,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                     Text = type.Type_Name,
                     Value = type.Id.ToString()
                 }).ToList(),
-                Menu_Unit_List = _IMenuUnitService.GetAll().Where(x => x.Status).Select(type => new SelectListItem()
+                Menu_Unit_List =(await _IMenuUnitService.GetAllAvailableAsync().ConfigureAwait(false)).Select(type => new SelectListItem()
                 {
                     Text = type.Unit_Symbol,
                     Value = type.Id.ToString()
@@ -64,7 +64,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(CreateMenuVM vm)
+        public async Task<IActionResult> Create(CreateMenuVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -79,13 +79,13 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                         Text = type.Category_Name,
                         Value = type.Id.ToString()
                     }).ToList();
-                vm.Menu_Unit_List = _IMenuUnitService.GetAll().Where(x => x.Status).Select(type => new SelectListItem()
+                vm.Menu_Unit_List = (await _IMenuUnitService.GetAllAvailableAsync()).Select(type => new SelectListItem()
                 {
                     Text = type.Unit_Symbol,
                     Value = type.Id.ToString()
                 }).ToList();
 
-                vm.UnitDivision = _IMenuUnitService.GetFirstOrDefaultById(vm.Unit_Id).UnitDivision.Select(unitt => new SelectListItem()
+                vm.UnitDivision = (await _IMenuUnitService.GetFirstOrDefaultByIdAsync(vm.Unit_Id)).UnitDivision.Select(unitt => new SelectListItem()
                 {
                     Text = unitt.Title + "(" + unitt.Value + " ) ",
                     Value = unitt.Id.ToString()
@@ -138,7 +138,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         }
    
 
-        public IActionResult Update(Guid Id)
+        public async Task<IActionResult> Update(Guid Id)
         {
             if (Id == Guid.Empty)
             {
@@ -190,12 +190,12 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                         Text = type.Category_Name,
                         Value = type.Id.ToString()
                     }).ToList(),
-                Menu_Unit_List = _IMenuUnitService.GetAll().Where(x => x.Status).Select(type => new SelectListItem()
+                Menu_Unit_List = (await _IMenuUnitService.GetAllAvailableAsync()).Select(type => new SelectListItem()
                 {
                     Text = type.Unit_Symbol,
                     Value = type.Id.ToString()
                 }).ToList(),
-                UnitDivision = _IMenuUnitService.GetFirstOrDefaultById(menu.Unit_Id).UnitDivision.Select(unitt => new SelectListItem()
+                UnitDivision = (await _IMenuUnitService.GetFirstOrDefaultByIdAsync(menu.Unit_Id)).UnitDivision.Select(unitt => new SelectListItem()
                 {
                     Text = unitt.Title + "(" + unitt.Value + " ) ",
                     Value = unitt.Id.ToString()
@@ -205,7 +205,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(UpdateMenuVM vm)
+        public async Task<IActionResult> Update(UpdateMenuVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -220,12 +220,12 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                         Text = type.Category_Name,
                         Value = type.Id.ToString()
                     }).ToList();
-                vm.Menu_Unit_List = _IMenuUnitService.GetAll().Where(x => x.Status).Select(type => new SelectListItem()
+                vm.Menu_Unit_List =(await _IMenuUnitService.GetAllAvailableAsync()).Select(type => new SelectListItem()
                 {
                     Text = type.Unit_Symbol,
                     Value = type.Id.ToString()
                 }).ToList();
-                vm.UnitDivision = _IMenuUnitService.GetFirstOrDefaultById(vm.Unit_Id).UnitDivision.Select(unitt => new SelectListItem()
+                vm.UnitDivision = (await _IMenuUnitService.GetFirstOrDefaultByIdAsync(vm.Unit_Id)).UnitDivision.Select(unitt => new SelectListItem()
                 {
                     Text = unitt.Title + "(" + unitt.Value + " ) ",
                     Value = unitt.Id.ToString()
@@ -342,9 +342,9 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetUnitDivision(Guid UnitId)
+        public async Task<IActionResult> GetUnitDivision(Guid UnitId)
         {
-            var units = _IMenuUnitService.GetFirstOrDefaultById(UnitId);
+            var units = await _IMenuUnitService.GetFirstOrDefaultByIdAsync(UnitId).ConfigureAwait(false);
             return Json(new { units.UnitDivision });
         }
 

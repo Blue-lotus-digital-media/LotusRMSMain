@@ -58,6 +58,10 @@ namespace LotusRMS.Models.Service.Implementation
         public async Task<IEnumerable<LotusRMS_Menu_Unit>> GetAllAsync()
         {
             return await _menuUnitRepository.GetAllAsync().ConfigureAwait(false);
+        }
+        public async Task<IEnumerable<LotusRMS_Menu_Unit>> GetAllAvailableAsync()
+        {
+            return await _menuUnitRepository.GetAllAsync(x=>x.Status && !x.IsDelete).ConfigureAwait(false);
         } 
         public async Task<LotusRMS_Menu_Unit> GetByGuidAsync(Guid Id)
         {
