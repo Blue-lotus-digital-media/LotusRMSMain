@@ -18,37 +18,59 @@ namespace LotusRMS.Models.Service.Implementation
         }
 
 
-        public async Task<Guid> Create(CreateCategoryDTO dto)
+        public async Task<Guid> CreateAsync(CreateCategoryDTO dto)
         {
             var category = new LotusRMS_Product_Category(dto.Category_Name,dto.Category_Description,dto.Type_Id);
-            _CategoryRepository.Add(category);
-            _CategoryRepository.Save();
+            await _CategoryRepository.AddAsync(category).ConfigureAwait(false);
+            await _CategoryRepository.SaveAsync().ConfigureAwait(false);
             return category.Id;
 
         }
 
-        public IEnumerable<LotusRMS_Product_Category> GetAll()
+        public async Task<IEnumerable<LotusRMS_Product_Category>> GetAllAsync()
         {
-            return _CategoryRepository.GetAll(includeProperties: "Product_Type");
+            return await _CategoryRepository.GetAllAsync(includeProperties: "Product_Type").ConfigureAwait(false);
+        }   public async Task<IEnumerable<LotusRMS_Product_Category>> GetAllAvailableAsync()
+        {
+            return await _CategoryRepository.GetAllAsync(x=>x.Status&& !x.IsDelete, includeProperties: "Product_Type").ConfigureAwait(false);
         }
 
-        public LotusRMS_Product_Category GetByGuid(Guid Id)
+        public async Task<LotusRMS_Product_Category> GetByGuidAsync(Guid Id)
         {
-            return _CategoryRepository.GetByGuid(Id);
+            return await _CategoryRepository.GetByGuidAsync(Id).ConfigureAwait(false);
         }
 
-        public Guid Update(UpdateCategoryDTO dto)
+        public async Task<bool> IsDuplicateName(string Name, Guid Id = new Guid())
         {
-            var category=_CategoryRepository.GetByGuid(dto.Id) ?? throw new Exception();
+            var category = await _CategoryRepository.GetFirstOrDefaultAsync(x => x.Category_Name == Name).ConfigureAwait(false);
+            if (category == null) {
+                return false;
+            }
+            else
+            {
+                if(Id!=Guid.Empty && Id == category.Id)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+        }
+
+        public async Task<Guid> UpdateAsync(UpdateCategoryDTO dto)
+        {
+            var category = await _CategoryRepository.GetByGuidAsync(dto.Id).ConfigureAwait(false) ?? throw new Exception();
             category.Update(category_Name: dto.Category_Name, category_Description: dto.Category_Description,type_Id:dto.Type_Id);
-            _CategoryRepository.Update(category);
-            _CategoryRepository.Save();
+            await _CategoryRepository.UpdateAsync(category).ConfigureAwait(false);
+          await  _CategoryRepository.SaveAsync().ConfigureAwait(false);
             return category.Id;
         }
-        public Guid UpdateStatus(Guid Id)
+        public async Task<Guid> UpdateStatusAsync(Guid Id)
         {
            
-            _CategoryRepository.UpdateStatus(Id);
+            await _CategoryRepository.UpdateStatusAsync(Id).ConfigureAwait(false);
            
             return Id;
         }

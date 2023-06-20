@@ -15,45 +15,46 @@ namespace LotusRMS.Models.Service.Implementation
         {
             _ITableRepository = iTableRepository;
         }
-        public async Task<Guid> Create(CreateTableDTO dto)
+        public async Task<Guid> CreateAsync(CreateTableDTO dto)
         {
             var table = new LotusRMS_Table(
                 table_Name: dto.Table_Name,
                 table_No: dto.Table_No,
                 no_Of_Chair:dto.No_Of_Chair,
                 table_Type_Id: dto.Table_Type_Id);
-            _ITableRepository.Add(table);
-            _ITableRepository.Save();
+           await _ITableRepository.AddAsync(table).ConfigureAwait(false);
+            await _ITableRepository.SaveAsync().ConfigureAwait(false);
             return table.Id;
         }
 
-        public IEnumerable<LotusRMS_Table> GetAll()
+        public async Task<IEnumerable<LotusRMS_Table>> GetAllAsync()
         {
-            return _ITableRepository.GetAll(includeProperties: "Table_Type");
+            return await _ITableRepository.GetAllAsync(includeProperties: "Table_Type").ConfigureAwait(false);
         } 
-        public IEnumerable<LotusRMS_Table> GetAllAvailable()
+        public async Task<IEnumerable<LotusRMS_Table>> GetAllAvailableAsync()
         {
-            return _ITableRepository.GetAll(x=>!x.IsDelete, includeProperties: "Table_Type");
-        }  public IEnumerable<LotusRMS_Table> GetAllReserved()
+            return  await _ITableRepository.GetAllAsync(x=>!x.IsDelete, includeProperties: "Table_Type").ConfigureAwait(false);
+        } 
+        public async Task<IEnumerable<LotusRMS_Table>> GetAllReservedAsync()
         {
-            return _ITableRepository.GetAll(x=>!x.IsDelete && x.IsReserved, includeProperties: "Table_Type");
+            return await _ITableRepository.GetAllAsync(x=>!x.IsDelete && x.IsReserved, includeProperties: "Table_Type").ConfigureAwait(false);
         }
 
-        public IEnumerable<LotusRMS_Table> GetAllByTypeId(Guid Id)
+        public async Task<IEnumerable<LotusRMS_Table>> GetAllByTypeIdAsync(Guid Id)
         {
-            return _ITableRepository.GetAll(x=>x.Table_Type_Id==Id,includeProperties: "Table_Type");
+            return await _ITableRepository.GetAllAsync(x=>x.Table_Type_Id==Id,includeProperties: "Table_Type").ConfigureAwait(false);
         }
 
-        public LotusRMS_Table GetByGuid(Guid Id)
+        public async Task<LotusRMS_Table> GetByGuidAsync(Guid Id)
         {
-            return _ITableRepository.GetByGuid(Id);
+            return await _ITableRepository.GetByGuidAsync(Id).ConfigureAwait(false);
         }
-        public LotusRMS_Table GetFirstOrDefaultById(Guid Id)
+        public async Task<LotusRMS_Table> GetFirstOrDefaultByIdAsync(Guid Id)
         {
-            return _ITableRepository.GetFirstOrDefault(x=>x.Id==Id,includeProperties:"Table_Type");
+            return await _ITableRepository.GetFirstOrDefaultAsync(x=>x.Id==Id,includeProperties:"Table_Type").ConfigureAwait(false);
         }
 
-        public Guid Update(UpdateTableDTO dto)
+        public async Task<Guid> UpdateAsync(UpdateTableDTO dto)
         {
             var table = _ITableRepository.GetByGuid(dto.Id) ?? throw new Exception();
             table.Update(
@@ -61,26 +62,40 @@ namespace LotusRMS.Models.Service.Implementation
                 table_No: dto.Table_No,
                 no_Of_Chair: dto.No_Of_Chair, 
                 table_Type_Id:dto.Table_Type_Id);
-            _ITableRepository.Update(table);
+            await _ITableRepository.UpdateAsync(table);
             return table.Id;
         }
 
-        public Guid UpdateStatus(Guid Id)
+        public async Task<Guid> UpdateStatusAsync(Guid Id)
         {
-            _ITableRepository.UpdateStatus(Id);
+            await _ITableRepository.UpdateStatusAsync(Id).ConfigureAwait(false);
 
             return Id;
         }
-        public bool UpdateReserved(Guid Id)
+        public async Task<bool> UpdateReservedAsync(Guid Id)
         {
-            var state= _ITableRepository.UpdateReserved(Id);
+            var state= await _ITableRepository.UpdateReservedAsync(Id).ConfigureAwait(false);
 
             return state;
         }
 
-        public async Task<bool> IsExist(string name)
+        public async Task<bool> IsDuplicateName(string name,Guid Id=new Guid())
         {
-            return await _ITableRepository.HasAnyAsync(x => x.Table_Name == name);
+            var table = await _ITableRepository.GetFirstOrDefaultAsync(x => x.Table_Name == name).ConfigureAwait(false);
+            if (table == null)
+            {
+                return false;
+            }
+            else
+            {
+                if (Id != Guid.Empty && Id == table.Id)
+                {
+                    return false;
+                }
+                else {
+                    return true;
+                }
+            }
         }
     }
 }

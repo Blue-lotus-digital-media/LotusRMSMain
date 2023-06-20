@@ -19,89 +19,68 @@ namespace LotusRMS.Models.Service.Implementation
         {
             _ITableTypeRepository = iTableTypeRepository;
         }
-
-     
-
-        public Guid Create(CreateTypeDTO dto)
-        {
-            var type=new LotusRMS_Table_Type(dto.Type_Name,dto.Type_Description);
-            _ITableTypeRepository.Add(type);
-            
-            return type.Id;
-
-        }
-
         public async Task<Guid> CreateAsync(CreateTypeDTO dto)
         {
-            throw new NotImplementedException();
+            var type = new LotusRMS_Table_Type(dto.Type_Name, dto.Type_Description);
+            await _ITableTypeRepository.AddAsync(type).ConfigureAwait(false);
+
+            return type.Id;
         }
 
-        public IEnumerable<LotusRMS_Table_Type> GetAll()
+      
+        public async Task<IEnumerable<LotusRMS_Table_Type>> GetAllAvailableAsync()
         {
-            return _ITableTypeRepository.GetAll();
-        }
-        public IEnumerable<LotusRMS_Table_Type> GetAllAvailable()
-        {
-            return _ITableTypeRepository.GetAll(x=>!x.IsDelete&&x.Status);
+            return await _ITableTypeRepository.GetAllAsync(x=>!x.IsDelete&&x.Status).ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<LotusRMS_Table_Type>> GetAllAsync()
         {
-            return await _ITableTypeRepository.GetAllAsync();
+            return await _ITableTypeRepository.GetAllAsync().ConfigureAwait(false);
         }
-        public LotusRMS_Table_Type GetFirstOrDefaultById(Guid TypeId)
+        public async Task<LotusRMS_Table_Type> GetFirstOrDefaultByIdAsync(Guid TypeId)
         {
-            return _ITableTypeRepository.GetFirstOrDefault(x=>x.Id==TypeId);
-        }
-
-        public LotusRMS_Table_Type GetByGuid(Guid Id)
-        {
-            return _ITableTypeRepository.GetByGuid(Id);
+            return await _ITableTypeRepository.GetFirstOrDefaultAsync(x=>x.Id==TypeId).ConfigureAwait(false);
         }
 
-        public async Task<LotusRMS_Table_Type> GetByGuidAsync(Guid Id)
+       public async Task<LotusRMS_Table_Type> GetByGuidAsync(Guid Id)
         {
-            throw new NotImplementedException();
-        }
-
-        public Guid Update(UpdateTypeDTO dto)
-        {
-            //using var tx = new TransactionScope();
-            var type = _ITableTypeRepository.GetByGuid(dto.Id) ?? throw new Exception();
-            type.Update(dto.Type_Name, dto.Type_Description);
-
-            _ITableTypeRepository.Update(type);
-            //todo logic
-
-           // tx.Complete();
-            return type.Id;
+            return await _ITableTypeRepository.GetByGuidAsync(Id).ConfigureAwait(false);
         }
 
         public async Task<Guid> UpdateAsync(UpdateTypeDTO dto)
         {
-            throw new NotImplementedException();
+            var type = await _ITableTypeRepository.GetByGuidAsync(dto.Id).ConfigureAwait(false) ?? throw new Exception();
+            type.Update(dto.Type_Name, dto.Type_Description);
+            await _ITableTypeRepository.UpdateAsync(type).ConfigureAwait(false);
+            return type.Id;
         }
 
-        public Guid UpdateStatus(Guid Id)
-        {
-            _ITableTypeRepository.UpdateStatus(Id);
-            return Id;
-        }
+      
 
         public async Task<Guid> UpdateStatusAsync(Guid Id)
         {
-            throw new NotImplementedException();
+            await _ITableTypeRepository.UpdateStatusAsync(Id);
+            return Id;
         }
 
-        public async Task<bool> IsExist(string type_Name)
+       public async Task<bool> IsDuplicateName(string Name, Guid Id = default)
         {
-            var type = await _ITableTypeRepository.GetFirstOrDefaultAsync(filter: x => x.Type_Name == type_Name);
-            if (type != null)
+            var tableType = await _ITableTypeRepository.GetFirstOrDefaultAsync(x => x.Type_Name == Name).ConfigureAwait(false);
+            if (tableType == null)
             {
-                return true;
+                return false;
             }
-            return false;
-
+            else
+            {
+                if(Id!=Guid.Empty && tableType.Id == Id)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
 
         }
     }

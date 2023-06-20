@@ -73,7 +73,7 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
             _IFiscalYearService = iFiscalYearService;
             _iInventoryService = iInventoryService;
         }
-        public IActionResult Index(Guid? TypeId,Guid? TableId)
+        public async Task<IActionResult> Index(Guid? TypeId,Guid? TableId)
         {
             var galla = _gallaService.GetTodayGalla();
             var createGallaVM = new CreateGallaVM()
@@ -100,17 +100,17 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
             ViewBag.TodayGalla = createGallaVM;
 
 
-            if (_IBillSettingService.GetActive() == null) {
+            if ((await _IBillSettingService.GetActiveAsync()) == null) {
                 _notyf.Warning("No Active Bill setting. Contact your admin first...", 20);
             }
 
-            var type = _ITableTypeService.GetAll().Where(x => !x.IsDelete && x.Status).ToList();
+            var type = await _ITableTypeService.GetAllAvailableAsync();
             var tableType = new List<TableTypeBookedVM>();
             if (type != null)
             {
                 foreach (var item in type)
                 {
-                    var tablesCount = _ITableService.GetAllByTypeId(item.Id).Where(x => x.IsReserved).Count();
+                    var tablesCount = (await _ITableService.GetAllByTypeIdAsync(item.Id)).Where(x => x.IsReserved).Count();
                     var tvm = new TableTypeBookedVM()
                     {
                         Type_Id = item.Id,
@@ -128,18 +128,18 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
             ViewBag.TableId = TableId;
             return View(tableType);
         }
-        public IActionResult GetTable(Guid Id)
+        public async Task<IActionResult> GetTable(Guid Id)
         {
-            var table = _ITableService.GetAll().Where(x => !x.IsDelete && x.Status && x.Table_Type_Id == Id);
+            var table = (await _ITableService.GetAllAvailableAsync()).Where(x => x.Table_Type_Id == Id);
             if (table.Count() == 0)
             {
                 _notyf.Error("No any table in this table type...", 5);
             }
             return PartialView("_TableList", model: table);
         }
-        public IActionResult GetOrder(Guid Id)
+        public async Task<IActionResult> GetOrder(Guid Id)
         {
-            var order = GetOrderVM(Id, "");
+            var order =await GetOrderVM(Id, "");
             ViewBag.Checkout = CreateCheckOut(order.Id, order.Order_Details.Sum(x => x.Total));
             return PartialView("_Order", model: order);
         }
@@ -163,7 +163,7 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
             };
             var id=_ICheckoutService.Create(dto);
             var order = _IOrderService.GetFirstOrDefaultByOrderId(vm.Order_Id);
-            _ITableService.UpdateReserved(order.Table_Id);
+            await _ITableService.UpdateReservedAsync(order.Table_Id);
 
 
             await SetCheckoutNotification(order.Table_Id);
@@ -199,7 +199,7 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
 
         }
 
-        public OrderVm GetOrderVM(Guid tableId, string? orderNo)
+        public async Task<OrderVm> GetOrderVM(Guid tableId, string? orderNo)
         {
             var OrderVM = new OrderVm()
             {
@@ -209,7 +209,7 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
             if (tableId != Guid.Empty)
             {
                 OrderVM.TableId = tableId;
-                OrderVM.Table_Name = _ITableService.GetByGuid(tableId).Table_Name;
+                OrderVM.Table_Name = (await _ITableService.GetByGuidAsync(tableId)).Table_Name;
                 order = _IOrderService.GetFirstOrDefaultByTableId(tableId);
                 if (order != null)
                 {
@@ -408,7 +408,7 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
         public async Task<IActionResult> CompleteOrderDetail(string orderNo, Guid OrderDetailId)
         {
             var id = _IOrderService.CompleteOrderDetail(orderNo, OrderDetailId);
-            var order = GetOrderVM(new Guid(), orderNo);
+            var order =await GetOrderVM(new Guid(), orderNo);
            await SetOrderNotification(order.TableId);
 
             ViewBag.Checkout = CreateCheckOut(order.Id, order.Order_Details.Sum(x => x.Total));
@@ -419,7 +419,7 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
         {
 
             var id = _IOrderService.CancelOrder(orderNo, OrderDetailId);
-            var order = GetOrderVM(new Guid(), orderNo);
+            var order = await GetOrderVM(new Guid(), orderNo);
 
             await SetOrderNotification(order.TableId);
 
@@ -429,17 +429,17 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
 
       
 
-        public IActionResult GetSwitchTableView(Guid TableId)
+        public async Task<IActionResult> GetSwitchTableView(Guid TableId)
         {
             var typeTable = new List<TypeTableVM>();
-            var type = _ITableTypeService.GetAllAvailable().Select(t=>new TypeVM()
+            var type = (await _ITableTypeService.GetAllAvailableAsync()).Select(t=>new TypeVM()
             {
                 Id=t.Id,
                 Type_Name=t.Type_Name
             });
             foreach(var item in type)
             {
-                var tables = _ITableService.GetAllByTypeId(item.Id).Select(tab => new TableVM() {
+                var tables = (await _ITableService.GetAllByTypeIdAsync(item.Id)).Select(tab => new TableVM() {
                     Id = tab.Id,
                     Table_Name=tab.Table_Name,
                     IsReserved=tab.IsReserved
@@ -457,21 +457,21 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
 
         }
 
-        public IActionResult SwitchTable(Guid OldTable,Guid NewTable)
+        public async Task<IActionResult> SwitchTable(Guid OldTable,Guid NewTable)
         {
             var order = _IOrderService.GetFirstOrDefaultByTableId(OldTable);
             order.Table_Id = NewTable;
 
-            var status = _ITableService.UpdateReserved(OldTable);
-            var newStatus = _ITableService.UpdateReserved(NewTable);
+            var status = await _ITableService.UpdateReservedAsync(OldTable);
+            var newStatus =await _ITableService.UpdateReservedAsync(NewTable);
 
             return RedirectToAction(nameof(Index));
         }
         #endregion
         public async Task SetCheckoutNotification(Guid Table_Id)
         {
-            var typeId = _ITableService.GetFirstOrDefaultById(Table_Id).Table_Type_Id;
-            var tableBooked = _ITableService.GetAllByTypeId(typeId).Count(x => x.IsReserved);
+            var typeId = (await _ITableService.GetFirstOrDefaultByIdAsync(Table_Id)).Table_Type_Id;
+            var tableBooked = (await _ITableService.GetAllByTypeIdAsync(typeId)).Count(x => x.IsReserved);
             var tvm = new tableReturnVM()
             {
                 Type_Id = typeId,
@@ -482,8 +482,8 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
         }
         public async Task SetOrderNotification(Guid Table_Id)
         {
-            var typeId = _ITableService.GetFirstOrDefaultById(Table_Id).Table_Type_Id;
-            var tableBooked = _ITableService.GetAllByTypeId(typeId).Count(x => x.IsReserved);
+            var typeId = (await _ITableService.GetFirstOrDefaultByIdAsync(Table_Id)).Table_Type_Id;
+            var tableBooked = (await _ITableService.GetAllByTypeIdAsync(typeId)).Count(x => x.IsReserved);
             var tvm = new tableReturnVM()
             {
                 Type_Id = typeId,

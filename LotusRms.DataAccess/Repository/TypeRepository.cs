@@ -16,23 +16,23 @@ namespace LotusRMS.DataAccess.Repository
             _dal = dal;
         }
 
-        public void Update(LotusRMS_Product_Type lType)
+        public async Task UpdateAsync(LotusRMS_Product_Type lType)
         {
-            var type = _dal.LotusRMS_Product_Types.FirstOrDefault(x=>x.Id== lType.Id);
+            var type = await GetFirstOrDefaultAsync(x=>x.Id== lType.Id).ConfigureAwait(false);
             if (type != null)
             {
                 type.Update(lType.Type_Name, lType.Type_Description);
-                Save();
+               await SaveAsync();
             }
         }
 
-        public void UpdateStatus(Guid Id)
+        public async Task UpdateStatusAsync(Guid Id)
         {
-            var type = _dal.LotusRMS_Product_Types.FirstOrDefault(x => x.Id == Id);
+            var type = await GetFirstOrDefaultAsync(x => x.Id == Id).ConfigureAwait(false);
             if (type != null)
             {
                 type.Status = !type.Status;
-                Save();
+                await SaveAsync();
             }
         }
     }

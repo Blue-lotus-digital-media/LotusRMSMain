@@ -35,35 +35,33 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(CreateTypeVM type, string? returnUrl = null)
+        public async Task<IActionResult> Create(CreateTypeVM type, string? returnUrl = null)
         {
+            returnUrl ??= nameof(Index);
+            ViewBag.ReturnUrl = returnUrl;
             if (!ModelState.IsValid)
             {
                 return View(type);
             }
-
+            if (await IsDuplicateName(type.Type_Name))
+            {
+                _notyf.Error("Duplicate Entry for type name " + type.Type_Name);
+                return View(type);
+            }
             var dto = new CreateTypeDTO(type_Name: type.Type_Name, type_Description: type.Type_Description);
-
-
-            _ITypeService.Create(dto);
+            await _ITypeService.CreateAsync(dto);
             _notyf.Success("Product Type Created Successfully!",5);
-
-
-            returnUrl ??= nameof(Index);
-
             return Redirect(returnUrl);
         }
 
-        public IActionResult Update(Guid? Id)
+        public async Task<IActionResult> Update(Guid Id=new Guid())
 
         {
             if (Id == Guid.Empty)
             {
                 return BadRequest("No data Found");
             }
-
-            var type = _ITypeService.GetByGuid((Guid)Id);
-
+            var type =await _ITypeService.GetByGuidAsync((Guid)Id);
             var updateTypeVM = new UpdateTypeVM()
             {
                 Id = type.Id,
@@ -75,10 +73,15 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(UpdateTypeVM type)
+        public async Task<IActionResult> Update(UpdateTypeVM type)
         {
             if (!ModelState.IsValid)
             {
+                return View(type);
+            }
+            if(await IsDuplicateName(type.Type_Name, type.Id))
+            {
+                _notyf.Error("Duplicate Entry for type name " + type.Type_Name);
                 return View(type);
             }
 
@@ -88,18 +91,23 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             };
 
 
-            _ITypeService.Update(dto);
+            await _ITypeService.UpdateAsync(dto);
             _notyf.Success("Product Type Updated Successfully!",5);
 
 
             return RedirectToAction(nameof(Index));
         }
 
+        private async Task<bool> IsDuplicateName(string name,Guid Id=new Guid())
+        {
+            return await _ITypeService.IsDuplicateName(name, Id);
+
+        }
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public IActionResult ExportToExcel()
+        public async Task<IActionResult> ExportToExcel()
         {
-            var arraylist = _ITypeService.GetAll();
+            var arraylist = await _ITypeService.GetAllAvailableAsync();
 
 
             using (XLWorkbook xl = new XLWorkbook())
@@ -119,9 +127,9 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         #region API CALLS
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var types = _ITypeService.GetAll().Select(x => new TypeVM()
+            var types = (await _ITypeService.GetAllAvailableAsync()).Select(x => new TypeVM()
             {
                 Id = x.Id,
                 Type_Name = x.Type_Name,
@@ -132,16 +140,16 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public IActionResult StatusChange(Guid Id)
+        public async Task<IActionResult> StatusChange(Guid Id)
         {
-            var unit = _ITypeService.GetByGuid(Id);
+            var unit = await _ITypeService.GetByGuidAsync(Id);
             if (unit == null)
             {
                 return BadRequest();
             }
             else
             {
-                var id = _ITypeService.UpdateStatus(Id);
+                var id =await _ITypeService.UpdateStatusAsync(Id);
 
                 return Ok(unit.Status);
             }

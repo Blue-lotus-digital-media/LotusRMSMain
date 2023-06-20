@@ -1,5 +1,6 @@
 ﻿using LotusRMS.Models;
 using LotusRMS.Models.IRepositorys;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,9 +17,9 @@ namespace LotusRMS.DataAccess.Repository
             _dal = dal;
         }
 
-        public void Update(LotusRMS_Table table)
+        public async Task UpdateAsync(LotusRMS_Table table)
         {
-            var tables = _dal.LotusRMS_Tables.FirstOrDefault(x => x.Id == table.Id);
+            var tables = await GetFirstOrDefaultAsync(x => x.Id == table.Id).ConfigureAwait(false);
             if (tables != null)
             {
                 tables.Update(
@@ -26,26 +27,26 @@ namespace LotusRMS.DataAccess.Repository
                     table_No:table.Table_No,
                     no_Of_Chair:table.No_Of_Chair,
                     table_Type_Id:table.Table_Type_Id);
-                Save();
+                await SaveAsync().ConfigureAwait(false);
             }
         }
 
-        public void UpdateStatus(Guid Id)
+        public async Task UpdateStatusAsync(Guid Id)
         {
-            var table = _dal.LotusRMS_Tables.FirstOrDefault(x => x.Id == Id);
+            var table = await GetFirstOrDefaultAsync(x => x.Id == Id).ConfigureAwait(false);
             if (table != null)
             {
                 table.Status = !table.Status;
-                Save();
+                await SaveAsync().ConfigureAwait(false);
             }
         } 
-        public bool UpdateReserved(Guid Id)
+        public async Task<bool> UpdateReservedAsync(Guid Id)
         {
-            var table = _dal.LotusRMS_Tables.FirstOrDefault(x => x.Id == Id);
+           var table = await GetFirstOrDefaultAsync(x => x.Id == Id).ConfigureAwait(false);
             if (table != null)
             {
                 table.IsReserved = !table.IsReserved;
-                Save();
+                await SaveAsync().ConfigureAwait(false);
             }
             return table.IsReserved;
         }

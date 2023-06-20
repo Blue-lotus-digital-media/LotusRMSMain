@@ -18,24 +18,23 @@ namespace LotusRMS.DataAccess.Repository
 
       
 
-        public void Update(LotusRMS_Product_Category obj)
+        public async Task UpdateAsync(LotusRMS_Product_Category obj)
         {
-            var category = _dal.LotusRMS_Product_Categories.FirstOrDefault(x => x.Id == obj.Id);
+            var category =await GetFirstOrDefaultAsync(x => x.Id == obj.Id).ConfigureAwait(false);
             if (category != null)
             {
                 category.Update(category_Name: obj.Category_Name, category_Description: obj.Category_Description,obj.Type_Id);
-                Save();
-
+                await SaveAsync().ConfigureAwait(false);
             }
         }
 
-        public void UpdateStatus(Guid Id)
+        public async Task UpdateStatusAsync(Guid Id)
         {
-            var type = _dal.LotusRMS_Product_Categories.FirstOrDefault(x => x.Id == Id);
+            var type = await GetFirstOrDefaultAsync(x => x.Id == Id).ConfigureAwait(false);
             if (type != null)
             {
                 type.Status = !type.Status;
-                Save();
+                await SaveAsync().ConfigureAwait(false);
             }
         }
     }

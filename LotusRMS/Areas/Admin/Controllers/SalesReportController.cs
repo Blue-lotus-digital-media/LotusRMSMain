@@ -43,7 +43,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetReportType(string reportType) {
+        public async Task<IActionResult> GetReportType(string reportType) {
            var list= new List<SelectList>();
 
             if (reportType == SalesReportType.ReportType.item.ToString())
@@ -51,7 +51,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 list = GetItemList();
             }else if (reportType == SalesReportType.ReportType.table.ToString())
             {
-                list = GetTableList();
+                list = await GetTableList();
             }else if (reportType == SalesReportType.ReportType.customer.ToString())
             {
                 list = GetCustomerList();
@@ -82,9 +82,9 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             return customerList;
         
         }
-        public List<SelectList> GetTableList() {
+        public async Task<List<SelectList>> GetTableList() {
 
-            var tableList = _iTableService.GetAllAvailable().Select(table => new SelectList(){ 
+            var tableList = (await _iTableService.GetAllAvailableAsync()).Select(table => new SelectList(){ 
                 Id= table.Id.ToString(),
                 Name= table.Table_Name }).ToList();
             tableList.Insert(0, new SelectList() { Id = Guid.Empty.ToString(), Name = "All" });

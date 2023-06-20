@@ -9,12 +9,13 @@ namespace LotusRMS.Models.Service
 {
     public interface ICategoryService
     {
-        Task<Guid> Create(CreateCategoryDTO dto);
-        Guid Update(UpdateCategoryDTO dto);
-        Guid UpdateStatus(Guid Id);
-
-        public IEnumerable<LotusRMS_Product_Category> GetAll();
-        public LotusRMS_Product_Category GetByGuid(Guid Id);
+        Task<Guid> CreateAsync(CreateCategoryDTO dto);
+        Task<Guid> UpdateAsync(UpdateCategoryDTO dto);
+        Task<Guid> UpdateStatusAsync(Guid Id);
+        Task<IEnumerable<LotusRMS_Product_Category>> GetAllAsync();
+        Task<IEnumerable<LotusRMS_Product_Category>> GetAllAvailableAsync();
+        Task<LotusRMS_Product_Category> GetByGuidAsync(Guid Id);
+        Task<bool> IsDuplicateName(string Name, Guid Id = new Guid());
 
 
     }

@@ -9,17 +9,17 @@ namespace LotusRMS.Models.Service
 {
     public interface ITableService
     {
-        Task<Guid> Create(CreateTableDTO dto);
-        Guid Update(UpdateTableDTO dto);
-        Guid UpdateStatus(Guid Id);
-        bool UpdateReserved(Guid Id);
-        Task<bool> IsExist(string name);
-        public IEnumerable<LotusRMS_Table> GetAll();
-        public IEnumerable<LotusRMS_Table> GetAllAvailable();
-        public IEnumerable<LotusRMS_Table> GetAllReserved();
-        public LotusRMS_Table GetByGuid(Guid Id);
-        public LotusRMS_Table GetFirstOrDefaultById(Guid Id);
-        public IEnumerable<LotusRMS_Table> GetAllByTypeId(Guid Id);
+        Task<Guid> CreateAsync(CreateTableDTO dto);
+        Task<Guid> UpdateAsync(UpdateTableDTO dto);
+        Task<Guid> UpdateStatusAsync(Guid Id);
+        Task<bool> UpdateReservedAsync(Guid Id);
+        Task<bool> IsDuplicateName(string name, Guid Id = new Guid());
+        Task<IEnumerable<LotusRMS_Table>> GetAllAsync();
+        Task<IEnumerable<LotusRMS_Table>> GetAllAvailableAsync();
+         Task<IEnumerable<LotusRMS_Table>> GetAllReservedAsync();
+         Task<LotusRMS_Table> GetByGuidAsync(Guid Id);
+         Task<LotusRMS_Table> GetFirstOrDefaultByIdAsync(Guid Id);
+         Task<IEnumerable<LotusRMS_Table>> GetAllByTypeIdAsync(Guid Id);
        
     }
 }

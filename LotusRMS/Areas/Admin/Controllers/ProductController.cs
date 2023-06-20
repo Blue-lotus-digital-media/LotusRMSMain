@@ -43,13 +43,13 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             return View();
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            var CategoryList = _ICategoryService.GetAll();
+            var CategoryList = await _ICategoryService.GetAllAsync();
             var UnitList = _IUnitService.GetAll();
             var createProductVMs = new CreateProductVM()
             {
-                TypeList = _ITypeService.GetAll().Where(x => x.Status).Select(type => new SelectListItem()
+                TypeList = (await _ITypeService.GetAllAvailableAsync()).Select(type => new SelectListItem()
                 {
                     Text = type.Type_Name,
                     Value = type.Id.ToString()
@@ -97,12 +97,12 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             else
             {
 
-                productVMs.TypeList = _ITypeService.GetAll().Where(x => x.Status).Select(type => new SelectListItem()
+                productVMs.TypeList = (await _ITypeService.GetAllAvailableAsync()).Select(type => new SelectListItem()
                 {
                     Text = type.Type_Name,
                     Value = type.Id.ToString()
                 });
-                productVMs.CategoryList = GetCategory(productVMs.Product_Type_Id);
+                productVMs.CategoryList =await GetCategory(productVMs.Product_Type_Id);
 
                 productVMs.UnitList = _IUnitService.GetAll().Select(i => new SelectListItem()
                 {
@@ -119,11 +119,11 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             if (Id == Guid.Empty || Id == null) {
                 return BadRequest();
             }
-            var CategoryList = _ICategoryService.GetAll();
+            var CategoryList =await _ICategoryService.GetAllAvailableAsync();
             var UnitList = _IUnitService.GetAll();
             var updateProductVMs = new UpdateProductVM()
             {
-                TypeList = _ITypeService.GetAll().Where(x => x.Status).Select(type => new SelectListItem()
+                TypeList = (await _ITypeService.GetAllAvailableAsync()).Select(type => new SelectListItem()
                 {
                     Text = type.Type_Name,
                     Value = type.Id.ToString()
@@ -143,7 +143,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             updateProductVMs.Product_Name = p.Product_Name;
             updateProductVMs.Product_Description = p.Product_Description;
             updateProductVMs.Product_Category_Id = p.Product_Category_Id;
-            updateProductVMs.CategoryList = GetCategory(p.Product_Type_Id);
+            updateProductVMs.CategoryList =await GetCategory(p.Product_Type_Id);
             updateProductVMs.Product_Unit_Id = p.Product_Unit_Id;
             updateProductVMs.Product_Type_Id = p.Product_Type_Id;
             updateProductVMs.Unit_Quantity = (double)p.Unit_Quantity;
@@ -216,12 +216,12 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             }
             else
             {
-                productVMs.TypeList = _ITypeService.GetAll().Where(x => x.Status).Select(type => new SelectListItem()
+                productVMs.TypeList = (await _ITypeService.GetAllAvailableAsync()).Select(type => new SelectListItem()
                 {
                     Text = type.Type_Name,
                     Value = type.Id.ToString()
                 });
-                productVMs.CategoryList = GetCategory(productVMs.Product_Type_Id);
+                productVMs.CategoryList =await GetCategory(productVMs.Product_Type_Id);
 
                 productVMs.UnitList = _IUnitService.GetAll().Select(i => new SelectListItem()
                 {
@@ -282,9 +282,9 @@ namespace LotusRMSweb.Areas.Admin.Controllers
 
 
         [HttpGet]
-        public List<SelectListItem> GetCategory(Guid Id)
+        public async Task<List<SelectListItem>> GetCategory(Guid Id)
         {
-            var CategoryList = _ICategoryService.GetAll().Where(x => x.Status && x.Type_Id == Id).Select(type =>
+            var CategoryList = (await _ICategoryService.GetAllAvailableAsync()).Where(x => x.Type_Id == Id).Select(type =>
                 new SelectListItem()
                 {
                     Text = type.Category_Name,

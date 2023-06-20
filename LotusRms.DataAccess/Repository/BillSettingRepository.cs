@@ -17,7 +17,7 @@ namespace LotusRMS.DataAccess.Repository
             _dal = dal;
         }
 
-        public void Update(LotusRMS_BillSetting obj)
+        public async Task UpdateAsync(LotusRMS_BillSetting obj)
         {
             var billSetting = GetByGuid(obj.Id);
             billSetting.BillPrefix = obj.BillPrefix;
@@ -27,30 +27,27 @@ namespace LotusRMS.DataAccess.Repository
             billSetting.BillNote = obj.BillNote;
             billSetting.BillTitle = obj.BillTitle;
 
-            var activeSetting = GetFirstOrDefault(x => x.IsActive);
+            var activeSetting = await GetFirstOrDefaultAsync(x => x.IsActive).ConfigureAwait(false);
             if (activeSetting.Id != obj.Id && obj.IsActive)
             {
                 activeSetting.IsActive = false;
                 billSetting.IsActive = true;
             }
-
-            Save();
-
+            await SaveAsync().ConfigureAwait(false);
         }
 
-        public void UpdateActive(Guid Id)
+        public async Task UpdateActiveAsync(Guid Id)
         {
-            var activeSetting = GetFirstOrDefault(x => x.IsActive);
+            var activeSetting = await GetFirstOrDefaultAsync(x => x.IsActive).ConfigureAwait(false);
             if (activeSetting != null)
             {
                 activeSetting.IsActive = false;
             }
-            var currentSetting = GetByGuid(Id);
+            var currentSetting = await GetByGuidAsync(Id).ConfigureAwait(false);
             currentSetting.IsActive = true;
-            Save();
+            await SaveAsync().ConfigureAwait(false);
         }
-
-        public void UpdateStatus(Guid Id)
+        public Task UpdateStatusAsync(Guid Id)
         {
             throw new NotImplementedException();
         }

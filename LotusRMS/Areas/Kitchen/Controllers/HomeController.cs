@@ -36,9 +36,9 @@ namespace LotusRMSweb.Areas.Kitchen.Controllers
 
 
         #region Api Call
-        public IActionResult GetData() {
+        public async Task<IActionResult> GetData() {
 
-            var tables = _tableService.GetAllReserved();
+            var tables =await _tableService.GetAllReservedAsync();
             var orderVM=new List<PrintOrderDetailVM>();   
             foreach(var table in tables) {
                 var order = _orderService.GetFirstOrDefaultByTableId(table.Id);

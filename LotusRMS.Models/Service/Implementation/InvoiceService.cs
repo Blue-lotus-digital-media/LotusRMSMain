@@ -31,7 +31,7 @@ namespace LotusRMS.Models.Service.Implementation
 
         public async Task<Guid> CreateAsync(Guid id)
         {
-            var bill = _billSettingService.GetActive();
+            var bill =await _billSettingService.GetActiveAsync();
 
             var billString = bill.BillPrefix;
            

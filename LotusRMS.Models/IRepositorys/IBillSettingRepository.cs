@@ -8,9 +8,9 @@ namespace LotusRMS.Models.IRepositorys
 {
     public interface IBillSettingRepository:IBaseRepository<LotusRMS_BillSetting>
     {
-        void Update(LotusRMS_BillSetting obj);
-        void UpdateStatus(Guid Id);
+        Task UpdateAsync(LotusRMS_BillSetting obj);
+        Task UpdateStatusAsync(Guid Id);
 
-        public void UpdateActive(Guid Id);
+        Task UpdateActiveAsync(Guid Id);
     }
 }

@@ -42,7 +42,7 @@ namespace LotusRMSweb.Areas.Menu.Controllers
               customer= JsonConvert.DeserializeObject<List<string>>(HttpContext.Session.GetString("customerInfo"));
             }
 
-                var table = _iTableService.GetFirstOrDefaultById(TableNo);
+                var table = await _iTableService.GetFirstOrDefaultByIdAsync(TableNo);
             if (table != null)
             {
                 var menus = _iMenuService.GetAllAvailable().ToList().Select(menu => new MenuVM()

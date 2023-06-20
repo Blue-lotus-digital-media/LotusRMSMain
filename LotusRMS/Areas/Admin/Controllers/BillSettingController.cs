@@ -74,7 +74,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(CreateBillSettingVM vm)
+        public async Task<IActionResult> Create(CreateBillSettingVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -93,13 +93,13 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 IsPhone = vm.IsPhone,
                 IsActive = vm.IsActive
             };
-            var id = _iBillSettingService.Create(dto);
+            var id = await _iBillSettingService.CreateAsync(dto);
             _notyf.Success("Bill setting added successfully... ", 5);
 
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult Update(Guid Id)
+        public async Task<IActionResult> Update(Guid Id)
         {
             if (Id == Guid.Empty)
             {
@@ -108,7 +108,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var billSetting = _iBillSettingService.GetByGuid(Id);
+            var billSetting = await _iBillSettingService.GetByGuidAsync(Id);
             if (billSetting == null)
             {
                 _notyf.Success("Company not setuped contact developer to register company... ", 5);
@@ -130,7 +130,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(UpdateBillSettingVM vm)
+        public async Task<IActionResult> Update(UpdateBillSettingVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -139,7 +139,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 return View(vm);
             }
 
-            var billSetting = _iBillSettingService.GetActive();
+            var billSetting = await _iBillSettingService.GetActiveAsync();
             if (billSetting.Id == vm.Id && !vm.IsActive)
             {
                 _notyf.Error("Active Bill setting cannot be deactive now... ", 5);
@@ -158,7 +158,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 IsPhone = vm.IsPhone,
                 IsActive = vm.IsActive
             };
-            var id = _iBillSettingService.Update(dto);
+            var id = await _iBillSettingService.UpdateAsync(dto);
             _notyf.Success("Bill Setting Updated Successfully... ", 5);
 
             return RedirectToAction(nameof(Index));
@@ -167,9 +167,9 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         #region API
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var billSettings = _iBillSettingService.GetAllAvailable().Select(vm => new BillSettingVM()
+            var billSettings = (await _iBillSettingService.GetAllAvailableAsync()).Select(vm => new BillSettingVM()
             {
                 Id = vm.Id,
                 BillPrefix = vm.BillPrefix,
@@ -187,9 +187,9 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public IActionResult ActiveChange(Guid id)
+        public async Task<IActionResult> ActiveChange(Guid id)
         {
-            var activeBill = _iBillSettingService.GetActive();
+            var activeBill = await _iBillSettingService.GetActiveAsync();
             if (activeBill != null)
             {
                 if (activeBill.Id == id)
@@ -199,7 +199,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                     return Ok(false);
                 }
 
-                var rid = _iBillSettingService.UpdateActive(id);
+                var rid = await _iBillSettingService.UpdateActiveAsync(id);
             }
             _notyf.Success("Active billsetting status changed... ", 5);
 

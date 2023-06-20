@@ -31,18 +31,18 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             _env = env;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
            
             var typeTable = new List<TodayTableVM>();
-            var type = _ITableTypeService.GetAllAvailable().Select(t => new TypeVM()
+            var type = (await _ITableTypeService.GetAllAvailableAsync()).Select(t => new TypeVM()
             {
                 Id = t.Id,
                 Type_Name = t.Type_Name
             });
             foreach (var item in type)
             {
-                var tables = _ITableService.GetAllByTypeId(item.Id).Select(tab => new TodayDetailVM()
+                var tables = (await _ITableService.GetAllByTypeIdAsync(item.Id)).Select(tab => new TodayDetailVM()
                 {
                     Table_Id = tab.Id,
                     Table_Name = tab.Table_Name,

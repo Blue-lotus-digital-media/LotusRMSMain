@@ -9,15 +9,16 @@ namespace LotusRMS.Models.Service
 {
     public interface IBillSettingService
     {
-        Task<Guid> Create(CreateBillSettingDTO dto);
-        Guid Update(UpdateBillSettingDTO dto);
-        Guid UpdateActive(Guid Id);
+        Task<Guid> CreateAsync(CreateBillSettingDTO dto);
+        Task<Guid> UpdateAsync(UpdateBillSettingDTO dto);
+        Task<Guid> UpdateActiveAsync(Guid Id);
 
-        IEnumerable<LotusRMS_BillSetting> GetAll();
-        IEnumerable<LotusRMS_BillSetting> GetAllAvailable();
-        LotusRMS_BillSetting GetByGuid(Guid Id);
-        LotusRMS_BillSetting GetActive();
-        bool CheckActive();
+        Task<IEnumerable<LotusRMS_BillSetting>> GetAllAsync();
+        Task<IEnumerable<LotusRMS_BillSetting>> GetAllAvailableAsync();
+       Task<LotusRMS_BillSetting> GetByGuidAsync(Guid Id);
+        Task<LotusRMS_BillSetting> GetActiveAsync();
+        Task<bool> CheckActiveAsync();
+        Task<bool> IsDuplicateName(string Name,Guid Id=new Guid());
 
     }
 }

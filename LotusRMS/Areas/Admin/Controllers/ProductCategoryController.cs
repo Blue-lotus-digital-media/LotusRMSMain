@@ -30,12 +30,11 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             return View();
         }
 
-        public IActionResult Create(string? returnUrl = null)
+        public async Task<IActionResult> Create(string? returnUrl = null)
         {
             returnUrl ??= nameof(Index);
-
             var category = new CreateCategoryVM();
-            var typeList = _ITypeService.GetAll().Where(x => x.Status).Select(x => new SelectListItem()
+            var typeList = (await _ITypeService.GetAllAvailableAsync()).Select(x => new SelectListItem()
             {
                 Text = x.Type_Name,
                 Value = x.Id.ToString()
@@ -48,12 +47,12 @@ namespace LotusRMSweb.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(CreateCategoryVM obj, string? returnUrl = null)
+        public async Task<IActionResult> Create(CreateCategoryVM obj, string? returnUrl = null)
         {
             returnUrl ??= nameof(Index);
             if (!ModelState.IsValid)
             {
-                var typeList = _ITypeService.GetAll().Where(x => x.Status).Select(x => new SelectListItem()
+                var typeList =(await _ITypeService.GetAllAvailableAsync()).Select(x => new SelectListItem()
                 {
                     Text = x.Type_Name,
                     Value = x.Id.ToString()
@@ -62,16 +61,25 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 _notyf.Error("One or move validation error !!! ", 5);
                 return View(obj);
             }
-
+            if (await IsDuplicate(obj.Category_Name))
+            {
+                obj.TypeList = (await _ITypeService.GetAllAvailableAsync()).Where(x => x.Status).Select(x => new SelectListItem()
+                {
+                    Text = x.Type_Name,
+                    Value = x.Id.ToString()
+                });
+                _notyf.Error("Duplicate entry for name " + obj.Category_Name, 5);
+                return View(obj);
+            }
             var category = new CreateCategoryDTO(obj.Category_Name, obj.Category_Description, obj.Type_Id);
 
-            var id = _ICategoryService.Create(category);
+            var id = await _ICategoryService.CreateAsync(category);
 
             _notyf.Success("Product Category created successfully", 5);
             return Redirect(returnUrl);
         }
 
-        public IActionResult Update(Guid? Id)
+        public async Task<IActionResult> Update(Guid? Id)
         {
             if (Id == Guid.Empty)
             {
@@ -79,7 +87,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             }
 
             var updateCategoryVM = new UpdateCategoryVM();
-            var typeList = _ITypeService.GetAll().Where(x => x.Status).Select(x => new SelectListItem()
+            var typeList = (await _ITypeService.GetAllAvailableAsync()).Select(x => new SelectListItem()
             {
                 Text = x.Type_Name,
                 Value = x.Id.ToString()
@@ -87,7 +95,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             updateCategoryVM.TypeList = typeList;
 
 
-            var category = _ICategoryService.GetByGuid((Guid)Id);
+            var category =await _ICategoryService.GetByGuidAsync((Guid)Id);
             if (category == null)
             {
                 return RedirectToAction(nameof(Index));
@@ -104,15 +112,25 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(UpdateCategoryVM vm)
+        public async Task<IActionResult> Update(UpdateCategoryVM vm)
         {
             if (!ModelState.IsValid)
             {
-                vm.TypeList = _ITypeService.GetAll().Where(x => x.Status).Select(x => new SelectListItem()
+                vm.TypeList = (await _ITypeService.GetAllAvailableAsync()).Where(x => x.Status).Select(x => new SelectListItem()
                 {
                     Text = x.Type_Name,
                     Value = x.Id.ToString()
                 });
+                return View(vm);
+            }
+            if (await IsDuplicate(vm.Category_Name,vm.Id))
+            {
+                vm.TypeList = (await _ITypeService.GetAllAvailableAsync()).Where(x => x.Status).Select(x => new SelectListItem()
+                {
+                    Text = x.Type_Name,
+                    Value = x.Id.ToString()
+                });
+                _notyf.Error("Duplicate entry for name " + vm.Category_Name, 5);
                 return View(vm);
             }
 
@@ -125,20 +143,23 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 Id = vm.Id
             };
 
-            _ICategoryService.Update(dto);
+            await _ICategoryService.UpdateAsync(dto);
 
             _notyf.Success("Product Category updated successfully", 5);
             return RedirectToAction(nameof(Index));
         }
 
-
+        private async Task<bool> IsDuplicate(string name,Guid Id=new Guid())
+        {
+            return await _ICategoryService.IsDuplicateName(name, Id);
+        }
         #region API CALLS
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public IActionResult ExportToExcel()
+        public async Task<IActionResult> ExportToExcel()
         {
-            var arraylist = _ICategoryService.GetAll();
+            var arraylist =await _ICategoryService.GetAllAvailableAsync();
 
 
             using (XLWorkbook xl = new XLWorkbook())
@@ -157,9 +178,9 @@ namespace LotusRMSweb.Areas.Admin.Controllers
 
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var categorys = _ICategoryService.GetAll().Select(x => new CategoryVM()
+            var categorys = (await _ICategoryService.GetAllAvailableAsync()).Select(x => new CategoryVM()
             {
                 Id = x.Id,
                 Category_Name = x.Category_Name,
@@ -172,16 +193,16 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public IActionResult StatusChange(Guid Id)
+        public async Task<IActionResult> StatusChange(Guid Id)
         {
-            var category = _ICategoryService.GetByGuid(Id);
+            var category = await _ICategoryService.GetByGuidAsync(Id);
             if (category == null)
             {
                 return BadRequest();
             }
             else
             {
-                _ICategoryService.UpdateStatus(Id);
+               await _ICategoryService.UpdateStatusAsync(Id);
 
                 return Ok(category.Status);
             }

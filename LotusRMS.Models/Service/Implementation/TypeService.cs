@@ -9,7 +9,7 @@ using System.Transactions;
 
 namespace LotusRMS.Models.Service.Implementation
 {
-    
+
     public class TypeService : ITypeService
     {
 
@@ -18,75 +18,56 @@ namespace LotusRMS.Models.Service.Implementation
         {
             _ITypeRepository = iTypeRepository;
         }
-
-     
-
-        public Guid Create(CreateTypeDTO dto)
-        {
-            var type=new LotusRMS_Product_Type(dto.Type_Name,dto.Type_Description);
-            _ITypeRepository.Add(type);
-            _ITypeRepository.Save();
-            return type.Id;
-
-        }
-
         public async Task<Guid> CreateAsync(CreateTypeDTO dto)
         {
-            throw new NotImplementedException();
+            var type = new LotusRMS_Product_Type(dto.Type_Name, dto.Type_Description);
+            await _ITypeRepository.AddAsync(type).ConfigureAwait(false);
+            await _ITypeRepository.SaveAsync().ConfigureAwait(false);
+            return type.Id;
         }
-
-        public IEnumerable<LotusRMS_Product_Type> GetAll()
+       public async Task<IEnumerable<LotusRMS_Product_Type>> GetAllAsync()
         {
-            return _ITypeRepository.GetAll();
+            return await _ITypeRepository.GetAllAsync().ConfigureAwait(false);
         }
-
-        public async Task<IEnumerable<LotusRMS_Product_Type>> GetAllAsync()
+        public async Task<IEnumerable<LotusRMS_Product_Type>> GetAllAvailableAsync()
         {
-            return await _ITypeRepository.GetAllAsync();
-        }
-
-        public LotusRMS_Product_Type GetByGuid(Guid Id)
-        {
-            return _ITypeRepository.GetByGuid(Id);
+            return await _ITypeRepository.GetAllAsync(x=>x.Status && !x.IsDelete).ConfigureAwait(false);
         }
 
         public async Task<LotusRMS_Product_Type> GetByGuidAsync(Guid Id)
         {
-            throw new NotImplementedException();
+            return await _ITypeRepository.GetByGuidAsync(Id).ConfigureAwait(false);
         }
 
-        public Guid Update(UpdateTypeDTO dto)
+        public async Task<bool> IsDuplicateName(string Name, Guid Id = new Guid())
         {
-            //using var tx = new TransactionScope();
-            var type = _ITypeRepository.GetByGuid(dto.Id) ?? throw new Exception();
-            type.Update(dto.Type_Name, dto.Type_Description);
-           
-            _ITypeRepository.Update(type);
-            _ITypeRepository.Save();
-            //todo logic
-
-           // tx.Complete();
-            return type.Id;
+            var type = await _ITypeRepository.GetFirstOrDefaultAsync(x => x.Type_Name == Name).ConfigureAwait(false);
+            if (type == null)
+            {
+                return false;
+            }
+            else
+            {
+                if(Id!=Guid.Empty && type.Id == Id)
+                {
+                    return false;
+                }
+                return true;
+            }
         }
 
         public async Task<Guid> UpdateAsync(UpdateTypeDTO dto)
         {
-            throw new NotImplementedException();
+            var type = await _ITypeRepository.GetByGuidAsync(dto.Id).ConfigureAwait(false) ?? throw new Exception();
+            type.Update(dto.Type_Name, dto.Type_Description);
+            await _ITypeRepository.UpdateAsync(type).ConfigureAwait(false);
+            await _ITypeRepository.SaveAsync().ConfigureAwait(false);
+            return type.Id;
         }
-
-        public Guid UpdateStatus(Guid Id)
-        {
-            _ITypeRepository.UpdateStatus(Id);
-
-            _ITypeRepository.Save();
-            return Id;
-        }
-
         public async Task<Guid> UpdateStatusAsync(Guid Id)
         {
-            throw new NotImplementedException();
+            await _ITypeRepository.UpdateStatusAsync(Id).ConfigureAwait(false);
+            return Id;
         }
-
-       
     }
 }

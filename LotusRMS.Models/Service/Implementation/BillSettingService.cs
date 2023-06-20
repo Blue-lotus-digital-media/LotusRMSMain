@@ -17,16 +17,14 @@ namespace LotusRMS.Models.Service.Implementation
             _billSettingRepository = billSettingRepository;
         }
 
-        public bool CheckActive()
+        public Task<bool> CheckActiveActive()
         {
             throw new NotImplementedException();
         }
 
-        public Task<Guid> Create(CreateBillSettingDTO dto)
+        public async Task<Guid> CreateAsync(CreateBillSettingDTO dto)
         {
-            var activeBill = GetActive();
-            
-
+            var activeBill = await GetActiveAsync().ConfigureAwait(false);
             var bs = new LotusRMS_BillSetting()
             {
                 BillPrefix = dto.BillPrefix,
@@ -49,32 +47,32 @@ namespace LotusRMS.Models.Service.Implementation
 
             }
           
-            _billSettingRepository.Add(bs);
-            _billSettingRepository.Save();
-            return Task.FromResult(bs.Id);
+          await _billSettingRepository.AddAsync(bs).ConfigureAwait(false);
+            await _billSettingRepository.SaveAsync().ConfigureAwait(false);
+            return bs.Id;
         }
 
-        public LotusRMS_BillSetting GetActive()
+        public async Task<LotusRMS_BillSetting> GetActiveAsync()
         {
-            return _billSettingRepository.GetFirstOrDefault(x => x.IsActive);
+            return await _billSettingRepository.GetFirstOrDefaultAsync(x => x.IsActive).ConfigureAwait(false);
         }
 
-        public IEnumerable<LotusRMS_BillSetting> GetAll()
+        public async Task<IEnumerable<LotusRMS_BillSetting>> GetAllAsync()
         {
-            return _billSettingRepository.GetAll();
+            return await _billSettingRepository.GetAllAsync().ConfigureAwait(false);
         }
 
-        public IEnumerable<LotusRMS_BillSetting> GetAllAvailable()
+        public async Task<IEnumerable<LotusRMS_BillSetting>> GetAllAvailableAsync()
         {
-            return _billSettingRepository.GetAll(x => !x.IsDelete);
+            return await _billSettingRepository.GetAllAsync(x => !x.IsDelete).ConfigureAwait(false);
         }
 
-        public LotusRMS_BillSetting GetByGuid(Guid Id)
+        public async Task<LotusRMS_BillSetting> GetByGuidAsync(Guid Id)
         {
-            return _billSettingRepository.GetByGuid(Id);
+            return await _billSettingRepository.GetByGuidAsync(Id).ConfigureAwait(false);
         }
 
-        public Guid Update(UpdateBillSettingDTO dto)
+        public async Task<Guid> UpdateAsync(UpdateBillSettingDTO dto)
         {
             var billsetting = new LotusRMS_BillSetting()
             {
@@ -88,15 +86,25 @@ namespace LotusRMS.Models.Service.Implementation
                 IsPhone = dto.IsPhone,
                 IsActive = dto.IsActive,
             };
-            _billSettingRepository.Update(billsetting);
+            await _billSettingRepository.UpdateAsync(billsetting).ConfigureAwait(false);
             return dto.Id;
         }
 
-        public Guid UpdateActive(Guid Id)
+        public async Task<Guid> UpdateActiveAsync(Guid Id)
         {
-            _billSettingRepository.UpdateActive(Id);
+            await _billSettingRepository.UpdateActiveAsync(Id).ConfigureAwait(false);
 
             return Id;
+        }
+
+        public Task<bool> CheckActiveAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> IsDuplicateName(string Name, Guid Id = default)
+        {
+            throw new NotImplementedException();
         }
     }
 }

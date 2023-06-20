@@ -42,46 +42,31 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             {
                 return View(type);
             }
-
-            if (!(await  _ITableTypeService.IsExist(type.Type_Name)))
+            if (await IsDuplicateName(type.Type_Name))
             {
-
-                var dto = new CreateTypeDTO(type_Name: type.Type_Name, type_Description: type.Type_Description);
-
-
-                _ITableTypeService.Create(dto);
-
-                _notyf.Success("Table Type created successfully !", 5);
-
-
-                returnUrl ??= nameof(Index);
-
-                return Redirect(returnUrl);
-            }
-            else
-            {
-                _notyf.Warning("Table Type with name "+ type.Type_Name + " already exist. Please try new Name!", 5);
+                _notyf.Warning("Table Type with name " + type.Type_Name + " already exist. Please try new Name!", 5);
                 return View(type);
             }
+            var dto = new CreateTypeDTO(type_Name: type.Type_Name, type_Description: type.Type_Description);
+                await _ITableTypeService.CreateAsync(dto);
+                _notyf.Success("Table Type created successfully !", 5);
+                returnUrl ??= nameof(Index);
+                return Redirect(returnUrl);
         }
 
-        public IActionResult Update(Guid? Id)
-
+        public async Task<IActionResult> Update(Guid? Id)
         {
             if (Id == Guid.Empty)
             {
                 return BadRequest("No data Found");
             }
-
-            var type = _ITableTypeService.GetByGuid((Guid)Id);
-
+            var type =await _ITableTypeService.GetByGuidAsync((Guid)Id);
             var updateTypeVM = new UpdateTypeVM()
             {
                 Id = type.Id,
                 Type_Description = type.Type_Description,
                 Type_Name = type.Type_Name
             };
-
             return View(updateTypeVM);
         }
 
@@ -92,28 +77,29 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             {
                 return View(type);
             }
-            if (!(await _ITableTypeService.IsExist(type.Type_Name)))
-            {
-                var dto = new UpdateTypeDTO(type_Name: type.Type_Name, type_Description: type.Type_Description)
-                {
-                    Id = type.Id
-                };
-                _ITableTypeService.Update(dto);
-                _notyf.Success("Table Type updated successfully !", 5);
-                return RedirectToAction(nameof(Index));
-            }
-            else
+            if (await IsDuplicateName(type.Type_Name, type.Id))
             {
                 _notyf.Warning("Table Type with name " + type.Type_Name + " already exist. Please try new Name!", 5);
                 return View(type);
             }
+            
+                var dto = new UpdateTypeDTO(type_Name: type.Type_Name, type_Description: type.Type_Description)
+                {
+                    Id = type.Id
+                };
+                await _ITableTypeService.UpdateAsync(dto);
+                _notyf.Success("Table Type updated successfully !", 5);
+                return RedirectToAction(nameof(Index));
+           
+               
+            
         }
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public IActionResult ExportToExcel()
+        public async Task<IActionResult> ExportToExcel()
         {
-            var arraylist = _ITableTypeService.GetAll();
+            var arraylist =await _ITableTypeService.GetAllAvailableAsync();
 
 
             using (XLWorkbook xl = new XLWorkbook())
@@ -129,13 +115,17 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 }
             }
         }
+        private async Task<bool> IsDuplicateName(string Name,Guid Id=new Guid())
+        {
+            return await _ITableTypeService.IsDuplicateName(Name, Id);
+        }
 
         #region API CALLS
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var types = _ITableTypeService.GetAll().Select(x => new TypeVM()
+            var types = (await _ITableTypeService.GetAllAvailableAsync()).Select(x => new TypeVM()
             {
                 Id = x.Id,
                 Type_Name = x.Type_Name,
@@ -146,16 +136,16 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public IActionResult StatusChange(Guid Id)
+        public async Task<IActionResult> StatusChange(Guid Id)
         {
-            var unit = _ITableTypeService.GetByGuid(Id);
+            var unit = await _ITableTypeService.GetByGuidAsync(Id);
             if (unit == null)
             {
                 return BadRequest();
             }
             else
             {
-                var id = _ITableTypeService.UpdateStatus(Id);
+                var id = await _ITableTypeService.UpdateStatusAsync(Id);
 
                 return Ok(unit.Status);
             }

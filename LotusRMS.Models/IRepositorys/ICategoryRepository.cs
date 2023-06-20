@@ -8,7 +8,7 @@ namespace LotusRMS.Models.IRepositorys
 {
     public interface ICategoryRepository : IBaseRepository<LotusRMS_Product_Category>
     {
-        void Update(LotusRMS_Product_Category obj);
-        void UpdateStatus(Guid Id);
+        Task UpdateAsync(LotusRMS_Product_Category obj);
+        Task UpdateStatusAsync(Guid Id);
     }
 }

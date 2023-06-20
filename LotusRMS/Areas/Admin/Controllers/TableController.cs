@@ -45,10 +45,10 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             return View();
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var tableVM = new CreateTableVM();
-            tableVM.Table_Type_List = _ITableTypeService.GetAll().Select(type => new SelectListItem()
+            tableVM.Table_Type_List = (await _ITableTypeService.GetAllAvailableAsync()).Select(type => new SelectListItem()
             {
                 Text = type.Type_Name,
                 Value = type.Id.ToString()
@@ -58,9 +58,9 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(CreateTableVM tableVM)
+        public async Task<IActionResult> Create(CreateTableVM tableVM)
         {
-            tableVM.Table_Type_List = _ITableTypeService.GetAll().Select(type => new SelectListItem()
+            tableVM.Table_Type_List = (await _ITableTypeService.GetAllAvailableAsync()).Select(type => new SelectListItem()
             {
                 Text = type.Type_Name,
                 Value = type.Id.ToString()
@@ -70,26 +70,35 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 return View(tableVM);
             }
 
+            if (await IsDuplicate(tableVM.Table_Name))
+            {
+                _notyf.Error("Duplicate entry for name " + tableVM.Table_Name, 5);
+                return View(tableVM);
+            }
+
+
+
+
             var dto = new CreateTableDTO(
                 table_Name: tableVM.Table_Name,
                 table_No: tableVM.Table_No,
                 no_Of_Chair: tableVM.No_Of_Chair,
                 table_Type_Id: tableVM.Table_Type_Id);
-            _ITableService.Create(dto);
+            await _ITableService.CreateAsync(dto);
 
             _notyf.Success("Table created successfully !", 5);
 
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult Update(Guid? Id)
+        public async Task<IActionResult> Update(Guid? Id)
         {
             if (Id == Guid.Empty || Id == null)
             {
                 return RedirectToAction(nameof(Index));
             }
 
-            var table = _ITableService.GetByGuid((Guid)Id);
+            var table = await _ITableService.GetByGuidAsync((Guid)Id);
             if (table == null)
             {
                 return RedirectToAction(nameof(Index));
@@ -105,7 +114,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
 
                 Id = table.Id
             };
-            tableVM.Table_Type_List = _ITableTypeService.GetAll().Select(type => new SelectListItem()
+            tableVM.Table_Type_List = (await _ITableTypeService.GetAllAsync()).Select(type => new SelectListItem()
             {
                 Text = type.Type_Name,
                 Value = type.Id.ToString()
@@ -114,22 +123,25 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(UpdateTableVM tableVM)
+        public async Task<IActionResult> Update(UpdateTableVM tableVM)
         {
-            if (tableVM.Id == Guid.Empty)
+            tableVM.Table_Type_List =(await _ITableTypeService.GetAllAsync()).Select(type => new SelectListItem()
             {
-                return RedirectToAction(nameof(Index));
-            }
-
+                Text = type.Type_Name,
+                Value = type.Id.ToString()
+            }).ToList();
             if (!ModelState.IsValid)
             {
-                tableVM.Table_Type_List = _ITableTypeService.GetAll().Select(type => new SelectListItem()
-                {
-                    Text = type.Type_Name,
-                    Value = type.Id.ToString()
-                }).ToList();
+               
                 return View(tableVM);
             }
+if(await IsDuplicate(tableVM.Table_Name, tableVM.Id))
+            {
+                _notyf.Error("Duplicate entry for name " + tableVM.Table_Name, 5);
+                return View(tableVM);
+
+            }
+
 
             var dto = new UpdateTableDTO(
                 table_Name: tableVM.Table_Name,
@@ -139,22 +151,26 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             {
                 Id = tableVM.Id
             };
-            _ITableService.Update(dto);
+           await _ITableService.UpdateAsync(dto);
 
             _notyf.Success("Table updated successfully...", 5);
 
             return RedirectToAction(nameof(Index));
         }
 
+        private async Task<bool> IsDuplicate(string name,Guid Id=new Guid())
+        {
+            return await _ITableService.IsDuplicateName(name, Id);
+        }
         #region API CALLS
 
         [HttpGet]
-        public IActionResult DownloadQr(Guid Id)
+        public async Task<IActionResult> DownloadQr(Guid Id)
         {
             String strUrl = HttpContext.Request.Path;
             /*  String strUrl = HttpContext.Current.Request.Url.AbsoluteUri.Replace(strPathAndQuery, "/");
             */
-            var table = _ITableService.GetByGuid(Id);
+            var table = await _ITableService.GetByGuidAsync(Id);
             if (table == null)
             {
                 return BadRequest("Table not found");
@@ -183,9 +199,9 @@ namespace LotusRMSweb.Areas.Admin.Controllers
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public IActionResult ExportToExcel()
+        public async Task<IActionResult> ExportToExcel()
         {
-            var arraylist = _ITableService.GetAll();
+            var arraylist = await _ITableService.GetAllAvailableAsync();
 
 
             using (XLWorkbook xl = new XLWorkbook())
@@ -204,9 +220,9 @@ namespace LotusRMSweb.Areas.Admin.Controllers
 
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var categorys = _ITableService.GetAll().Select(x => new TableVM()
+            var categorys = (await _ITableService.GetAllAvailableAsync()).Select(x => new TableVM()
             {
                 Id = x.Id,
                 Table_Name = x.Table_Name,
@@ -221,16 +237,16 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public IActionResult StatusChange(Guid Id)
+        public async Task<IActionResult> StatusChange(Guid Id)
         {
-            var category = _ITableService.GetByGuid(Id);
+            var category =await _ITableService.GetByGuidAsync(Id);
             if (category == null)
             {
                 return BadRequest();
             }
             else
             {
-                _ITableService.UpdateStatus(Id);
+               await _ITableService.UpdateStatusAsync(Id);
                 if (category.Status == true)
                 {
                     _notyf.Success("Status Activated successfully..", 2);  
@@ -244,14 +260,14 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             }
         }
 
-        public IActionResult DownloadAllQr()
+        public async Task<IActionResult> DownloadAllQr()
         {
             var companyName = _ICompanyService.GetCompany().CompanyName;
 
-            var tables = _ITableService.GetAll().Where(x => x.Status && !x.IsDelete).Select(tbl => new QrTableVM()
+            var tables= (await _ITableService.GetAllAvailableAsync()).Select(tbl => new QrTableVM()
             {
                 Table_Name = tbl.Table_Name,
-                imageString = GetQR(tbl.Id)
+                imageString =GetQR(tbl.Id)
             }).ToList();
             var globalSettings = new GlobalSettings
             {
