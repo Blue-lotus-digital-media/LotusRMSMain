@@ -15,7 +15,6 @@ btnScanQR.addEventListener("click", function () {
         .getUserMedia({ video: { facingMode: "environment" } })
         .then(function (stream) {
             scanning = true;
-            btnScanQR.hidden = true;
             canvasElement.hidden = false;
             imageForm.hidden = false;
             video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
@@ -38,13 +37,14 @@ btnScanQR.addEventListener("click", function () {
     qrCode.callback = res => {
         if (res) {
             RedirectToAction(res);
+            closeBtn.click();
             scanning = false;
             video.srcObject.getTracks().forEach(track => {
                 track.stop();
             });
 
             canvasElement.hidden = true;
-            btnScanQR.hidden = false;
+          
             imageForm.hidden = true;
         }
     };
@@ -103,3 +103,19 @@ const isValidUrl = urlString => {
         return false;
     }
 }
+
+const closeBtn = document.querySelector('#btn-close');
+
+closeBtn.addEventListener('click', () => {
+    scanning = false;
+    video.srcObject.getTracks().forEach(track => {
+        track.stop();
+    });
+
+    canvasElement.hidden = true;
+  
+    imageForm.hidden = true;
+})
+
+
+

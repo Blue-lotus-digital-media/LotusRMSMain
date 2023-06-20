@@ -54,7 +54,7 @@ function loadData() {
                     if (data == "") {
                         return ``;
                     } else {
-                        return `<img src="${data}" width="60px" style="border-radius:50%; border:0.25rem solid green"  onclick="showImage()" >`;
+                        return `<img src="${data}" width="60px"  height="60px"  style="border-radius:50%; border:0.25rem solid green; margin-right:0"  onclick="showImage()" class="d-flex justify-content-center align-items-center" >`;
                     }
                 }
 

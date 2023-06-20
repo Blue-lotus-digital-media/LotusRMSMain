@@ -13,8 +13,8 @@
         width: 100%;
     }
     .cameraWrapper #qr-canvas video{
-        height: 300px !important;
-        width: 300px !important;
+        height: 100% !important;
+        width: 100% !important;
     }
 
     .cameraWrapper #codeReader {

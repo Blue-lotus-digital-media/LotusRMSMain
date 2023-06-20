@@ -9,18 +9,25 @@
     ViewData["Title"] = "Home Page";
 }
 
+<style>
+    .file-upload-icon{
+        font-size:2.5rem;
+        cursor:pointer;
+        color: #2593e2;
+    }
+</style>
 <link rel="stylesheet" href="~/css/qrCodeStyles1.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 <script src="https://rawgit.com/sitepoint-editors/jsqrcode/master/src/qr_packed.js"></script>
 <div class="cameraWrapper">
-    <button type="button" id="btn-scan-qr" class="btn btn-secondary btn-lg scan-btn fw-bold">Scan Here</button>
+   @* <button type="button" id="btn-scan-qr" class="btn btn-secondary btn-lg scan-btn fw-bold">Scan Here</button>*@
 
     <canvas hidden="" id="qr-canvas"></canvas>
     <form action="#" id="imageForm" hidden>
         <input type="file" hidden>
         <div class="content">
-            <i class="fas fa-cloud-upload text-primary"></i>
+            <i class="fa-solid fa-file-arrow-up file-upload-icon"></i>
         </div>
     </form>
    </div>
-<script src="~/js/qrcodescanner1.js"></script>
+<script src="~/js/qrcodescanner2.js"></script>
