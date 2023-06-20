@@ -13,66 +13,271 @@
     .main {
       
         margin-left:0 !important;
-        background: url('https://images.pexels.com/photos/1310848/pexels-photo-1310848.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
+        padding:0 !important;
+     
    
     }
 
-    .hero-container {
-        min-height:80vh;
-       
-       
-    }
-
-
-    .h1-title {
-        font-size: 4rem;
-        font-weight: bold;
-        text-align: center;
-        margin-bottom: 8rem !important;
-        background-color: #007bff;
-        display: inline;
-        color: white !important;
-    }
-
-    .p-details {
-        text-align: center;
-        font-size: 1.6rem;
-        width: 80% !important;
-        margin-inline: auto;
-        font-weight: 400;
-        color: white;
-        background-color: orangered;
-    }
-
-    .scan-btn {
-        font-size: 2.2rem;
-      
-    }
-
-  
+ 
 
     .footer {
         margin-left: 0 !important;
+        display:none;
     }
+
+
+    @@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Montserrat:wght@400;500;700&display=swap');
+
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: inherit;
+}
+
+html {
+    font-size: 62.5%;
+}
+@@media screen and (max-width: 500px) {
+   
+ html {
+    font-size: 52%;
+ }
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.6rem;
+    box-sizing: border-box; 
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+
+ 
+}
+
+.navbar-front {
+    height: 6rem;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.container-fluid {
+    display: flex;
+    width: 100%;
+    --bs-gutter-x: 0rem;
+
+
+
+}
+
+.left-container,.right-container {
+    flex: 0 1 calc(50%);
+    background-color: rgb(238, 238, 218);
+}
+
+.right-container {
+        background-color: rgb(150, 150, 150);
+    opacity: 0.8;
+}
+
+.footer {
+    background-color: black;
+    color: white;
+}
+
+@@media screen and (max-width: 900px) {
+    body {
+        overflow: auto;
+    }
+
+    .container-fluid {
+        flex-direction: column-reverse;
+        gap: 0rem;
+      
+    }
+
+    .text-shadow{
+        margin-left: 0 !important;
+    }
+  }
+
+
+
+  .company-title {
+    margin-top: 6rem;
+    color:  #2593E2;
+    font-size: 3.5rem;
+    font-weight: bold;
+    line-height: 4.2rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.1rem;
+    margin-left: -20rem;
+  }
+  
+
+  .company-details {
+    margin-left: 5rem;
+    margin-bottom: 3rem;
+    font-size: 1.9rem;
+    font-weight: bold;
+    line-height: 2.2rem;
+    color: #000;
+    
+  }
+  
+  .company-logo {
+    height: 35rem;
+    margin-bottom: 6.6rem;
+  }
+
+  .company-footer{
+    background-color: #2B68DD;
+    width: 100%;
+  }
+
+  .hotel-logo {
+    width: 25rem;
+    height: 25rem;
+    border-radius: 50%;
+    border: 1px solid #2593e2;
+    margin-inline: auto;
+    object-fit: cover;
+    object-position: center;
+  }
+  
+
+  .hotel-title{
+    margin-top: 6rem;
+    font-weight: 700;
+    font-size: 2.1rem;
+    line-height: 2.5rem;
+    color: #fff;
+    background-color: #0A559A;
+    width: 70%;
+    margin-inline: auto;
+    text-align: center;
+    padding: 0.8rem 1.5rem;
+    margin-bottom: 2.5rem;
+    letter-spacing: 0.1rem;
+  }
+
+  .scan-here-btn {
+    display: block;
+    font-size: 2rem;
+    padding: 0.2rem 2rem;
+    margin-top: 4rem;
+    width: 25rem;
+    margin-inline: auto;
+  }
+
+  .text-shadow {
+    text-shadow: 0.8px 0.8px;
+    margin-bottom: 5rem;
+  }
+ 
+  .hotel-footer {
+        background-color: #ff7400;
+  }
+
+.qr-details {
+    margin-bottom: 2rem;
+   
+}
+
+  @@media screen and (max-width: 500px) {
+    img.company-logo{
+       width: 25rem;
+       height: 25rem;
+}
+
+
+
+
+.company-title {
+    margin-right: 0;
+    margin-left: 0;
+}
+
+.hotel-footer {
+    padding-bottom: 2rem;
+}
+
+}
+
+.modal-body {
+    height: 300px;
+}
+
+.qr-camera {
+    width: 100%;
+    height: 100%;
+}
+
+#btn-close {
+   background-size: 50% !important;
+}
+
 
 
 
 </style>
 
-
-
-<div class="container d-flex flex-column justify-content-center align-items-center hero-container text-center">
-    <div class="hero-section">
-        <h1 class="text-capitalize h1-title text-primary">One App <br> is Enough for a Restaurant</h1>
-        <p class="p-details mt-5 mb-3">
-            ✨Efficiently manage restaurant with Blue Lotus✨All features in one platform✨
-        </p>
-       
-    </div> 
-    <div class="scan-button mt-5" style="width:30rem; height:30rem;">
-        <partial name="_QrScanner" />
+<div class="container-fluid">
+    <div class="left-container text-center">
+        <h1 class="company-title">Blue Lotus ERP</h1>
+        <p class="company-details">Manage your hospitality business</p>
+        <img src="~/assets/img/section1.png" class="company-logo">
+        <div class="company-footer text-center text-light">
+            <div>9808606863, 9808606864</div>
+            <div>Info@bluelotusdigital.com.np</div>
+            <div>Birtamode, Jhapa</div>
+            <div>bluelotusdigitalmedia.com.np</div>
+        </div>
     </div>
+    <div class="right-container text-center">
+
+        <h2 class="hotel-title">Welcome to Bacon Rolls</h2>
+        <img src="~/assets/img/bacon-restaurant-logo.jpg" class="hotel-logo">
+        <a class="btn btn-secondary scan-here-btn" data-bs-toggle="modal" data-bs-target="#modal" id="btn-scan-qr">Scan Now</a>
+        <p class="mt-2 text-shadow">Please scan for Menu</p>
+        <div class="text-center qr-details"> Scan the qr code to find out our menu items and enjoy our service</div>
+        <div class="hotel-footer text-center text-light">
+            <div class="hotel-contact">97845412, 023-548748</div>
+            <div>dinewine@restaurant.com</div>
+            <div>Birtamode, Jhapa</div>
+            <div>www.resturantdinewine.com</div>
+        </div>
+
+
+    </div>
+
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-sm modals">
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title fw-bold text-center ms-auto" id="modalLabel">Qr Scanner</h3>
+                    <button type="button" class="btn-close lg-btn" id="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="qr-camera">
+
+                        <partial name="_QrScanner" />
+                    </div>
+                </div>
+              @*  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>*@
+            </div>
+        </div>
+    </div>
+
 </div>
