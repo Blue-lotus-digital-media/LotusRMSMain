@@ -78,10 +78,10 @@ namespace LotusRMSweb.Areas.Order.Controllers
             return PartialView("_TableList", model: table);
         }
 
-        public IActionResult GetOrder(Guid Id)
+        public async Task<IActionResult> GetOrder(Guid Id)
         {
-            var order = GetOrderVM(Id,"");
-            ViewBag.NewOrder = GetNewOrder(Id);
+            var order =await GetOrderVM(Id,"");
+            ViewBag.NewOrder =await GetNewOrder(Id);
             return PartialView("_Order",model:order);
         }
 
@@ -263,7 +263,7 @@ namespace LotusRMSweb.Areas.Order.Controllers
             ViewBag.NewOrder = GetNewOrder(tableId);
             return PartialView("_Order",model:orders);
         }
-        public IEnumerable<AddNewOrderVM> GetNewOrder(Guid tableId)
+        public async Task<IEnumerable<AddNewOrderVM>> GetNewOrder(Guid tableId)
         {
             var newOrder = new List<AddNewOrderVM>();
             if (HttpContext.Session.GetString(tableId.ToString()) != null)

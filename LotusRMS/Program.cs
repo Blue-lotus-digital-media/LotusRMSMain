@@ -61,14 +61,15 @@ builder.Services.AddAuthentication()
         // Map the external picture claim to the internally used image claim
         options.ClaimActions.MapJsonKey("image", "picture");
         options.AccessDeniedPath = $"/account/accessDenied";
+        options.CorrelationCookie.Expiration = TimeSpan.FromDays(1);
+
     });
 builder.Services.ConfigureApplicationCookie(options =>
 {
-    
     options.LoginPath = $"/account/login";
     options.LogoutPath = $"/account/logout";
     options.AccessDeniedPath = $"/account/accessDenied";
-    options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+    options.ExpireTimeSpan = TimeSpan.FromDays(1);
 });
 builder.Services.Configure<IdentityOptions>(options =>
 {

@@ -425,9 +425,7 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
 
             ViewBag.Checkout = CreateCheckOut(order.Id, order.Order_Details.Sum(x => x.Total));
             return PartialView("_Order", model: order);
-        }
-
-      
+        }   
 
         public async Task<IActionResult> GetSwitchTableView(Guid TableId)
         {
