@@ -9,8 +9,8 @@ namespace LotusRMS.Models.IRepositorys
 {
     public interface IMenuRepository : IBaseRepository<LotusRMS_Menu>
     {
-        void Update(LotusRMS_Menu menu);
-        void UpdateStatus(Guid Id);
+        Task UpdateAsync(LotusRMS_Menu menu);
+        Task UpdateStatusAsync(Guid Id);
 
     }
 }

@@ -46,7 +46,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         public async Task<IActionResult> Create()
         {
             var CategoryList = await _ICategoryService.GetAllAsync();
-            var UnitList = _IUnitService.GetAll();
+            var UnitList = await _IUnitService.GetAllAsync();
             var createProductVMs = new CreateProductVM()
             {
                 TypeList = (await _ITypeService.GetAllAvailableAsync()).Select(type => new SelectListItem()
@@ -56,7 +56,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 }),
 
 
-                UnitList = _IUnitService.GetAll().Where(x => x.Status).Select(i => new SelectListItem()
+                UnitList = (await _IUnitService.GetAllAvailableAsync()).Select(i => new SelectListItem()
                 {
                     Text = i.Unit_Name,
                     Value = i.Id.ToString()
@@ -80,7 +80,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 );
 
 
-                var id=_IProductService.Create(dto);
+                var id=await _IProductService.CreateAsync(dto);
                 var invDto = new CreateInventoryDTO()
                 {
                     ProductId = id,
@@ -104,7 +104,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 });
                 productVMs.CategoryList =await GetCategory(productVMs.Product_Type_Id);
 
-                productVMs.UnitList = _IUnitService.GetAll().Select(i => new SelectListItem()
+                productVMs.UnitList =(await _IUnitService.GetAllAvailableAsync()).Select(i => new SelectListItem()
                 {
                     Text = i.Unit_Name,
                     Value = i.Id.ToString()
@@ -120,7 +120,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 return BadRequest();
             }
             var CategoryList =await _ICategoryService.GetAllAvailableAsync();
-            var UnitList = _IUnitService.GetAll();
+            var UnitList = await _IUnitService.GetAllAvailableAsync();
             var updateProductVMs = new UpdateProductVM()
             {
                 TypeList = (await _ITypeService.GetAllAvailableAsync()).Select(type => new SelectListItem()
@@ -130,7 +130,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 }),
 
 
-                UnitList = _IUnitService.GetAll().Where(x => x.Status).Select(i => new SelectListItem()
+                UnitList = UnitList.Where(x => x.Status).Select(i => new SelectListItem()
                 {
                     Text = i.Unit_Name,
                     Value = i.Id.ToString()
@@ -138,7 +138,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             };
 
 
-                       var p = _IProductService.GetByGuid((Guid)Id) ?? throw new Exception();
+                       var p =await _IProductService.GetByGuidAsync((Guid)Id) ?? throw new Exception();
             updateProductVMs.Id = p.Id;
             updateProductVMs.Product_Name = p.Product_Name;
             updateProductVMs.Product_Description = p.Product_Description;
@@ -173,7 +173,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
               
-                    var products = _IProductService.GetByGuid(productVMs.Id) ?? throw new Exception();
+                    var products = await _IProductService.GetByGuidAsync(productVMs.Id) ?? throw new Exception();
                     if (products == null)
                     {
                         return BadRequest("Product not found");
@@ -189,7 +189,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                     {
                         Id = productVMs.Id
                     };
-               await _IProductService.Update(dto);
+               await _IProductService.UpdateAsync(dto);
                 if (productVMs.Inventory.Id == Guid.Empty)
                 {
                     var createInv = new CreateInventoryDTO()
@@ -223,7 +223,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 });
                 productVMs.CategoryList =await GetCategory(productVMs.Product_Type_Id);
 
-                productVMs.UnitList = _IUnitService.GetAll().Select(i => new SelectListItem()
+                productVMs.UnitList = (await _IUnitService.GetAllAvailableAsync()).Select(i => new SelectListItem()
                 {
                     Text = i.Unit_Name,
                     Value = i.Id.ToString()
@@ -237,9 +237,9 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         #region Api Call
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var products = _IProductService.GetAll().ToList().Select(pro => new ProductVM()
+            var products = (await _IProductService.GetAllAsync()).Select(pro => new ProductVM()
             {
                 Id = pro.Id,
                 Product_Name = pro.Product_Name,
@@ -256,16 +256,16 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public IActionResult StatusChange(Guid Id)
+        public async Task<IActionResult> StatusChange(Guid Id)
         {
-            var unit = _IProductService.GetByGuid(Id);
+            var unit = await _IProductService.GetByGuidAsync(Id);
             if (unit == null)
             {
                 return BadRequest();
             }
             else
             {
-                var id = _IProductService.UpdateStatus(Id);
+                var id = await _IProductService.UpdateStatusAsync(Id);
                 if (unit.Status == true)
                 {
                     _notyf.Success("Status Activated successfully..", 2);

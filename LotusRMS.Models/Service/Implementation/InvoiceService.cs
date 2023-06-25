@@ -56,7 +56,7 @@ namespace LotusRMS.Models.Service.Implementation
             await _invoiceRepository.AddAsync(model);
             await _invoiceRepository.SaveAsync();
 
-            var checkout = _iCheckOutService.Value.GetByGuid(id);
+            var checkout = await _iCheckOutService.Value.GetByGuidAsync(id).ConfigureAwait(false);
             if(checkout.Payment_Mode.ToString()=="Credit" && checkout.Customer_Id != Guid.Empty)
             {
                 var customer = _iCustomerService.GetFirstOrDefaultById((Guid)checkout.Customer_Id);

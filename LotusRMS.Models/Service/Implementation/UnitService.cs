@@ -1,4 +1,5 @@
 ﻿using LotusRMS.Models.Dto.UnitDto;
+using LotusRMS.Models.Helper;
 using LotusRMS.Models.IRepositorys;
 using System;
 using System.Collections.Generic;
@@ -18,47 +19,51 @@ namespace LotusRMS.Models.Service.Implementation
             _unitRepository = unitRepository;
         }
 
-        public async Task<Guid> Create(UnitCreateDto dto)
+        public async Task<Guid> CreateAsync(UnitCreateDto dto)
         {
-           // using var tx = new TransactionScope();
+            using var tx = TransactionScopeHelper.GetInstance;
             var unit = new LotusRMS_Unit(dto.UnitName, dto.UnitSymbol, dto.UnitDescription);
-            _unitRepository.Add(unit);
-            _unitRepository.Save();
-           // tx.Complete();
+            await _unitRepository.AddAsync(unit);
+            await _unitRepository.SaveAsync();
+            tx.Complete();
             return unit.Id;
 
 
         }
 
-        public Guid Update(UnitUpdateDto dto)
+        public async Task<Guid> UpdateAsync(UnitUpdateDto dto)
         {
-            using var tx = new TransactionScope();
-            var unit = _unitRepository.GetByGuid(dto.Id) ?? throw new Exception();
+            using var tx = TransactionScopeHelper.GetInstance; ;
+            var unit = await _unitRepository.GetByGuidAsync(dto.Id) ?? throw new Exception();
 
             unit.Update(unit_Name: dto.UnitName, unit_Symbol: dto.UnitSymbol, unit_Description: dto.UnitDescription);
            
-            _unitRepository.Update(unit);
-            _unitRepository.Save();
+            await _unitRepository.UpdateAsync(unit).ConfigureAwait(false);
+            
             //todo logic
 
             tx.Complete();
             return unit.Id;
         }
 
-        public IEnumerable<LotusRMS_Unit> GetAll()
+        public async Task<IEnumerable<LotusRMS_Unit>> GetAllAsync()
         {
-            return _unitRepository.GetAll();
+            return await _unitRepository.GetAllAsync().ConfigureAwait(false);
+        }  
+        public async Task<IEnumerable<LotusRMS_Unit>> GetAllAvailableAsync()
+        {
+            return await _unitRepository.GetAllAsync(x=>!x.IsDelete && x.Status).ConfigureAwait(false);
         } 
-        public LotusRMS_Unit GetByGuid(Guid Id)
+        public async Task<LotusRMS_Unit?> GetByGuidAsync(Guid Id)
         {
-            return _unitRepository.GetByGuid(Id);
+            return await _unitRepository.GetByGuidAsync(Id).ConfigureAwait(false);
         }
 
-        public Guid UpdateStatus(Guid Id)
+        public async Task<Guid> UpdateStatusAsync(Guid Id)
         {
-            
-            _unitRepository.UpdateStatus(Id);
-            _unitRepository.Save();
+            using var tx = TransactionScopeHelper.GetInstance;
+            await _unitRepository.UpdateStatusAsync(Id).ConfigureAwait(false);
+            tx.Complete();
             return Id;
 
         }

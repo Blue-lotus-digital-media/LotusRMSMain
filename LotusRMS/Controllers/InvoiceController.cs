@@ -41,7 +41,7 @@ namespace LotusRMSweb.Controllers
             _iBillSettingService = iBillSettingService;
         }
 
-        public IActionResult InvoicePrint(Guid Id, string? returnUrl = null)
+        public async Task<IActionResult> InvoicePrint(Guid Id, string? returnUrl = null)
         {
             var invoice = _invoiceService.GetFirstOrDefault(Id);
             if (invoice.Checkout.Payment_Mode.ToString() == "Credit")
@@ -50,7 +50,7 @@ namespace LotusRMSweb.Controllers
                 var dueAmount = due.DueBooks.FirstOrDefault(x => x.Invoice_Id == Id).BalanceDue;
                 ViewBag.DueAmount = dueAmount;
             }
-            var checkout = GetCheckout(invoice.Checkout);
+            var checkout = await GetCheckout(invoice.Checkout);
             var invoiceVM = new InvoiceVM()
             {
                 Id = invoice.Id,
@@ -84,13 +84,13 @@ namespace LotusRMSweb.Controllers
             _gallaService.AddGallaDetail(addGallaDetail);
 
 
-            ViewBag.Company = _iCompanyService.GetCompany();
+            ViewBag.Company = await _iCompanyService.GetCompanyAsync();
              
             ViewBag.ReturnUrl = returnUrl;
             return View(invoiceVM);
         }
 
-        public CheckoutVM GetCheckout(LotusRMS_Checkout checkout)
+        public async Task<CheckoutVM> GetCheckout(LotusRMS_Checkout checkout)
         {
             var checkouts = new CheckoutVM()
             {
@@ -106,14 +106,14 @@ namespace LotusRMSweb.Controllers
                 Discount_Type = checkout.Discount_Type.ToString(),
                 Payment_Mode = checkout.Payment_Mode.ToString(),
                 Order_Id = checkout.Order_Id,
-                Order = GetOrderVM(checkout.Order)
+                Order = await GetOrderVM(checkout.Order).ConfigureAwait(true)
 
 
             };
             return checkouts;
 
         }
-        public OrderVm GetOrderVM(LotusRMS_Order order)
+        public async Task<OrderVm> GetOrderVM(LotusRMS_Order order)
         {
             var OrderVM = new OrderVm()
             {
@@ -127,7 +127,7 @@ namespace LotusRMSweb.Controllers
             };
             foreach (var item in order.Order_Details)
             {
-                var menu = _iMenuService.GetFirstOrDefault(item.MenuId);
+                var menu = await _iMenuService.GetFirstOrDefaultByIdAsync(item.MenuId).ConfigureAwait(true);
                 var orderDetail = new OrderDetailVm()
                 {
                     Id = item.Id,
@@ -154,11 +154,11 @@ namespace LotusRMSweb.Controllers
             var estimateVM = new EstimateInvoiceVM()
             {
                 OrderId = order.Id,
-                Order = GetOrderVM(order),
+                Order = await GetOrderVM(order).ConfigureAwait(true),
                 FiscalYear = fiscalyear,
                 BillSetting=billSetting
             };
-            ViewBag.Company = _iCompanyService.GetCompany();
+            ViewBag.Company =await _iCompanyService.GetCompanyAsync();
             return View(estimateVM);
         }
 

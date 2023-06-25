@@ -43,12 +43,12 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         {
             var createMenuVM = new CreateMenuVM()
             {
-                Menu_Type_List = _IMenuTypeService.GetAll().Where(x => x.Status).Select(type => new SelectListItem()
+                Menu_Type_List = (await _IMenuTypeService.GetAllAvailableAsync().ConfigureAwait(true)).Select(type => new SelectListItem()
                 {
                     Text = type.Type_Name,
                     Value = type.Id.ToString()
                 }).ToList(),
-                Menu_Unit_List =(await _IMenuUnitService.GetAllAvailableAsync().ConfigureAwait(false)).Select(type => new SelectListItem()
+                Menu_Unit_List =(await _IMenuUnitService.GetAllAvailableAsync().ConfigureAwait(true)).Select(type => new SelectListItem()
                 {
                     Text = type.Unit_Symbol,
                     Value = type.Id.ToString()
@@ -68,7 +68,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         {
             if (!ModelState.IsValid)
             {
-                vm.Menu_Type_List = _IMenuTypeService.GetAll().Where(x => x.Status).Select(type => new SelectListItem()
+                vm.Menu_Type_List = (await _IMenuTypeService.GetAllAvailableAsync()).Select(type => new SelectListItem()
                 {
                     Text = type.Type_Name,
                     Value = type.Id.ToString()
@@ -130,7 +130,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 dto.Image = ImageUpload.GetByteArrayFromImage(vm.Menu_Image);
             }
 
-            var id = _IMenuService.Create(dto);
+            var id =await _IMenuService.CreateAsync(dto).ConfigureAwait(true);
 
             _notyf.Success("Menu Created successfully..", 5);
 
@@ -146,7 +146,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var menu = _IMenuService.GetFirstOrDefault(Id);
+            var menu = await _IMenuService.GetFirstOrDefaultByIdAsync(Id).ConfigureAwait(true);
             if (menu == null)
             {
                 _notyf.Information("no such data...");
@@ -179,7 +179,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 IsDelete=x.IsDelete
                 }).ToList(),
 
-                Menu_Type_List = _IMenuTypeService.GetAll().Where(x => x.Status).Select(type => new SelectListItem()
+                Menu_Type_List = (await _IMenuTypeService.GetAllAvailableAsync().ConfigureAwait(true)).Select(type => new SelectListItem()
                 {
                     Text = type.Type_Name,
                     Value = type.Id.ToString()
@@ -190,12 +190,12 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                         Text = type.Category_Name,
                         Value = type.Id.ToString()
                     }).ToList(),
-                Menu_Unit_List = (await _IMenuUnitService.GetAllAvailableAsync()).Select(type => new SelectListItem()
+                Menu_Unit_List = (await _IMenuUnitService.GetAllAvailableAsync().ConfigureAwait(true)).Select(type => new SelectListItem()
                 {
                     Text = type.Unit_Symbol,
                     Value = type.Id.ToString()
                 }).ToList(),
-                UnitDivision = (await _IMenuUnitService.GetFirstOrDefaultByIdAsync(menu.Unit_Id)).UnitDivision.Select(unitt => new SelectListItem()
+                UnitDivision = (await _IMenuUnitService.GetFirstOrDefaultByIdAsync(menu.Unit_Id).ConfigureAwait(true)).UnitDivision.Select(unitt => new SelectListItem()
                 {
                     Text = unitt.Title + "(" + unitt.Value + " ) ",
                     Value = unitt.Id.ToString()
@@ -209,7 +209,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         {
             if (!ModelState.IsValid)
             {
-                vm.Menu_Type_List = _IMenuTypeService.GetAll().Where(x => x.Status).Select(type => new SelectListItem()
+                vm.Menu_Type_List = (await _IMenuTypeService.GetAllAvailableAsync().ConfigureAwait(true)).Select(type => new SelectListItem()
                 {
                     Text = type.Type_Name,
                     Value = type.Id.ToString()
@@ -220,12 +220,12 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                         Text = type.Category_Name,
                         Value = type.Id.ToString()
                     }).ToList();
-                vm.Menu_Unit_List =(await _IMenuUnitService.GetAllAvailableAsync()).Select(type => new SelectListItem()
+                vm.Menu_Unit_List =(await _IMenuUnitService.GetAllAvailableAsync().ConfigureAwait(true)).Select(type => new SelectListItem()
                 {
                     Text = type.Unit_Symbol,
                     Value = type.Id.ToString()
                 }).ToList();
-                vm.UnitDivision = (await _IMenuUnitService.GetFirstOrDefaultByIdAsync(vm.Unit_Id)).UnitDivision.Select(unitt => new SelectListItem()
+                vm.UnitDivision = (await _IMenuUnitService.GetFirstOrDefaultByIdAsync(vm.Unit_Id).ConfigureAwait(true)).UnitDivision.Select(unitt => new SelectListItem()
                 {
                     Text = unitt.Title + "(" + unitt.Value + " ) ",
                     Value = unitt.Id.ToString()
@@ -270,7 +270,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 dto.Image = ImageUpload.GetByteArrayFromImage(vm.Menu_Image);
             }
 
-            _IMenuService.Update(dto);
+            await _IMenuService.UpdateAsync(dto).ConfigureAwait(true);
 
             _notyf.Success("Menu Updated successfully..", 5);
             return RedirectToAction(nameof(Index));
@@ -280,9 +280,9 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         #region Api Call
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var menus = _IMenuService.GetAll().ToList().Select(menu => new MenuVM()
+            var menus = (await _IMenuService.GetAllAsync().ConfigureAwait(true)).ToList().Select(menu => new MenuVM()
             {
                 Id = menu.Id,
                 Item_name = menu.Item_Name,
@@ -304,16 +304,16 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public IActionResult StatusChange(Guid Id)
+        public async Task<IActionResult> StatusChange(Guid Id)
         {
-            var unit = _IMenuService.GetByGuid(Id);
+            var unit = await _IMenuService.GetByGuidAsync(Id).ConfigureAwait(true);
             if (unit == null)
             {
                 return BadRequest();
             }
             else
             {
-                var id = _IMenuService.UpdateStatus(Id);
+                var id =await _IMenuService.UpdateStatusAsync(Id).ConfigureAwait(true);
                 if (unit.Status == true)
                 {
                     _notyf.Success("Status Activated successfully..", 2);
@@ -344,7 +344,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUnitDivision(Guid UnitId)
         {
-            var units = await _IMenuUnitService.GetFirstOrDefaultByIdAsync(UnitId).ConfigureAwait(false);
+            var units = await _IMenuUnitService.GetFirstOrDefaultByIdAsync(UnitId).ConfigureAwait(true);
             return Json(new { units.UnitDivision });
         }
 

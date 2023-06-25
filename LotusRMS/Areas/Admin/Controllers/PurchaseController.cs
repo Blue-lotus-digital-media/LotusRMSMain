@@ -86,9 +86,9 @@ namespace LotusRMSweb.Areas.Admin.Controllers
 
         #region APICalls
 
-        public IActionResult GetProduct()
+        public async Task<IActionResult> GetProduct()
         {
-            var product = _iProductService.GetAllAvailable().Select(pro => new ProductVM()
+            var product = (await _iProductService.GetAllAvailableAsync()).Select(pro => new ProductVM()
             {
                 Id = pro.Id,
                 Product_Name = pro.Product_Name,

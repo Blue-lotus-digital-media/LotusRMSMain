@@ -55,7 +55,7 @@ namespace LotusRMSweb.Areas.Kitchen.Controllers
 
                     foreach (var item in order.Order_Details.Where(x => !x.IsKitchenComplete && !x.IsComplete ))
                     {
-                        var menu = _menuService.GetFirstOrDefault(item.MenuId);
+                        var menu = await _menuService.GetFirstOrDefaultByIdAsync(item.MenuId).ConfigureAwait(true);
                         if (menu.OrderTo == "Kitchen")
                         {
                             var orderDetail = new OrderDetailVm()
@@ -93,7 +93,7 @@ namespace LotusRMSweb.Areas.Kitchen.Controllers
             var order = _orderService.GetFirstOrDefaultByOrderNo(orderNo);
             
             var orderDetail = order.Order_Details.Where(x => x.Id == orderDetailId).FirstOrDefault();
-            var menu = _menuService.GetByGuid(orderDetail.MenuId);
+            var menu = await _menuService.GetByGuidAsync(orderDetail.MenuId).ConfigureAwait(true);
             var data = new List<string>()
             {
                 order.Table.Table_Name,

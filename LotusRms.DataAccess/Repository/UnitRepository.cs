@@ -1,4 +1,5 @@
-﻿using LotusRMS.Models;
+﻿using DinkToPdf;
+using LotusRMS.Models;
 using LotusRMS.Models.IRepositorys;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -20,24 +21,24 @@ namespace LotusRMS.DataAccess.Repository
 
       
 
-        public void Update(LotusRMS_Unit lUnit)
+        public async Task UpdateAsync(LotusRMS_Unit lUnit)
         {
-            var unit = _dal.LotusRMS_Units.FirstOrDefault(s => s.Id ==  lUnit.Id);
+            var unit = await GetFirstOrDefaultAsync(s => s.Id ==  lUnit.Id).ConfigureAwait(false);
             if (unit != null)
             {
                 unit.Update(lUnit.Unit_Name, lUnit.Unit_Symbol, lUnit.Unit_Description);
 
-                Save();
+                await SaveAsync().ConfigureAwait(false);
             }
         }
-        public void UpdateStatus(Guid Id)
+        public async Task UpdateStatusAsync(Guid Id)
         {
-            var unit = _dal.LotusRMS_Units.FirstOrDefault(s => s.Id == Id);
+            var unit = await GetFirstOrDefaultAsync(s => s.Id == Id).ConfigureAwait(false);
             if (unit != null)
             {
                 unit.Status = !unit.Status;
 
-                Save();
+                await SaveAsync().ConfigureAwait(false);
             }
         }
     }

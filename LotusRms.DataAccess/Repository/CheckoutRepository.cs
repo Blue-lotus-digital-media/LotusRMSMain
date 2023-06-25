@@ -1,5 +1,6 @@
 ﻿using LotusRMS.Models;
 using LotusRMS.Models.IRepositorys;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,15 +16,15 @@ namespace LotusRMS.DataAccess.Repository
         {
             _dal = dal;
         }
-        public void Update(LotusRMS_Checkout obj)
+        public async Task Update(LotusRMS_Checkout obj)
         {
 
         }
-        public void UpdateOrder(Guid Id)
+        public async Task UpdateOrderAsync(Guid Id)
         {
-            var order = _dal.LotusRMS_Orders.FirstOrDefault(x => x.Id == Id);
+            var order = await _dal.LotusRMS_Orders.FirstOrDefaultAsync(x => x.Id == Id);
             order.IsCheckout = true;
-            Save();
+            await SaveAsync();
 
         }
          

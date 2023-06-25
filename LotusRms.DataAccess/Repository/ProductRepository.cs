@@ -18,9 +18,9 @@ namespace LotusRMS.DataAccess.Repository
         }
         
 
-        public void Update(LotusRMS_Product lProduct)
+        public async Task UpdateAsync(LotusRMS_Product lProduct)
         {
-            var product = GetByGuid(lProduct.Id);
+            var product =await GetByGuidAsync(lProduct.Id).ConfigureAwait(false);
             if (product != null)
             {
                 product.Update(product_Name: lProduct.Product_Name,
@@ -32,13 +32,14 @@ namespace LotusRMS.DataAccess.Repository
                    
                     );
             }
+            await SaveAsync().ConfigureAwait(false);
         }
-        public void UpdateStatus(Guid Id)
+        public async Task UpdateStatusAsync(Guid Id)
         {
-            var product = GetByGuid(Id);
+            var product = await GetByGuidAsync(Id).ConfigureAwait(false);
             product.Status = !product.Status;
-            
-            
+
+            await SaveAsync();
         }
 
     }

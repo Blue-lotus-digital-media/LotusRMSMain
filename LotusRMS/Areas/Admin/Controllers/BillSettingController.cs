@@ -1,12 +1,15 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using LotusRMS.DataAccess.Exceptions;
 using LotusRMS.Models.Dto.BillSettingDTO;
 using LotusRMS.Models.Dto.FiscalYearDTO;
 using LotusRMS.Models.Service;
 using LotusRMS.Models.Service.Implementation;
 using LotusRMS.Models.Viewmodels.BillSetting;
 using LotusRMS.Models.Viewmodels.FiscalYear;
+using LotusRMSweb.Helper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Transactions;
 
 namespace LotusRMSweb.Areas.Admin.Controllers
 {
@@ -43,34 +46,40 @@ namespace LotusRMSweb.Areas.Admin.Controllers
 
         public async Task<IActionResult> Create()
         {
-            var company = _iCompanyService.GetCompany();
-            if (company.CompanyName == null)
+            try
+            {
+                var company = await _iCompanyService.GetCompanyAsync().ConfigureAwait(true) ?? throw new CompanyNotFoundException();
+                var fiscalyear = await _iFiscalYearService.GetActiveYearAsync().ConfigureAwait(true) ?? throw new FiscalYearNotFoundException();
+                if (fiscalyear == null)
+                {
+                    _notyf.Error("Fiscal year not added yet please add fiscal year first... ", 5);
+                    return RedirectToAction(nameof(Index));
+                }
+
+                var bill = new CreateBillSettingVM()
+                {
+                    BillTitle = company.CompanyName,
+                    BillAddress = company.Tole + ", " + company.City,
+                    BillPrefix = GetBillPrefix(company.CompanyName),
+                    FiscalYear = fiscalyear.Name,
+                    PanOrVat = company.PanOrVat,
+                    Contact = company.Contact,
+                    IsPhone = true,
+                    IsPanOrVat = true,
+                    IsFiscalYear = true,
+                    BillNote = "Good once sold cannot be returned. this bill is not supported for legal purpose "
+                };
+                return View(bill);
+            }
+            catch (CompanyNotFoundException ex)
             {
                 _notyf.Error("Company not setuped contact developer to register company... ", 5);
-                return RedirectToAction(nameof(Index));
             }
-
-            var fiscalyear = await _iFiscalYearService.GetActiveYearAsync();
-            if (fiscalyear == null)
+            catch (FiscalYearNotFoundException ex)
             {
-                _notyf.Error("Fiscal year not added yet pleas add fiscal year first... ", 5);
-                return RedirectToAction(nameof(Index));
+                _notyf.Error("Fiscal year not added yet please add fiscal year first... ", 5);
             }
-
-            var bill = new CreateBillSettingVM()
-            {
-                BillTitle = company.CompanyName,
-                BillAddress = company.Tole + ", " + company.City,
-                BillPrefix = GetBillPrefix(company.CompanyName),
-                FiscalYear = fiscalyear.Name,
-                PanOrVat = company.PanOrVat,
-                Contact = company.Contact,
-                IsPhone = true,
-                IsPanOrVat = true,
-                IsFiscalYear = true,
-                BillNote = "Good once sold cannot be returned. this bill is not supported for legal purpose "
-            };
-            return View(bill);
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
@@ -82,19 +91,25 @@ namespace LotusRMSweb.Areas.Admin.Controllers
 
                 return View(vm);
             }
-
-            var dto = new CreateBillSettingDTO()
+            try
             {
-                BillPrefix = vm.BillPrefix,
-                BillAddress = vm.BillAddress,
-                BillTitle = vm.BillTitle,
-                BillNote = vm.BillNote,
-                IsPanOrVat = vm.IsPanOrVat,
-                IsPhone = vm.IsPhone,
-                IsActive = vm.IsActive
-            };
-            var id = await _iBillSettingService.CreateAsync(dto);
-            _notyf.Success("Bill setting added successfully... ", 5);
+                var dto = new CreateBillSettingDTO()
+                {
+                    BillPrefix = vm.BillPrefix,
+                    BillAddress = vm.BillAddress,
+                    BillTitle = vm.BillTitle,
+                    BillNote = vm.BillNote,
+                    IsPanOrVat = vm.IsPanOrVat,
+                    IsPhone = vm.IsPhone,
+                    IsActive = vm.IsActive
+                };
+                var id = await _iBillSettingService.CreateAsync(dto);
+                _notyf.Success("Bill setting added successfully... ", 5);
+            }catch(Exception e)
+            {
+                _notyf.Error("Error while adding bill setting... ", 5);
+                return View(vm);
+            }
 
             return RedirectToAction(nameof(Index));
         }

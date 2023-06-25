@@ -177,7 +177,7 @@ if(await IsDuplicate(tableVM.Table_Name, tableVM.Id))
             }
 
             var stringImages = GetQR(Id);
-            var companyName = _ICompanyService.GetCompany().CompanyName;
+            var companyName = await _ICompanyService.GetCompanyNameAsync();
 
 
             return Ok(new { hotelName = companyName, tableName = table.Table_Name, stringImage = stringImages });
@@ -262,7 +262,7 @@ if(await IsDuplicate(tableVM.Table_Name, tableVM.Id))
 
         public async Task<IActionResult> DownloadAllQr()
         {
-            var companyName = _ICompanyService.GetCompany().CompanyName;
+            var companyName = await _ICompanyService.GetCompanyNameAsync();
 
             var tables= (await _ITableService.GetAllAvailableAsync()).Select(tbl => new QrTableVM()
             {

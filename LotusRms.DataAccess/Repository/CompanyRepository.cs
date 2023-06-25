@@ -19,9 +19,9 @@ namespace LotusRMS.DataAccess.Repository
             _dal = dal;
         }
 
-        public void Update(LotusRMS_Company obj)
+        public async Task UpdateAsync(LotusRMS_Company obj)
         {
-            var company = GetFirstOrDefault();
+            var company =await GetFirstOrDefaultAsync().ConfigureAwait(false);
             company.Update(
             companyName: obj.CompanyName,
             country: obj.Country,
@@ -40,7 +40,7 @@ namespace LotusRMS.DataAccess.Repository
             registrationNo:obj.RegistrationNo
 
             );
-            Save();
+            await SaveAsync();
         }
 
       

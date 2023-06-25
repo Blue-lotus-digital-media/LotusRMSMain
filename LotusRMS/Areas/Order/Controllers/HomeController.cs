@@ -60,7 +60,7 @@ namespace LotusRMSweb.Areas.Order.Controllers
                     tableType.Add(tvm);
                 }
             }
-            var menu = _IMenuService.GetAllAvailable().Where(x => !x.IsDelete && x.Status).Select(nmenu => new OrderMenu()
+            var menu =(await _IMenuService.GetAllAvailableAsync().ConfigureAwait(true)).Select(nmenu => new OrderMenu()
             {
                 Item_Name = nmenu.Item_Name,
                 Symbol= nmenu.Menu_Details.FirstOrDefault(x => x.Default).Divison.Title, //+ "( "+menu.Menu_Details.FirstOrDefault(x => x.Default).Divison.Value+" " + menu.Menu_Unit.Unit_Symbol+")",
@@ -74,7 +74,7 @@ namespace LotusRMSweb.Areas.Order.Controllers
         }
         public async Task<IActionResult> GetTable(Guid Id)
         {
-            var table=(await _ITableService.GetAllAvailableAsync()).Where(x => x.Table_Type_Id==Id);
+            var table=(await _ITableService.GetAllAvailableAsync().ConfigureAwait(true)).Where(x => x.Table_Type_Id==Id);
             return PartialView("_TableList", model: table);
         }
 
@@ -85,9 +85,9 @@ namespace LotusRMSweb.Areas.Order.Controllers
             return PartialView("_Order",model:order);
         }
 
-        public IActionResult Selectmenu(Guid MenuId,Guid TableId)
+        public async Task<IActionResult> Selectmenu(Guid MenuId,Guid TableId)
         {
-            var menu=_IMenuService.GetFirstOrDefault(MenuId);
+            var menu=await _IMenuService.GetFirstOrDefaultByIdAsync(MenuId).ConfigureAwait(true);
             var vm = new AddNewOrderVM()
             {
                 Menu=menu,
@@ -126,7 +126,7 @@ namespace LotusRMSweb.Areas.Order.Controllers
                     };
                     foreach(var item in order.Order_Details)
                     {
-                        var menu = _IMenuService.GetFirstOrDefault(item.MenuId);
+                        var menu = await _IMenuService.GetFirstOrDefaultByIdAsync(item.MenuId).ConfigureAwait(true);
                         var orderDetail = new OrderDetailVm()
                         {
                             Id = item.Id,
@@ -161,7 +161,7 @@ namespace LotusRMSweb.Areas.Order.Controllers
                     foreach (var item in order.Order_Details)
                     {
 
-                        var menu = _IMenuService.GetFirstOrDefault(item.MenuId);
+                        var menu = await _IMenuService.GetFirstOrDefaultByIdAsync(item.MenuId).ConfigureAwait(true);
                         var orderDetail = new OrderDetailVm()
                         {
                             Id = item.Id,
@@ -188,14 +188,14 @@ namespace LotusRMSweb.Areas.Order.Controllers
         //new order region
         #region newOrder
         [HttpPost]
-        public IActionResult AddNewOrder(AddNewOrderVM vm)
+        public async Task<IActionResult> AddNewOrder(AddNewOrderVM vm)
         {
             var orderList = new List<AddNewOrderVM>();
             if (HttpContext.Session.GetString(vm.TableId.ToString()) != null )
             {
                 orderList = JsonConvert.DeserializeObject<List<AddNewOrderVM>>(HttpContext.Session.GetString(vm.TableId.ToString()));
             }
-            var menu=_IMenuService.GetAll().Where(x=>x.Id== vm.MenuId).FirstOrDefault();
+            var menu=await _IMenuService.GetFirstOrDefaultByIdAsync(vm.MenuId).ConfigureAwait(true);
             vm.Item_Name = menu.Item_Name +"("+menu.Menu_Details.FirstOrDefault(x=>x.Id==vm.Quantity_Id).Divison.Title+")";
             vm.Item_Unit= menu.Menu_Unit.Unit_Symbol;
             orderList.Add(vm);
@@ -256,7 +256,7 @@ namespace LotusRMSweb.Areas.Order.Controllers
 
             HttpContext.Session.Remove(tableId.ToString());
            
-            var orders = GetOrderVM(tableId, "");
+            var orders =await GetOrderVM(tableId, "");
             await SetNotification(tableId);
 
 
@@ -289,7 +289,7 @@ namespace LotusRMSweb.Areas.Order.Controllers
             return PartialView("_NewOrders", orderList);
         }
         [HttpPost]
-        public IActionResult EditNewOrder(Guid tableId,Guid menuId,float quantity,string remarks)
+        public async Task<IActionResult> EditNewOrder(Guid tableId,Guid menuId,float quantity,string remarks)
         {
             var orderList = new List<AddNewOrderVM>();
             if (HttpContext.Session.GetString(tableId.ToString()) != null)
@@ -302,7 +302,7 @@ namespace LotusRMSweb.Areas.Order.Controllers
 
             HttpContext.Session.SetString(tableId.ToString(), JsonConvert.SerializeObject(orderList));
 
-            var menu = _IMenuService.GetFirstOrDefault(menuId);
+            var menu = await _IMenuService.GetFirstOrDefaultByIdAsync(menuId).ConfigureAwait(true);
 
             var vm = new AddNewOrderVM()
             {
@@ -373,7 +373,7 @@ namespace LotusRMSweb.Areas.Order.Controllers
             
             var tableId =_IOrderService.ReleaseTable(OrderNo);
             var IsReserved=await _ITableService.UpdateReservedAsync(tableId);
-            var order = GetOrderVM(tableId, "");
+            var order =await GetOrderVM(tableId, "");
             ViewBag.NewOrder = GetNewOrder(tableId);
             await SetReleaseNotification(tableId);
             return PartialView("_Order", model: order);

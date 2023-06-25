@@ -9,12 +9,13 @@ namespace LotusRMS.Models.Service
 {
     public interface IUnitService
     {
-        Task<Guid> Create(UnitCreateDto dto);
-        Guid Update(UnitUpdateDto dto);
-        Guid UpdateStatus(Guid Id);
+        Task<Guid> CreateAsync(UnitCreateDto dto);
+        Task<Guid> UpdateAsync(UnitUpdateDto dto);
+        Task<Guid> UpdateStatusAsync(Guid Id);
 
-        public IEnumerable<LotusRMS_Unit> GetAll();
-        public LotusRMS_Unit GetByGuid(Guid Id);
+        Task<IEnumerable<LotusRMS_Unit>> GetAllAsync();
+        Task<IEnumerable<LotusRMS_Unit>> GetAllAvailableAsync();
+        Task<LotusRMS_Unit?> GetByGuidAsync(Guid Id);
 
     }
 }

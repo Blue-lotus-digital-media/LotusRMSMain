@@ -31,12 +31,12 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             return View();
         }
 
-        public IActionResult Create(string? returnUrl = null)
+        public async Task<IActionResult> Create(string? returnUrl = null)
         {
             returnUrl ??= nameof(Index);
 
             var category = new CreateCategoryVM();
-            var typeList = _IMenuTypeService.GetAll().Where(x => x.Status).Select(x => new SelectListItem()
+            var typeList = (await _IMenuTypeService.GetAllAvailableAsync()).Select(x => new SelectListItem()
             {
                 Text = x.Type_Name,
                 Value = x.Id.ToString()
@@ -49,12 +49,12 @@ namespace LotusRMSweb.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(CreateCategoryVM obj, string? returnUrl = null)
+        public async Task<IActionResult> Create(CreateCategoryVM obj, string? returnUrl = null)
         {
             returnUrl ??= nameof(Index);
             if (!ModelState.IsValid)
             {
-                var typeList = _IMenuTypeService.GetAll().Where(x => x.Status).Select(x => new SelectListItem()
+                var typeList = (await _IMenuTypeService.GetAllAvailableAsync()).Select(x => new SelectListItem()
                 {
                     Text = x.Type_Name,
                     Value = x.Id.ToString()
@@ -74,7 +74,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             return Redirect(returnUrl);
         }
 
-        public IActionResult Update(Guid? Id)
+        public async Task<IActionResult> Update(Guid? Id)
         {
             if (Id == Guid.Empty)
             {
@@ -83,7 +83,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             }
 
             var updateCategoryVM = new UpdateCategoryVM();
-            var typeList = _IMenuTypeService.GetAll().Where(x => x.Status).Select(x => new SelectListItem()
+            var typeList = (await _IMenuTypeService.GetAllAvailableAsync()).Select(x => new SelectListItem()
             {
                 Text = x.Type_Name,
                 Value = x.Id.ToString()
@@ -109,11 +109,11 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(UpdateCategoryVM vm)
+        public async Task<IActionResult> Update(UpdateCategoryVM vm)
         {
             if (!ModelState.IsValid)
             {
-                vm.TypeList = _IMenuTypeService.GetAll().Where(x => x.Status).Select(x => new SelectListItem()
+                vm.TypeList = (await _IMenuTypeService.GetAllAvailableAsync().ConfigureAwait(true)).Where(x => x.Status).Select(x => new SelectListItem()
                 {
                     Text = x.Type_Name,
                     Value = x.Id.ToString()

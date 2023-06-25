@@ -48,7 +48,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
 
             if (reportType == SalesReportType.ReportType.item.ToString())
             {
-                list = GetItemList();
+                list = await GetItemList();
             }else if (reportType == SalesReportType.ReportType.table.ToString())
             {
                 list = await GetTableList();
@@ -64,9 +64,9 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         }
 
 
-        public List<SelectList> GetItemList() {
+        public async Task<List<SelectList>> GetItemList() {
 
-            var menuList = _iMenuService.GetAllAvailable().Select(menu => new SelectList(){ 
+            var menuList = (await _iMenuService.GetAllAvailableAsync().ConfigureAwait(true)).Select(menu => new SelectList(){ 
                 Id= menu.Id.ToString(),
                 Name=menu.Item_Name }).ToList();
             menuList.Insert(0, new SelectList() { Id = Guid.Empty.ToString(), Name = "All" });
@@ -119,7 +119,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         }
 
 
-        public IActionResult GetOrder(DateTime startDate,DateTime endDate,string ReportType,string Id)
+        public async Task<IActionResult> GetOrder(DateTime startDate,DateTime endDate,string ReportType,string Id)
         {
             endDate = endDate.AddDays(1).AddMilliseconds(-1);
             var gId = Guid.Empty;
@@ -128,7 +128,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 gId = Guid.Parse(Id);
             }
          
-            var checkout = _iCheckoutService.GetAllByDateRange( startDate,endDate);
+            var checkout = await _iCheckoutService.GetAllByDateRangeAsync( startDate,endDate);
 
             if(checkout != null)
             {

@@ -22,9 +22,9 @@ namespace LotusRMSweb.Controllers
             return View();
         }
         #region APICall
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var menus = _iMenuService.GetAllAvailable().ToList().Select(menu => new MenuVM()
+            var menus = (await _iMenuService.GetAllAvailableAsync().ConfigureAwait(true)).Select(menu => new MenuVM()
             {
                 Id = menu.Id,
                 Item_name = menu.Item_Name,
@@ -45,16 +45,16 @@ namespace LotusRMSweb.Controllers
             return Json(new { data = menus });
         }
         [HttpGet]
-        public IActionResult StatusChange(Guid Id)
+        public async Task<IActionResult> StatusChange(Guid Id)
         {
-            var unit = _iMenuService.GetByGuid(Id);
+            var unit =await  _iMenuService.GetByGuidAsync(Id).ConfigureAwait(true);
             if (unit == null)
             {
-                return BadRequest();
+                return BadRequest("No such unit");
             }
             else
             {
-                var id = _iMenuService.UpdateStatus(Id);
+                var id = await _iMenuService.UpdateStatusAsync(Id).ConfigureAwait(true);
                 if (unit.Status == true)
                 {
                     _notyf.Success("Status Activated successfully..", 2);

@@ -27,6 +27,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System.Data.Entity.SqlServer;
 
 var builder = WebApplication.CreateBuilder(args);
 //var connectionString = builder.Configuration.GetConnectionString("ApplicationDbContextConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDbContextConnection' not found.");
@@ -44,8 +45,16 @@ var connectionStringBuilder = new MySqlConnectionStringBuilder(builder.Configura
 
 //connectionStringBuilder.Password = builder.Configuration.GetValue<string>("App:ServerPassword"); 
 
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(connectionStringBuilder.ConnectionString, new MySqlServerVersion(new Version(8, 0, 11)), options => options.EnableRetryOnFailure()));
-
+builder.Services.AddDbContext<ApplicationDbContext>(
+    options => options.UseMySql(connectionStringBuilder.ConnectionString,
+    ServerVersion.AutoDetect(connectionStringBuilder.ConnectionString),
+    opt=> new SqlAzureExecutionStrategy()
+   // opt=>opt.ExecutionStrategy(c=>new LotusExecutionStrategy(c))
+    /*opt => opt.EnableRetryOnFailure(
+    maxRetryCount: 10,
+        maxRetryDelay: TimeSpan.FromSeconds(30),
+        errorNumbersToAdd: null)*/
+    ));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddIdentity<RMSUser, IdentityRole>()
@@ -151,8 +160,8 @@ app.UseRouting();
 app.UseSession();
 app.UseCookiePolicy(new CookiePolicyOptions()
 {
-    MinimumSameSitePolicy = SameSiteMode.Lax
-   
+    MinimumSameSitePolicy = SameSiteMode.Strict
+
 });
 app.UseNotyf();
 app.UseAuthentication();

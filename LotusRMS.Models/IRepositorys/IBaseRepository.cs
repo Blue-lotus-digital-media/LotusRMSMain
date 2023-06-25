@@ -9,9 +9,9 @@ namespace LotusRMS.Models.IRepositorys
 {
     public interface IBaseRepository<T> where T:class
     {
-        T Get(int id);
-        T GetByGuid(Guid id);
-        Task<T> GetByGuidAsync(Guid id);
+        T? Get(int id);
+        T? GetByGuid(Guid id);
+        Task<T?> GetByGuidAsync(Guid id);
         IEnumerable<T> GetAll(
             Expression<Func<T, bool>> filter = null,
             Func<IQueryable<T>,IOrderedQueryable<T>> orderBy=null,
@@ -22,16 +22,16 @@ namespace LotusRMS.Models.IRepositorys
             Func<IQueryable<T>,IOrderedQueryable<T>> orderBy=null,
             string includeProperties = null
             );
-        T GetFirstOrDefault(
+        T? GetFirstOrDefault(
             Expression<Func<T, bool>> filter = null,
             string includeProperties = null
             );
-        T GetLastOrDefault(
+        T? GetLastOrDefault(
             Expression<Func<T, bool>> filter = null,
             Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
             string includeProperties = null
             );
-        Task<T> GetFirstOrDefaultAsync(
+        Task<T?> GetFirstOrDefaultAsync(
            Expression<Func<T, bool>> filter = null,
            string includeProperties = null
            );
@@ -40,10 +40,12 @@ namespace LotusRMS.Models.IRepositorys
         void Remove(int id);
         void RemoveRange(IEnumerable<T> entity);
         void Remove(T entity);
-
+        Task<ICollection<T>> FindBy(Expression<Func<T, bool>> filter = null, string includeProperties = null);
+        IQueryable<T> GetQueryable();
         void Save();
         Task SaveAsync();
         Task<bool> HasAnyAsync(Expression<Func<T, bool>> filter = null);
+
 
     }
 }

@@ -10,15 +10,15 @@ namespace LotusRMS.Models.Service
 {
     public interface ICheckoutService
     {
-        Task<Guid> Create(CreateCheckoutDTO dto);
-        Guid Update(UpdateCheckoutDTO dto);
-        Guid UpdateStatus(Guid Id);
+        Task<Guid> CreateAsync(CreateCheckoutDTO dto);
+        Task<Guid> UpdateAsync(UpdateCheckoutDTO dto);
+        Task<Guid> UpdateStatusAsync(Guid Id);
 
-        public IEnumerable<LotusRMS_Checkout> GetAll();
-        public IEnumerable<LotusRMS_Checkout> GetAllByDateRange(DateTime startDate,DateTime endDate);
-        public LotusRMS_Checkout GetByGuid(Guid Id);
+        Task<IEnumerable<LotusRMS_Checkout>> GetAllAsync();
+        Task<IEnumerable<LotusRMS_Checkout>> GetAllByDateRangeAsync(DateTime startDate,DateTime endDate);
+        Task<LotusRMS_Checkout> GetByGuidAsync(Guid Id);
 
-        Guid SetInvoice(Guid Id);
+        Task<Guid> SetInvoiceAsync(Guid Id);
 
 
     }

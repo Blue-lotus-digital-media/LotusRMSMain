@@ -161,7 +161,7 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
                 Paid_Amount=vm.Paid_Amount
 
             };
-            var id=_ICheckoutService.Create(dto);
+            var id=await _ICheckoutService.CreateAsync(dto);
             var order = _IOrderService.GetFirstOrDefaultByOrderId(vm.Order_Id);
             await _ITableService.UpdateReservedAsync(order.Table_Id);
 
@@ -195,7 +195,7 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
             }
 
 
-            return RedirectToAction("InvoicePrint", "Invoice", new {area="",Id = id.Result,returnUrl="/checkout" });
+            return RedirectToAction("InvoicePrint", "Invoice", new {area="",Id = id,returnUrl="/checkout" });
 
         }
 
@@ -209,7 +209,7 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
             if (tableId != Guid.Empty)
             {
                 OrderVM.TableId = tableId;
-                OrderVM.Table_Name = (await _ITableService.GetByGuidAsync(tableId)).Table_Name;
+                OrderVM.Table_Name = (await _ITableService.GetByGuidAsync(tableId).ConfigureAwait(true)).Table_Name;
                 order = _IOrderService.GetFirstOrDefaultByTableId(tableId);
                 if (order != null)
                 {
@@ -224,7 +224,7 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
                     };
                     foreach (var item in order.Order_Details)
                     {
-                        var menu = _IMenuService.GetFirstOrDefault(item.MenuId);
+                        var menu = await _IMenuService.GetFirstOrDefaultByIdAsync(item.MenuId).ConfigureAwait(true);
                         var orderDetail = new OrderDetailVm()
                         {
                             Id = item.Id,
@@ -260,7 +260,7 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
                     foreach (var item in order.Order_Details)
                     {
 
-                        var menu = _IMenuService.GetFirstOrDefault(item.MenuId);
+                        var menu = await _IMenuService.GetFirstOrDefaultByIdAsync(item.MenuId).ConfigureAwait(true);
                         var orderDetail = new OrderDetailVm()
                         {
                             Id = item.Id,
@@ -326,7 +326,7 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
             }
         }
 
-        public IActionResult PrintKOT(string OrderNo)
+        public async Task<IActionResult> PrintKOT(string OrderNo)
         {
             var order = _IOrderService.GetFirstOrDefaultByOrderNo(OrderNo);
 
@@ -342,7 +342,7 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
 
                 foreach (var item in order.Order_Details.Where(x => !x.IsPrinted))
                 {
-                    var menu = _IMenuService.GetFirstOrDefault(item.MenuId);
+                    var menu = await _IMenuService.GetFirstOrDefaultByIdAsync(item.MenuId).ConfigureAwait(true);
                     var orderDetail = new OrderDetailVm()
                     {
                         Id = item.Id,
@@ -364,7 +364,7 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
             {
                 foreach (var item in order.Order_Details)
                 {
-                    var menu = _IMenuService.GetFirstOrDefault(item.MenuId);
+                    var menu =await _IMenuService.GetFirstOrDefaultByIdAsync(item.MenuId).ConfigureAwait(true);
                     var orderDetail = new OrderDetailVm()
                     {
                         Id = item.Id,

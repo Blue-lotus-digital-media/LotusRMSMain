@@ -1,5 +1,6 @@
 ﻿using LotusRMS.Models.IRepositorys;
 using LotusRMS.Models.Viewmodels.Order;
+using MailKit.Search;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -13,9 +14,9 @@ namespace LotusRMS.DataAccess.Repository
     public class BaseRepository<T> : IBaseRepository<T> where T : class
     {
         private readonly ApplicationDbContext _dal;
-        internal DbSet<T> dbSet;
+        private readonly DbSet<T> dbSet;
         
-        public BaseRepository(ApplicationDbContext dal) {
+        protected BaseRepository(ApplicationDbContext dal) {
             _dal = dal;
             this.dbSet = _dal.Set<T>();
         }
@@ -34,11 +35,11 @@ namespace LotusRMS.DataAccess.Repository
         {
             return dbSet.Find(id);
         } 
-        public async Task<T> GetByGuidAsync(Guid id)
+        public async Task<T?> GetByGuidAsync(Guid id)
         {
-            return await dbSet.FindAsync(id);
+            return await dbSet.FindAsync(id).ConfigureAwait(false); ;
         }
-        public T Get(int id)
+        public T? Get(int id)
         {
             return dbSet.Find(id);
         }
@@ -73,7 +74,30 @@ namespace LotusRMS.DataAccess.Repository
             await _dal.SaveChangesAsync().ConfigureAwait(false);
         }
 
-        public T GetFirstOrDefault(Expression<Func<T, bool>> filter = null, string includeProperties = null)
+        public IQueryable<T> GetQueryable()
+        {
+            return dbSet;
+        }
+
+        public virtual async Task<ICollection<T>> FindBy(Expression<Func<T, bool>> filter = null, string includeProperties = null)
+        {
+            IQueryable<T> query = dbSet;
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+            if (includeProperties != null)
+            {
+                foreach (var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
+           
+            return await query.ToListAsync().ConfigureAwait(false);
+        }
+
+        public T? GetFirstOrDefault(Expression<Func<T, bool>> filter = null, string includeProperties = null)
         {
             IQueryable<T> query = dbSet;
             if (filter != null)
@@ -89,7 +113,7 @@ namespace LotusRMS.DataAccess.Repository
             }
             return query.FirstOrDefault();
         }
-        public T GetLastOrDefault(Expression<Func<T, bool>> filter = null,
+        public T? GetLastOrDefault(Expression<Func<T, bool>> filter = null,
             Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, string includeProperties = null)
         {
             IQueryable<T> query = dbSet;
@@ -108,7 +132,7 @@ namespace LotusRMS.DataAccess.Repository
         }
         public void Remove(int id)
         {
-            T entity = dbSet.Find(id);
+            T? entity = dbSet.Find(id);
             Remove(entity);
         }
 
@@ -141,9 +165,9 @@ namespace LotusRMS.DataAccess.Repository
             {
                 return await orderBy(query).ToListAsync().ConfigureAwait(false);
             }
-            return await query.ToListAsync();
+            return await query.ToListAsync().ConfigureAwait(false);
         }
-        public async Task<T> GetFirstOrDefaultAsync(Expression<Func<T, bool>> filter = null, string includeProperties = null)
+        public async Task<T?> GetFirstOrDefaultAsync(Expression<Func<T, bool>> filter = null, string includeProperties = null)
         {
             IQueryable<T> query = dbSet;
             if (filter != null)

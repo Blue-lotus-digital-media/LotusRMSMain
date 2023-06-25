@@ -9,8 +9,8 @@ namespace LotusRMS.Models.IRepositorys
 {
     public interface IUnitRepository:IBaseRepository<LotusRMS_Unit>
     {
-        void Update(LotusRMS_Unit unit);
-        void UpdateStatus(Guid Id);
+        Task UpdateAsync(LotusRMS_Unit unit);
+        Task UpdateStatusAsync(Guid Id);
     }
 
 }

@@ -1,4 +1,5 @@
 ﻿using LotusRMS.Models.Dto.ProductDTO;
+using LotusRMS.Models.Helper;
 using LotusRMS.Models.IRepositorys;
 using System;
 using System.Collections.Generic;
@@ -19,8 +20,9 @@ namespace LotusRMS.Models.Service.Implementation
             _IProductRepository = iProductRepository;
         }
 
-        public Guid Create(CreateProductDTO dto)
+        public async Task<Guid> CreateAsync(CreateProductDTO dto)
         {
+            using var scope = TransactionScopeHelper.GetInstance;
             var product = new LotusRMS_Product(
                  product_Name: dto.Product_Name,
                 product_Description: dto.Product_Description,
@@ -29,27 +31,31 @@ namespace LotusRMS.Models.Service.Implementation
                 unit_Quantity: dto.Unit_Quantity,
                 product_Type_Id: dto.Product_Type_Id
                 );
-            _IProductRepository.Add(product);
-            _IProductRepository.Save();
+            await _IProductRepository.AddAsync(product).ConfigureAwait(false);
+            await _IProductRepository.SaveAsync().ConfigureAwait(false);
+            scope.Complete();
+
             return product.Id;
         }
 
-        public IEnumerable<LotusRMS_Product> GetAll()
+        public async Task<IEnumerable<LotusRMS_Product>> GetAllAsync()
         {
-            return _IProductRepository.GetAll(x => !x.IsDelete,includeProperties: "Product_Unit,Product_Category,Product_Type");    
-        } public IEnumerable<LotusRMS_Product> GetAllAvailable()
+            return await _IProductRepository.GetAllAsync(x => !x.IsDelete,includeProperties: "Product_Unit,Product_Category,Product_Type").ConfigureAwait(false);    
+        } 
+        public async Task<IEnumerable<LotusRMS_Product>> GetAllAvailableAsync()
         {
-            return _IProductRepository.GetAll(x=>!x.IsDelete&&x.Status, includeProperties: "Product_Unit,Product_Category,Product_Type");    
+            return await _IProductRepository.GetAllAsync(x=>!x.IsDelete&&x.Status, includeProperties: "Product_Unit,Product_Category,Product_Type").ConfigureAwait(false);    
         }
 
-        public LotusRMS_Product GetByGuid(Guid Id)
+        public async Task<LotusRMS_Product?> GetByGuidAsync(Guid Id)
         {
-            return _IProductRepository.GetByGuid(Id);
+            return await _IProductRepository.GetByGuidAsync(Id).ConfigureAwait(false);
         }
 
-        public async Task<Guid> Update(UpdateProductDTO dto)
+        public async Task<Guid> UpdateAsync(UpdateProductDTO dto)
         {
-            var product = _IProductRepository.GetByGuid(dto.Id) ?? throw new Exception();
+            using var scope = TransactionScopeHelper.GetInstance;
+            var product = await _IProductRepository.GetByGuidAsync(dto.Id).ConfigureAwait(false) ?? throw new Exception();
             product.Update(
                 product_Name: dto.Product_Name,
                 product_Description: dto.Product_Description,
@@ -58,20 +64,18 @@ namespace LotusRMS.Models.Service.Implementation
                 unit_Quantity:dto.Unit_Quantity,
                 product_Type_Id:dto.Product_Type_Id
                 );
-            _IProductRepository.Update(product);
-
-            _IProductRepository.Save();
+            await _IProductRepository.UpdateAsync(product);
+            scope.Complete();
             return product.Id;
 
         }
 
-        public Guid UpdateStatus(Guid Id)
+        public async Task<Guid> UpdateStatusAsync(Guid Id)
         {
-            var product = _IProductRepository.GetByGuid(Id) ?? throw new Exception();
-            _IProductRepository.UpdateStatus(Id);
-
-            _IProductRepository.Save();
-            return product.Id;
+            using var scope = TransactionScopeHelper.GetInstance;
+            await _IProductRepository.UpdateStatusAsync(Id).ConfigureAwait(false);
+            scope.Complete();
+            return Id;
         }
     }
 }

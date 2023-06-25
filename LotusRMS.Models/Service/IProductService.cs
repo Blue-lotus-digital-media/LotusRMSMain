@@ -9,13 +9,13 @@ namespace LotusRMS.Models.Service
 {
     public interface IProductService
     {
-        Guid Create(CreateProductDTO dto);
-        Task<Guid> Update(UpdateProductDTO dto);
-        Guid UpdateStatus(Guid Id);
+        Task<Guid> CreateAsync(CreateProductDTO dto);
+        Task<Guid> UpdateAsync(UpdateProductDTO dto);
+        Task<Guid> UpdateStatusAsync(Guid Id);
 
-        public IEnumerable<LotusRMS_Product> GetAll();
-        public IEnumerable<LotusRMS_Product> GetAllAvailable();
-        public LotusRMS_Product GetByGuid(Guid Id);
+        Task<IEnumerable<LotusRMS_Product>> GetAllAsync();
+        Task<IEnumerable<LotusRMS_Product>> GetAllAvailableAsync();
+        Task<LotusRMS_Product?> GetByGuidAsync(Guid Id);
 
 
 

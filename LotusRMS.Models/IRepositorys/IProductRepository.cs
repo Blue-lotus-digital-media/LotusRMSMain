@@ -8,8 +8,8 @@ namespace LotusRMS.Models.IRepositorys
 {
     public interface IProductRepository : IBaseRepository<LotusRMS_Product>
     {
-        void Update(LotusRMS_Product product);
-        void UpdateStatus(Guid Id);
+        Task UpdateAsync(LotusRMS_Product product);
+        Task UpdateStatusAsync(Guid Id);
 
     }
 }

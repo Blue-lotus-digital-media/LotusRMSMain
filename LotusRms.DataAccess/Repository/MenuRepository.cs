@@ -17,19 +17,18 @@ namespace LotusRMS.DataAccess.Repository
             _dal = dal;
         }
 
-        public void Update(LotusRMS_Menu lMenu)
+        public async Task UpdateAsync(LotusRMS_Menu lMenu)
         {
-
-            Save();
+            await SaveAsync();
         }
 
-        public void UpdateStatus(Guid Id)
+        public async Task UpdateStatusAsync(Guid Id)
         {
-            var type = _dal.LotusRMS_Menus.FirstOrDefault(x => x.Id == Id);
+            var type = await GetFirstOrDefaultAsync(x => x.Id == Id).ConfigureAwait(false);
             if (type != null)
             {
                 type.Status = !type.Status;
-                Save();
+                await SaveAsync();
             }
         }
     }

@@ -35,7 +35,6 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ;
                 _notyf.Error("One or More validation error!!!", 5);
                 return View(vm);
             }
@@ -151,14 +150,14 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> ActiveChange(Guid id)
         {
-            var activeYear = await _fiscalyearService.GetActiveYearAsync().ConfigureAwait(false);
+            /*var activeYear = await _fiscalyearService.GetActiveYearAsync().ConfigureAwait(true);
             if (activeYear.Id == id)
             {
                 _notyf.Error("Active fiscal year cant be changed!!!", 5);
                 return Ok(false);
-            }
+            }*/
 
-            var rid =await _fiscalyearService.UpdateActiveAsync(id).ConfigureAwait(false);
+            var rid =await _fiscalyearService.UpdateActiveAsync(id).ConfigureAwait(true);
             _notyf.Success("Active fiscal year changed successfully", 5);
             return Ok(true);
         }

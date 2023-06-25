@@ -19,9 +19,9 @@ namespace LotusRMSweb.Areas.SuperAdmin.Controllers
             _companyService = companyService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var company = _companyService.GetCompany();
+            var company = await _companyService.GetCompanyAsync().ConfigureAwait(true);
             if (company.CompanyName == null)
             {
                 return RedirectToAction(nameof(Create));
@@ -43,7 +43,7 @@ namespace LotusRMSweb.Areas.SuperAdmin.Controllers
         }
              
         [HttpPost]
-        public IActionResult Create(CreateCompanyVM company)
+        public async Task<IActionResult> Create(CreateCompanyVM company)
         {
 
             var dto = new CreateCompanyDTO() {
@@ -75,19 +75,19 @@ namespace LotusRMSweb.Areas.SuperAdmin.Controllers
             dto.ContactPersons.Add(ucp);
 
             }
-            var id=_companyService.Create(dto);
+            var id=await _companyService.CreateAsync(dto).ConfigureAwait(true);
 
             return RedirectToAction(nameof(Index));
         }
 
-      public IActionResult Update()
+      public async Task<IActionResult> Update()
         {
-            var company = _companyService.GetCompany();
+            var company =await _companyService.GetCompanyAsync().ConfigureAwait(true);
             return View(company);
         }
 
         [HttpPost]
-        public IActionResult Update(UpdateCompanyVM company)
+        public async Task<IActionResult> Update(UpdateCompanyVM company)
         {
 
             var dto = new UpdateCompanyDTO()
@@ -124,7 +124,7 @@ namespace LotusRMSweb.Areas.SuperAdmin.Controllers
                 dto.ContactPersons.Add(ucp);
 
             }
-            var id = _companyService.Update(dto);
+            var id = await _companyService.UpdateAsync(dto).ConfigureAwait(true);
 
             return RedirectToAction(nameof(Index));
         }

@@ -40,7 +40,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(UnitVM unitVM, string? returnUrl = null)
+        public async Task<IActionResult> Create(UnitVM unitVM, string? returnUrl = null)
         {
             if (!ModelState.IsValid)
             {
@@ -49,16 +49,16 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             }
 
             var unitCreateDto = new UnitCreateDto(unitVM.Name, unitVM.Unit_Symbol, unitVM.Unit_Description);
-            var id = _unitService.Create(unitCreateDto);
+            var id = await _unitService.CreateAsync(unitCreateDto);
             _notyf.Success("Product unit created successfully", 5);
             return Redirect(returnUrl);
         }
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public IActionResult ExportToExcel()
+        public async Task<IActionResult> ExportToExcel()
         {
-            var arraylist = _unitService.GetAll();
+            var arraylist  =await _unitService.GetAllAvailableAsync();
 
 
             using (XLWorkbook xl = new XLWorkbook())
@@ -78,9 +78,9 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         #region API CALLS
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var units = _unitService.GetAll().Select(x => new UnitVMUpdate()
+            var units =(await _unitService.GetAllAvailableAsync()).Select(x => new UnitVMUpdate()
             {
                 Id = x.Id,
                 Name = x.Unit_Name,
@@ -92,16 +92,16 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public IActionResult StatusChange(Guid Id)
+        public async Task<IActionResult> StatusChange(Guid Id)
         {
-            var unit = _unitService.GetByGuid(Id);
+            var unit =await _unitService.GetByGuidAsync(Id);
             if (unit == null)
             {
                 return BadRequest();
             }
             else
             {
-                var id = _unitService.UpdateStatus(Id);
+                var id = await _unitService.UpdateStatusAsync(Id);
 
                 return Ok(unit.Status);
             }

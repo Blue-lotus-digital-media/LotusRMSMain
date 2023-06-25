@@ -14,9 +14,7 @@ namespace LotusRMS.Models.Helper
         ///     Without the TransactionScopeAsyncFlowOption.Enabled, the exception wont flow.
         /// </summary>
         /// <returns></returns>
-        public static TransactionScope GetInstance()
-        {
-            return new TransactionScope(TransactionScopeOption.RequiresNew,TransactionScopeAsyncFlowOption.Enabled);
-        }
+
+        public static TransactionScope GetInstance => new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
     }
 }

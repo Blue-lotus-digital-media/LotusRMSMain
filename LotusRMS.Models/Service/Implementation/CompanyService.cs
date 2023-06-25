@@ -1,4 +1,5 @@
 ﻿using LotusRMS.Models.Dto.CompanyDTO;
+using LotusRMS.Models.Helper;
 using LotusRMS.Models.IRepositorys;
 using LotusRMS.Models.Viewmodels.Company;
 using Org.BouncyCastle.Utilities.Net;
@@ -22,9 +23,9 @@ namespace LotusRMS.Models.Service.Implementation
             _companyRepository = companyRepository;
         }
 
-        public UpdateCompanyVM GetCompany()
+        public async Task<UpdateCompanyVM?> GetCompanyAsync()
         {
-            var company = _companyRepository.GetFirstOrDefault(includeProperties: "ContactPersons");
+            var company = await _companyRepository.GetFirstOrDefaultAsync(includeProperties: "ContactPersons").ConfigureAwait(false);
             var upcVM = new UpdateCompanyVM()
             {
                 ContactPerson = new List<UpdateContactPersonVM>()
@@ -65,8 +66,9 @@ namespace LotusRMS.Models.Service.Implementation
             return upcVM;
         }
 
-        public Guid Create(CreateCompanyDTO obj)
+        public async Task<Guid> CreateAsync(CreateCompanyDTO obj)
         {
+            using var scope = TransactionScopeHelper.GetInstance;
             var Company = new LotusRMS_Company(
             companyName: obj.CompanyName,
             country: obj.Country,
@@ -84,25 +86,23 @@ namespace LotusRMS.Models.Service.Implementation
             registrationNo: obj.RegistrationNo
             )
             {
-                ContactPersons = new List<ContactPerson>(),
+                ContactPersons = obj.ContactPersons,
                 IpV4Address="127.0.0.1"
             };
-            foreach(var item in obj.ContactPersons)
-            {
-                Company.ContactPersons.Add( item ); 
-            }
-            _companyRepository.Add(Company);
-            _companyRepository.Save();
+            await _companyRepository.AddAsync(Company).ConfigureAwait(false);
+            await _companyRepository.SaveAsync().ConfigureAwait(false);
+            scope.Complete();
             return Company.Id;
 
         }
 
-        public async Task<Guid> Update(UpdateCompanyDTO obj)
+        public async Task<Guid> UpdateAsync(UpdateCompanyDTO obj)
         {
-            var company = _companyRepository.GetFirstOrDefault();
+            using var scope = TransactionScopeHelper.GetInstance;
+            var company = await _companyRepository.GetFirstOrDefaultAsync().ConfigureAwait(false);
 
             company.Update(
-                  companyName: obj.CompanyName,
+            companyName: obj.CompanyName,
             country: obj.Country,
             province: obj.Province,
             city: obj.City,
@@ -118,20 +118,30 @@ namespace LotusRMS.Models.Service.Implementation
             serviceStartDate: obj.ServiceStartDate,
             registrationNo:obj.RegistrationNo
                 );
-            _companyRepository.Update(company);
+            await _companyRepository.UpdateAsync(company).ConfigureAwait(false);
+            scope.Complete();
             return company.Id;
         }
 
-        public async Task UpdateIp(string Ip)
+        public async Task UpdateIpAsync(string Ip)
         {
-            var company =await _companyRepository.GetFirstOrDefaultAsync();
+            using var scope = TransactionScopeHelper.GetInstance;
+            var company =await _companyRepository.GetFirstOrDefaultAsync().ConfigureAwait(false);
             company.IpV4Address = Ip;
-            _companyRepository.Update(company);
+            await _companyRepository.UpdateAsync(company).ConfigureAwait(false);
+            scope.Complete();
         }
-        public async Task<string> GetIp()
+        public async Task<string> GetIpAsync()
         {
-            var company = await _companyRepository.GetFirstOrDefaultAsync();
+
+            var company = await _companyRepository.GetFirstOrDefaultAsync().ConfigureAwait(false);
             return company!=null? company.IpV4Address:"127.0.0.1";
+        }
+
+        public async Task<string> GetCompanyNameAsync()
+        {
+            var company = await _companyRepository.GetFirstOrDefaultAsync().ConfigureAwait(false);
+            return company != null ? company.CompanyName : "No Name";
         }
     }
 }

@@ -36,7 +36,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(CreateTypeVM type, string? returnUrl)
+        public async Task<IActionResult> Create(CreateTypeVM type, string? returnUrl)
         {
             returnUrl ??= nameof(Index);
             ViewBag.ReturnUrl = returnUrl;
@@ -48,21 +48,21 @@ namespace LotusRMSweb.Areas.Admin.Controllers
 
             var createDto = new CreateTypeDTO(type_Name: type.Type_Name, type_Description: type.Type_Description);
 
-            _IMenuTypeService.Create(createDto);
+            await _IMenuTypeService.CreateAsync(createDto).ConfigureAwait(true);
             _notyf.Success("Menu Type created successfully !", 5);
 
 
             return Redirect(returnUrl);
         }
 
-        public IActionResult Update(Guid? Id)
+        public async Task<IActionResult> Update(Guid? Id)
         {
             if (Id == Guid.Empty)
             {
                 return RedirectToAction(nameof(Index));
             }
 
-            var type = _IMenuTypeService.GetByGuid((Guid)Id);
+            var type = await _IMenuTypeService.GetByGuidAsync((Guid)Id).ConfigureAwait(true);
 
             var updateTypeVM = new UpdateTypeVM()
             {
@@ -75,7 +75,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(UpdateTypeVM type)
+        public async Task<IActionResult> Update(UpdateTypeVM type)
         {
             if (!ModelState.IsValid)
             {
@@ -88,7 +88,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             };
 
 
-            _IMenuTypeService.Update(dto);
+            await _IMenuTypeService.UpdateAsync(dto).ConfigureAwait(true);
 
             _notyf.Success("Menu Type updated successfully !", 5);
             return RedirectToAction(nameof(Index));
@@ -97,9 +97,9 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         #region API CALLS
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var types = _IMenuTypeService.GetAll().Select(x => new TypeVM()
+            var types = (await _IMenuTypeService.GetAllAvailableAsync()).Select(x => new TypeVM()
             {
                 Id = x.Id,
                 Type_Name = x.Type_Name,
@@ -110,16 +110,16 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public IActionResult StatusChange(Guid Id)
+        public async Task<IActionResult> StatusChange(Guid Id)
         {
-            var unit = _IMenuTypeService.GetByGuid(Id);
+            var unit =await _IMenuTypeService.GetByGuidAsync(Id).ConfigureAwait(true);
             if (unit == null)
             {
-                return BadRequest();
+                return BadRequest("No unit found");
             }
             else
             {
-                var id = _IMenuTypeService.UpdateStatus(Id);
+                var id = await _IMenuTypeService.UpdateStatusAsync(Id).ConfigureAwait(true);
 
                 return Ok(unit.Status);
             }

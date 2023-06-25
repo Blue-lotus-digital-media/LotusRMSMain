@@ -88,7 +88,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                 Select(group=> new { fee=group.Key,total=group.Sum(f=>f.Quantity)});
             return Json(new { data = data });
         }
-        public IActionResult GetTransection(ReportType type){
+        public async Task<IActionResult> GetTransection(ReportType type){
             var today = CurrentTime.DateTimeToday();
             var startDate = Convert.ToDateTime(today);
             var endDate = CurrentTime.DateTimeNow();
@@ -104,7 +104,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             {
                 startDate = startDate.AddMonths(-startDate.Month + 1).AddDays(-startDate.Day + 1);
             }
-            var totalTransection = _iCheckoutService.GetAllByDateRange(startDate, endDate).Sum(x=>x.Total);
+            var totalTransection =(await _iCheckoutService.GetAllByDateRangeAsync(startDate, endDate)).Sum(x=>x.Total);
             
             return Json(new { data = totalTransection });
         }

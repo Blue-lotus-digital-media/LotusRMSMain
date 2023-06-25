@@ -1,4 +1,5 @@
 ﻿using LotusRMS.Models.Dto.MenuDTO;
+using LotusRMS.Models.Helper;
 using LotusRMS.Models.IRepositorys;
 using System;
 using System.Collections.Generic;
@@ -15,9 +16,10 @@ namespace LotusRMS.Models.Service.Implementation
         {
             _IMenuRepository = iMenuRepository;
         }
-        public Guid Create(CreateMenuDTO dto)
-        {
-            var  menu= new LotusRMS_Menu();
+            public async Task<Guid> CreateAsync(CreateMenuDTO dto)
+            {
+            using var scope = TransactionScopeHelper.GetInstance;
+                var  menu= new LotusRMS_Menu();
             menu.Update(
                 item_name: dto.Item_name,
                 unit_Id: dto.Unit_Id,
@@ -51,51 +53,38 @@ namespace LotusRMS.Models.Service.Implementation
             {
                 menu.Image = dto.Image;
             }
-            _IMenuRepository.Add(menu);
-            _IMenuRepository.Save();
+            await _IMenuRepository.AddAsync(menu).ConfigureAwait(false);
+            await _IMenuRepository.SaveAsync().ConfigureAwait(false);
+            scope.Complete();
             return menu.Id;
 
         }
        
-
-        public async Task<Guid> CreateAsync(CreateMenuDTO dto)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<LotusRMS_Menu> GetAll()
-        {
-            return _IMenuRepository.GetAll(includeProperties: "Menu_Unit,Menu_Category,Menu_Type,Menu_Details,Menu_Details.Divison,Menu_Incredians,Menu_Incredians.Product,Menu_Incredians.Unit");
-        } public IEnumerable<LotusRMS_Menu> GetAllAvailable()
-        {
-            return _IMenuRepository.GetAll(filter:x=>!x.IsDelete, includeProperties: "Menu_Unit,Menu_Category,Menu_Type,Menu_Details,Menu_Details.Divison,Menu_Incredians,Menu_Incredians.Product,Menu_Incredians.Unit");
-        }
-
         public async Task<IEnumerable<LotusRMS_Menu>> GetAllAsync()
         {
-            return await _IMenuRepository.GetAllAsync();
+            return await _IMenuRepository.GetAllAsync(includeProperties: "Menu_Unit,Menu_Category,Menu_Type,Menu_Details,Menu_Details.Divison,Menu_Incredians,Menu_Incredians.Product,Menu_Incredians.Unit").ConfigureAwait(false);
+        }
+        public async Task<IEnumerable<LotusRMS_Menu>> GetAllAvailableAsync()
+        {
+            return await _IMenuRepository.GetAllAsync(filter:x=>!x.IsDelete&&x.Status, includeProperties: "Menu_Unit,Menu_Category,Menu_Type,Menu_Details,Menu_Details.Divison,Menu_Incredians,Menu_Incredians.Product,Menu_Incredians.Unit").ConfigureAwait(false);
         }
 
-        public LotusRMS_Menu GetByGuid(Guid Id)
+        public async Task<LotusRMS_Menu?> GetByGuidAsync(Guid Id)
         {
-            return _IMenuRepository.GetByGuid(Id);
+            return await _IMenuRepository.GetByGuidAsync(Id).ConfigureAwait(false);
         }
 
-        public async Task<LotusRMS_Menu> GetByGuidAsync(Guid Id)
+        public async Task<LotusRMS_Menu?> GetFirstOrDefaultByIdAsync(Guid Id)
         {
-            throw new NotImplementedException();
+
+            return await _IMenuRepository.GetFirstOrDefaultAsync(filter: x => x.Id == Id,
+                includeProperties: "Menu_Unit,Menu_Category,Menu_Type,Menu_Details,Menu_Details.Divison,Menu_Incredians,Menu_Incredians.Product,Menu_Incredians.Unit").ConfigureAwait(false);
         }
 
-        public LotusRMS_Menu GetFirstOrDefault(Guid Id)
+        public async Task<Guid> UpdateAsync(UpdateMenuDTO dto)
         {
-
-            return _IMenuRepository.GetFirstOrDefault(filter: x => x.Id == Id, includeProperties: "Menu_Unit,Menu_Category,Menu_Type,Menu_Details,Menu_Details.Divison,Menu_Incredians,Menu_Incredians.Product,Menu_Incredians.Unit");
-        }
-
-        public Guid Update(UpdateMenuDTO dto)
-        {
-            //using var tx = new TransactionScope();
-            var menu = _IMenuRepository.GetFirstOrDefault(x => x.Id == dto.Id, includeProperties: "Menu_Details,Menu_Incredians");
+            using var scope = TransactionScopeHelper.GetInstance;
+            var menu = await _IMenuRepository.GetFirstOrDefaultAsync(x => x.Id == dto.Id, includeProperties: "Menu_Details,Menu_Incredians").ConfigureAwait(false);
 
             menu.Update(
                   item_name: dto.Item_name,
@@ -163,30 +152,23 @@ namespace LotusRMS.Models.Service.Implementation
             }
 
 
-            _IMenuRepository.Update(menu);
+           await _IMenuRepository.UpdateAsync(menu).ConfigureAwait(false);
             //todo logic
 
-            // tx.Complete();
+            scope.Complete();
             return menu.Id;
         }
 
-        public async Task<Guid> UpdateAsync(UpdateMenuDTO dto)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Guid UpdateStatus(Guid Id)
-        {
-            _IMenuRepository.UpdateStatus(Id);
-
-            _IMenuRepository.Save();
-            return Id;
-        }
+       
 
         public async Task<Guid> UpdateStatusAsync(Guid Id)
         {
-            throw new NotImplementedException();
+            using var scope = TransactionScopeHelper.GetInstance;
+            await _IMenuRepository.UpdateStatusAsync(Id);
+            scope.Complete();
+            return Id;
         }
+
 
     }
 }

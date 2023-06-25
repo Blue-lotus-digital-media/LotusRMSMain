@@ -29,7 +29,7 @@ namespace LotusRMSweb.Areas.Menu.Controllers
         {
             var connecton = HttpContext.Connection;
             var remoteIp = HttpContext.Connection.RemoteIpAddress?.ToString();
-            var systemIp = await _iCompanyService.GetIp();
+            var systemIp = await _iCompanyService.GetIpAsync();
            if (systemIp != remoteIp)
             {
                 return BadRequest();
@@ -45,7 +45,7 @@ namespace LotusRMSweb.Areas.Menu.Controllers
                 var table = await _iTableService.GetFirstOrDefaultByIdAsync(TableNo);
             if (table != null)
             {
-                var menus = _iMenuService.GetAllAvailable().ToList().Select(menu => new MenuVM()
+                var menus = (await _iMenuService.GetAllAvailableAsync()).Select(menu => new MenuVM()
                 {
                     Id = menu.Id,
                     Item_name = menu.Item_Name,
