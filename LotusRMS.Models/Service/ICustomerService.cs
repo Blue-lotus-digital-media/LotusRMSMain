@@ -10,15 +10,15 @@ namespace LotusRMS.Models.Service
 {
     public interface ICustomerService
     {
-        Guid Create(CreateCustomerDTO dto);
-        void Update(UpdateCustomerDTO dto);
-        void UpdateDue(UpdateCustomerDTO dto);
-        IEnumerable<LotusRMS_Customer> GetAll(); 
-        LotusRMS_Customer GetByGuid(Guid id); 
-        LotusRMS_Customer GetFirstOrDefaultById(Guid id); 
-        IEnumerable<LotusRMS_Customer> GetAllAvailable();
+        Task<Guid> CreateAsync(CreateCustomerDTO dto);
+        Task UpdateAsync(UpdateCustomerDTO dto);
+        Task UpdateDueAsync(UpdateCustomerDTO dto);
+        Task<IEnumerable<LotusRMS_Customer>> GetAllAsync(); 
+        Task<LotusRMS_Customer?> GetByGuidAsync(Guid id); 
+        Task<LotusRMS_Customer?> GetFirstOrDefaultByIdAsync(Guid id); 
+        Task<IEnumerable<LotusRMS_Customer>> GetAllAvailableAsync();
 
-        void UpdateStatus(Guid Id);
+        Task UpdateStatusAsync(Guid Id);
 
     }
 }

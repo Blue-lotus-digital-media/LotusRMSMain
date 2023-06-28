@@ -20,12 +20,12 @@ namespace LotusRMS.Models.Service.Implementation
         {
             _IOrderRepository = _iOrderRepository;
         }
-        public Task<bool> AddOrderItem(AddOrderItemDTO dto)
+        public async Task<bool> AddOrderItemAsync(AddOrderItemDTO dto)
         {
             throw new NotImplementedException();
         }
 
-        public Guid Create(CreateOrderDTO dto)
+        public async Task<Guid> CreateAsync(CreateOrderDTO dto)
         {
             var order = new LotusRMS_Order()
             {
@@ -48,73 +48,54 @@ namespace LotusRMS.Models.Service.Implementation
                 order.Order_Details.Add(orderDetail);
             }
 
-            _IOrderRepository.Add(order);
+            await _IOrderRepository.AddAsync(order).ConfigureAwait(false);
             return order.Id;
         }
-
-        public Task<Guid> CreateAsync(CreateOrderDTO dto)
+    public async Task<IEnumerable<LotusRMS_Order>> GetAllAsync()
         {
-            throw new NotImplementedException();
-        }
-
-
-
-
-        public IEnumerable<LotusRMS_Order> GetAll()
-        {
-            var orders = _IOrderRepository.GetAll(x => x.IsCheckout);
+            var orders = await _IOrderRepository.GetAllAsync(x => x.IsCheckout).ConfigureAwait(false);
             return orders;
         }
-        public IEnumerable<LotusRMS_Order> GetAllActiveOrder()
+        public async Task<IEnumerable<LotusRMS_Order>> GetAllActiveOrderAsync()
         {
-            return _IOrderRepository.GetAll(x => !x.IsCheckout, includeProperties: "Order_Details,Order_Details.Menu,Order_Details.Menu.Menu_Details,Order_Details.Menu.Menu_Details.Divison,User,Table");
+            return await _IOrderRepository.GetAllAsync(x => !x.IsCheckout, includeProperties: "Order_Details,Order_Details.Menu,Order_Details.Menu.Menu_Details,Order_Details.Menu.Menu_Details.Divison,User,Table").ConfigureAwait(false);
            
         }
-        public IEnumerable<LotusRMS_Order> GetAllByDateRange(DateTime StartDate,DateTime EndDate)
+        public async Task<IEnumerable<LotusRMS_Order>> GetAllByDateRangeAsync(DateTime StartDate,DateTime EndDate)
         {
-            var orders = _IOrderRepository.GetAll(x => x.DateTime >= StartDate && x.DateTime <= EndDate, includeProperties: "Order_Details,Order_Details.Menu,Order_Details.Menu.Menu_Details,Order_Details.Menu.Menu_Details.Divison,User,Table");
+            var orders =await _IOrderRepository.FindBy(x => x.DateTime >= StartDate && x.DateTime <= EndDate, includeProperties: "Order_Details,Order_Details.Menu,Order_Details.Menu.Menu_Details,Order_Details.Menu.Menu_Details.Divison,User,Table").ConfigureAwait(false);
             return orders;
         }
 
-        public Task<IEnumerable<LotusRMS_Order>> GetAllAsync()
+        public async Task<LotusRMS_Order?> GetByGuidAsync(Guid Id)
         {
-            throw new NotImplementedException();
+            return await _IOrderRepository.GetByGuidAsync(Id).ConfigureAwait(false);
         }
 
-        public LotusRMS_Order GetByGuid(Guid Id)
+        public async Task<LotusRMS_Order?> GetFirstOrDefaultByTableIdAsync(Guid TableId)
         {
-            return _IOrderRepository.GetByGuid(Id);
-        }
-
-        public Task<LotusRMS_Order> GetByGuidAsync(Guid Id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public LotusRMS_Order GetFirstOrDefaultByTableId(Guid TableId)
-        {
-            var orders = _IOrderRepository.GetFirstOrDefault(filter: x=>x.Table_Id==TableId && !x.IsCheckout ,includeProperties: "Order_Details,User,Table");
+            var orders =await _IOrderRepository.GetFirstOrDefaultAsync(filter: x=>x.Table_Id==TableId && !x.IsCheckout ,includeProperties: "Order_Details,User,Table").ConfigureAwait(false);
             return orders;
         }
        
 
-        public LotusRMS_Order GetFirstOrDefaultByOrderNo(string orderNo)
+        public async Task<LotusRMS_Order?> GetFirstOrDefaultByOrderNoAsync(string orderNo)
         {
-            var orders = _IOrderRepository.GetFirstOrDefault(filter: x=>x.Order_No==orderNo ,includeProperties: "Order_Details,Order_Details.Menu,Order_Details.Menu.Menu_Details,Order_Details.Menu.Menu_Details.Divison,Order_Details.Menu.Menu_Incredians,User,Table");
+            var orders =await _IOrderRepository.GetFirstOrDefaultAsync(filter: x=>x.Order_No==orderNo ,includeProperties: "Order_Details,Order_Details.Menu,Order_Details.Menu.Menu_Details,Order_Details.Menu.Menu_Details.Divison,Order_Details.Menu.Menu_Incredians,User,Table").ConfigureAwait(false);
             return orders;
         } 
 
-        public LotusRMS_Order GetFirstOrDefaultByOrderId(Guid orderId)
+        public async Task<LotusRMS_Order?> GetFirstOrDefaultByOrderIdAsync(Guid orderId)
         {
-            var orders = _IOrderRepository.GetFirstOrDefault(filter: x=>x.Id==orderId ,includeProperties: "Order_Details,Order_Details.Menu,Order_Details.Menu.Menu_Details,Order_Details.Menu.Menu_Details.Divison,Order_Details.Menu.Menu_Incredians,User,Table");
+            var orders = await _IOrderRepository.GetFirstOrDefaultAsync(filter: x=>x.Id==orderId ,includeProperties: "Order_Details,Order_Details.Menu,Order_Details.Menu.Menu_Details,Order_Details.Menu.Menu_Details.Divison,Order_Details.Menu.Menu_Incredians,User,Table").ConfigureAwait(false);
             return orders;
         }
 
-        public Guid Update(UpdateOrderDTO dto)
+        public async Task<Guid> UpdateAsync(UpdateOrderDTO dto)
         {
             throw new NotImplementedException();
         }
-        public Guid UpdateCompleteOrder(UpdateOrderDTO dto)
+        public async Task<Guid> UpdateCompleteOrderAsync(UpdateOrderDTO dto)
         {
             var order = new LotusRMS_Order()
             {
@@ -134,55 +115,48 @@ namespace LotusRMS.Models.Service.Implementation
                 };
                 order.Order_Details.Add(orderDetail);
             }
-            _IOrderRepository.UpdateCompleteOrder(order);
+           await _IOrderRepository.UpdateCompleteOrderAsync(order).ConfigureAwait(false);
             return order.Id;
         }
 
-        public Task<Guid> UpdateAsync(UpdateOrderDTO dto)
-        {
-            throw new NotImplementedException();
-        }
+    
 
-        public Guid UpdateStatus(Guid Id)
-        {
-            throw new NotImplementedException();
-        }
 
         public Task<Guid> UpdateStatusAsync(Guid Id)
         {
             throw new NotImplementedException();
         }
 
-        public Guid CancelOrder(string OrderNo, Guid OrderDetailId)
+        public async Task<Guid> CancelOrderAsync(string OrderNo, Guid OrderDetailId)
         {
-            _IOrderRepository.CancelOrder(OrderNo, OrderDetailId);
+            await _IOrderRepository.CancelOrderAsync(OrderNo, OrderDetailId).ConfigureAwait(false);
             return OrderDetailId; 
         } 
-        public Guid UpdateKitchenComplete(string OrderNo, Guid OrderDetailId)
+        public async Task<Guid> UpdateKitchenCompleteAsync(string OrderNo, Guid OrderDetailId)
         {
-            _IOrderRepository.UpdateKitchenComplete(OrderNo, OrderDetailId);
+            await _IOrderRepository.UpdateKitchenCompleteAsync(OrderNo, OrderDetailId).ConfigureAwait(false);
             return OrderDetailId; 
         }
-        public Guid CompleteOrderDetail(string OrderNo, Guid OrderDetailId)
+        public async Task<Guid> CompleteOrderDetailAsync(string OrderNo, Guid OrderDetailId)
         {
-            _IOrderRepository.CompleteOrderDetail(OrderNo, OrderDetailId);
+            await _IOrderRepository.CompleteOrderDetailAsync(OrderNo, OrderDetailId).ConfigureAwait(false);
             return OrderDetailId; 
         }
 
         public async Task<Guid> PrintKotAsync(Guid OrderId,List<LotusRMS_Order_Details> orderDetails )
         {
-            var order =_IOrderRepository.GetFirstOrDefault(x => x.Id == OrderId, includeProperties: "Order_Details,User,Table");
+            var order =await _IOrderRepository.GetFirstOrDefaultAsync(x => x.Id == OrderId, includeProperties: "Order_Details,User,Table").ConfigureAwait(false);
             foreach(var item in orderDetails)
             {
                 order.Order_Details.Where(x => x.Id == item.Id).First().IsPrinted = true;
             }
-            _IOrderRepository.Update(order);
+            await _IOrderRepository.UpdateAsync(order).ConfigureAwait(false);
             return OrderId;
         }
 
-        public async Task<IEnumerable<LotusRMS_Order_Details>> GetUnPrintedDetail(string orderNo)
+        public async Task<IEnumerable<LotusRMS_Order_Details>> GetUnPrintedDetailAsync(string orderNo)
         {
-            var order =await _IOrderRepository.GetFirstOrDefaultAsync(x => x.Order_No == orderNo, includeProperties: "Order_Details,User,Table");
+            var order =await _IOrderRepository.GetFirstOrDefaultAsync(x => x.Order_No == orderNo, includeProperties: "Order_Details,User,Table").ConfigureAwait(false);
             var orderDetail = new List<LotusRMS_Order_Details>();
             foreach(var item in order.Order_Details) {
                 if (!item.IsPrinted)
@@ -193,11 +167,11 @@ namespace LotusRMS.Models.Service.Implementation
             return orderDetail;
         }
 
-        public Guid ReleaseTable(string OrderNo)
+        public async Task<Guid> ReleaseTableAsync(string OrderNo)
         {
-            var order = GetFirstOrDefaultByOrderNo(orderNo: OrderNo);
+            var order =await GetFirstOrDefaultByOrderNoAsync(orderNo: OrderNo).ConfigureAwait(false);
             var tableId = order.Table_Id;
-            _IOrderRepository.Remove(order);
+            await _IOrderRepository.RemoveAsync(order).ConfigureAwait(false);
             return tableId;
 
         }

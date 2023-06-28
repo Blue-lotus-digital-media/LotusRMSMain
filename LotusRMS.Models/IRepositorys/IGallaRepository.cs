@@ -8,11 +8,11 @@ namespace LotusRMS.Models.IRepositorys
 {
     public interface IGallaRepository :IBaseRepository<LotusRMS_Galla>
     {
-        void AddNewDetail(LotusRMS_Galla obj);
-        LotusRMS_Galla GetGallaToday(string UserId);
-        LotusRMS_Galla GetGallaByDate(string Date,string UserId);
-        LotusRMS_Galla GetLastGalla(string UserId);
-        LotusRMS_Galla GetGallaByGuid(Guid Id);
+        Task AddNewDetailAsync(LotusRMS_Galla obj);
+        Task<LotusRMS_Galla?> GetGallaTodayAsync(string UserId);
+        Task<LotusRMS_Galla?> GetGallaByDateAsync(string Date,string UserId);
+        Task<LotusRMS_Galla?> GetLastGallaAsync(string UserId);
+        Task<LotusRMS_Galla?> GetGallaByGuidAsync(Guid Id);
         
     }
 }

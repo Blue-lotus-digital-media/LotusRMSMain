@@ -10,13 +10,13 @@ namespace LotusRMS.Models.IRepositorys
     public interface IOrderRepository : IBaseRepository<LotusRMS_Order>
     {
 
-        void Update(LotusRMS_Order Order);
+        
         Task UpdateAsync(LotusRMS_Order Order);
-        void UpdateCompleteOrder(LotusRMS_Order order);
-        void UpdateKitchenComplete(string OrderNo, Guid OrderDetailId);
-        void UpdateStatus(Guid Id);
-        void CancelOrder(string OrderNo, Guid OrderDetailId);
-        void CompleteOrderDetail(string OrderNo, Guid OrderDetailId);
+        Task UpdateCompleteOrderAsync(LotusRMS_Order order);
+        Task UpdateKitchenCompleteAsync(string OrderNo, Guid OrderDetailId);
+        Task UpdateStatusAsync(Guid Id);
+        Task CancelOrderAsync(string OrderNo, Guid OrderDetailId);
+        Task CompleteOrderDetailAsync(string OrderNo, Guid OrderDetailId);
       /*  IEnumerable<LotusRMS_Order> GetFirstOrDefault(Guid TableId);*/
     }
 }

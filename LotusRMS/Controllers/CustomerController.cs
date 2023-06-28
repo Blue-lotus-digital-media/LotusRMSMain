@@ -27,9 +27,9 @@ namespace LotusRMSweb.Controllers
             _notyf = notyf;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var customer = _customerService.GetAllAvailable();
+            var customer = await _customerService.GetAllAvailableAsync().ConfigureAwait(true);
             return View();
         }
         public IActionResult Create()
@@ -37,7 +37,7 @@ namespace LotusRMSweb.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create(CreateCustomerVM vm)
+        public async Task<IActionResult> Create(CreateCustomerVM vm)
         {
             if(!ModelState.IsValid){
                 return View(vm);
@@ -54,23 +54,22 @@ namespace LotusRMSweb.Controllers
                 var due = new CreateDueBookDTO()
                 {
                     DueAmount = vm.DueAmount,
-
                 };
                 dto.DueBook = due;
             }
-            var id = _customerService.Create(dto);
+            var id =await _customerService.CreateAsync(dto).ConfigureAwait(true);
             _notyf.Success("Customer created successfully", 5);
 
             return RedirectToAction(nameof(Index));
         }
-        public IActionResult Update(Guid id)
+        public async Task<IActionResult> Update(Guid id)
         {
             if (id == Guid.Empty)
             {
                 return RedirectToAction(nameof(Index));
 
             }
-            var customer = _customerService.GetFirstOrDefaultById(id);
+            var customer = await _customerService.GetFirstOrDefaultByIdAsync(id).ConfigureAwait(true);
             if (customer == null)
             {
                 return RedirectToAction(nameof(Index));
@@ -96,7 +95,7 @@ namespace LotusRMSweb.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(UpdateCustomerVM vm)
+        public async Task<IActionResult> Update(UpdateCustomerVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -110,16 +109,16 @@ namespace LotusRMSweb.Controllers
                 Contact = vm.Contact,
                 PanOrVat = vm.PanOrVat
             };
-            _customerService.Update(dto);
+            await _customerService.UpdateAsync(dto).ConfigureAwait(true);
             _notyf.Success("Product Category updated successfully", 5);
             return RedirectToAction(nameof(Index));
 
         }
         #region ApiCall
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var customer = _customerService.GetAllAvailable().Select(cus => new CustomerVm()
+            var customer = (await _customerService.GetAllAvailableAsync().ConfigureAwait(true)).Select(cus => new CustomerVm()
             {
                 Id=cus.Id,
                 Name = cus.Name,
@@ -130,9 +129,6 @@ namespace LotusRMSweb.Controllers
                 Status =cus.Status
             });
             return Json(new { data = customer });
-
-
-
         }
         public double GetDue(List<LotusRMS_DueBook> dueBook)
         {
@@ -147,10 +143,9 @@ namespace LotusRMSweb.Controllers
         }
 
         [HttpGet]
-        public IActionResult StatusChange(Guid id)
+        public async Task<IActionResult> StatusChange(Guid id)
         {
-
-            var customer = _customerService.GetByGuid(id);
+            var customer = await _customerService.GetByGuidAsync(id).ConfigureAwait(true);
             if (customer == null)
             {
                 return BadRequest();
@@ -159,7 +154,7 @@ namespace LotusRMSweb.Controllers
             else
             {
 
-                _customerService.UpdateStatus(id);
+                await _customerService.UpdateStatusAsync(id).ConfigureAwait(true);
 
                 if (customer.Status == true)
                 {
@@ -176,9 +171,9 @@ namespace LotusRMSweb.Controllers
 
 
         [HttpGet]
-        public IActionResult PayDue(Guid customerId)
+        public async Task<IActionResult> PayDue(Guid customerId)
         {
-            var customer = _customerService.GetFirstOrDefaultById(customerId);
+            var customer = await _customerService.GetFirstOrDefaultByIdAsync(customerId).ConfigureAwait(true);
             var vm = new PayDueVM()
             {
                 Customer = customer,
@@ -188,9 +183,9 @@ namespace LotusRMSweb.Controllers
             };
             return PartialView("_PayDue",model:vm);
         }
-        public IActionResult PayDueComplete(PayDueVM vm)
+        public async Task<IActionResult> PayDueComplete(PayDueVM vm)
         {
-            var customer= _customerService.GetFirstOrDefaultById(vm.CustomerId);
+            var customer= await _customerService.GetFirstOrDefaultByIdAsync(vm.CustomerId).ConfigureAwait(true);
             var dueAmount = GetDue(customer.DueBooks);
             var dueBook = new CreateDueBookDTO()
             {
@@ -206,7 +201,7 @@ namespace LotusRMSweb.Controllers
                DueBook = dueBook
 
             };
-            _customerService.UpdateDue(customerDTO);
+            await _customerService.UpdateDueAsync(customerDTO).ConfigureAwait(true);
             _notyf.Success("Due paid successfully...", 5);
             return Ok();
         }

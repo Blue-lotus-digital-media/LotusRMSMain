@@ -9,6 +9,7 @@ using Newtonsoft.Json.Linq;
 using System.Text.Json;
 using LotusRMS.Models.Viewmodels.MenuUnit;
 using Newtonsoft.Json;
+using LotusRMS.Models;
 
 namespace LotusRMSweb.Areas.Admin.Controllers
 {
@@ -35,31 +36,37 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         {
            
             var typeTable = new List<TodayTableVM>();
-            var type = (await _ITableTypeService.GetAllAvailableAsync()).Select(t => new TypeVM()
+            var type =(await _ITableTypeService.GetAllAvailableAsync().ConfigureAwait(true)).Select(t => new TypeVM()
             {
                 Id = t.Id,
                 Type_Name = t.Type_Name
             });
             foreach (var item in type)
             {
-                var tables = (await _ITableService.GetAllByTypeIdAsync(item.Id)).Select(tab => new TodayDetailVM()
-                {
-                    Table_Id = tab.Id,
-                    Table_Name = tab.Table_Name,
-                    IsReserved = tab.IsReserved,
-                    Transaction=GetAmount(tab.Id,tab.IsReserved)
-                }).ToList();
+               var tables =(await _ITableService.GetAllByTypeIdAsync(item.Id).ConfigureAwait(true))
+                    .Select(async tab => await GetTodayDetailVM(tab)).ToList();
 
                 typeTable.Add(new TodayTableVM()
                 {
                     Type = item,
-                    Table = tables
+                    Table =(await Task.WhenAll(tables)).ToList()
                 });
 
             }
             return View(typeTable);
         }
-        private double GetAmount(Guid table_Id,bool isReserved)
+        private async Task<TodayDetailVM> GetTodayDetailVM(LotusRMS_Table tab)
+        {
+            var table = new TodayDetailVM()
+            {
+                Table_Id = tab.Id,
+                Table_Name = tab.Table_Name,
+                IsReserved = tab.IsReserved,
+                Transaction = await GetAmount(tab.Id, tab.IsReserved).ConfigureAwait(true)
+            };
+            return table;
+        }
+        private async Task<double> GetAmount(Guid table_Id,bool isReserved)
         {
             if (!isReserved)
             {
@@ -67,9 +74,17 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             }
             else
             {
-                var order = _IOrderService.GetFirstOrDefaultByTableId(table_Id);
-                double total = order.Order_Details.Sum(x => x.GetTotal);
-                return total;
+                var order = await _IOrderService.GetFirstOrDefaultByTableIdAsync(table_Id).ConfigureAwait(true);
+                if (order != null)
+                {
+                    if (order.Order_Details != null && order.Order_Details.Count() > 0)
+                    {
+                        double total = order.Order_Details.Sum(x => x.GetTotal);
+                        return total;
+                    }
+                }
+                return 0;
+                
             }
 
         }

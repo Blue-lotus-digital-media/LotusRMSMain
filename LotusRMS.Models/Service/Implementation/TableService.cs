@@ -42,7 +42,7 @@ namespace LotusRMS.Models.Service.Implementation
 
         public async Task<IEnumerable<LotusRMS_Table>> GetAllByTypeIdAsync(Guid Id)
         {
-            return await _ITableRepository.GetAllAsync(x=>x.Table_Type_Id==Id,includeProperties: "Table_Type").ConfigureAwait(false);
+            return await _ITableRepository.FindBy(x=>x.Table_Type_Id==Id,includeProperties: "Table_Type").ConfigureAwait(false);
         }
 
         public async Task<LotusRMS_Table> GetByGuidAsync(Guid Id)

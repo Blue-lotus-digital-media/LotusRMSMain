@@ -414,7 +414,15 @@ namespace LotusRMSweb.Controllers
                 await _userManager.UpdateAsync(user);
             }
             _notyf.Success("Profile Changed Successfully", 5);
-            return View(dto);
+            var model = new MyProfileVM()
+            {
+                Contact =user.Contact,
+                MiddleName = user.MiddleName,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                ProfilePicture = user.ProfilePicture
+            };
+            return View(model);
         }
 
         [HttpPost]

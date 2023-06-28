@@ -12,12 +12,12 @@ namespace LotusRMS.Models.IRepositorys
         T? Get(int id);
         T? GetByGuid(Guid id);
         Task<T?> GetByGuidAsync(Guid id);
-        IEnumerable<T> GetAll(
+        ICollection<T> GetAll(
             Expression<Func<T, bool>> filter = null,
             Func<IQueryable<T>,IOrderedQueryable<T>> orderBy=null,
             string includeProperties = null
             );
-        Task<IEnumerable<T>> GetAllAsync(
+        Task<ICollection<T>> GetAllAsync(
             Expression<Func<T, bool>> filter = null,
             Func<IQueryable<T>,IOrderedQueryable<T>> orderBy=null,
             string includeProperties = null
@@ -38,8 +38,10 @@ namespace LotusRMS.Models.IRepositorys
         void Add(T entity);
         Task AddAsync(T entity);
         void Remove(int id);
+        Task RemoveAsync(int id);
         void RemoveRange(IEnumerable<T> entity);
         void Remove(T entity);
+        Task RemoveAsync(T entity);
         Task<ICollection<T>> FindBy(Expression<Func<T, bool>> filter = null, string includeProperties = null);
         IQueryable<T> GetQueryable();
         void Save();

@@ -27,9 +27,9 @@ namespace LotusRMSweb.Controllers
             _notyf = notyf;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var galla = _gallaService.GetTodayGalla();
+            var galla = await _gallaService.GetTodayGallaAsync().ConfigureAwait(true);
             var gallaVM = new GallaVM();
 
             if (galla == null)
@@ -64,7 +64,6 @@ namespace LotusRMSweb.Controllers
                         Deposit = item.Deposit,
                         Withdrawl = item.Withdrawl,
                         Balance = item.Balance
-
                     };
                     gallaVM.Galla_Details.Add(gallaDetailVM);
                 }
@@ -74,26 +73,22 @@ namespace LotusRMSweb.Controllers
         
     }
 
-        public IActionResult CreateGalla(CreateGallaVM vm)
+        public async Task<IActionResult> CreateGalla(CreateGallaVM vm)
         {
             var cashier = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            
             var dto = new CreateGallaDTO()
             {
                 Cashier = cashier,
                 Opening_Balance = vm.Opening_Balance
             };
-
-            _gallaService.CreateGalla(dto);
+            await _gallaService.CreateGallaAsync(dto).ConfigureAwait(true);
             _notyf.Success("Galla for today setuped successfully...", 5);
             return Ok();
         }
         [HttpPost]
-        public IActionResult WithDrawGalla(double withDrawAmount)
+        public async Task<IActionResult> WithDrawGalla(double withDrawAmount)
         {
-            var galla = _gallaService.GetTodayGalla();
-            
-            
+            var galla = await _gallaService.GetTodayGallaAsync().ConfigureAwait(true);
             if (galla != null)
             {
                 var closing = galla.Closing_Balance - withDrawAmount;
@@ -108,20 +103,15 @@ namespace LotusRMSweb.Controllers
                         Withdrawl=withDrawAmount,
                         Deposit=0
                     }
-
                 };
-                _gallaService.AddGallaDetail(dto);
+                await _gallaService.AddGallaDetailAsync(dto).ConfigureAwait(true);
                 _notyf.Success("Galla withdrawl successfully...", 5);
             }
             else
             {
                 _notyf.Error("No Galla Setuped yet today!!!", 5);
             }
-            //var galla = _gallaService.GetTodayGalla();
-            
             return Ok(GetGallaVM(galla));
         }
-       
-
     }
 }

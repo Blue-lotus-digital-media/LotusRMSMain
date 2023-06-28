@@ -15,7 +15,7 @@ namespace LotusRMS.Models.Service
         IEnumerable<LotusRMS_Invoice> GetAll();
         IEnumerable<LotusRMS_Invoice> GetAllByDateRange(DateTime StartDate, DateTime EndDate);
         
-            LotusRMS_Invoice GetByGuid(Guid Id);
+        LotusRMS_Invoice GetByGuid(Guid Id);
         LotusRMS_Invoice GetFirstOrDefault(Guid Id);
 
 

@@ -18,31 +18,31 @@ namespace LotusRMS.DataAccess.Repository
             _dal = dal;
         }
 
-        public void Update(LotusRMS_Customer obj)
+        public async Task UpdateAsync(LotusRMS_Customer obj)
         {
-            var customer = GetFirstOrDefault(filter: x => x.Id == obj.Id, includeProperties: "DueBooks");
+            var customer =await GetFirstOrDefaultAsync(filter: x => x.Id == obj.Id, includeProperties: "DueBooks").ConfigureAwait(false);
             customer.Update(name: obj.Name,address:obj.Address,contact:obj.Contact);
             customer.PanOrVat = obj.PanOrVat;
-            Save();
+            await SaveAsync().ConfigureAwait(false);
         }
 
-        public void UpdateDue(LotusRMS_Customer obj)
+        public async Task UpdateDueAsync(LotusRMS_Customer obj)
         {
-            var customer = GetFirstOrDefault(filter: x => x.Id == obj.Id, includeProperties: "DueBooks");
+            var customer =await GetFirstOrDefaultAsync(filter: x => x.Id == obj.Id, includeProperties: "DueBooks").ConfigureAwait(false);
            foreach(var due in obj.DueBooks)
             {
                 customer.DueBooks.Add(due);
             }
-            Save();
+            await SaveAsync().ConfigureAwait(false);
         }
 
-        public void UpdateStatus(Guid id)
+        public async Task UpdateStatusAsync(Guid id)
         {
-            var customer = GetByGuid(id);
+            var customer = await GetByGuidAsync(id).ConfigureAwait(false);
             if (customer != null)
             {
                 customer.Status = !customer.Status;
-                Save();
+                await SaveAsync().ConfigureAwait(false);
             }
         }
     }

@@ -46,11 +46,11 @@ namespace LotusRMSweb.Controllers
             var invoice = _invoiceService.GetFirstOrDefault(Id);
             if (invoice.Checkout.Payment_Mode.ToString() == "Credit")
             {
-                var due = _iCustomerService.GetFirstOrDefaultById((Guid)invoice.Checkout.Customer_Id);
+                var due = await _iCustomerService.GetFirstOrDefaultByIdAsync((Guid)invoice.Checkout.Customer_Id).ConfigureAwait(true);
                 var dueAmount = due.DueBooks.FirstOrDefault(x => x.Invoice_Id == Id).BalanceDue;
                 ViewBag.DueAmount = dueAmount;
             }
-            var checkout = await GetCheckout(invoice.Checkout);
+            var checkout = await GetCheckout(invoice.Checkout).ConfigureAwait(true);
             var invoiceVM = new InvoiceVM()
             {
                 Id = invoice.Id,
@@ -66,7 +66,7 @@ namespace LotusRMSweb.Controllers
               };
 
 
-            var galla = _gallaService.GetTodayGalla();
+            var galla =await _gallaService.GetTodayGallaAsync().ConfigureAwait(true);
             var gallaDetail = new CreateGallaDetailVM()
             {
                 Title=  invoice.Invoice_String,
@@ -81,10 +81,10 @@ namespace LotusRMSweb.Controllers
             GallaDetail = gallaDetail
             };
 
-            _gallaService.AddGallaDetail(addGallaDetail);
+           await _gallaService.AddGallaDetailAsync(addGallaDetail).ConfigureAwait(true);
 
 
-            ViewBag.Company = await _iCompanyService.GetCompanyAsync();
+            ViewBag.Company = await _iCompanyService.GetCompanyAsync().ConfigureAwait(true);
              
             ViewBag.ReturnUrl = returnUrl;
             return View(invoiceVM);
@@ -107,11 +107,8 @@ namespace LotusRMSweb.Controllers
                 Payment_Mode = checkout.Payment_Mode.ToString(),
                 Order_Id = checkout.Order_Id,
                 Order = await GetOrderVM(checkout.Order).ConfigureAwait(true)
-
-
             };
             return checkouts;
-
         }
         public async Task<OrderVm> GetOrderVM(LotusRMS_Order order)
         {
@@ -133,24 +130,21 @@ namespace LotusRMSweb.Controllers
                     Id = item.Id,
                     MenuId = item.MenuId,
                     Item_Name = menu.Item_Name + "(" + menu.Menu_Details.FirstOrDefault(x => x.Id == item.Quantity_Id).Divison.Title + ")",
-
                     Item_Unit = menu.Menu_Unit.Unit_Symbol,
                     Rate = item.Rate,
                     Quantity = item.Quantity,
                     IsComplete = item.IsComplete,
                     IsKitchenComplete = item.IsKitchenComplete,
-                    
                 };
                 OrderVM.Order_Details.Add(orderDetail);
-
             }
             return OrderVM;
         }
         public async Task<IActionResult> EstimateBillPrint(Guid Order_Id)
         {
-            var fiscalyear =await _iFiscalYearService.GetActiveYearAsync();
-            var billSetting =await _iBillSettingService.GetActiveAsync();
-            var order = _orderService.GetFirstOrDefaultByOrderId(Order_Id);
+            var fiscalyear =await _iFiscalYearService.GetActiveYearAsync().ConfigureAwait(true);
+            var billSetting =await _iBillSettingService.GetActiveAsync().ConfigureAwait(true);
+            var order = await _orderService.GetFirstOrDefaultByOrderIdAsync(Order_Id).ConfigureAwait(true);
             var estimateVM = new EstimateInvoiceVM()
             {
                 OrderId = order.Id,
@@ -158,7 +152,7 @@ namespace LotusRMSweb.Controllers
                 FiscalYear = fiscalyear,
                 BillSetting=billSetting
             };
-            ViewBag.Company =await _iCompanyService.GetCompanyAsync();
+            ViewBag.Company =await _iCompanyService.GetCompanyAsync().ConfigureAwait(true);
             return View(estimateVM);
         }
 

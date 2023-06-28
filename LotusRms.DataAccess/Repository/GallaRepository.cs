@@ -24,32 +24,32 @@ namespace LotusRMS.DataAccess.Repository
             //_httpContextAccessor = httpContextAccessor;
         }
 
-        public void AddNewDetail(LotusRMS_Galla obj)
+        public async Task AddNewDetailAsync(LotusRMS_Galla obj)
         {
 
         }
 
-        public LotusRMS_Galla GetGallaByDate(string Date,string UserId)
+        public async Task<LotusRMS_Galla?> GetGallaByDateAsync(string Date,string UserId)
         {
             var date = Convert.ToDateTime(Date);
-            var galla = GetFirstOrDefault(filter: x => x.Date == date && x.Cashier == UserId, includeProperties: "Galla_Details,User");
+            var galla = await GetFirstOrDefaultAsync(filter: x => x.Date == date && x.Cashier == UserId, includeProperties: "Galla_Details,User").ConfigureAwait(false);
             return galla;
         } 
-        public LotusRMS_Galla GetLastGalla(string UserId)
+        public async Task<LotusRMS_Galla?> GetLastGallaAsync(string UserId)
         {
-            var galla = GetLastOrDefault(filter: x =>x.Cashier == UserId,orderBy:x=>x.OrderBy(y=>y.Date),includeProperties: "Galla_Details,User");
+            var galla = await GetLastOrDefaultAsync(filter: x =>x.Cashier == UserId,orderBy:x=>x.OrderBy(y=>y.Date),includeProperties: "Galla_Details,User").ConfigureAwait(false);
             return galla;
         }
 
-        public LotusRMS_Galla GetGallaByGuid(Guid Id)
+        public async Task<LotusRMS_Galla?> GetGallaByGuidAsync(Guid Id)
         {
             throw new NotImplementedException();
         }
 
-        public LotusRMS_Galla GetGallaToday(string UserId)
+        public async Task<LotusRMS_Galla?> GetGallaTodayAsync(string UserId)
         {
             var date =Convert.ToDateTime(CurrentTime.DateTimeToday()); 
-            var galla = GetFirstOrDefault(filter:x=>x.Date==date&& x.Cashier==UserId, includeProperties: "Galla_Details,User");
+            var galla = await GetFirstOrDefaultAsync(filter:x=>x.Date==date&& x.Cashier==UserId, includeProperties: "Galla_Details,User").ConfigureAwait(false);
             return galla;
         }
     }

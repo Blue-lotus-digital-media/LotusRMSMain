@@ -44,7 +44,7 @@ namespace LotusRMS.DataAccess.Repository
             return dbSet.Find(id);
         }
 
-        public IEnumerable<T> GetAll(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, string includeProperties = null)
+        public ICollection<T> GetAll(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, string includeProperties = null)
         {
             IQueryable<T> query = dbSet;
             if (filter != null)
@@ -93,8 +93,8 @@ namespace LotusRMS.DataAccess.Repository
                     query = query.Include(includeProperty);
                 }
             }
-           
-            return await query.ToListAsync().ConfigureAwait(false);
+           var data= await query.ToListAsync().ConfigureAwait(false);
+            return data;
         }
 
         public T? GetFirstOrDefault(Expression<Func<T, bool>> filter = null, string includeProperties = null)
@@ -130,10 +130,32 @@ namespace LotusRMS.DataAccess.Repository
             }
             return orderBy(query).LastOrDefault();
         }
+        public async Task<T?> GetLastOrDefaultAsync(Expression<Func<T, bool>> filter = null,
+            Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, string includeProperties = null)
+        {
+            IQueryable<T> query = dbSet;
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+            if (includeProperties != null)
+            {
+                foreach (var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
+            return await orderBy(query).LastOrDefaultAsync().ConfigureAwait(false);
+        }
         public void Remove(int id)
         {
             T? entity = dbSet.Find(id);
             Remove(entity);
+        }
+        public async Task RemoveAsync(int id)
+        {
+            T? entity = await dbSet.FindAsync(id).ConfigureAwait(false);
+           await RemoveAsync(entity);
         }
 
         public void Remove(T entity)
@@ -141,13 +163,21 @@ namespace LotusRMS.DataAccess.Repository
             dbSet.Remove(entity);
 
         }
+        
+        
+        public async Task RemoveAsync(T entity)
+        {
+            dbSet.Remove(entity);
+
+        }
+        
 
         public void RemoveRange(IEnumerable<T> entity)
         {
             dbSet.RemoveRange(entity);
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, string includeProperties = null)
+        public async Task<ICollection<T>> GetAllAsync(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, string includeProperties = null)
         {
             IQueryable<T> query =  dbSet;
             if (filter != null)

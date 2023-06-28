@@ -75,7 +75,7 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
         }
         public async Task<IActionResult> Index(Guid? TypeId,Guid? TableId)
         {
-            var galla = _gallaService.GetTodayGalla();
+            var galla = await _gallaService.GetTodayGallaAsync().ConfigureAwait(true);
             var createGallaVM = new CreateGallaVM()
             {
                 User = User.FindFirstValue("firstname") + " " + User.FindFirstValue("middlename") + " " + User.FindFirstValue("lastname"),
@@ -86,7 +86,7 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
             {
                 var date = Convert.ToDateTime(CurrentTime.DateTimeToday()).AddDays(-1).ToString();
                 var userId= User.FindFirst(ClaimTypes.NameIdentifier).Value;
-                var lastGalla = _gallaService.GetLastGalla(userId);
+                var lastGalla = await _gallaService.GetLastGallaAsync(userId).ConfigureAwait(true);
                 if (lastGalla != null)
                 {
                     createGallaVM.Opening_Balance = lastGalla.Closing_Balance;
@@ -147,55 +147,65 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
 
         public async Task<IActionResult> CompleteCheckout(CreateCheckoutVM vm)
         {
-            var dto = new CreateCheckoutDTO()
+
+            try
             {
-                Order_Id = vm.Order_Id,
-                Customer_Id = vm.Customer_Id,
-                Customer_Name = vm.Customer_Name,
-                Customer_Address = vm.Customer_Address,
-                Customer_Contact = vm.Customer_Contact,
-                Total = vm.Total,
-                Discount_Type = vm.Discount_Type,
-                Discount = vm.Discount,
-                Payment_Mode = vm.Payment_Mode,
-                Paid_Amount=vm.Paid_Amount
 
-            };
-            var id=await _ICheckoutService.CreateAsync(dto);
-            var order = _IOrderService.GetFirstOrDefaultByOrderId(vm.Order_Id);
-            await _ITableService.UpdateReservedAsync(order.Table_Id);
-
-
-            await SetCheckoutNotification(order.Table_Id);
-            foreach(var orderDetails in order.Order_Details)
-            {
-                foreach(var menuIncredian in orderDetails.Menu.Menu_Incredians)
+                var dto = new CreateCheckoutDTO()
                 {
-                    var inv = await _iInventoryService.GetInventoryByProductIdAsync(menuIncredian.Product_Id);
-                    if(inv!=null)
+                    Order_Id = vm.Order_Id,
+                    Customer_Id = vm.Customer_Id,
+                    Customer_Name = vm.Customer_Name,
+                    Customer_Address = vm.Customer_Address,
+                    Customer_Contact = vm.Customer_Contact,
+                    Total = vm.Total,
+                    Discount_Type = vm.Discount_Type,
+                    Discount = vm.Discount,
+                    Payment_Mode = vm.Payment_Mode,
+                    Paid_Amount = vm.Paid_Amount
+
+                };
+                var id = await _ICheckoutService.CreateAsync(dto).ConfigureAwait(true);
+                var order = await _IOrderService.GetFirstOrDefaultByOrderIdAsync(vm.Order_Id).ConfigureAwait(true);
+                await _ITableService.UpdateReservedAsync(order.Table_Id).ConfigureAwait(true);
+
+
+                await SetCheckoutNotification(order.Table_Id).ConfigureAwait(true);
+                foreach (var orderDetails in order.Order_Details)
+                {
+                    foreach (var menuIncredian in orderDetails.Menu.Menu_Incredians)
                     {
-                        var quantity = orderDetails.Quantity;
-                        var menuQuantity = orderDetails.Menu.Menu_Details.Where(x => x.Id == orderDetails.Quantity_Id).FirstOrDefault().Divison.Value;
-                        var incredianQuantity = menuIncredian.Quantity;
-                        var stockQuantity = inv.StockQuantity-(quantity*menuQuantity * incredianQuantity);
-
-
-                        var UpdateInventoryOnSale = new UpdateInventoryDTO()
+                        var inv = await _iInventoryService.GetInventoryByProductIdAsync(menuIncredian.Product_Id).ConfigureAwait(true);
+                        if (inv != null)
                         {
-                            Id = inv.Id,
-                            StockQuantity = stockQuantity
+                            var quantity = orderDetails.Quantity;
+                            var menuQuantity = orderDetails.Menu.Menu_Details.Where(x => x.Id == orderDetails.Quantity_Id).FirstOrDefault().Divison.Value;
+                            var incredianQuantity = menuIncredian.Quantity;
+                            var stockQuantity = inv.StockQuantity - (quantity * menuQuantity * incredianQuantity);
 
-                        };
-                        await _iInventoryService.UpdateOnSaleAsync(UpdateInventoryOnSale);
+
+                            var UpdateInventoryOnSale = new UpdateInventoryDTO()
+                            {
+                                Id = inv.Id,
+                                StockQuantity = stockQuantity
+
+                            };
+                            await _iInventoryService.UpdateOnSaleAsync(UpdateInventoryOnSale).ConfigureAwait(true);
+                        }
+
                     }
 
+
                 }
-
-
+                return RedirectToAction("InvoicePrint", "Invoice", new { area = "", Id = id, returnUrl = "/checkout" });
+            }
+            catch(Exception e)
+            {
+                _notyf.Error(e.Message);
+                return Ok(false);
             }
 
-
-            return RedirectToAction("InvoicePrint", "Invoice", new {area="",Id = id,returnUrl="/checkout" });
+         
 
         }
 
@@ -210,7 +220,7 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
             {
                 OrderVM.TableId = tableId;
                 OrderVM.Table_Name = (await _ITableService.GetByGuidAsync(tableId).ConfigureAwait(true)).Table_Name;
-                order = _IOrderService.GetFirstOrDefaultByTableId(tableId);
+                order =await _IOrderService.GetFirstOrDefaultByTableIdAsync(tableId).ConfigureAwait(true);
                 if (order != null)
                 {
                     OrderVM = new OrderVm()
@@ -244,7 +254,7 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
             }
             else if (orderNo != null)
             {
-                order = _IOrderService.GetFirstOrDefaultByOrderNo(orderNo);
+                order = await _IOrderService.GetFirstOrDefaultByOrderNoAsync(orderNo).ConfigureAwait(true);
                 if (order != null)
                 {
                     OrderVM = new OrderVm()
@@ -299,9 +309,9 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
             return PartialView("_CustomerView");
         }
         [HttpGet]    
-        public IActionResult GetAllCustomer()
+        public async Task<IActionResult> GetAllCustomer()
         {
-            var customer = _ICustomerService.GetAllAvailable().Select(x=>new CustomerCheckOutVM()
+            var customer = (await _ICustomerService.GetAllAvailableAsync().ConfigureAwait(true)).Select(x=>new CustomerCheckOutVM()
             {
                 Id=x.Id,
                 Name=x.Name,
@@ -328,88 +338,100 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
 
         public async Task<IActionResult> PrintKOT(string OrderNo)
         {
-            var order = _IOrderService.GetFirstOrDefaultByOrderNo(OrderNo);
-
-
-            var printOrderVM = new PrintOrderDetailVM()
+            try
             {
-                OrderNo=OrderNo,
-                TableName=order.Table.Table_Name,
-                OrderDetail=new List<OrderDetailVm>()
-            };
-            if (order.Order_Details.Any(x =>!x.IsPrinted))
-            {
+                var order = await _IOrderService.GetFirstOrDefaultByOrderNoAsync(OrderNo).ConfigureAwait(true);
+                var printOrderVM = new PrintOrderDetailVM()
+                {
+                    OrderNo = OrderNo,
+                    TableName = order.Table.Table_Name,
+                    OrderDetail = new List<OrderDetailVm>()
+                };
+                if (order.Order_Details.Any(x => !x.IsPrinted))
+                {
 
+                    foreach (var item in order.Order_Details.Where(x => !x.IsPrinted))
+                    {
+                        var menu = await _IMenuService.GetFirstOrDefaultByIdAsync(item.MenuId).ConfigureAwait(true);
+                        var orderDetail = new OrderDetailVm()
+                        {
+                            Id = item.Id,
+                            MenuId = item.MenuId,
+                            Item_Name = menu.Item_Name + "(" + menu.Menu_Details.FirstOrDefault(x => x.Id == item.Quantity_Id).Divison.Title + ")",
+                            Item_Unit = menu.Menu_Unit.Unit_Symbol,
+                            Rate = item.Rate,
+                            Quantity = item.Quantity,
+                            Quantity_Id = item.Quantity_Id,
+                            IsComplete = item.IsComplete,
+                            IsPrinted = item.IsPrinted,
+                            IsKitchenComplete = item.IsKitchenComplete
+                        };
+                        printOrderVM.OrderDetail.Add(orderDetail);
+
+                    }
+                }
+                else
+                {
+                    foreach (var item in order.Order_Details)
+                    {
+                        var menu = await _IMenuService.GetFirstOrDefaultByIdAsync(item.MenuId).ConfigureAwait(true);
+                        var orderDetail = new OrderDetailVm()
+                        {
+                            Id = item.Id,
+                            MenuId = item.MenuId,
+                            Item_Name = menu.Item_Name + "(" + menu.Menu_Details.FirstOrDefault(x => x.Id == item.Quantity_Id).Divison.Title + ")",
+                            Item_Unit = menu.Menu_Unit.Unit_Symbol,
+                            Rate = item.Rate,
+                            Quantity = item.Quantity,
+                            Quantity_Id = item.Quantity_Id,
+                            IsComplete = item.IsComplete,
+                            IsPrinted = item.IsPrinted,
+                            IsKitchenComplete = item.IsKitchenComplete
+                        };
+                        printOrderVM.OrderDetail.Add(orderDetail);
+
+                    }
+                }
+                return View(printOrderVM);
+            }catch(Exception e)
+            {
+                _notyf.Error(e.Message);
+                return Ok(false);
+            }
+        }
+        public async Task<IActionResult> PrintKOTComplete(string OrderNo)
+        {
+            try
+            {
+                var order = await _IOrderService.GetFirstOrDefaultByOrderNoAsync(OrderNo).ConfigureAwait(true);
+                var printOrderVM = new PrintOrderDetailVM()
+                {
+                    OrderNo = OrderNo,
+                    TableName = order.Table.Table_Name,
+                    OrderDetail = new List<OrderDetailVm>()
+                };
+                List<LotusRMS_Order_Details> orderDetails = new List<LotusRMS_Order_Details>();
                 foreach (var item in order.Order_Details.Where(x => !x.IsPrinted))
                 {
-                    var menu = await _IMenuService.GetFirstOrDefaultByIdAsync(item.MenuId).ConfigureAwait(true);
-                    var orderDetail = new OrderDetailVm()
-                    {
-                        Id = item.Id,
-                        MenuId = item.MenuId,
-                        Item_Name = menu.Item_Name + "(" + menu.Menu_Details.FirstOrDefault(x => x.Id == item.Quantity_Id).Divison.Title + ")",
-                        Item_Unit = menu.Menu_Unit.Unit_Symbol,
-                        Rate = item.Rate,
-                        Quantity = item.Quantity,
-                        Quantity_Id=item.Quantity_Id,
-                        IsComplete = item.IsComplete,
-                        IsPrinted = item.IsPrinted,
-                        IsKitchenComplete = item.IsKitchenComplete
-                    };
-                    printOrderVM.OrderDetail.Add(orderDetail);
+
+                    orderDetails.Add(item);
 
                 }
-            }
-            else
+                var id = await _IOrderService.PrintKotAsync(order.Id, orderDetails).ConfigureAwait(true);
+
+                return Ok(true);
+            }catch(Exception e)
             {
-                foreach (var item in order.Order_Details)
-                {
-                    var menu =await _IMenuService.GetFirstOrDefaultByIdAsync(item.MenuId).ConfigureAwait(true);
-                    var orderDetail = new OrderDetailVm()
-                    {
-                        Id = item.Id,
-                        MenuId = item.MenuId,
-                        Item_Name = menu.Item_Name + "(" + menu.Menu_Details.FirstOrDefault(x => x.Id == item.Quantity_Id).Divison.Title + ")",
-                        Item_Unit = menu.Menu_Unit.Unit_Symbol,
-                        Rate = item.Rate,
-                        Quantity = item.Quantity,
-                        Quantity_Id = item.Quantity_Id,
-                        IsComplete = item.IsComplete,
-                        IsPrinted = item.IsPrinted,
-                        IsKitchenComplete = item.IsKitchenComplete
-                    };
-                    printOrderVM.OrderDetail.Add(orderDetail);
-
-                }
+                _notyf.Error(e.Message);
+                return Ok(false);
             }
-            return View(printOrderVM);
-        }
-        public IActionResult PrintKOTComplete(string OrderNo)
-        {
-            var order = _IOrderService.GetFirstOrDefaultByOrderNo(OrderNo);
-            var printOrderVM = new PrintOrderDetailVM()
-            {
-                OrderNo = OrderNo,
-                TableName = order.Table.Table_Name,
-                OrderDetail = new List<OrderDetailVm>()
-            };
-            List<LotusRMS_Order_Details> orderDetails=new List<LotusRMS_Order_Details>();
-            foreach (var item in order.Order_Details.Where(x => !x.IsPrinted))
-            {
-
-                orderDetails.Add(item);
-
-            }
-            var id=_IOrderService.PrintKotAsync(order.Id, orderDetails);
-
-            return Ok();
         }
         [HttpPost]
         public async Task<IActionResult> CompleteOrderDetail(string orderNo, Guid OrderDetailId)
         {
-            var id = _IOrderService.CompleteOrderDetail(orderNo, OrderDetailId);
-            var order =await GetOrderVM(new Guid(), orderNo);
-           await SetOrderNotification(order.TableId);
+            var id = await _IOrderService.CompleteOrderDetailAsync(orderNo, OrderDetailId).ConfigureAwait(true);
+            var order =await GetOrderVM(new Guid(), orderNo).ConfigureAwait(true);
+           await SetOrderNotification(order.TableId).ConfigureAwait(true);
 
             ViewBag.Checkout = CreateCheckOut(order.Id, order.Order_Details.Sum(x => x.Total));
             return PartialView("_Order", model: order);
@@ -418,10 +440,10 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
         public async Task<IActionResult> CancelOrder(string orderNo, Guid OrderDetailId)
         {
 
-            var id = _IOrderService.CancelOrder(orderNo, OrderDetailId);
-            var order = await GetOrderVM(new Guid(), orderNo);
+            var id = await _IOrderService.CancelOrderAsync(orderNo, OrderDetailId).ConfigureAwait(true);
+            var order = await GetOrderVM(new Guid(), orderNo).ConfigureAwait(true);
 
-            await SetOrderNotification(order.TableId);
+            await SetOrderNotification(order.TableId).ConfigureAwait(true);
 
             ViewBag.Checkout = CreateCheckOut(order.Id, order.Order_Details.Sum(x => x.Total));
             return PartialView("_Order", model: order);
@@ -430,14 +452,14 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
         public async Task<IActionResult> GetSwitchTableView(Guid TableId)
         {
             var typeTable = new List<TypeTableVM>();
-            var type = (await _ITableTypeService.GetAllAvailableAsync()).Select(t=>new TypeVM()
+            var type = (await _ITableTypeService.GetAllAvailableAsync().ConfigureAwait(true)).Select(t=>new TypeVM()
             {
                 Id=t.Id,
                 Type_Name=t.Type_Name
             });
             foreach(var item in type)
             {
-                var tables = (await _ITableService.GetAllByTypeIdAsync(item.Id)).Select(tab => new TableVM() {
+                var tables = (await _ITableService.GetAllByTypeIdAsync(item.Id).ConfigureAwait(true)).Select(tab => new TableVM() {
                     Id = tab.Id,
                     Table_Name=tab.Table_Name,
                     IsReserved=tab.IsReserved
@@ -457,7 +479,7 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
 
         public async Task<IActionResult> SwitchTable(Guid OldTable,Guid NewTable)
         {
-            var order = _IOrderService.GetFirstOrDefaultByTableId(OldTable);
+            var order = await _IOrderService.GetFirstOrDefaultByTableIdAsync(OldTable).ConfigureAwait(true);
             order.Table_Id = NewTable;
 
             var status = await _ITableService.UpdateReservedAsync(OldTable);
@@ -468,8 +490,8 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
         #endregion
         public async Task SetCheckoutNotification(Guid Table_Id)
         {
-            var typeId = (await _ITableService.GetFirstOrDefaultByIdAsync(Table_Id)).Table_Type_Id;
-            var tableBooked = (await _ITableService.GetAllByTypeIdAsync(typeId)).Count(x => x.IsReserved);
+            var typeId = (await _ITableService.GetFirstOrDefaultByIdAsync(Table_Id).ConfigureAwait(true)).Table_Type_Id;
+            var tableBooked = (await _ITableService.GetAllByTypeIdAsync(typeId).ConfigureAwait(true)).Count(x => x.IsReserved);
             var tvm = new tableReturnVM()
             {
                 Type_Id = typeId,
@@ -480,8 +502,8 @@ namespace LotusRMSweb.Areas.Checkout.Controllers
         }
         public async Task SetOrderNotification(Guid Table_Id)
         {
-            var typeId = (await _ITableService.GetFirstOrDefaultByIdAsync(Table_Id)).Table_Type_Id;
-            var tableBooked = (await _ITableService.GetAllByTypeIdAsync(typeId)).Count(x => x.IsReserved);
+            var typeId = (await _ITableService.GetFirstOrDefaultByIdAsync(Table_Id).ConfigureAwait(true)).Table_Type_Id;
+            var tableBooked = (await _ITableService.GetAllByTypeIdAsync(typeId).ConfigureAwait(true)).Count(x => x.IsReserved);
             var tvm = new tableReturnVM()
             {
                 Type_Id = typeId,

@@ -20,40 +20,29 @@ namespace LotusRMS.DataAccess.Repository
 
 
 
-        public void Update(LotusRMS_Order order)
-        {
-            
-            
-                Save();
-            
-        }   
         public async Task UpdateAsync(LotusRMS_Order order)
+        { 
+            await SaveAsync().ConfigureAwait(false);
+        }   
+        
+        public async Task UpdateCompleteOrderAsync(LotusRMS_Order orders)
         {
-            
-            
-                Save();
-            
-        }
-        public void UpdateCompleteOrder(LotusRMS_Order orders)
-        {
-            var order = GetFirstOrDefault(filter: x => x.Id == orders.Id, includeProperties: "Order_Details,User");
+            var order =await GetFirstOrDefaultAsync(filter: x => x.Id == orders.Id, includeProperties: "Order_Details,User").ConfigureAwait(false);
             if (order != null)
             {
-
                 order.Order_Details.AddRange(orders.Order_Details);
-
-                Save();
+                await SaveAsync().ConfigureAwait(false);
             }
         }
 
-        public void UpdateStatus(Guid Id)
+        public async Task UpdateStatusAsync(Guid Id)
         {
             throw new NotImplementedException();
         }
 
-        public void CancelOrder(string OrderNo, Guid OrderDetailId)
+        public async Task CancelOrderAsync(string OrderNo, Guid OrderDetailId)
         {
-            var order = GetFirstOrDefault(filter: x => x.Order_No == OrderNo, includeProperties: "Order_Details,User");
+            var order = await GetFirstOrDefaultAsync(filter: x => x.Order_No == OrderNo, includeProperties: "Order_Details,User").ConfigureAwait(false);
             if (order != null)
             {
                 var orderDetail = order.Order_Details.FirstOrDefault(x => x.Id == OrderDetailId);
@@ -62,12 +51,12 @@ namespace LotusRMS.DataAccess.Repository
                     order.Order_Details.Remove(orderDetail);
                 }
             }
-            Save();
+            await SaveAsync().ConfigureAwait(false);
         }
 
-        public void CompleteOrderDetail(string OrderNo, Guid OrderDetailId)
+        public async Task CompleteOrderDetailAsync(string OrderNo, Guid OrderDetailId)
         {
-            var order = GetFirstOrDefault(filter: x => x.Order_No == OrderNo, includeProperties: "Order_Details,User");
+            var order = await GetFirstOrDefaultAsync(filter: x => x.Order_No == OrderNo, includeProperties: "Order_Details,User").ConfigureAwait(false);
             if (order != null)
             {
                 var orderDetail = order.Order_Details.FirstOrDefault(x => x.Id == OrderDetailId);
@@ -84,23 +73,20 @@ namespace LotusRMS.DataAccess.Repository
                     orderDetail.IsKitchenComplete = true;
                     order.Order_Details[index] = orderDetail;
                 }
-
-
-
             }
-            Save();
+            await SaveAsync().ConfigureAwait(false);
         }
 
-        public void UpdateKitchenComplete(string OrderNo, Guid OrderDetailId)
+        public async Task UpdateKitchenCompleteAsync(string OrderNo, Guid OrderDetailId)
         {
-            var order = GetFirstOrDefault(filter: x => x.Order_No == OrderNo, includeProperties: "Order_Details,User");
+            var order =await GetFirstOrDefaultAsync(filter: x => x.Order_No == OrderNo, includeProperties: "Order_Details,User").ConfigureAwait(false);
             if (order != null)
             {
                 var orderDetail = order.Order_Details.FirstOrDefault(x => x.Id == OrderDetailId);
                 var index=order.Order_Details.IndexOf(orderDetail);
                 order.Order_Details[index].IsKitchenComplete = true;
             }
-            Save();
+            await SaveAsync().ConfigureAwait(false);
         }
     }
 }

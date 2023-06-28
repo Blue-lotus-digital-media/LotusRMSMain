@@ -5,6 +5,7 @@ function GetTableBooked(me) {
     var text = $(me).text();
 
     $.ajax({
+        async:'true',
         type: 'GET',
         url: "/Admin/Home/GetTableBooked",
         data: "type=" + type,
@@ -16,13 +17,18 @@ function GetTableBooked(me) {
 
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
-            alert(errorThrown);
+
+            console.log(XMLHttpRequest);
+            console.log(textStatus);
+            console.log(errorThrown);
         }
     });
 }
 function GetTop5Item() {
     
     $.ajax({
+
+        async: 'true',
         type: 'GET',
         url: "/Admin/Home/GetTop5Item",
         
@@ -31,12 +37,17 @@ function GetTop5Item() {
 
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
-            alert(errorThrown);
+
+            console.log(XMLHttpRequest);
+            console.log(textStatus);
+            console.log(errorThrown);
         }
     });
 }
 function GetDue() {
     $.ajax({
+
+        async: 'true',
         type: 'GET',
         url: "/Admin/Home/GetCustomerDue",
         success: function (data) {
@@ -46,7 +57,9 @@ function GetDue() {
             customerCount.innerHTML = data.count;
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
-            alert(errorThrown);
+            console.log(XMLHttpRequest);
+            console.log(textStatus);
+            console.log(errorThrown);
         }
     });
 }
@@ -56,6 +69,8 @@ function GetTransection(me) {
     var text = $(me).text();
 
     $.ajax({
+
+        async: 'true',
         type: 'GET',
         url: "/Admin/Home/GetTransection",
         data: "type=" + type,
@@ -67,12 +82,16 @@ function GetTransection(me) {
 
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
-            alert(errorThrown);
+            console.log(XMLHttpRequest);
+            console.log(textStatus);
+            console.log(errorThrown);
         }
     });
 }
 function GetStandingOrder() {
-     $.ajax({
+    $.ajax({
+
+        async: 'true',
         type: 'GET',
         url: "/Admin/Home/GetStandingOrder",
         success: function (data) {
@@ -82,7 +101,9 @@ function GetStandingOrder() {
                 });  
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
-            alert(errorThrown);
+            console.log(XMLHttpRequest);
+            console.log(textStatus);
+            console.log(errorThrown);
         }
     });
 }

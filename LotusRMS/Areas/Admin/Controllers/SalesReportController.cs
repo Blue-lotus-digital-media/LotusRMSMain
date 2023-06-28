@@ -48,13 +48,13 @@ namespace LotusRMSweb.Areas.Admin.Controllers
 
             if (reportType == SalesReportType.ReportType.item.ToString())
             {
-                list = await GetItemList();
+                list = await GetItemList().ConfigureAwait(true);
             }else if (reportType == SalesReportType.ReportType.table.ToString())
             {
-                list = await GetTableList();
+                list = await GetTableList().ConfigureAwait(true);
             }else if (reportType == SalesReportType.ReportType.customer.ToString())
             {
-                list = GetCustomerList();
+                list = await GetCustomerList().ConfigureAwait(true);
             }else if (reportType == SalesReportType.ReportType.user.ToString())
             {
                 list = GetUserList();
@@ -73,9 +73,9 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             return menuList;
         
         } 
-        public List<SelectList> GetCustomerList() {
+        public async Task<List<SelectList>> GetCustomerList() {
 
-            var customerList = _iCustomerService.GetAllAvailable().Select(customer => new SelectList(){ 
+            var customerList = (await _iCustomerService.GetAllAvailableAsync().ConfigureAwait(true)).Select(customer => new SelectList(){ 
                 Id= customer.Id.ToString(),
                 Name= customer.Name }).ToList();
             customerList.Insert(0, new SelectList() { Id = Guid.Empty.ToString(), Name = "Cash" });

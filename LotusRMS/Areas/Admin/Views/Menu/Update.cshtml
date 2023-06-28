@@ -125,9 +125,9 @@
                                                     }
                                                 </select>
                                                 <input type="number" class="form-control me-2" placeholder="rate" name="MenuDetail[@item.i].Rate" value="@item.value.Rate" />
-                                                <input type="radio" class="me-2 unitDefault" name="MenuDetail[@item.i].IsDefault" value="@item.value.IsDefault" checked="@item.value.IsDefault" title="Is active divison?"/>
-                                                <input type="radio" class="me-2 unitDelete" name="MenuDetail[@item.i].IsDelete" value="@item.value.IsDelete" checked="@item.value.IsDelete" title="Want to delete ?"/>
-
+                                                <input type="radio" class="me-2 unitDefault" name="MenuDetail[@item.i].IsDefault" value="@item.value.IsDefault.ToString()" checked="@item.value.IsDefault" title="Is active divison?"/>
+                                                <input type="radio" class="me-2 unitDelete" name="MenuDetail[@item.i].IsDelete" value="@item.value.IsDelete.ToString()" checked="@item.value.IsDelete" title="Want to delete ?"/>
+                                                 
                                                 @if (item.i == 0)
                                                 {
                                                     <button type="button" class="add_unit_button btn btn-primary" onclick="addDivision()"> <i class="fa-solid fa-plus"></i></button>
@@ -135,7 +135,7 @@
                                                 else
                                                 {
                                                     <button type="button" class="delete_unit_button btn btn-danger" > <i class="fa fa-trash-o"></i></button>
-                                                }
+                                                }4
 
                                             </div>
 

@@ -1,5 +1,6 @@
 ﻿using LotusRMS.Models.Dto.CompanyDTO;
 using LotusRMS.Models.Dto.CustomerDTO;
+using LotusRMS.Models.Helper;
 using LotusRMS.Models.IRepositorys;
 using LotusRMS.Utility;
 using System;
@@ -19,8 +20,9 @@ namespace LotusRMS.Models.Service.Implementation
             _customerRepository = customerRepository;
         }
 
-        public Guid Create(CreateCustomerDTO dto)
+        public async Task<Guid> CreateAsync(CreateCustomerDTO dto)
         {
+            using var scope = TransactionScopeHelper.GetInstance;
             var customer = new LotusRMS_Customer()
             {
                 Name = dto.Name,
@@ -41,32 +43,32 @@ namespace LotusRMS.Models.Service.Implementation
                     dueBook
                 };
             }
-            _customerRepository.Add(customer);
-            _customerRepository.Save();
+           await _customerRepository.AddAsync(customer).ConfigureAwait(false);
+            scope.Complete();
             return customer.Id;
         }
 
-        public IEnumerable<LotusRMS_Customer> GetAll()
+        public async Task<IEnumerable<LotusRMS_Customer>> GetAllAsync()
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<LotusRMS_Customer> GetAllAvailable()
+        public async Task<IEnumerable<LotusRMS_Customer>> GetAllAvailableAsync()
         {
-            return _customerRepository.GetAll(x => !x.IsDelete && x.Status,includeProperties: "DueBooks,DueBooks.Invoice");
+            return await _customerRepository.GetAllAsync(x => !x.IsDelete && x.Status,includeProperties: "DueBooks,DueBooks.Invoice").ConfigureAwait(false);
         }
 
-        public LotusRMS_Customer GetByGuid(Guid id)
+        public async Task<LotusRMS_Customer?> GetByGuidAsync(Guid id)
         {
-            return _customerRepository.GetByGuid(id);
+            return await _customerRepository.GetByGuidAsync(id).ConfigureAwait(false);
         }
 
-        public LotusRMS_Customer GetFirstOrDefaultById(Guid id)
+        public async Task<LotusRMS_Customer?> GetFirstOrDefaultByIdAsync(Guid id)
         {
-            return _customerRepository.GetFirstOrDefault(x => x.Id==id, includeProperties: "DueBooks");
+            return await _customerRepository.GetFirstOrDefaultAsync(x => x.Id==id, includeProperties: "DueBooks").ConfigureAwait(false);
         }
 
-        public void Update(UpdateCustomerDTO dto)
+        public async Task UpdateAsync(UpdateCustomerDTO dto)
         {
             var customer = new LotusRMS_Customer()
             {
@@ -74,10 +76,10 @@ namespace LotusRMS.Models.Service.Implementation
                 PanOrVat = dto.PanOrVat
         };
             customer.Update(name: dto.Name, address: dto.Address, contact: dto.Contact);
-            _customerRepository.Update(customer);
+           await _customerRepository.UpdateAsync(customer).ConfigureAwait(false);
         }
 
-        public void UpdateDue(UpdateCustomerDTO dto)
+        public async Task UpdateDueAsync(UpdateCustomerDTO dto)
         {
             var customer = new LotusRMS_Customer()
             {
@@ -95,12 +97,12 @@ namespace LotusRMS.Models.Service.Implementation
                 }
                 
             };
-            _customerRepository.UpdateDue(customer);
+            await _customerRepository.UpdateDueAsync(customer).ConfigureAwait(false);
         }
 
-        public void UpdateStatus(Guid Id)
+        public async Task UpdateStatusAsync(Guid Id)
         {
-            _customerRepository.UpdateStatus(Id);
+           await _customerRepository.UpdateStatusAsync(Id).ConfigureAwait(false);
         }
     }
 }

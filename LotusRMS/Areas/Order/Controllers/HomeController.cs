@@ -44,13 +44,13 @@ namespace LotusRMSweb.Areas.Order.Controllers
         public async Task<IActionResult> Index(Guid? TableId,Guid? TypeId)
         {
             
-            var type = await _ITableTypeService.GetAllAvailableAsync();
+            var type = await _ITableTypeService.GetAllAvailableAsync().ConfigureAwait(true);
             var tableType = new List<TableTypeBookedVM>();
             if (type != null)
             {
                 foreach (var item in type)
                 {
-                    var tablesCount = (await _ITableService.GetAllByTypeIdAsync(item.Id)).Where(x => x.IsReserved).Count();
+                    var tablesCount = (await _ITableService.GetAllByTypeIdAsync(item.Id).ConfigureAwait(true)).Where(x => x.IsReserved).Count();
                     var tvm = new TableTypeBookedVM()
                     {
                         Type_Id = item.Id,
@@ -111,8 +111,8 @@ namespace LotusRMSweb.Areas.Order.Controllers
             if (tableId != Guid.Empty)
             {
                 OrderVM.TableId = tableId;
-                OrderVM.Table_Name = (await _ITableService.GetByGuidAsync(tableId)).Table_Name;
-                order = _IOrderService.GetFirstOrDefaultByTableId(tableId);
+                OrderVM.Table_Name = (await _ITableService.GetByGuidAsync(tableId).ConfigureAwait(true)).Table_Name;
+                order =await _IOrderService.GetFirstOrDefaultByTableIdAsync(tableId).ConfigureAwait(true);
                 if (order != null)
                 {
                     OrderVM = new OrderVm()
@@ -145,7 +145,7 @@ namespace LotusRMSweb.Areas.Order.Controllers
                 }
             } else if (orderNo != null)
             {
-                order = _IOrderService.GetFirstOrDefaultByOrderNo(orderNo);
+                order = await _IOrderService.GetFirstOrDefaultByOrderNoAsync(orderNo).ConfigureAwait(false);
                 if (order != null)
                 {
                     OrderVM = new OrderVm()
@@ -228,7 +228,7 @@ namespace LotusRMSweb.Areas.Order.Controllers
                 };
                 orderDetailDTO.Add(detailDto);
             }
-            var order = _IOrderService.GetFirstOrDefaultByTableId((Guid)tableId);
+            var order = await _IOrderService.GetFirstOrDefaultByTableIdAsync((Guid)tableId).ConfigureAwait(false);
             if (order != null)
             {
                 var dto = new UpdateOrderDTO()
@@ -236,7 +236,7 @@ namespace LotusRMSweb.Areas.Order.Controllers
                     Order_Id = order.Id,
                     OrderDetail = orderDetailDTO
                 };
-                _IOrderService.UpdateCompleteOrder(dto);
+               await _IOrderService.UpdateCompleteOrderAsync(dto).ConfigureAwait(false);
 
             }
             else {
@@ -247,9 +247,9 @@ namespace LotusRMSweb.Areas.Order.Controllers
                     UserId = userId,
                     OrderDetails = orderDetailDTO
                 };
-                var id = _IOrderService.Create(dto);
+                var id = await _IOrderService.CreateAsync(dto).ConfigureAwait(false);
                 if(id!=Guid.Empty){
-                    await _ITableService.UpdateReservedAsync(tableId);
+                    await _ITableService.UpdateReservedAsync(tableId).ConfigureAwait(false);
                 }
             }
 
@@ -328,7 +328,7 @@ namespace LotusRMSweb.Areas.Order.Controllers
         public async Task<IActionResult> CancelOrder(string orderNo, Guid OrderDetailId)
         {
 
-            var id = _IOrderService.CancelOrder(orderNo, OrderDetailId);
+            var id =await _IOrderService.CancelOrderAsync(orderNo, OrderDetailId).ConfigureAwait(true);
             var order =await GetOrderVM(new Guid(), orderNo);
             ViewBag.NewOrder = GetNewOrder(order.TableId);
             await SetNotification(order.TableId);
@@ -339,7 +339,7 @@ namespace LotusRMSweb.Areas.Order.Controllers
         public async Task<IActionResult> CompleteOrderDetail(string orderNo,Guid OrderDetailId)
         {
 
-            var id = _IOrderService.CompleteOrderDetail(orderNo, OrderDetailId);
+            var id =await _IOrderService.CompleteOrderDetailAsync(orderNo, OrderDetailId).ConfigureAwait(true);
             var order =await GetOrderVM(new Guid(), orderNo);
 
             await SetNotification(order.TableId);
@@ -371,8 +371,8 @@ namespace LotusRMSweb.Areas.Order.Controllers
         public async Task<IActionResult> ReleaseTable(string OrderNo)
         {
             
-            var tableId =_IOrderService.ReleaseTable(OrderNo);
-            var IsReserved=await _ITableService.UpdateReservedAsync(tableId);
+            var tableId =await _IOrderService.ReleaseTableAsync(OrderNo).ConfigureAwait(true);
+            var IsReserved=await _ITableService.UpdateReservedAsync(tableId).ConfigureAwait(true);
             var order =await GetOrderVM(tableId, "");
             ViewBag.NewOrder = GetNewOrder(tableId);
             await SetReleaseNotification(tableId);
@@ -381,8 +381,8 @@ namespace LotusRMSweb.Areas.Order.Controllers
         }
         public async Task SetReleaseNotification(Guid Table_Id)
         {
-            var typeId =(await _ITableService.GetFirstOrDefaultByIdAsync(Table_Id)).Table_Type_Id;
-            var tableBooked =(await _ITableService.GetAllByTypeIdAsync(typeId)).Count(x => x.IsReserved);
+            var typeId =(await _ITableService.GetFirstOrDefaultByIdAsync(Table_Id).ConfigureAwait(true)).Table_Type_Id;
+            var tableBooked =(await _ITableService.GetAllByTypeIdAsync(typeId).ConfigureAwait(true)).Count(x => x.IsReserved);
             var tvm = new tableReturnVM()
             {
                 Type_Id = typeId,

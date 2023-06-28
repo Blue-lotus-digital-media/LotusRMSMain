@@ -86,7 +86,8 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         public async Task<IActionResult> ManageRole(string userId)
         {
             ViewBag.userId = userId;
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByIdAsync(userId).ConfigureAwait(true);
+            var roles = _roleManager.Roles;
             if (user == null)
             {
                 ViewBag.ErrorMessage = $"User with Id = {userId} cannot be found";
@@ -94,7 +95,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             }
             ViewBag.UserName = user.UserName;
             var model = new List<ManageUserRolesVM>();
-            foreach (var role in _roleManager.Roles)
+            foreach (var role in roles)
             {
                 if (role.Name == "SuperAdmin")
                 {
@@ -108,14 +109,10 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                     RoleId = role.Id,
                     RoleName = role.Name
                 };
-                if (await _userManager.IsInRoleAsync(user, role.Name))
+                if (await _userManager.IsInRoleAsync(user, role.Name).ConfigureAwait(true))
                 {
                     userRolesViewModel.Selected = true;
-                }
-                else
-                {
-                    userRolesViewModel.Selected = false;
-                }
+                }               
                 model.Add(userRolesViewModel);
             }
             return View(model);

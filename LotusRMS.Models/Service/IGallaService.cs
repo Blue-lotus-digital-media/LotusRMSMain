@@ -9,12 +9,12 @@ namespace LotusRMS.Models.Service
 {
     public interface IGallaService
     {
-        void CreateGalla(CreateGallaDTO dto);
-        void AddGallaDetail(AddGallaDetailDTO dto);
-        void UpdateGallaDetail();
-        LotusRMS_Galla GetTodayGalla();
-        LotusRMS_Galla GetGallaByDate(string date,string UserId);
-        LotusRMS_Galla GetLastGalla(string UserId);
+        Task CreateGallaAsync(CreateGallaDTO dto);
+        Task AddGallaDetailAsync(AddGallaDetailDTO dto);
+        Task UpdateGallaDetailAsync();
+        Task<LotusRMS_Galla?> GetTodayGallaAsync();
+        Task<LotusRMS_Galla?> GetGallaByDateAsync(string date,string UserId);
+        Task<LotusRMS_Galla?> GetLastGallaAsync(string UserId);
         Task<double> GetGallaAmountAsync(); 
 
 

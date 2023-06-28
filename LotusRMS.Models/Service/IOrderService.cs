@@ -10,30 +10,27 @@ namespace LotusRMS.Models.Service
     public interface IOrderService
     {
         Task<Guid> CreateAsync(CreateOrderDTO dto);
-        Guid Create(CreateOrderDTO dto);
-        Guid Update(UpdateOrderDTO dto);
-        Guid UpdateCompleteOrder(UpdateOrderDTO dto);
-
-        Guid CancelOrder(string OrderNo, Guid OrderDetailId);
-        Guid UpdateKitchenComplete(string OrderNo, Guid OrderDetailId);
-        Guid CompleteOrderDetail(string OrderNo, Guid OrderDetailId);
+        
         Task<Guid> UpdateAsync(UpdateOrderDTO dto);
-        Guid UpdateStatus(Guid Id);
+        Task<Guid> UpdateCompleteOrderAsync(UpdateOrderDTO dto);
+
+        Task<Guid> CancelOrderAsync(string OrderNo, Guid OrderDetailId);
+        Task<Guid> UpdateKitchenCompleteAsync(string OrderNo, Guid OrderDetailId);
+        Task<Guid> CompleteOrderDetailAsync(string OrderNo, Guid OrderDetailId);
+       
         Task<Guid> UpdateStatusAsync(Guid Id);
 
         Task<Guid> PrintKotAsync(Guid OrderId, List<LotusRMS_Order_Details> orderDetails);
-        /*Task<LotusRMS_Order> GetUnPrintedDetail(string OrderNo);*/
-        IEnumerable<LotusRMS_Order> GetAll();
-        IEnumerable<LotusRMS_Order> GetAllActiveOrder();
-        IEnumerable<LotusRMS_Order> GetAllByDateRange(DateTime startDate,DateTime EndDate);
+        
+        Task<IEnumerable<LotusRMS_Order>> GetAllActiveOrderAsync();
+        Task<IEnumerable<LotusRMS_Order>> GetAllByDateRangeAsync(DateTime startDate,DateTime EndDate);
         Task<IEnumerable<LotusRMS_Order>> GetAllAsync();
-        LotusRMS_Order GetByGuid(Guid Id);
-        LotusRMS_Order GetFirstOrDefaultByTableId(Guid TableId);
-        LotusRMS_Order GetFirstOrDefaultByOrderNo(string orderNo);
-        LotusRMS_Order GetFirstOrDefaultByOrderId(Guid orderId);
-        Task<LotusRMS_Order> GetByGuidAsync(Guid Id);
-        Guid ReleaseTable(string OrderNo);
-        Task<bool> AddOrderItem(AddOrderItemDTO dto);   
+        Task<LotusRMS_Order?> GetByGuidAsync(Guid Id);
+        Task<LotusRMS_Order?> GetFirstOrDefaultByTableIdAsync(Guid TableId);
+        Task<LotusRMS_Order?> GetFirstOrDefaultByOrderNoAsync(string orderNo);
+        Task<LotusRMS_Order?> GetFirstOrDefaultByOrderIdAsync(Guid orderId);
+        Task<Guid> ReleaseTableAsync(string OrderNo);
+        Task<bool> AddOrderItemAsync(AddOrderItemDTO dto);   
 
         
 

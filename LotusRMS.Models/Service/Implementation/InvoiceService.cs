@@ -1,4 +1,5 @@
 ﻿using LotusRMS.Models.Dto.InvoiceDTO;
+using LotusRMS.Models.Helper;
 using LotusRMS.Models.IRepositorys;
 using LotusRMS.Utility;
 using System;
@@ -31,12 +32,13 @@ namespace LotusRMS.Models.Service.Implementation
 
         public async Task<Guid> CreateAsync(Guid id)
         {
-            var bill =await _billSettingService.GetActiveAsync();
+            using var scope = TransactionScopeHelper.GetInstance;
+            var bill =await _billSettingService.GetActiveAsync().ConfigureAwait(false);
 
             var billString = bill.BillPrefix;
            
             
-            var fiscalyear = await _iFiscalYearService.GetActiveYearAsync();
+            var fiscalyear = await _iFiscalYearService.GetActiveYearAsync().ConfigureAwait(false);
             if (bill.IsFiscalYear)
             {
                 billString = billString + "" + fiscalyear.Name;
@@ -53,13 +55,12 @@ namespace LotusRMS.Models.Service.Implementation
                 Checkout_Id=id,
 
             };
-            await _invoiceRepository.AddAsync(model);
-            await _invoiceRepository.SaveAsync();
+            await _invoiceRepository.AddAsync(model).ConfigureAwait(false);
 
             var checkout = await _iCheckOutService.Value.GetByGuidAsync(id).ConfigureAwait(false);
             if(checkout.Payment_Mode.ToString()=="Credit" && checkout.Customer_Id != Guid.Empty)
             {
-                var customer = _iCustomerService.GetFirstOrDefaultById((Guid)checkout.Customer_Id);
+                var customer = await _iCustomerService.GetFirstOrDefaultByIdAsync((Guid)checkout.Customer_Id).ConfigureAwait(false);
                 double discount = 0;
                 if (checkout.Discount_Type.ToString() == "Cash")
                 {
@@ -93,11 +94,11 @@ namespace LotusRMS.Models.Service.Implementation
                 } }
 
                 };
-                _iCustomerRepository.UpdateDue(cus);
+               await _iCustomerRepository.UpdateDueAsync(cus).ConfigureAwait(false);
 
 
             }
-
+            scope.Complete();
 
 
 

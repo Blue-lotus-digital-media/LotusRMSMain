@@ -41,7 +41,7 @@ namespace LotusRMSweb.Areas.Kitchen.Controllers
             var tables =await _tableService.GetAllReservedAsync();
             var orderVM=new List<PrintOrderDetailVM>();   
             foreach(var table in tables) {
-                var order = _orderService.GetFirstOrDefaultByTableId(table.Id);
+                var order = await _orderService.GetFirstOrDefaultByTableIdAsync(table.Id).ConfigureAwait(true);
                 if (order.Order_Details.Any(x => !x.IsKitchenComplete && !x.IsComplete))
                 {
                     var kitchenOrderVM = new PrintOrderDetailVM()
@@ -89,8 +89,8 @@ namespace LotusRMSweb.Areas.Kitchen.Controllers
 
         public async Task<IActionResult> CompleteKitchen(string orderNo,Guid orderDetailId)
         {
-            var orderId = _orderService.UpdateKitchenComplete(orderNo, orderDetailId);
-            var order = _orderService.GetFirstOrDefaultByOrderNo(orderNo);
+            var orderId = await _orderService.UpdateKitchenCompleteAsync(orderNo, orderDetailId).ConfigureAwait(true);
+            var order = await _orderService.GetFirstOrDefaultByOrderNoAsync(orderNo).ConfigureAwait(true);
             
             var orderDetail = order.Order_Details.Where(x => x.Id == orderDetailId).FirstOrDefault();
             var menu = await _menuService.GetByGuidAsync(orderDetail.MenuId).ConfigureAwait(true);

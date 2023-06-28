@@ -38,9 +38,9 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             return View();
         }
         #region APICalls
-        public IActionResult GetCustomerDue()
+        public async Task<IActionResult> GetCustomerDue()
         {
-            var customer = _iCustomerService.GetAllAvailable();
+            var customer =await _iCustomerService.GetAllAvailableAsync().ConfigureAwait(true);
             var count = 0;
             var due = 0.0;
             if (customer != null)
@@ -62,7 +62,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             return Json(new { count = count, due = Math.Round(due,2) });
         
         }
-        public IActionResult GetTableBooked(ReportType type)
+        public async Task<IActionResult> GetTableBooked(ReportType type)
         {
             var today = CurrentTime.DateTimeToday();
             var startDate = Convert.ToDateTime(today);
@@ -77,13 +77,20 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             {
                 startDate = startDate.AddMonths(-startDate.Month+1).AddDays(-startDate.Day+1);
             }
-            var tableBookedCount = _iOrderService.GetAllByDateRange(startDate, endDate);
+            var tableBookedCount = await _iOrderService.GetAllByDateRangeAsync(startDate, endDate).ConfigureAwait(true);
+            if (tableBookedCount != null)
+            {
 
-            return Json(new {data=tableBookedCount.Count()});
+                return Json(new { data = tableBookedCount.Count() });
+            }
+            else
+            {
+                return Json(new { data = 0 });
+            }
         }
-       public IActionResult GetStandingOrder()
+       public async Task<IActionResult> GetStandingOrder()
         {
-            var active = _iOrderService.GetAllActiveOrder();
+            var active = await _iOrderService.GetAllActiveOrderAsync().ConfigureAwait(true)?? throw new Exception();
             var data = GetItemDetail(active).Where(x=>!x.IsComplete).GroupBy(f=>new { f.MenuId ,f.Quantity_Id,f.Item_Name}).
                 Select(group=> new { fee=group.Key,total=group.Sum(f=>f.Quantity)});
             return Json(new { data = data });
@@ -104,11 +111,15 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             {
                 startDate = startDate.AddMonths(-startDate.Month + 1).AddDays(-startDate.Day + 1);
             }
-            var totalTransection =(await _iCheckoutService.GetAllByDateRangeAsync(startDate, endDate)).Sum(x=>x.Total);
-            
-            return Json(new { data = totalTransection });
+            var totalTransection =await _iCheckoutService.GetAllByDateRangeAsync(startDate, endDate) ?? throw new Exception();
+            if (totalTransection != null)
+            {
+                return Json(new { data = totalTransection.Sum(x => x.Total) });
+            }else{
+                return Json(new { data = 0 });
+            }
         }
-        public IActionResult GetTop5Item()
+        public async Task<IActionResult> GetTop5Item()
         {
             var todayStart = Convert.ToDateTime(CurrentTime.DateTimeToday());
             var yesterdayStart= todayStart.AddDays(-1);
@@ -116,8 +127,8 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             var yesterdayEnd = todayEnd.AddDays(-1);
 
 
-            var yeaterdayOrder = _iOrderService.GetAllByDateRange(yesterdayStart, yesterdayEnd);
-             var todayOrder = _iOrderService.GetAllByDateRange(todayStart, todayEnd);
+            var yeaterdayOrder =await _iOrderService.GetAllByDateRangeAsync(yesterdayStart, yesterdayEnd).ConfigureAwait(true);
+             var todayOrder = await _iOrderService.GetAllByDateRangeAsync(todayStart, todayEnd).ConfigureAwait(true);
 
             var yesterdayData = GetItemDetail(yeaterdayOrder).GroupBy(x => x.Item_Name).Select(grouped => new
             {
@@ -132,7 +143,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
 
             });
             var dataset = GetDataSet(yesterdayData,todayData);
-            return Ok(dataset);
+            return new JsonResult(dataset);
         }
         public List<Object> GetDataSet(IEnumerable<dynamic> yesterdayData, IEnumerable<dynamic> todayData)
         {
@@ -174,29 +185,23 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         public List<OrderDetailVm> GetItemDetail(IEnumerable<LotusRMS_Order> order)
         {
             var ordervm= new List<OrderDetailVm>();
-
             if (order != null)
             {
-                var od = order.Select(x => x.Order_Details);
-                foreach (var o in od)
-                {
-                   
-                    var dd = o.Select(y => new OrderDetailVm()
+                    var od = order.Select(x => x.Order_Details);
+                    foreach (var o in od)
                     {
-                        MenuId=y.MenuId,
-                        Quantity=y.Quantity,
-                        Item_Name=y.Menu.Item_Name + "(" + y.Menu.Menu_Details.FirstOrDefault(x => x.Id == y.Quantity_Id).Divison.Title + ")",
-                        Quantity_Id=y.Quantity_Id,
-                        IsComplete=y.IsComplete
+                        var dd = o.Select(y => new OrderDetailVm()
+                        {
+                            MenuId = y.MenuId,
+                            Quantity = y.Quantity,
+                            Item_Name = y.Menu.Item_Name + "(" + y.Menu.Menu_Details.FirstOrDefault(x => x.Id == y.Quantity_Id).Divison.Title + ")",
+                            Quantity_Id = y.Quantity_Id,
+                            IsComplete = y.IsComplete
 
-                    }).ToList();
-                    ordervm.AddRange(dd);
-                }
-
-
+                        }).ToList();
+                        ordervm.AddRange(dd);
+                    } 
             }
-
-
             return ordervm;
         }
 

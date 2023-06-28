@@ -24,9 +24,9 @@ namespace LotusRMS.Models.Service.Implementation
             this.httpAccessor = httpAccessor;
         }
 
-        public void AddGallaDetail(AddGallaDetailDTO dto)
+        public async Task AddGallaDetailAsync(AddGallaDetailDTO dto)
         {
-            var galla = _gallaRepository.GetByGuid(dto.Galla_Id);
+            var galla =await _gallaRepository.GetByGuidAsync(dto.Galla_Id).ConfigureAwait(false);
             var gallaDetail = new LotusRMS_GallaDetail()
             {
                 Time = CurrentTime.DateTimeNow(),
@@ -37,14 +37,10 @@ namespace LotusRMS.Models.Service.Implementation
             };
             galla.Closing_Balance = gallaDetail.Balance;
             galla.Galla_Details.Add(gallaDetail);
-            _gallaRepository.Save();
-
-
-
-           
+            await _gallaRepository.SaveAsync();
         }
 
-        public void CreateGalla(CreateGallaDTO dto)
+        public async Task CreateGallaAsync(CreateGallaDTO dto)
         {
             var galla = new LotusRMS_Galla()
             {
@@ -54,21 +50,18 @@ namespace LotusRMS.Models.Service.Implementation
                 Closing_Balance = dto.Opening_Balance,
             };
 
-            _gallaRepository.Add(galla);
-            _gallaRepository.Save();
+            await _gallaRepository.AddAsync(galla).ConfigureAwait(false);
         }
 
-        public LotusRMS_Galla GetGallaByDate(string date,string UserId)
-        {
-            
-            //var UserId = httpAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var galla = _gallaRepository.GetGallaByDate(date,UserId);
+        public async Task<LotusRMS_Galla?> GetGallaByDateAsync(string date,string UserId)
+        {            
+            var galla = await _gallaRepository.GetGallaByDateAsync(date,UserId).ConfigureAwait(false);
             return galla;
         }
 
         public async Task<double> GetGallaAmountAsync()
         {
-            var galla = GetTodayGalla();
+            var galla = await GetTodayGallaAsync().ConfigureAwait(false);
             if (galla != null)
             {
                 return galla.Closing_Balance;
@@ -76,22 +69,22 @@ namespace LotusRMS.Models.Service.Implementation
             return 0.0;
         }
 
-        public LotusRMS_Galla GetLastGalla(string UserId)
+        public async Task<LotusRMS_Galla?> GetLastGallaAsync(string UserId)
         {
 
             //var UserId = httpAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var galla = _gallaRepository.GetLastGalla(UserId);
+            var galla =await _gallaRepository.GetLastGallaAsync(UserId).ConfigureAwait(false);
             return galla;
         }
 
-        public LotusRMS_Galla GetTodayGalla()
+        public async Task<LotusRMS_Galla?> GetTodayGallaAsync()
         {
             var UserId= httpAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var galla = _gallaRepository.GetGallaToday(UserId);
+            var galla =await _gallaRepository.GetGallaTodayAsync(UserId).ConfigureAwait(false);
             return galla;
         }
 
-        public void UpdateGallaDetail()
+        public async Task UpdateGallaDetailAsync()
         {
             throw new NotImplementedException();
         }
