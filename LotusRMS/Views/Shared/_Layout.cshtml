@@ -39,7 +39,7 @@
     <script src="~/js/signalr/dist/browser/signalr.js"></script>
     <script src="~/js/site1.js"></script>
     <!-- Template Main CSS File -->
-    <link href="~/assets/css/style.css" rel="stylesheet">
+    <link href="~/assets/css/style01.css" rel="stylesheet">
 
     <link href="~/css/site1.css" rel="stylesheet" />
     <link href="~/css/nepali.datepicker.v4.0.1.min.css" rel="stylesheet" />
@@ -64,7 +64,7 @@
         <header id="header" class="header fixed-top d-flex align-items-center">
 
             <div class="d-flex align-items-center justify-content-between">
-                <a href="index.html" class="logo d-flex align-items-center">
+                <a asp-area="" asp-controller="Home" asp-action="index" class="logo d-flex align-items-center">
                     <img src="~/assets/img/logo.png" alt="">
                     <span class="d-none d-lg-block">Blue Lotus</span>
                 </a>
@@ -95,7 +95,7 @@
                     }else if (User.IsInRole("Admin"))
                     {
                         <li class="nav-item">
-                            <a class="nav-link @Html.ActiveClass(areas:"Admin",controllers:"Home", actions:"Index", cssClass:"active-route") asp-area="Admin" asp-action="Index" asp-controller="Home">
+                            <a class="nav-link @Html.ActiveClass(areas:"Admin",controllers:"Home", actions:"Index", cssClass:"active-route")" asp-area="Admin" asp-action="Index" asp-controller="Home">
                                 <i class="bi bi-grid"></i>
                                 <span>Dashboard</span>
                             </a>
@@ -206,7 +206,7 @@
                     @if (User.IsInRole("Admin") || User.IsInRole("Cashier"))
                     {
                         <li class="nav-item">
-                            <a class="nav-link @Html.ActiveClass(areas:"Admin",controllers:"Purchase", actions:"Index", cssClass:"active-route")" asp-action="index" asp-controller="purchase" asp-area="admin">
+                            <a class="nav-link @Html.ActiveClass(areas:"Admin",controllers:"Purchase", actions:"Index", cssClass:"active-route")" asp-action="index" asp-controller="purchase" asp-area="Admin">
                                 <i class="bi bi-cash"></i>
                                 <span>Purchase</span>
                             </a>
@@ -222,22 +222,22 @@
                             </a>
                             <ul id="report-nav" class="nav-content collapse @Html.ActiveClass(areas:"Admin",controllers:"PurchaseReport,InvoiceReport,SalesReport,InventoryReport", actions:"Index", cssClass:"show")" data-bs-parent="#sidebar-nav">
                                 <li>
-                                    <a asp-action="index" asp-controller="purchaseReport" asp-area="admin" class=@Html.ActiveClass(areas:"Admin",controllers:"PurchaseReport", actions:"Index",  cssClass:"active-sub-route")>
+                                    <a asp-action="index" asp-controller="purchaseReport" asp-area="Admin" class=@Html.ActiveClass(areas:"Admin",controllers:"PurchaseReport", actions:"Index",  cssClass:"active-sub-route")>
                                         <i class="bi bi-circle"></i><span>Purchase</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a asp-action="index" asp-controller="invoiceReport" asp-area="admin" class=@Html.ActiveClass(areas:"Admin",controllers:"InvoiceReport", actions:"Index",  cssClass:"active-sub-route")>
+                                    <a asp-action="index" asp-controller="invoiceReport" asp-area="Admin" class=@Html.ActiveClass(areas:"Admin",controllers:"InvoiceReport", actions:"Index",  cssClass:"active-sub-route")>
                                         <i class="bi bi-circle"></i><span>Invoice</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a asp-action="index" asp-controller="salesReport" asp-area="admin" class=@Html.ActiveClass(areas:"Admin",controllers:"SalesReport", actions:"Index", cssClass:"active-sub-route")>
+                                    <a asp-action="index" asp-controller="salesReport" asp-area="Admin" class=@Html.ActiveClass(areas:"Admin",controllers:"SalesReport", actions:"Index", cssClass:"active-sub-route")>
                                         <i class="bi bi-circle"></i><span>Sales</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a asp-action="index" asp-controller="inventoryReport" asp-area="admin" class=@Html.ActiveClass(areas:"Admin",controllers:"InventoryReport", actions:"Index", "active-sub-route")>
+                                    <a asp-action="index" asp-controller="inventoryReport" asp-area="Admin" class=@Html.ActiveClass(areas:"Admin",controllers:"InventoryReport", actions:"Index", "active-sub-route")>
                                         <i class="bi bi-circle"></i><span>Stock</span>
                                     </a>
                                 </li>
@@ -301,18 +301,18 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a asp-area="admin" asp-action="index" asp-controller="menucategory" asp-route-returnUrl="" class="@Html.ActiveClass(areas:"Admin",controllers:"MenuCategory", actions:"Index", cssClass:"active-sub-route")">
+                                    <a asp-area="Admin" asp-action="index" asp-controller="menucategory" asp-route-returnUrl="" class="@Html.ActiveClass(areas:"Admin",controllers:"MenuCategory", actions:"Index", cssClass:"active-sub-route")">
                                         <i class="bi bi-circle"></i><span>Menu Setting</span>
                                     </a>
                                 </li>
 
                                 <li>
-                                    <a asp-area="admin" asp-action="index" asp-controller="MenuUnit" asp-route-returnUrl="" class="@Html.ActiveClass(areas:"Admin",controllers:"MenuUnit", actions:"Index", cssClass:"active-sub-route")">
+                                    <a asp-area="Admin" asp-action="index" asp-controller="MenuUnit" asp-route-returnUrl="" class="@Html.ActiveClass(areas:"Admin",controllers:"MenuUnit", actions:"Index", cssClass:"active-sub-route")">
                                         <i class="bi bi-circle"></i><span>Unit Setting</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a asp-action="index" asp-controller="fiscalyear" asp-area="admin" class="@Html.ActiveClass(areas:"Admin",controllers:"FiscalYear", actions:"Index", cssClass:"active-sub-route")">
+                                    <a asp-action="index" asp-controller="fiscalyear" asp-area="Admin" class="@Html.ActiveClass(areas:"Admin",controllers:"FiscalYear", actions:"Index", cssClass:"active-sub-route")">
                                         <i class="bi bi-circle"></i><span>Fiscal Year</span>
                                     </a>
                                 </li>
@@ -357,7 +357,7 @@
     <script src="~/assets/vendor/php-email-form/validate.js"></script>
 
     <!-- Template Main JS File -->
-    <script src="~/assets/js/main.js"></script>
+    <script src="~/assets/js/main1.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 
 

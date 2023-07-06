@@ -5,6 +5,21 @@
     ViewBag.Title = "Access Denied";
 }
 <style>
+    .toggle-sidebar-btn {
+        display: none;
+    }
+    .sidebar {
+        display: none;
+    }
+    .main {
+        margin-left: 0 !important;
+        padding: 0 !important;
+    }
+    .footer {
+        margin-left: 0 !important;
+        display: none;
+    }
+
     *,
 *::before,
 *::after {
@@ -35,10 +50,10 @@
     padding-inline: 2rem;
 }
 .hero-section {
-    min-height: 35rem;
+    min-height: 25rem;
     width: 30rem;
     margin-inline: auto;
-    background:url(~/wwwroot/assets/img/card.jpg);  
+    background:url(/assets/img/accessdenied.png);  
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

@@ -12,7 +12,7 @@
             <div class="card-body">
                 <h5 class="card-title">Add Menu Category</h5>
                 <!-- Vertical Form -->
-                <form class="row g-3" asp-action="Create" asp-controller="menucategory" asp-area="admin" asp-route-returnUrl="@ViewBag.ReturnUrl">
+                <form class="row g-3" asp-action="Create" asp-controller="menucategory" asp-area="Admin" asp-route-returnUrl="@ViewBag.ReturnUrl">
 
                     <div class="col-md-12">
                         <label for="typeText" class="form-label">Type</label>
@@ -28,7 +28,7 @@
                                 </select>
                             </div>
                             <div class="col-2">
-                                <a class="btn btn-primary" asp-action="create" asp-controller="menutype" asp-area="admin" asp-route-returnUrl="~/admin/menucategory/create">
+                                <a class="btn btn-primary" asp-action="create" asp-controller="menutype" asp-area="Admin" asp-route-returnUrl="~/admin/menucategory/create">
                                     <i class="bi bi-plus-lg"></i>
                                 </a>
                             </div>

@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace LotusRMSweb.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin,Cashier,Superadmin")]
+    [Authorize(Roles = "Admin,Cashier,SuperAdmin")]
     public class MenuCategoryController : Controller
     {
         private readonly IMenuCategoryService _IMenuCategoryService;

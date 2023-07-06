@@ -66,7 +66,7 @@ client.on("CheckoutComplete", newCall => {
 
 document.addEventListener("DOMContentLoaded", () => {
     client.start();
-    
+    console.log(client);
 
 });
 

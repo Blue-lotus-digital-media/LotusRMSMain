@@ -28,6 +28,8 @@ using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Data.Entity.SqlServer;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 //var connectionString = builder.Configuration.GetConnectionString("ApplicationDbContextConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDbContextConnection' not found.");
@@ -61,8 +63,16 @@ builder.Services.AddIdentity<RMSUser, IdentityRole>()
             .AddDefaultUI()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
-builder.Services.AddAuthentication()
-    .AddGoogle(options =>
+builder.Services.AddAuthentication(
+    CookieAuthenticationDefaults.AuthenticationScheme
+    ).AddCookie(options =>
+    {
+        options.Cookie.Name = "AuthCookie";
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        options.Cookie.HttpOnly = true;
+        options.Cookie.SameSite = SameSiteMode.None;
+        // Other configuration options
+    }).AddGoogle(options =>
     {
         options.ClientId = builder.Configuration.GetValue<string>("App:GoogleClientId");
         options.ClientSecret = builder.Configuration.GetValue<string>("App:GoogleClientSecrets");
@@ -70,8 +80,9 @@ builder.Services.AddAuthentication()
         // Map the external picture claim to the internally used image claim
         options.ClaimActions.MapJsonKey("image", "picture");
         options.AccessDeniedPath = $"/account/accessDenied";
+        options.RemoteAuthenticationTimeout = TimeSpan.FromDays(1);
         options.CorrelationCookie.Expiration = TimeSpan.FromDays(1);
-
+        /*options.SaveTokens = true;*/
     });
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -105,6 +116,7 @@ var emailConfig = new EmailConfiguration()
 };
 
 builder.Services.AddSingleton(emailConfig);
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
@@ -114,7 +126,9 @@ builder.Services.Configure<FormOptions>(o => {
     o.MemoryBufferThreshold = int.MaxValue;
 });
 
-builder.Services.AddSignalR(cfg=>cfg.EnableDetailedErrors=true);
+builder.Services.AddSignalR(cfg=>
+
+cfg.EnableDetailedErrors=true);
 builder.Services.AddAuthorization(options =>
 {
     /* options.AddPolicy("EmailID", policy =>
@@ -136,7 +150,7 @@ builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new 
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options => {
-    options.IdleTimeout = TimeSpan.FromMinutes(120);//You can set Time   
+    options.IdleTimeout = TimeSpan.FromDays(1);//You can set Time   
 });
 builder.Services.AddNotyf(config => { config.DurationInSeconds = 10; config.IsDismissable = true; config.Position = NotyfPosition.BottomRight; });
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -160,8 +174,7 @@ app.UseRouting();
 app.UseSession();
 app.UseCookiePolicy(new CookiePolicyOptions()
 {
-    MinimumSameSitePolicy = SameSiteMode.Strict
-
+    MinimumSameSitePolicy = SameSiteMode.Lax
 });
 app.UseNotyf();
 app.UseAuthentication();

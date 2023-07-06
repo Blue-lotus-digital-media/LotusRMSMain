@@ -1,4 +1,4 @@
-﻿window.onload = function () {
+﻿function setDate() {
 
 
     var startDate = document.getElementById("startDate");
@@ -40,9 +40,7 @@
     endDate.value = dateTo;
 }
 document.addEventListener("DOMContentLoaded", () => {
-   
-    
-
+    setDate();
     reportTypeChanged($("#reporttype"));
     GetReport();
 });
@@ -73,22 +71,29 @@ function reportTypeChanged(me) {
 }
 function GetReport() {
     var startDate = $("#startDate").val();
-    var startDateAD = NepaliFunctions.BS2AD(startDate);
+   
     var endDate = $("#endDate").val();
 
-    var endDateAD = NepaliFunctions.BS2AD(endDate);
     if (startDate == "" || endDate == "") {
         alert("Please Select start date and end date first");
         return false;
     }
     var reportType = $("#reporttype").find(":selected").val();
     var reportTypeId = $("#selectItem").find(":selected").val();
+    var startDateAD = NepaliFunctions.BS2AD(startDate);
+        
+    var endDateAD = NepaliFunctions.BS2AD(endDate);
 
+    loading();
     $.ajax({
         type: 'GET',
         url: "/admin/salesreport/GetOrder",
-        data: " startdate="+startDateAD+"&endDate="+endDateAD+"&reportType="+reportType+"&id="+reportTypeId,
+        data: "startDate="+startDateAD+"&endDate="+endDateAD+"&reportType="+reportType+"&id="+reportTypeId,
         success: function (data) {
+            $("#reportHere").empty();
+            $("#reportHere").html(data);
+
+            loading();
             console.log(data);
 
         },
@@ -97,4 +102,7 @@ function GetReport() {
         }
     });
 
+}
+function loading() {
+    $("#overlay").toggle();
 }

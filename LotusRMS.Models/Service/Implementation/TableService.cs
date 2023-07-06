@@ -37,7 +37,7 @@ namespace LotusRMS.Models.Service.Implementation
         } 
         public async Task<IEnumerable<LotusRMS_Table>> GetAllReservedAsync()
         {
-            return await _ITableRepository.GetAllAsync(x=>!x.IsDelete && x.IsReserved, includeProperties: "Table_Type").ConfigureAwait(false);
+            return await _ITableRepository.FindBy(x=>!x.IsDelete && x.IsReserved, includeProperties: "Table_Type").ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<LotusRMS_Table>> GetAllByTypeIdAsync(Guid Id)

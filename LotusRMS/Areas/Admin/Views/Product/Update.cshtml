@@ -15,7 +15,7 @@
                 <h5 class="card-title">@title Product</h5>
 
                 <!-- Multi Columns Form -->
-                <form class="row g-3 bordered" asp-action="Update" asp-controller="Product" asp-area="admin">
+                <form class="row g-3 bordered" asp-action="Update" asp-controller="Product" asp-area="Admin">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                     <input type="hidden" asp-for="Id" />
@@ -40,7 +40,7 @@
                                 </select>
                             </div>
                             <div class="col-2">
-                                <a class="btn btn-primary" asp-area="admin" asp-action="create" asp-controller="producttype" asp-route-returnUrl="~/admin/product/update">
+                                <a class="btn btn-primary" asp-area="Admin" asp-action="create" asp-controller="producttype" asp-route-returnUrl="~/admin/product/update">
                                     <i class="bi bi-plus-lg"></i>
                                 </a>
                             </div>
@@ -63,7 +63,7 @@
                                 </select>
                             </div>
                             <div class="col-2">
-                                <a class="btn btn-primary" asp-area="admin" asp-action="create" asp-controller="productcategory" asp-route-returnUrl="~/admin/product/update">
+                                <a class="btn btn-primary" asp-area="Admin" asp-action="create" asp-controller="productcategory" asp-route-returnUrl="~/admin/product/update">
                                     <i class="bi bi-plus-lg"></i>
                                 </a>
                             </div>
@@ -88,7 +88,7 @@
                                 </select>
                             </div>
                             <div class="col-2">
-                                <a class="btn btn-primary" asp-area="admin" asp-action="create" asp-controller="ProductUnit" asp-route-returnUrl="~/admin/product/update">
+                                <a class="btn btn-primary" asp-area="Admin" asp-action="create" asp-controller="ProductUnit" asp-route-returnUrl="~/admin/product/update">
                                     <i class="bi bi-plus-lg"></i>
                                 </a>
                             </div>

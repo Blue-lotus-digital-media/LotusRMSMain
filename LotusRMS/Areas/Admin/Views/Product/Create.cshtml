@@ -30,7 +30,7 @@
                 <h5 class="card-title">@title Product</h5>
 
                 <!-- Multi Columns Form -->
-                <form class="row g-3 bordered" asp-action="Create" asp-controller="Product" asp-area="admin">
+                <form class="row g-3 bordered" asp-action="Create" asp-controller="Product" asp-area="Admin">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                     <div class="col-md-11">
@@ -53,7 +53,7 @@
                                 </select>
                             </div>
                             <div class="col-2">
-                                <a class="btn btn-primary" asp-area="admin" asp-action="create" asp-controller="producttype" asp-route-returnUrl="~/admin/product/create">
+                                <a class="btn btn-primary" asp-area="Admin" asp-action="create" asp-controller="producttype" asp-route-returnUrl="~/admin/product/create">
                                     <i class="bi bi-plus-lg"></i>
                                 </a>
                             </div>
@@ -79,7 +79,7 @@
                                 </select>
                             </div>
                             <div class="col-2">
-                                <a class="btn btn-primary" asp-area="admin" asp-action="create" asp-controller="productcategory" asp-route-returnUrl="~/admin/product/create">
+                                <a class="btn btn-primary" asp-area="Admin" asp-action="create" asp-controller="productcategory" asp-route-returnUrl="~/admin/product/create">
                                     <i class="bi bi-plus-lg"></i>
                                 </a>
                             </div>
@@ -104,7 +104,7 @@
                                 </select>
                             </div>
                             <div class="col-2">
-                                <a class="btn btn-primary" asp-area="admin" asp-action="create" asp-controller="ProductUnit" asp-route-returnUrl="~/admin/product/create">
+                                <a class="btn btn-primary" asp-area="Admin" asp-action="create" asp-controller="ProductUnit" asp-route-returnUrl="~/admin/product/create">
                                     <i class="bi bi-plus-lg"></i>
                                 </a>
                             </div>
@@ -132,7 +132,7 @@
                                     <span asp-validation-for="Inventory.StockQuantity" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="unit" class="form-label">Unit</label>
+                                    <label for="unit" class="form-label">Reorder level</label>
                                     <input type="number" class="form-control" id="unit" asp-for="Inventory.ReorderLevel">
                                     <span asp-validation-for="Inventory.ReorderLevel" class="text-danger"></span>
                                 </div>

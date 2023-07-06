@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace LotusRMSweb.Areas.SuperAdmin.Controllers
 {
     [Area("SuperAdmin")]
-    [Authorize(Roles = "superadmin")]
+    [Authorize(Roles = "SuperAdmin")]
     public class CompanyController : Controller
     {
         private readonly ICompanyService _companyService;

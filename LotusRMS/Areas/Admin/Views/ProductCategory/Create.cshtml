@@ -12,7 +12,7 @@
             <div class="card-body">
                 <h5 class="card-title">Create Product Category</h5>
                 <!-- Vertical Form -->
-                <form class="row g-3" asp-action="Create" asp-controller="ProductCategory" asp-area="admin" asp-route-returnUrl="@ViewBag.ReturnUrl">
+                <form class="row g-3" asp-action="Create" asp-controller="ProductCategory" asp-area="Admin" asp-route-returnUrl="@ViewBag.ReturnUrl">
                     <div class="col-12">
                         <label for="cName" class="form-label">Category Name</label>
                         <input asp-for="Category_Name" class="form-control" id="cName">
@@ -38,7 +38,7 @@
                                 </select>
                             </div>
                             <div class="col-2">
-                                <a class="btn btn-primary" asp-action="create" asp-controller="type" asp-area="admin" asp-route-returnUrl="~/admin/category/create"><i class="bi bi-plus-lg"></i></a>
+                                <a class="btn btn-primary" asp-action="create" asp-controller="type" asp-area="Admin" asp-route-returnUrl="~/admin/category/create"><i class="bi bi-plus-lg"></i></a>
                             </div>
 
                         </div>

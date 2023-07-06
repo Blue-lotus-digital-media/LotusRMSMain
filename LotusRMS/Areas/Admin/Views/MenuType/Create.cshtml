@@ -13,7 +13,7 @@
             <div class="card-body">
                 <h5 class="card-title">Create Menu Type</h5>
 
-                <form class="form" asp-area="admin" asp-action="create" asp-controller="menutype" asp-route-returnUrl="@ViewBag.ReturnUrl">
+                <form class="form" asp-area="Admin" asp-action="create" asp-controller="menutype" asp-route-returnUrl="@ViewBag.ReturnUrl">
                     <div class="form-group mb-3">
                         <label for="mType" class="mb-1">Type Name</label>
                         <input asp-for="Type_Name" class="form-control" placeholder="eg. food , eg. liquor" id="mType" />

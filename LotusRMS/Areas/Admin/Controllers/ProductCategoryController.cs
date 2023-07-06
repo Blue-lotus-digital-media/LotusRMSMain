@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace LotusRMSweb.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin,Superadmin")]
+    [Authorize(Roles = "Admin,SuperAdmin")]
     public class ProductCategoryController : Controller
     {
         private readonly ICategoryService _ICategoryService;

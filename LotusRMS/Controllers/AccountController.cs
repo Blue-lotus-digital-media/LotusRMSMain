@@ -458,7 +458,7 @@ namespace LotusRMSweb.Controllers
                 return View(nameof(Login), model);
             }
             
-            var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+            var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: true, bypassTwoFactor: true);
             if (signInResult.Succeeded)
             { 
 
@@ -486,7 +486,7 @@ namespace LotusRMSweb.Controllers
                         await _userManager.AddToRoleAsync(user, "User");
                     }
                     await _userManager.AddLoginAsync(user, info);
-                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    await _signInManager.SignInAsync(user, isPersistent: true);
                     // Let’s add the image to the User Claims 
                     if (info.Principal.HasClaim(c => c.Type == "image"))
                     {

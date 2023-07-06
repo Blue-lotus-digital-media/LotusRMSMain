@@ -7,6 +7,7 @@ using LotusRMS.Models.Viewmodels.Order;
 using LotusRMS.Models.Viewmodels.signalRVM;
 using LotusRMSweb.Hubs;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -17,6 +18,7 @@ using System.Security.Claims;
 
 namespace LotusRMSweb.Areas.Order.Controllers
 {
+    
     [Area("Order")]
     [Authorize(Roles ="Admin,SuperAdmin,Waiter,Cashier,Bar")]
     public class HomeController : Controller
@@ -72,19 +74,21 @@ namespace LotusRMSweb.Areas.Order.Controllers
             ViewBag.TypeId = TypeId;
             return View(tableType);
         }
+        [AllowAnonymous]
         public async Task<IActionResult> GetTable(Guid Id)
         {
             var table=(await _ITableService.GetAllAvailableAsync().ConfigureAwait(true)).Where(x => x.Table_Type_Id==Id);
             return PartialView("_TableList", model: table);
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> GetOrder(Guid Id)
         {
             var order =await GetOrderVM(Id,"");
             ViewBag.NewOrder =await GetNewOrder(Id);
             return PartialView("_Order",model:order);
         }
-
+        [AllowAnonymous]
         public async Task<IActionResult> Selectmenu(Guid MenuId,Guid TableId)
         {
             var menu=await _IMenuService.GetFirstOrDefaultByIdAsync(MenuId).ConfigureAwait(true);

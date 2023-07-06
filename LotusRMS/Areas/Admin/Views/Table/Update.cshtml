@@ -12,7 +12,7 @@
             <div class="card-body">
                 <h5 class="card-title">Update Table</h5>
                 <!-- Vertical Form -->
-                <form class="row g-3" asp-action="Update" asp-controller="Table" asp-area="admin">
+                <form class="row g-3" asp-action="Update" asp-controller="Table" asp-area="Admin">
                     <input asp-for="Id" hidden/>
                     <div class="col-12">
                         <label for="cName" class="form-label">Table Name</label>
@@ -45,7 +45,7 @@
                                 </select>
                             </div>
                             <div class="col-2">
-                                <a class="btn btn-primary" asp-action="create" asp-controller="tabletype" asp-area="admin" asp-route-returnUrl="~/admin/Table/create" target="_blank">
+                                <a class="btn btn-primary" asp-action="create" asp-controller="tabletype" asp-area="Admin" asp-route-returnUrl="~/admin/Table/create" target="_blank">
                                     <i class="bi bi-plus-lg"></i>
                                 </a>
                             </div>
