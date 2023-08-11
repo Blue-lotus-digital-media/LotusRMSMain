@@ -1,5 +1,8 @@
-﻿using LotusRMS.DataAccess.Constants;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using LotusRMS.DataAccess.Constants;
 using LotusRMS.Models;
+using LotusRMS.Models.Service;
+using LotusRMS.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,16 +15,24 @@ namespace LotusRMSweb.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly UserManager<RMSUser> _userManager;
+        private readonly INotyfService _notyf;
+        private readonly IEmailSender _emailSender;
 
-        public HomeController(ILogger<HomeController> logger, UserManager<RMSUser> userManager)
+        public HomeController(
+            ILogger<HomeController> logger,
+            UserManager<RMSUser> userManager,
+            IEmailSender emailSender,
+            INotyfService notyf)
         {
             _logger = logger;
             _userManager = userManager;
+            _emailSender = emailSender;
+            _notyf = notyf;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            if (User.IsInRole("Admin"))
+          if (User.IsInRole("Admin"))
             {
                 return RedirectToAction("Index", "Home", new { area = "Admin" });
             }else if (User.IsInRole("SuperAdmin"))
@@ -38,7 +49,7 @@ namespace LotusRMSweb.Controllers
                 return RedirectToAction("Index", "Home", new { area = "Checkout" });
             }else if (User.IsInRole("Bar"))
             {
-                return RedirectToAction("Index", "Home", new { area = "Bar" });
+                return RedirectToAction("Index", "Home", new { area = "Order" });
             }
 
             return View();

@@ -1,10 +1,16 @@
-﻿using DocumentFormat.OpenXml.ExtendedProperties;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using DocumentFormat.OpenXml.ExtendedProperties;
 using LotusRMS.Models;
 using LotusRMS.Models.Dto.CompanyDTO;
 using LotusRMS.Models.Service;
 using LotusRMS.Models.Viewmodels.Company;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Text.Encodings.Web;
+using System.Text;
+using Microsoft.AspNetCore.Identity;
+using LotusRMS.Utility;
 
 namespace LotusRMSweb.Areas.SuperAdmin.Controllers
 {
@@ -13,10 +19,19 @@ namespace LotusRMSweb.Areas.SuperAdmin.Controllers
     public class CompanyController : Controller
     {
         private readonly ICompanyService _companyService;
+        private readonly IUserService _userService;
 
-        public CompanyController(ICompanyService companyService)
+        private readonly UserManager<RMSUser> _userManager;
+
+        private readonly IEmailSender _emailSender;
+        private readonly INotyfService _notyf;
+        public CompanyController(ICompanyService companyService, IUserService userService, INotyfService notyf, IEmailSender emailSender, UserManager<RMSUser> userManager)
         {
             _companyService = companyService;
+            _userService = userService;
+            _notyf = notyf;
+            _emailSender = emailSender;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> Index()
@@ -75,7 +90,25 @@ namespace LotusRMSweb.Areas.SuperAdmin.Controllers
             dto.ContactPersons.Add(ucp);
 
             }
-            var id=await _companyService.CreateAsync(dto).ConfigureAwait(true);
+/*            try
+            {*/
+                var user = await _companyService.CreateAsync(dto).ConfigureAwait(false);
+
+                var userId = await _userManager.GetUserIdAsync(user);
+                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                var callbackUrl = Url.Action("ConfirmEmail", "Account", new { area = "", userId = user.Id, token = code }, Request.Scheme);
+                await _emailSender.SendEmailAsync(new Message(new string[] { user.Email }, "Confirm your email",
+                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.", null));
+
+         /*   }
+            catch(Exception e)
+            {
+                _notyf.Error(e.Message, 10);
+            }*/
+
+            
+
 
             return RedirectToAction(nameof(Index));
         }

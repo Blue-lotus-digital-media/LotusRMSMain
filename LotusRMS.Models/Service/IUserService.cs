@@ -11,5 +11,7 @@ namespace LotusRMS.Models.Service
         RMSUser GetUser(Guid Id);
         IEnumerable<RMSUser> GetAllUser();
         IEnumerable<RMSUser> GetExceptSA();
+
+        
     }
 }

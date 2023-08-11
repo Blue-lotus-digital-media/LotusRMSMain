@@ -11,7 +11,7 @@ namespace LotusRMS.Models.Service
     public interface ICompanyService
     {
        Task<UpdateCompanyVM?> GetCompanyAsync();
-        Task<Guid> CreateAsync(CreateCompanyDTO dto);
+        Task<RMSUser> CreateAsync(CreateCompanyDTO dto);
         Task<Guid> UpdateAsync(UpdateCompanyDTO dto);
         Task<string> GetCompanyNameAsync();
         Task UpdateIpAsync(string Ip);

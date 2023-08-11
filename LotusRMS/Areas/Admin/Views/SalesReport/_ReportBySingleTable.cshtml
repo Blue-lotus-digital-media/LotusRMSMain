@@ -9,7 +9,7 @@
 
 <div class="row">
     <div class="col-md-6">
-        Sales Report of Table @Model.Table_Name (@Model.Table_Type), from @Model.DateFrom to @Model.DateTo .
+        Sales Report of Table @Model.Table_Name (@Model.Table_Type), from @Model.DateFrom.ToShortDateString() to @Model.DateTo.ToShortDateString() .
     </div>
 </div>
 
@@ -34,7 +34,7 @@
                             var i = item.index + 1;
                         }@i
                     </td>
-                    <td>@item.value.DateTime</td>
+                    <td>@item.value.DateTime.ToShortDateString()</td>
                     
                     <td>@item.value.Total</td>
                     <td>@item.value.Discount</td>
@@ -44,7 +44,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <th colspan="3">Total</th>
+                <th colspan="2">Total</th>
                 <th> @Model.Sales_Detail.Sum(x=>x.Total)</th>
                 <th> @Model.Sales_Detail.Sum(x=>x.Discount)</th>
                 <th> @Model.Sales_Detail.Sum(x=>x.GTotal)</th>

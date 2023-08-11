@@ -5,7 +5,6 @@ using LotusRMS.Utility;
 using Org.BouncyCastle.Math.EC.Rfc7748;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -90,7 +89,7 @@ namespace LotusRMS.Models.Service.Implementation
 
         public async Task<IEnumerable<LotusRMS_Checkout>> GetAllByDateRangeAsync(DateTime startDate, DateTime endDate)
         {
-            var dataset = await _CheckoutRepository.FindBy(x => x.DateTime >= startDate, includeProperties: "Order,Order.Order_Details,Order.Order_Details.Menu,Order.User,Order.Table").ConfigureAwait(false);
+            var dataset = await _CheckoutRepository.FindBy(x => x.DateTime >= startDate, includeProperties: "Order,Order.Order_Details,Order.Order_Details.Menu,Order.Order_Details.Menu.Menu_Details,Order.Order_Details.Menu.Menu_Unit,Order.Order_Details.Menu.Menu_Unit.UnitDivision,Order.User,Order.Table").ConfigureAwait(false);
           return dataset;
         }
     }

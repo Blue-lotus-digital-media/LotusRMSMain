@@ -40,6 +40,10 @@ function toggleMe(me) {
 }
 function loadData() {
     dataTable = $("#tblData").DataTable({
+        responsive: true,
+        rowReorder: {
+            selector: 'td:nth-child(2)'
+        },
         "ajax": {
             "url": "/Admin/table/GetAll",
              /*"success": function (data) {

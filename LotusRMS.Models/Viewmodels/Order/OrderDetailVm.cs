@@ -20,6 +20,8 @@ namespace LotusRMS.Models.Viewmodels.Order
         public bool IsKitchenComplete { get; set; }
         public string Remarks { get; set; }
         public Guid Quantity_Id { get; set; }
+        public Guid? Unit_Id { get; set; }
+        public string? Quantity_Text { get; set; }
         public double Total
         {
             get { return Quantity * Rate; }

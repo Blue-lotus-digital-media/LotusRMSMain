@@ -8,7 +8,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LotusRMS.Models.Helper;
-using System.Data.Entity.SqlServer;
 
 namespace LotusRMS.Models.Service.Implementation
 {

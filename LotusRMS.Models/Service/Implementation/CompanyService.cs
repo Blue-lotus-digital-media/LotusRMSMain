@@ -1,28 +1,44 @@
-﻿using LotusRMS.Models.Dto.CompanyDTO;
+﻿using AutoMapper;
+using LotusRMS.Models.Dto.BillSettingDTO;
+using LotusRMS.Models.Dto.CompanyDTO;
 using LotusRMS.Models.Helper;
 using LotusRMS.Models.IRepositorys;
 using LotusRMS.Models.Viewmodels.Company;
-using Org.BouncyCastle.Utilities.Net;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Metrics;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Text;
-using System.Threading.Tasks;
-using static QRCoder.PayloadGenerator.SwissQrCode;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace LotusRMS.Models.Service.Implementation
 {
     public class CompanyService : ICompanyService
     {
         private readonly ICompanyRepository _companyRepository;
-
-        public CompanyService(ICompanyRepository companyRepository)
+        private readonly UserManager<RMSUser> _userManager;
+        private readonly IUserStore<RMSUser> _userStore;
+        private readonly IUserEmailStore<RMSUser> _emailStore;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly ILogger<CompanyService> _logger;
+        public CompanyService(ICompanyRepository companyRepository,
+UserManager<RMSUser> userManager,
+IUserStore<RMSUser> userStore,
+RoleManager<IdentityRole> roleManager,
+ILogger<CompanyService> logger)
         {
             _companyRepository = companyRepository;
+            _userManager = userManager;
+            _userStore = userStore;
+            _emailStore = GetEmailStore();
+            _roleManager = roleManager;
+            _logger = logger;
         }
-
+        private IUserEmailStore<RMSUser> GetEmailStore()
+        {
+            if (!_userManager.SupportsUserEmail)
+            {
+                throw new NotSupportedException("The default UI requires a user store with email support.");
+            }
+            return (IUserEmailStore<RMSUser>)_userStore;
+        }
         public async Task<UpdateCompanyVM?> GetCompanyAsync()
         {
             var company = await _companyRepository.GetFirstOrDefaultAsync(includeProperties: "ContactPersons").ConfigureAwait(false);
@@ -66,7 +82,7 @@ namespace LotusRMS.Models.Service.Implementation
             return upcVM;
         }
 
-        public async Task<Guid> CreateAsync(CreateCompanyDTO obj)
+        public async Task<RMSUser> CreateAsync(CreateCompanyDTO obj)
         {
             using var scope = TransactionScopeHelper.GetInstance;
             var Company = new LotusRMS_Company(
@@ -80,21 +96,68 @@ namespace LotusRMS.Models.Service.Implementation
             panOrVat: obj.PanOrVat,
             registrationDate: obj.RegistrationDate,
             validTill: obj.ValidTill,
-             companyRegistrationNumber: obj.CompanyRegistrationNumber,
+            companyRegistrationNumber: obj.CompanyRegistrationNumber,
             contractDate: obj.ContractDate,
             serviceStartDate: obj.ServiceStartDate,
-            registrationNo: obj.RegistrationNo
-            )
+            registrationNo: obj.RegistrationNo)
             {
                 ContactPersons = obj.ContactPersons,
                 IpV4Address="127.0.0.1"
             };
             await _companyRepository.AddAsync(Company).ConfigureAwait(false);
             await _companyRepository.SaveAsync().ConfigureAwait(false);
+            _logger.LogInformation("Company registered ");
+ 
+             var user= await CompanyUserAsync(obj);
+            
             scope.Complete();
-            return Company.Id;
+            return user;
 
         }
+        private async Task<RMSUser> CompanyUserAsync(CreateCompanyDTO request)
+        {
+            using var scope = TransactionScopeHelper.GetInstance;
+            var userCheck = await _userManager.FindByEmailAsync(request.Email);
+
+            if (userCheck == null)
+            {
+                _logger.LogInformation("user checked");
+                var user = new RMSUser(firstName: request.CompanyName, middleName: "", lastName: "", contact: request.Contact)
+                {
+
+                    EmailConfirmed = false,
+                    PhoneNumberConfirmed = false,
+                };
+                await _userStore.SetUserNameAsync(user, request.Email, CancellationToken.None);
+                await _emailStore.SetEmailAsync(user, request.Email, CancellationToken.None);
+                var result = await _userManager.CreateAsync(user);
+                var role = _roleManager.FindByNameAsync("Admin").Result;
+
+
+                if (result.Succeeded)
+                {
+                    
+                    await _userManager.AddToRoleAsync(user, role.ToString());
+                    scope.Complete();
+                    _logger.LogInformation("User created a new account with password. in company");
+
+                    return user;
+
+                   
+                  
+
+                }
+                else
+                {
+                    throw new Exception("Cannot create user");
+                }
+            }
+            else
+            {
+                throw new Exception("User with email already exist");
+            }
+        }
+
 
         public async Task<Guid> UpdateAsync(UpdateCompanyDTO obj)
         {

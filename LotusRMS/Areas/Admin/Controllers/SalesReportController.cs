@@ -10,6 +10,7 @@ using System.Web.WebPages;
 using System.Linq.Expressions;
 using LotusRMS.Models.Viewmodels.SalesReport;
 using MimeKit.Tnef;
+using LotusRMS.Models.Viewmodels.Order;
 
 namespace LotusRMSweb.Areas.Admin.Controllers
 {
@@ -22,6 +23,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
         private readonly UserManager<RMSUser> _iUserManager;
         private readonly ICustomerService _iCustomerService;
         private readonly ITableService _iTableService;
+        private readonly IMenuUnitService _iMenuUnitService;
         private readonly RoleManager<IdentityRole> roleManager;
 
         private readonly ICheckoutService _iCheckoutService;
@@ -30,7 +32,8 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             ITableService iTableService,
             UserManager<RMSUser> iUserManager,
             ICheckoutService iCheckoutService,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager,
+            IMenuUnitService iMenuUnitService)
         {
             _iMenuService = iMenuService;
             _iCustomerService = iCustomerService;
@@ -38,6 +41,7 @@ namespace LotusRMSweb.Areas.Admin.Controllers
             _iUserManager = iUserManager;
             _iCheckoutService = iCheckoutService;
             this.roleManager = roleManager;
+            _iMenuUnitService = iMenuUnitService;
         }
         public IActionResult Index()
         {
@@ -147,7 +151,19 @@ namespace LotusRMSweb.Areas.Admin.Controllers
                     {
                         checkout = checkout.Where(x => x.Customer_Id == gId);
                     }
-                } else if (ReportType == SalesReportType.ReportType.user.ToString())
+                } 
+                else if (ReportType == SalesReportType.ReportType.item.ToString())
+                {
+                    if (gId != Guid.Empty)
+                    {
+                        checkout = checkout.Where(x => x.Customer_Id == gId);
+                    }
+                    else
+                    {
+                        return await GetReportByAllItem(checkout).ConfigureAwait(true);
+                    }
+                }
+                else if (ReportType == SalesReportType.ReportType.user.ToString())
                 {
                     if (gId != Guid.Empty)
                     {
@@ -187,10 +203,71 @@ namespace LotusRMSweb.Areas.Admin.Controllers
 
         public async Task<IActionResult> GetReportBySingleTable(IEnumerable<LotusRMS_Checkout> checkout,SalesReportBySingleTable salesReport)
         {
-           
-
-            return PartialView("_ReportBySingleTable");
+            var groupByDate = checkout.GroupBy(x => x.DateTime.ToShortDateString());
+            foreach(var item in groupByDate)
+            {
+                var detail = new SalesReportBySingleTableDetail()
+                {
+                    DateTime = Convert.ToDateTime(item.Key),
+                    Total=item.Sum(x=>x.Total),
+                    Discount=item.Sum(x=>x.Discount)
+                };
+                salesReport.Sales_Detail.Add(detail);
+            }
+            return PartialView("_ReportBySingleTable",salesReport);
         }
 
+        public async Task<IActionResult> GetReportByAllItem(IEnumerable<LotusRMS_Checkout> checkout)
+        {
+            var orderdetail =GetAllOrderDetail(checkout);
+            var menuOrder = orderdetail.GroupBy(x =>new { x.MenuId, x.Quantity_Id });
+
+            var ReportByAllItem = new List<SalesReportByAllItem>();
+            foreach(var item in menuOrder)
+            {
+                var report = new SalesReportByAllItem()
+                {
+                    Id=item.Key.MenuId,
+                    Item_Name = item.FirstOrDefault().Item_Name,
+                    Category=(await _iMenuService.GetFirstOrDefaultByIdAsync(item.Key.MenuId)).Menu_Category.Category_Name,
+                    Type=(await _iMenuService.GetFirstOrDefaultByIdAsync(item.Key.MenuId)).Menu_Type.Type_Name,
+
+                    Unit = item.FirstOrDefault().Item_Unit,
+                    TotalSold = item.Sum(x => x.Quantity),
+                    Unit_Division = item.FirstOrDefault().Quantity_Text
+                };
+                ReportByAllItem.Add(report);
+            }
+
+           return PartialView("_ReportByAllItem",ReportByAllItem);
+        }
+
+        public async Task<IActionResult> GetReportBySingleItem(IEnumerable<LotusRMS_Checkout> checkout)
+        {
+            return PartialView("_ReportBySingleItem");
+        }
+        private List<OrderDetailVm> GetAllOrderDetail(IEnumerable<LotusRMS_Checkout>  checkout)
+        {
+            var order = new List<OrderDetailVm>();
+            foreach(var item in checkout)
+            {
+                order.AddRange(
+                    item.Order.Order_Details.Select(x=>new OrderDetailVm()
+                    {
+                        MenuId=x.MenuId,
+                        Item_Name=x.Menu.Item_Name,
+                        Item_Unit=x.Menu.Menu_Unit.Unit_Symbol,
+                        Quantity=x.Quantity,
+                        Quantity_Id=x.Quantity_Id,
+                        Rate=x.Rate,
+                        Unit_Id=x.Menu.Unit_Id,
+                        Quantity_Text=x.Menu.Menu_Details.FirstOrDefault(y=>y.Id==x.Quantity_Id).Divison.Title
+                    }).ToList()                  
+                    );
+            }
+            return order;
+
+
+        }
 }
 }

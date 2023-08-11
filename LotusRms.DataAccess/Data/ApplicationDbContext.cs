@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LotusRMS.DataAccess
 {
-    public class ApplicationDbContext : IdentityDbContext<RMSUser>
+    public class ApplicationDbContext : IdentityDbContext<RMSUser,IdentityRole,string>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -38,10 +38,10 @@ namespace LotusRMS.DataAccess
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-          /*  modelBuilder.HasDefaultSchema("Identity");
-            modelBuilder.Entity<IdentityUser>(entity =>
+            modelBuilder.HasDefaultSchema("Identity");
+            modelBuilder.Entity<RMSUser>(entity =>
             {
-                entity.ToTable(name: "User");
+                entity.ToTable(name: "Users");
             });
             modelBuilder.Entity<IdentityRole>(entity =>
             {
@@ -66,7 +66,7 @@ namespace LotusRMS.DataAccess
             modelBuilder.Entity<IdentityUserToken<string>>(entity =>
             {
                 entity.ToTable("UserTokens");
-            });*/
+            });
             // add your own configuration here
             modelBuilder.Entity<RMSUser>(entity => entity.Property(m => m.NormalizedEmail).HasMaxLength(100));
             modelBuilder.Entity<RMSUser>(entity => entity.Property(m => m.Id).HasMaxLength(100));
@@ -95,7 +95,18 @@ namespace LotusRMS.DataAccess
 
             modelBuilder.Entity<IdentityUserClaim<string>>(entity => entity.Property(m => m.UserId).HasMaxLength(100));
             modelBuilder.Entity<IdentityRoleClaim<string>>(entity => entity.Property(m => m.RoleId).HasMaxLength(100));
-        }
+
+
+
+         
+            foreach (var entity in modelBuilder.Model.GetEntityTypes())
+            {
+                entity.SetTableName(entity.GetTableName().ToLower());
+            }
+        
+
+
+    }
 
     }   
 }

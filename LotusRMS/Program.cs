@@ -3,9 +3,6 @@ using LotusRMS.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using LotusRMS.DataAccess.Repository;
-using LotusRMS.Models.IRepositorys;
 using LotusRMSweb;
 using DinkToPdf;
 using DinkToPdf.Contracts;
@@ -27,9 +24,10 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System.Data.Entity.SqlServer;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Mvc;
+using System.Data.Entity.SqlServer;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 //var connectionString = builder.Configuration.GetConnectionString("ApplicationDbContextConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDbContextConnection' not found.");
@@ -50,18 +48,24 @@ var connectionStringBuilder = new MySqlConnectionStringBuilder(builder.Configura
 builder.Services.AddDbContext<ApplicationDbContext>(
     options => options.UseMySql(connectionStringBuilder.ConnectionString,
     ServerVersion.AutoDetect(connectionStringBuilder.ConnectionString),
-    opt=> new SqlAzureExecutionStrategy()
-   // opt=>opt.ExecutionStrategy(c=>new LotusExecutionStrategy(c))
+   /* opt=> new SqlAzureExecutionStrategy(),*/
+     mysqlOptions =>
+     {
+         // Set the SchemaBehavior option to ignore EF Core schemas.
+         mysqlOptions.SchemaBehavior(MySqlSchemaBehavior.Ignore);
+     })
+
+    // opt=>opt.ExecutionStrategy(c=>new LotusExecutionStrategy(c))
     /*opt => opt.EnableRetryOnFailure(
     maxRetryCount: 10,
         maxRetryDelay: TimeSpan.FromSeconds(30),
         errorNumbersToAdd: null)*/
-    ));
+    );
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddIdentity<RMSUser, IdentityRole>()
             .AddDefaultUI()
-            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddEntityFrameworkStores<ApplicationDbContext>()           
             .AddDefaultTokenProviders();
 builder.Services.AddAuthentication(
     CookieAuthenticationDefaults.AuthenticationScheme
@@ -143,9 +147,10 @@ builder.Services.AddAuthorization(options =>
 builder.Services.UseConfMgmtCore();
 builder.Services.UseConfMgmtData();
 builder.Services.AddLazyResolution();
-var context = new CustomAssemblyLoadContext();
-context.LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox.dll"));
 
+var context = new CustomAssemblyLoadContext();
+logger.LogInformation(Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox.dll"));
+/*context.LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox.dll"));*/
 builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
 
 builder.Services.AddDistributedMemoryCache();
