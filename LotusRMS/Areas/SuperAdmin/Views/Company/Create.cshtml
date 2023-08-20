@@ -1,6 +1,12 @@
 ﻿@using LotusRMS.Models.Viewmodels.Company;
 @model CreateCompanyVM
-
+<style>
+    .required::after{
+        content:"*";
+        color:red;
+        font-size:1.1rem;
+    }
+</style>
 <div class="card">
     <div class="card-body">
         <h5 class="card-title">Add Organization Details </h5>
@@ -12,50 +18,50 @@
                   asp-controller="Company"
                   asp-area="SuperAdmin">
             <div class="col-md-12">
-                <label for="organizationName" class="form-label">Organization Name</label>
+                <label for="organizationName" class="form-label required">Organization Name</label>
                 <input type="text" class="form-control" id="organizationName" asp-for="CompanyName">
                 <span asp-validation-for="CompanyName" class="text-danger"></span>
             </div>
             <div class="col-md-6">
-                <label for="regNumber" class="form-label">Company Registration Number</label>
+                <label for="regNumber" class="form-label required">Company Registration Number</label>
                 <input class="form-control" id="regNumber" asp-for="CompanyRegistrationNumber">
 
                 <span asp-validation-for="CompanyRegistrationNumber" class="text-danger"></span>
             </div>
             <div class="col-md-6">
-                <label for="regDate" class="form-label">Company Registration Date</label>
+                <label for="regDate" class="form-label required">Company Registration Date</label>
                 <input type="date" class="form-control" id="regDate" asp-for="RegistrationDate">
 
                 <span asp-validation-for="RegistrationDate" class="text-danger"></span>
             </div>
            
             <div class="col-md-6">
-                <label for="panNumber" class="form-label">PAN Number</label>
+                <label for="panNumber" class="form-label required">PAN Number</label>
                 <input class="form-control" id="panNumber" asp-for="PanOrVat">
 
                 <span asp-validation-for="PanOrVat" class="text-danger"></span>
             </div>
             <div class="col-md-6">
-                <label for="Number" class="form-label">Contact Number</label>
+                <label for="Number" class="form-label required">Contact Number</label>
                 <input class="form-control" id="Number" asp-for="Contact">
 
                 <span asp-validation-for="Contact" class="text-danger"></span>
             </div>
             <div class="col-md-6">
-                <label for="email" class="form-label">Email</label>
+                <label for="email" class="form-label required">Email</label>
                 <input type="email" class="form-control" id="email" asp-for="Email">
 
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
 
             <div class="col-6">
-                <label for="Country" class="form-label">Country</label>
-                <input type="text" class="form-control" id="inputAddress2" asp-for="Country">
+                <label for="Country" class="form-label required">Country</label>
+                <input type="text" class="form-control" id="inputAddress2" asp-for="Country" value="Nepal" readonly>
 
                 <span asp-validation-for="Country" class="text-danger"></span>
             </div>
             <div class="col-md-6">
-                <label for="inputState" class="form-label">Province</label>
+                <label for="inputState" class="form-label required">Province</label>
                 <select id="inputState" class="form-select" asp-for="Province">
                     <option>Choose province...</option>
                     <option value="Koshi">Koshi</option>
@@ -70,19 +76,24 @@
                 <span asp-validation-for="Province" class="text-danger"></span>
             </div>
             <div class="col-md-6">
-                <label for="inputCity" class="form-label">City</label>
+                <label for="inputCity" class="form-label required">City</label>
                 <input type="text" class="form-control" id="inputCity" asp-for="City">
 
                 <span asp-validation-for="City" class="text-danger"></span>
             </div>
           
             <div class="col-md-6">
-                <label for="inputToal" class="form-label">Tole</label>
+                <label for="inputToal" class="form-label required">Tole</label>
                 <input type="text" class="form-control" id="inputToal" asp-for="Tole">
 
                 <span asp-validation-for="Tole" class="text-danger"></span>
             </div>
+            <div class="col-md-6">
+                <label for="webSite" class="form-label">Website</label>
+                <input type="text" class="form-control" id="webSite" asp-for="WebSite">
 
+                <span asp-validation-for="WebSite" class="text-danger"></span>
+            </div>
             <label for="cPerson2" class="form-label" style="font-size: 2rem;">Contact Person Details</label>
            <div id="contactPersonSection" class="row m-2">
                 <div class="col-md-6 " id="contactperson0">
@@ -91,15 +102,15 @@
                     </h3>
                     <div class="row">
                         <div class="col-md-12">
-                            <label class="form-label">Contact Person Name</label>
+                            <label class="form-label required">Contact Person Name</label>
                             <input type="text" class="form-control" asp-for="ContactPerson[0].PersonName" required>
                         </div>
                         <div class="col-md-12">
-                            <label class="form-label">Phone Number</label>
+                            <label class="form-label required">Phone Number</label>
                             <input  class="form-control" asp-for="ContactPerson[0].ContactNumber" required>
                         </div>
                         <div class="col-md-12">
-                            <label class="form-label">Address</label>
+                            <label class="form-label required">Address</label>
                             <input class="form-control" asp-for="ContactPerson[0].Address" required>
                         </div>
                     </div>
@@ -131,25 +142,25 @@
 
                 <div class="row">
                 <div class="col-md-6">
-                    <label for="regNo" class="form-label">System Contract Number</label>
+                    <label for="regNo" class="form-label required">System Contract Number</label>
                     <input class="form-control" id="regNo" asp-for="RegistrationNo">
 
                     <span asp-validation-for="RegistrationNo" class="text-danger"></span>
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label">Service Contract Date</label>
+                    <label class="form-label required">Service Contract Date</label>
                     <input type="date" class="form-control" asp-for="ContractDate">
 
                     <span asp-validation-for="ContractDate" class="text-danger"></span>
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label">Service start date</label>
+                    <label class="form-label required">Service start date</label>
                     <input type="date" class="form-control" asp-for="ServiceStartDate">
 
                     <span asp-validation-for="ServiceStartDate" class="text-danger"></span>
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label">Service Valid Till</label>
+                    <label class="form-label required">Service Valid Till</label>
                     <input type="date" class="form-control" asp-for="ValidTill">
 
                     <span asp-validation-for="ValidTill" class="text-danger"></span>
@@ -171,7 +182,4 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-
-
-
 }

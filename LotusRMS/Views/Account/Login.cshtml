@@ -156,8 +156,12 @@
     </main><!-- End #main -->
 
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+    }
     <!-- Vendor JS Files -->
+
+    <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="~/assets/vendor/apexcharts/apexcharts.min.js"></script>
     <script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="~/assets/vendor/chart.js/chart.umd.js"></script>
@@ -169,8 +173,7 @@
 
     <!-- Template Main JS File -->
     <script src="~/assets/js/main1.js"></script>
-
-</body>
+    @await Component.InvokeAsync("Notyf")
 <script>
     const togglePassword = document.querySelector("#inputGroupPrepend");
     const eyeicon = document.querySelector("#togglePassword");
@@ -191,13 +194,12 @@
 </script>
 
 
-@await Component.InvokeAsync("Notyf")
+
+</body>
 </html>
 
 
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
+
 
 

@@ -30,6 +30,6 @@ namespace LotusRMS.Models.Viewmodels.Company
         public string ContractDate { get; set; }
         public string ServiceStartDate { get;  set; }
 
-
+        public string? WebSite { get; set; }
     }
 }

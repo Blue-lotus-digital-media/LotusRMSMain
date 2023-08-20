@@ -2,6 +2,8 @@
 using LotusRMS.DataAccess.Constants;
 using LotusRMS.Models;
 using LotusRMS.Models.Service;
+using LotusRMS.Models.Service.Implementation;
+using LotusRMS.Models.Viewmodels.Company;
 using LotusRMS.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -16,18 +18,19 @@ namespace LotusRMSweb.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly UserManager<RMSUser> _userManager;
         private readonly INotyfService _notyf;
-        private readonly IEmailSender _emailSender;
+        private readonly ICompanyService _companyService;
 
         public HomeController(
             ILogger<HomeController> logger,
             UserManager<RMSUser> userManager,
             IEmailSender emailSender,
-            INotyfService notyf)
+            INotyfService notyf,
+            ICompanyService companyService)
         {
             _logger = logger;
             _userManager = userManager;
-            _emailSender = emailSender;
             _notyf = notyf;
+            _companyService = companyService;
         }
 
         public async Task<IActionResult> Index()
@@ -52,7 +55,18 @@ namespace LotusRMSweb.Controllers
                 return RedirectToAction("Index", "Home", new { area = "Order" });
             }
 
-            return View();
+            var company = await _companyService.GetCompanyAsync().ConfigureAwait(true);
+            if (company == null)
+            {
+                company = new UpdateCompanyVM(){
+                    CompanyName= "Blue Lotus digital pvt ltd.",
+                    City="Birtamode",
+                    Tole="Athitisadan",
+                    Contact="9844662120",
+                    Email="bluelotusdigital.bld@gmail.com" 
+                };
+            }
+            return View(company);
         }
 
         public IActionResult Privacy()

@@ -22,6 +22,7 @@ namespace LotusRMS.Models.Dto.CompanyDTO
         public string PanOrVat { get;  set; }
 
         public string RegistrationDate { get;  set; }
+        public string WebSite { get; set; }
         public string CompanyRegistrationNumber { get; set; }
         public string ContractDate { get;  set; }
         public string ServiceStartDate { get;  set; }

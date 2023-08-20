@@ -99,10 +99,14 @@ ILogger<CompanyService> logger)
             companyRegistrationNumber: obj.CompanyRegistrationNumber,
             contractDate: obj.ContractDate,
             serviceStartDate: obj.ServiceStartDate,
-            registrationNo: obj.RegistrationNo)
+            registrationNo: obj.RegistrationNo
+
+            )
             {
                 ContactPersons = obj.ContactPersons,
-                IpV4Address="127.0.0.1"
+                IpV4Address="127.0.0.1",
+                WebSite = obj.WebSite
+
             };
             await _companyRepository.AddAsync(Company).ConfigureAwait(false);
             await _companyRepository.SaveAsync().ConfigureAwait(false);
@@ -172,15 +176,16 @@ ILogger<CompanyService> logger)
             tole: obj.Tole,
             email: obj.Email,
             contact: obj.Contact,
-            contactPersons:obj.ContactPersons,
+            contactPersons: obj.ContactPersons,
             panOrVat: obj.PanOrVat,
             registrationDate: obj.RegistrationDate,
             validTill: obj.ValidTill,
              companyRegistrationNumber: obj.CompanyRegistrationNumber,
             contractDate: obj.ContractDate,
             serviceStartDate: obj.ServiceStartDate,
-            registrationNo:obj.RegistrationNo
+            registrationNo: obj.RegistrationNo
                 );
+            company.WebSite = obj.WebSite;
             await _companyRepository.UpdateAsync(company).ConfigureAwait(false);
             scope.Complete();
             return company.Id;

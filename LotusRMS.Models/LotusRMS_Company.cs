@@ -31,6 +31,7 @@ namespace LotusRMS.Models
         public string RegistrationDate { get;private set; }
         public string RegistrationNo { get; private set; }
         public string CompanyRegistrationNumber { get; private set; }
+        public string WebSite { get; set; }
 
         public string ContractDate { get; private set; }
         public string ServiceStartDate { get; private set; }
@@ -67,6 +68,17 @@ namespace LotusRMS.Models
             ServiceStartDate = serviceStartDate;
             RegistrationNo = registrationNo;
         }
+
+        public LotusRMS_Company(string companyName, string city, string tole, string contact, string email,string website)
+        {
+            CompanyName = companyName;
+            City = city;
+            Tole = tole;
+            Contact = contact;
+            Email = email;
+            WebSite = website;
+        }
+
         public void Update(string companyName,
                            string country,
                            string province,
@@ -75,6 +87,7 @@ namespace LotusRMS.Models
                            string email,
                            string contact,
                            string panOrVat,
+
                            List<ContactPerson> contactPersons,
                            string registrationDate,
                            string validTill,

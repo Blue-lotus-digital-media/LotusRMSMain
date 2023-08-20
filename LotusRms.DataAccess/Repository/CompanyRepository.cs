@@ -38,8 +38,10 @@ namespace LotusRMS.DataAccess.Repository
             contractDate: obj.ContractDate,
             serviceStartDate: obj.ServiceStartDate,
             registrationNo:obj.RegistrationNo
+            
 
             );
+            company.WebSite = obj.WebSite;
             await SaveAsync();
         }
 

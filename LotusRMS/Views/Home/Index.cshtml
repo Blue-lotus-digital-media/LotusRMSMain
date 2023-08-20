@@ -1,4 +1,6 @@
-﻿@{
+﻿@using LotusRMS.Models.Viewmodels.Company;
+@model UpdateCompanyVM
+@{
     ViewData["Title"] = "Home Page";
 }
 <style>
@@ -14,12 +16,7 @@
       
         margin-left:0 !important;
         padding:0 !important;
-     
-   
-    }
-
- 
-
+       }
     .footer {
         margin-left: 0 !important;
         display:none;
@@ -52,11 +49,7 @@ body {
     font-size: 1.6rem;
     box-sizing: border-box; 
     width: 100%;
-  
-
- 
 }
-
 .navbar-front {
     height: 6rem;
     display: flex;
@@ -242,16 +235,16 @@ body {
     </div>
     <div class="right-container text-center">
 
-        <h2 class="hotel-title">Welcome to Bacon Rolls</h2>
+        <h2 class="hotel-title">Welcome to @Model.CompanyName</h2>
         <img src="~/assets/img/bacon-restaurant-logo.jpg" class="hotel-logo">
-        <a class="btn btn-secondary scan-here-btn" data-bs-toggle="modal" data-bs-target="#modal" id="btn-scan-qr">Scan Now</a>
+        <a class="btn btn-secondary scan-here-btn" data-bs-toggle="modal" data-bs-target="#modal" id="btn-scan-qr" disabled>Scan Now</a>
         <p class="mt-2 text-shadow">Please scan for Menu</p>
         <div class="text-center qr-details"> Scan the qr code to find out our menu items and enjoy our service</div>
         <div class="hotel-footer text-center text-light">
-            <div class="hotel-contact">97845412, 023-548748</div>
-            <div>dinewine@restaurant.com</div>
-            <div>Birtamode, Jhapa</div>
-            <div>www.resturantdinewine.com</div>
+            <div class="hotel-contact">@Model.Contact</div>
+            <div>@Model.Email</div>
+            <div>@Model.Tole , @Model.City</div>
+            <div>@Model.WebSite</div>
         </div>
 
 

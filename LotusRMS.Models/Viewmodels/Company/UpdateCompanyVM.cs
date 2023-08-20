@@ -16,7 +16,7 @@ namespace LotusRMS.Models.Viewmodels.Company
         public string Province { get; set; }
         public string Tole { get; set; }
 
-
+        public string WebSite { get; set; }
         public string Contact { get; set; }
 
         public List<UpdateContactPersonVM> ContactPerson { get; set; }
