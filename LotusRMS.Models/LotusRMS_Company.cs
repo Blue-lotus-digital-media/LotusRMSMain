@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,12 +32,15 @@ namespace LotusRMS.Models
         public string RegistrationDate { get;private set; }
         public string RegistrationNo { get; private set; }
         public string CompanyRegistrationNumber { get; private set; }
+        [MaybeNull]
         public string WebSite { get; set; }
 
         public string ContractDate { get; private set; }
         public string ServiceStartDate { get; private set; }
         public string ValidTill { get; private set; }
         public string IpV4Address { get; set; }
+        [MaybeNull]
+        public byte[] Logo { get; set; }
 
         public LotusRMS_Company(string companyName,
                                 string country,
@@ -87,8 +91,6 @@ namespace LotusRMS.Models
                            string email,
                            string contact,
                            string panOrVat,
-
-                           List<ContactPerson> contactPersons,
                            string registrationDate,
                            string validTill,
                              string companyRegistrationNumber,
@@ -105,7 +107,6 @@ namespace LotusRMS.Models
             Email = email;
             Contact = contact;
             PanOrVat = panOrVat;
-            ContactPersons = contactPersons;
             RegistrationDate = registrationDate;
             ValidTill = validTill;
 
@@ -122,11 +123,21 @@ namespace LotusRMS.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 
         public Guid Id { get; set; }
+        [MaybeNull]
         public string PersonName { get;private set; }
+        [MaybeNull]
         public string ContactNumber { get; private set; }
+        [MaybeNull]
         public string Address { get; private set; }
         public ContactPerson(string personName,string contactNumber,string address)
         {
+            PersonName = personName;
+            ContactNumber = contactNumber;
+            Address = address;
+        }
+        public void UpdateContactPerson(string personName, string contactNumber, string address)
+        {
+           
             PersonName = personName;
             ContactNumber = contactNumber;
             Address = address;

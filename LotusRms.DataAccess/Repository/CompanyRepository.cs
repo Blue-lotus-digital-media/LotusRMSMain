@@ -21,27 +21,30 @@ namespace LotusRMS.DataAccess.Repository
 
         public async Task UpdateAsync(LotusRMS_Company obj)
         {
-            var company =await GetFirstOrDefaultAsync().ConfigureAwait(false);
+            var company = await GetFirstOrDefaultAsync().ConfigureAwait(false);
             company.Update(
             companyName: obj.CompanyName,
             country: obj.Country,
             province: obj.Province,
             city: obj.City,
             tole: obj.Tole,
-            email: obj.Email,   
-            contact:obj.Contact,
+            email: obj.Email,
+            contact: obj.Contact,
             panOrVat: obj.PanOrVat,
-            contactPersons: obj.ContactPersons,
             registrationDate: obj.RegistrationDate,
             validTill: obj.ValidTill,
-             companyRegistrationNumber : obj.CompanyRegistrationNumber,
+             companyRegistrationNumber: obj.CompanyRegistrationNumber,
             contractDate: obj.ContractDate,
             serviceStartDate: obj.ServiceStartDate,
-            registrationNo:obj.RegistrationNo
-            
+            registrationNo: obj.RegistrationNo
+
 
             );
             company.WebSite = obj.WebSite;
+            company.Logo = obj.Logo;
+            company.ContactPersons = obj.ContactPersons;
+           
+
             await SaveAsync();
         }
 

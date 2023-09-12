@@ -9,6 +9,7 @@ namespace LotusRMS.Models.IRepositorys
     public interface ICompanyRepository:IBaseRepository<LotusRMS_Company>
     {
         Task UpdateAsync(LotusRMS_Company obj);
+        
        
     }
 }

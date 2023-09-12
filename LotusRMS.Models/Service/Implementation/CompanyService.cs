@@ -65,7 +65,8 @@ ILogger<CompanyService> logger)
                     ContractDate = company.ContractDate,
                     ServiceStartDate = company.ServiceStartDate,
                     ValidTill = company.ValidTill,
-                    ContactPerson = new List<UpdateContactPersonVM>()
+                    ContactPerson = new List<UpdateContactPersonVM>(),
+                    Logo=company.Logo
                 };
                 foreach (var item in company.ContactPersons)
                 {
@@ -106,8 +107,8 @@ ILogger<CompanyService> logger)
                 ContactPersons = obj.ContactPersons,
                 IpV4Address="127.0.0.1",
                 WebSite = obj.WebSite
-
             };
+            _logger.LogInformation("Company being registered ");
             await _companyRepository.AddAsync(Company).ConfigureAwait(false);
             await _companyRepository.SaveAsync().ConfigureAwait(false);
             _logger.LogInformation("Company registered ");
@@ -120,6 +121,8 @@ ILogger<CompanyService> logger)
         }
         private async Task<RMSUser> CompanyUserAsync(CreateCompanyDTO request)
         {
+
+            _logger.LogInformation("user checking");
             using var scope = TransactionScopeHelper.GetInstance;
             var userCheck = await _userManager.FindByEmailAsync(request.Email);
 
@@ -139,17 +142,12 @@ ILogger<CompanyService> logger)
 
 
                 if (result.Succeeded)
-                {
-                    
+                {                    
                     await _userManager.AddToRoleAsync(user, role.ToString());
                     scope.Complete();
                     _logger.LogInformation("User created a new account with password. in company");
 
                     return user;
-
-                   
-                  
-
                 }
                 else
                 {
@@ -176,7 +174,7 @@ ILogger<CompanyService> logger)
             tole: obj.Tole,
             email: obj.Email,
             contact: obj.Contact,
-            contactPersons: obj.ContactPersons,
+            
             panOrVat: obj.PanOrVat,
             registrationDate: obj.RegistrationDate,
             validTill: obj.ValidTill,
@@ -186,6 +184,17 @@ ILogger<CompanyService> logger)
             registrationNo: obj.RegistrationNo
                 );
             company.WebSite = obj.WebSite;
+           
+            if (obj.ContactPersons.Count() > 0)
+            {
+                foreach (var person in company.ContactPersons)
+                {
+                    var cp = obj.ContactPersons.Where(x => x.Id == person.Id).FirstOrDefault();
+                    person.UpdateContactPerson(personName: cp.PersonName, address: cp.Address, contactNumber: cp.ContactNumber);
+                }
+            }
+
+
             await _companyRepository.UpdateAsync(company).ConfigureAwait(false);
             scope.Complete();
             return company.Id;
@@ -210,6 +219,14 @@ ILogger<CompanyService> logger)
         {
             var company = await _companyRepository.GetFirstOrDefaultAsync().ConfigureAwait(false);
             return company != null ? company.CompanyName : "No Name";
+        }
+
+        public async Task UpdateLogoAsync(byte[] logo)
+        {
+            var company = await _companyRepository.GetFirstOrDefaultAsync(includeProperties: "ContactPersons").ConfigureAwait(false);
+            company.Logo = logo;
+            await _companyRepository.UpdateAsync(company).ConfigureAwait(false);
+           
         }
     }
 }

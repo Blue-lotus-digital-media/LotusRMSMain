@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ namespace LotusRMS.Models.Viewmodels.Company
         public string Province { get; set; }
         public string Tole { get; set; }
 
+        [MaybeNull]
         public string WebSite { get; set; }
         public string Contact { get; set; }
 
@@ -30,5 +32,7 @@ namespace LotusRMS.Models.Viewmodels.Company
 
         public string ContractDate { get;  set; }
         public string ServiceStartDate { get;  set; }
+        [MaybeNull]
+        public byte[] Logo { get; set; }
     }
 }

@@ -17,7 +17,7 @@ namespace LotusRMS.Models.Service
         Task UpdateIpAsync(string Ip);
         Task<string> GetIpAsync();
 
-        
+        Task UpdateLogoAsync(byte[] logo);
 
 
     }

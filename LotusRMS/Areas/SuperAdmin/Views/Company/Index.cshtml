@@ -4,7 +4,16 @@
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
- 
+ <style>
+     #logoimg{
+         width:100%;
+         max-width:300px;
+         height:auto;
+     }
+     #logoDiv{
+         display:none;
+     }
+ </style>
 
 
         <section class="section profile">
@@ -13,8 +22,11 @@
 
           <div class="card">
             <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-
-              <img src="assets/img/profile-img.jpg" alt="Organization Logo" class="rounded-circle">
+            @if(Model.Logo==null){
+                        <img src="~/assets/img/hotel-logo.png" alt="Organization Logo" class="rounded-circle" id="roundedLogo">
+            }else{
+              <img src="data:image/jpg;base64,@Model.Logo" alt="Organization Logo" class="rounded-circle" id="roundedLogo">
+            }
               <h2>@Model.CompanyName</h2>
               <h3>Pan Or Vat No: @Model.PanOrVat</h3>
                
@@ -48,18 +60,31 @@
               <div class="tab-content pt-2">
 
                 <div class="tab-pane fade show active profile-overview" id="profile-overview">
-                  <form>
+                 
                       <div class="row mb-3">
                       <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Profile Image</label>
-                      <div class="col-md-8 col-lg-9">
-                        <img src="assets/img/profile-img.jpg" alt="Profile">
+                                    <div class="col-md-8 col-lg-9">
+                                        @if (Model.Logo == null)
+                                        {
+                                            <img src="~/assets/img/hotel-logo.png" alt="Profile" id="logoimg">
+                                        }else{
+                                            <img src="data:image/jpg;base64,@Model.Logo" alt="Profile" id="logoimg">
+                                        }
                         <div class="pt-2">
-                          <a href="#" class="btn btn-primary btn-sm" title="Upload Company Logo"><i class="bi bi-upload"></i></a>
+                                            <form asp-area="SuperAdmin" asp-action="UploadLogo" asp-controller="Company" enctype="multipart/form-data">
+                                                <input accept="image/*" type='file' id="imgInp" hidden name="file"/>
+                                               <div id="logoDiv">
+                                                <div class="d-flex p-2">
+                                                <button type="reset" class="btn btn-danger mx-2" id="resetLogo">cancel</button>
+                                                    <button type="submit" class="btn btn-success mx-2" id="submitLogo">Update</button>
+                                                </div>
+                                                </div>
+                                            </form>
+                          <a href="#" class="btn btn-primary btn-sm" title="Upload Company Logo" id="uploadLogobtn"><i class="bi bi-upload"></i></a>
                           <a href="#" class="btn btn-danger btn-sm" title="Remove Company Logo"><i class="bi bi-trash"></i></a>
                         </div>
                       </div>
                     </div>
-                  </form>
 
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label ">Contact Number</div>
@@ -89,6 +114,11 @@
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label">Tole</div>
                     <div class="col-lg-9 col-md-8">@Model.Tole</div>
+                  </div>  
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Website</div>
+                    <div class="col-lg-9 col-md-8">@Model.WebSite</div>
                   </div>                 
 
                 </div>
@@ -97,7 +127,7 @@
                    
 
                   <div class="row">
-                    <div class="col-lg-3 col-md-4 label ">First Persone Name</div>
+                    <div class="col-lg-3 col-md-4 label ">First Person Name</div>
                     <div class="col-lg-9 col-md-8">@Model.ContactPerson[0].PersonName</div>
                   </div>
 
@@ -156,3 +186,30 @@
         </div>
       </div>
     </section>
+    <script>
+        const imgInp = document.getElementById("imgInp");
+        const imageuploadbtn = document.getElementById("uploadLogobtn");
+        const logo = document.getElementById("logoimg");
+    const submitLogo = document.getElementById("submitLogo");
+    const resetLogo = document.getElementById("resetLogo");
+    const logoDiv = document.getElementById("logoDiv");
+    const roundLogo = document.getElementById("roundedLogo");
+       resetLogo.onclick = evt =>{
+           console.log("reset success");
+        logoDiv.style.setProperty("display","none");
+           var round_src=roundLogo.getAttribute("src");
+           logo.src = round_src;
+        }
+        imageuploadbtn.onclick=evt=>{
+            imgInp.click();
+        }
+    imgInp.onchange = evt => {
+        const [file] = imgInp.files
+        if (file) {
+            logo.src = URL.createObjectURL(file);
+            logoDiv.style.setProperty("display","block");
+        }
+    }
+
+      
+    </script>

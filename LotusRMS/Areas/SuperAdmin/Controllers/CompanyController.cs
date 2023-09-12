@@ -11,6 +11,7 @@ using System.Text.Encodings.Web;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
 using LotusRMS.Utility;
+using Microsoft.AspNetCore.Http;
 
 namespace LotusRMSweb.Areas.SuperAdmin.Controllers
 {
@@ -25,13 +26,21 @@ namespace LotusRMSweb.Areas.SuperAdmin.Controllers
 
         private readonly IEmailSender _emailSender;
         private readonly INotyfService _notyf;
-        public CompanyController(ICompanyService companyService, IUserService userService, INotyfService notyf, IEmailSender emailSender, UserManager<RMSUser> userManager)
+        private readonly ILogger<CompanyController> _logger;
+        public CompanyController(
+            ICompanyService companyService,
+            IUserService userService,
+            INotyfService notyf,
+            IEmailSender emailSender,
+            UserManager<RMSUser> userManager,
+            ILogger<CompanyController> logger)
         {
             _companyService = companyService;
             _userService = userService;
             _notyf = notyf;
             _emailSender = emailSender;
             _userManager = userManager;
+            _logger = logger;
         }
 
         public async Task<IActionResult> Index()
@@ -60,9 +69,7 @@ namespace LotusRMSweb.Areas.SuperAdmin.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateCompanyVM company)
         {
-
             var dto = new CreateCompanyDTO() {
-                
                 CompanyName = company.CompanyName,
                 Country = company.Country,
                 Province = company.Province,
@@ -77,7 +84,6 @@ namespace LotusRMSweb.Areas.SuperAdmin.Controllers
                 CompanyRegistrationNumber = company.CompanyRegistrationNumber,
                 ContractDate = company.ContractDate,
                 ServiceStartDate = company.ServiceStartDate,
-
                 ValidTill = company.ValidTill,
                 ContactPersons = new List<ContactPerson>()
             };
@@ -88,12 +94,11 @@ namespace LotusRMSweb.Areas.SuperAdmin.Controllers
                     contactNumber :item.ContactNumber
                 );
             dto.ContactPersons.Add(ucp);
-
             }
             try
             {
                 var user = await _companyService.CreateAsync(dto).ConfigureAwait(false);
-
+                _logger.LogInformation("company user created successfully");
                 var userId = await _userManager.GetUserIdAsync(user);
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
@@ -156,6 +161,16 @@ namespace LotusRMSweb.Areas.SuperAdmin.Controllers
             var id = await _companyService.UpdateAsync(dto).ConfigureAwait(true);
 
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UploadLogo(IFormFile file)
+        {
+            var byteArray = ImageUpload.GetByteArrayFromImage(file);
+            await _companyService.UpdateLogoAsync(byteArray).ConfigureAwait(true);
+
+
+            return RedirectToAction("Index");
         }
     }
 }
